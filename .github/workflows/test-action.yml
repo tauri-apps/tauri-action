@@ -1,0 +1,22 @@
+name: "test-action"
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: matrix.platform
+    steps:
+    - uses: actions/checkout@v1
+    - run: |
+        yarn
+        yarn build
+    - uses: ./
+      with: 
+        projectPath: ./example
