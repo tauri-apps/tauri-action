@@ -1,9 +1,8 @@
 {
-  "name": "typescript-action",
-  "version": "0.0.0",
-  "private": true,
-  "description": "TypeScript template action",
-  "main": "lib/main.js",
+  "name": "tauri-action",
+  "version": "0.0.1",
+  "description": "Tauri GitHub Action",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write **/*.ts",
@@ -22,10 +21,11 @@
     "node",
     "setup"
   ],
-  "author": "YourNameOrOrganization",
+  "author": "Lucas Nogueira <lucas@tauri.studio>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.0"
+    "@actions/core": "^1.2.0",
+    "execa": "^4.0.3"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
