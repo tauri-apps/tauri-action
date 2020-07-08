@@ -70,3 +70,11 @@ jobs:
 | `releaseDraft`     |  false   | Whether the release to create is a draft or not                                             | bool   | false                 |
 | `prerelease`       |  false   | Whether the release to create is a prerelease or not                                        | bool   | false                 |
 | `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
+
+## Outputs
+
+| Name               | Description                                                        |
+| ------------------ | ------------------------------------------------------------------ |
+| `releaseId`        | The ID of the created release                                      |
+| `releaseHtmlUrl`   | The URL users can navigate to in order to view the created release |
+| `releaseUploadUrl` | The URL for uploading assets to the created release                |

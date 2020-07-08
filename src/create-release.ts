@@ -29,24 +29,37 @@ export default async function createRelease(tagName: string, releaseName: string
     }
   }
 
-  // Create a release
-  // API Documentation: https://developer.github.com/v3/repos/releases/#create-a-release
-  // Octokit Documentation: https://octokit.github.io/rest.js/#octokit-routes-repos-create-release
-  const createReleaseResponse = await github.repos.createRelease({
-    owner,
-    repo,
-    tag_name: tagName,
-    name: releaseName,
-    body: bodyFileContent || body,
-    draft,
-    prerelease,
-    target_commitish: commitish || context.sha
-  })
+  let release
+  try {
+    release = await github.repos.getReleaseByTag({
+      owner,
+      repo,
+      tag: tagName
+    })
+  } catch (error) {
+    if (error.status === 404) {
+      release = await github.repos.createRelease({
+        owner,
+        repo,
+        tag_name: tagName,
+        name: releaseName,
+        body: bodyFileContent || body,
+        draft,
+        prerelease,
+        target_commitish: commitish || context.sha
+      })
+    } else {
+      console.log(
+        `⚠️ Unexpected error fetching GitHub release for tag ${tagName}: ${error}`
+      );
+      throw error;
+    }
+  }
 
   // Get the ID, html_url, and upload URL for the created Release from the response
   const {
     data: { id, html_url: htmlUrl, upload_url: uploadUrl }
-  } = createReleaseResponse
+  } = release
 
   return {
     id,

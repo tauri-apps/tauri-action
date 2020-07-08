@@ -24,6 +24,13 @@ inputs:
     default: 'tauri.conf.json'
   distPath:
     description: 'path to the distributable folder with your index.html and JS/CSS'
+outputs:
+  releaseId:
+    description: 'The ID of the created release'
+  releaseHtmlUrl:
+    description: 'The URL users can navigate to in order to view the created release'
+  releaseUploadUrl:
+    description: 'The URL for uploading assets to the created release'
 runs:
   using: 'node12'
   main: 'dist/main.js'

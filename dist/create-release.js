@@ -53,21 +53,34 @@ function createRelease(tagName, releaseName, body, commitish, draft = true, prer
                 core.setFailed(error.message);
             }
         }
-        // Create a release
-        // API Documentation: https://developer.github.com/v3/repos/releases/#create-a-release
-        // Octokit Documentation: https://octokit.github.io/rest.js/#octokit-routes-repos-create-release
-        const createReleaseResponse = yield github.repos.createRelease({
-            owner,
-            repo,
-            tag_name: tagName,
-            name: releaseName,
-            body: bodyFileContent || body,
-            draft,
-            prerelease,
-            target_commitish: commitish || github_1.context.sha
-        });
+        let release;
+        try {
+            release = yield github.repos.getReleaseByTag({
+                owner,
+                repo,
+                tag: tagName
+            });
+        }
+        catch (error) {
+            if (error.status === 404) {
+                release = yield github.repos.createRelease({
+                    owner,
+                    repo,
+                    tag_name: tagName,
+                    name: releaseName,
+                    body: bodyFileContent || body,
+                    draft,
+                    prerelease,
+                    target_commitish: commitish || github_1.context.sha
+                });
+            }
+            else {
+                console.log(`⚠️ Unexpected error fetching GitHub release for tag ${tagName}: ${error}`);
+                throw error;
+            }
+        }
         // Get the ID, html_url, and upload URL for the created Release from the response
-        const { data: { id, html_url: htmlUrl, upload_url: uploadUrl } } = createReleaseResponse;
+        const { data: { id, html_url: htmlUrl, upload_url: uploadUrl } } = release;
         return {
             id,
             htmlUrl,
