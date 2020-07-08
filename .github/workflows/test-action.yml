@@ -2,7 +2,35 @@ name: "test-action"
 on: [pull_request, push]
 
 jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      RELEASE_UPLOAD_URL: ${{ steps.create_tauri_release.outputs.upload_url }}
+      RELEASE_ID: ${{ steps.create_tauri_release.outputs.id }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: get version
+        run: echo ::set-env name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
+        working-directory: ./example
+      - name: create release
+        id: create_tauri_release
+        uses: jbolda/create-release@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: example-v${{ env.PACKAGE_VERSION }}
+          release_name: "Release example app v${{ env.PACKAGE_VERSION }}"
+          body: "See the assets to download this version and install."
+          draft: true
+          prerelease: false
+
   build:
+    needs: create-release
     strategy:
       fail-fast: false
       matrix:
@@ -11,13 +39,10 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v2
-    - name: build action
-      run: |
-        yarn
-        yarn build
-    - name: install example dependencies
-      run: yarn
-      working-directory: ./example
+    - name: setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
@@ -29,6 +54,15 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y webkit2gtk-4.0
+    - name: build action
+      run: |
+        yarn
+        yarn build
+    - name: install example dependencies
+      run: yarn
+      working-directory: ./example
     - uses: ./
       with: 
         projectPath: ./example
+        uploadUrl: ${{ needs.create-release.outputs.RELEASE_UPLOAD_URL }}
+        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
