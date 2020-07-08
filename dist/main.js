@@ -62,7 +62,7 @@ function execCommand(command, { cwd }) {
         env: { FORCE_COLOR: '0' },
     }).then();
 }
-function buildProject(root, args, { configPath, distPath }) {
+function buildProject(root, debug, { configPath, distPath }) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve) => {
             if (hasTauriDependency(root)) {
@@ -91,14 +91,15 @@ function buildProject(root, args, { configPath, distPath }) {
                 tauriConf.build.distDir = distPath;
                 fs_1.writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
             }
+            const args = debug ? ['--debug'] : [];
             return execCommand(`${runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root }).then(() => {
-                const appName = 'app';
-                const artifactsPath = path_1.join(root, 'src-tauri/target/release');
+                const appName = 'app'; // TODO read from Cargo.toml
+                const artifactsPath = path_1.join(root, `src-tauri/target/${debug ? 'debug' : 'release'}`);
                 switch (os_1.platform()) {
                     case 'darwin':
                         return [
                             path_1.join(artifactsPath, `bundle/dmg/${appName}.dmg`),
-                            path_1.join(artifactsPath, `bundle/osx/${appName}.osx`)
+                            path_1.join(artifactsPath, `bundle/osx/${appName}.app`)
                         ];
                     case 'win32':
                         return [
@@ -110,7 +111,7 @@ function buildProject(root, args, { configPath, distPath }) {
                             path_1.join(artifactsPath, `bundle/appimage/${appName}.AppImage`)
                         ];
                 }
-            });
+            }).then(paths => paths.filter(p => fs_1.existsSync(p)));
         });
     });
 }
@@ -126,12 +127,22 @@ function run() {
                 core.setFailed('To upload artifacts to a release, you need to set both `releaseId` and `uploadUrl`.');
                 return;
             }
-            let config = null;
-            if (fs_1.existsSync(configPath)) {
-                config = JSON.parse(fs_1.readFileSync(configPath).toString());
-            }
-            const artifacts = yield buildProject(projectPath, [], { configPath: config, distPath });
+            const artifacts = yield buildProject(projectPath, false, { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath });
             if (uploadUrl && releaseId) {
+                if (os_1.platform() === 'darwin') {
+                    let index = -1;
+                    let i = 0;
+                    for (const artifact of artifacts) {
+                        if (artifact.endsWith('.app')) {
+                            index = i;
+                            yield execCommand(`tar -czf ${artifact}`, { cwd: projectPath });
+                        }
+                        i++;
+                    }
+                    if (index >= 0) {
+                        artifacts[index] = artifacts[index] + '.tgz';
+                    }
+                }
                 yield upload_release_assets_1.default(uploadUrl, Number(releaseId), artifacts);
             }
         }
