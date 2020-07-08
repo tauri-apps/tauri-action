@@ -91,11 +91,11 @@ async function run(): Promise<void> {
     const projectPath = resolve(process.cwd(), core.getInput('projectPath') || process.argv[2])
     const configPath = join(projectPath, core.getInput('configPath') || 'tauri.conf.json')
     const distPath = core.getInput('distPath')
-    const releaseId = core.getInput('releaseId')
+    const uploadUrl = core.getInput('uploadUrl')
 
     const artifacts = await buildProject(projectPath, false, { configPath: existsSync(configPath) ? configPath : null, distPath })
 
-    if (releaseId) {
+    if (uploadUrl) {
       if (platform() === 'darwin') {
         let index = -1
         let i = 0
@@ -110,7 +110,7 @@ async function run(): Promise<void> {
           artifacts[index] = artifacts[index] + '.tgz'
         }
       }
-      await uploadReleaseAssets(Number(releaseId), artifacts)
+      await uploadReleaseAssets(uploadUrl, artifacts)
     }
   } catch (error) {
     core.setFailed(error.message)

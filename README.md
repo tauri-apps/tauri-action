@@ -18,7 +18,7 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     outputs:
-      RELEASE_UPLOAD_ID: ${{ steps.create_tauri_release.outputs.upload_id }}
+      RELEASE_UPLOAD_URL: ${{ steps.create_tauri_release.outputs.upload_url }}
 
     steps:
       - uses: actions/checkout@v2
@@ -75,7 +75,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
-        releaseId: ${{ needs.create-release.outputs.RELEASE_UPLOAD_ID }}
+        uploadUrl: ${{ needs.create-release.outputs.RELEASE_UPLOAD_URL }}
 ```
 
 ## Inputs
@@ -85,4 +85,4 @@ jobs:
 | `projectPath` |  false   | Path to the root of the project that will be built                                          | string | .               |
 | `configPath`  |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json |
 | `distPath`    |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                 |
-| `releaseId`   |  false   | The id of the release to upload the assets                                                  | number |                 |
+| `uploadUrl`   |  false   | The URL for uploading assets to the release                                                 | string |                 |
