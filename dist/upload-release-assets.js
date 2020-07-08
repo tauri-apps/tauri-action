@@ -41,7 +41,7 @@ function uploadAssets(uploadUrl, releaseId, assets) {
             if (process.env.GITHUB_TOKEN === undefined) {
                 throw new Error('GITHUB_TOKEN is required');
             }
-            const github = github_1.getOctokit(process.env.GITHUB_TOKEN);
+            const github = new github_1.GitHub(process.env.GITHUB_TOKEN);
             // Determine content-length for header to upload asset
             const contentLength = (filePath) => fs_1.default.statSync(filePath).size;
             for (const assetPath of assets) {
@@ -50,9 +50,7 @@ function uploadAssets(uploadUrl, releaseId, assets) {
                     url: uploadUrl,
                     headers,
                     name: path_1.default.basename(assetPath),
-                    data: fs_1.default.readFileSync(assetPath).toString(),
-                    owner: github_1.context.repo.owner,
-                    repo: github_1.context.repo.repo,
+                    data: fs_1.default.readFileSync(assetPath),
                     release_id: Number(releaseId)
                 });
             }

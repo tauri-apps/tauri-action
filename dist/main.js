@@ -118,7 +118,7 @@ function buildProject(root, debug, { configPath, distPath }) {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const projectPath = core.getInput('projectPath') || process.argv[2];
+            const projectPath = path_1.resolve(process.cwd(), core.getInput('projectPath') || process.argv[2]);
             const configPath = path_1.join(projectPath, core.getInput('configPath') || 'tauri.conf.json');
             const distPath = core.getInput('distPath');
             const uploadUrl = core.getInput('uploadUrl');
@@ -135,7 +135,7 @@ function run() {
                     for (const artifact of artifacts) {
                         if (artifact.endsWith('.app')) {
                             index = i;
-                            yield execCommand(`tar -czf ${artifact}`, { cwd: projectPath });
+                            yield execCommand(`tar -czf ${artifact}.tgz ${artifact}`, { cwd: undefined });
                         }
                         i++;
                     }
