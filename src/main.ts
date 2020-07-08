@@ -1,7 +1,7 @@
 import { platform } from 'os';
 import * as core from '@actions/core'
 import execa from 'execa'
-import { join } from 'path'
+import { join, resolve } from 'path'
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 
@@ -88,7 +88,7 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
 
 async function run(): Promise<void> {
   try {
-    const projectPath = core.getInput('projectPath') || process.argv[2]
+    const projectPath = resolve(process.cwd(), core.getInput('projectPath') || process.argv[2])
     const configPath = join(projectPath, core.getInput('configPath') || 'tauri.conf.json')
     const distPath = core.getInput('distPath')
     const uploadUrl = core.getInput('uploadUrl')
@@ -108,7 +108,7 @@ async function run(): Promise<void> {
         for (const artifact of artifacts) {
           if (artifact.endsWith('.app')) {
             index = i
-            await execCommand(`tar -czf ${artifact}`, { cwd: projectPath })
+            await execCommand(`tar -czf ${artifact}.tgz ${artifact}`, { cwd: undefined })
           }
           i++
         }
