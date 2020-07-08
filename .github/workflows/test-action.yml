@@ -53,6 +53,10 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y webkit2gtk-4.0
+    - name: build action
+      run: |
+        yarn
+        yarn build
     - name: install example dependencies
       run: yarn
       working-directory: ./example
