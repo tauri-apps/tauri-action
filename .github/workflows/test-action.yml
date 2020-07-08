@@ -19,9 +19,9 @@ jobs:
       run: yarn
       working-directory: ./example
     - name: install Rust stable
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
     - name: install tauri bundler
       run: cargo install tauri-bundler --force
     - name: install webkit2gtk (ubuntu only)
