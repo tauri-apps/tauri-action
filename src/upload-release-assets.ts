@@ -1,15 +1,15 @@
 import * as core from '@actions/core'
-import { GitHub } from '@actions/github'
+import { getOctokit, context } from '@actions/github'
 import fs from 'fs'
 import path from 'path'
 
-export default async function uploadAssets(uploadUrl: string, assets: string[]) {
+export default async function uploadAssets(releaseId: number, assets: string[]) {
   try {
     if (process.env.GITHUB_TOKEN === undefined) {
       throw new Error('GITHUB_TOKEN is required')
     }
 
-    const github = new GitHub(process.env.GITHUB_TOKEN)
+    const github = getOctokit(process.env.GITHUB_TOKEN)
 
     // Determine content-length for header to upload asset
     const contentLength = (filePath: string) => fs.statSync(filePath).size
@@ -18,10 +18,12 @@ export default async function uploadAssets(uploadUrl: string, assets: string[]) 
       const headers = { 'content-type': 'application/zip', 'content-length': contentLength(assetPath) }
 
       await github.repos.uploadReleaseAsset({
-        url: uploadUrl,
+        release_id: releaseId,
         headers,
         name: path.basename(assetPath),
-        data: fs.readFileSync(assetPath)
+        data: fs.readFileSync(assetPath).toString(),
+        repo: context.repo.repo,
+        owner: context.repo.owner
       })
     }
   } catch (error) {

@@ -121,14 +121,9 @@ function run() {
             const projectPath = path_1.resolve(process.cwd(), core.getInput('projectPath') || process.argv[2]);
             const configPath = path_1.join(projectPath, core.getInput('configPath') || 'tauri.conf.json');
             const distPath = core.getInput('distPath');
-            const uploadUrl = core.getInput('uploadUrl');
             const releaseId = core.getInput('releaseId');
-            if ((!!uploadUrl) !== (!!releaseId)) {
-                core.setFailed('To upload artifacts to a release, you need to set both `releaseId` and `uploadUrl`.');
-                return;
-            }
             const artifacts = yield buildProject(projectPath, false, { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath });
-            if (uploadUrl && releaseId) {
+            if (releaseId) {
                 if (os_1.platform() === 'darwin') {
                     let index = -1;
                     let i = 0;
@@ -143,7 +138,7 @@ function run() {
                         artifacts[index] = artifacts[index] + '.tgz';
                     }
                 }
-                yield upload_release_assets_1.default(uploadUrl, Number(releaseId), artifacts);
+                yield upload_release_assets_1.default(Number(releaseId), artifacts);
             }
         }
         catch (error) {

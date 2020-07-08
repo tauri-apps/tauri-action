@@ -10,15 +10,45 @@ This template includes compilication support, tests, a validation workflow, publ
 
 If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
 
-## Create an action from this template
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      RELEASE_ID: ${{ steps.create_tauri_release.outputs.upload_id }}
 
 Click the `Use this Template` and provide the new repo details for your action
 
 ## Code in Master
 
-Install the dependencies  
-```bash
-$ npm install
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - name: install Rust stable
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - name: install tauri bundler
+      run: cargo install tauri-bundler --force
+    - name: install webkit2gtk (ubuntu only)
+      if: matrix.platform == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y webkit2gtk-4.0
+    - name: build action
+      run: |
+        yarn
+        yarn build
+    - name: install app dependencies and build it
+      run: yarn && yarn build
+    - uses: tauri-apps/tauri-action
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with: 
+        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
 ```
 
 Build the typescript and package it for distribution
@@ -26,9 +56,12 @@ Build the typescript and package it for distribution
 $ npm run build && npm run pack
 ```
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
+| Name          | Required | Description                                                                                 | Type   | Default         |
+| ------------- | :------: | ------------------------------------------------------------------------------------------- | ------ | --------------- |
+| `projectPath` |  false   | Path to the root of the project that will be built                                          | string | .               |
+| `configPath`  |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json |
+| `distPath`    |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                 |
+| `releaseId`   |  false   | The id of the release to upload the assets                                                  | number |                 |
 
  PASS  ./index.test.js
   ✓ throws invalid number (3ms)
