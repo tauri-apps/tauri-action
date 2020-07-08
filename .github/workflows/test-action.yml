@@ -62,6 +62,8 @@ jobs:
       run: yarn
       working-directory: ./example
     - uses: ./
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
         projectPath: ./example
         uploadUrl: ${{ needs.create-release.outputs.RELEASE_UPLOAD_URL }}
