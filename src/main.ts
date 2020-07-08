@@ -3,6 +3,7 @@ import * as core from '@actions/core'
 import execa from 'execa'
 import { join } from 'path'
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
+import uploadReleaseAssets from './upload-release-assets'
 
 function hasTauriDependency(root: string): boolean {
   const packageJsonPath = join(root, 'package.json')
@@ -89,6 +90,13 @@ async function run(): Promise<void> {
     const projectPath = core.getInput('projectPath') || process.argv[2]
     const configPath = join(projectPath, core.getInput('configPath') || 'tauri.conf.json')
     const distPath = core.getInput('distPath')
+    const uploadUrl = core.getInput('uploadUrl')
+    const releaseId = core.getInput('releaseId')
+
+    if ((!!uploadUrl) !== (!!releaseId)) {
+      core.setFailed('To upload artifacts to a release, you need to set both `releaseId` and `uploadUrl`.')
+      return
+    }
 
     let config = null
     if (existsSync(configPath)) {
@@ -96,8 +104,10 @@ async function run(): Promise<void> {
     }
 
     const artifacts = await buildProject(projectPath, [], { configPath: config, distPath })
-    console.log(`artifacts: ${artifacts}`)
-    core.setOutput('artifacts', artifacts)
+
+    if (uploadUrl && releaseId) {
+      await uploadReleaseAssets(uploadUrl, Number(releaseId), artifacts)
+    }
   } catch (error) {
     core.setFailed(error.message)
   }

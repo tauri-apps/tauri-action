@@ -25,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.0",
+    "@actions/github": "^4.0.0",
     "execa": "^4.0.3"
   },
   "devDependencies": {
