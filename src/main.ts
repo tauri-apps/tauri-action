@@ -106,6 +106,20 @@ async function run(): Promise<void> {
     const artifacts = await buildProject(projectPath, [], { configPath: config, distPath })
 
     if (uploadUrl && releaseId) {
+      if (platform() === 'darwin') {
+        let index = -1
+        let i = 0
+        for (const artifact of artifacts) {
+          if (artifact.endsWith('.app')) {
+            index = i
+            await execCommand(`tar -czf ${artifact}`, { cwd: projectPath })
+          }
+          i++
+        }
+        if (index >= 0) {
+          artifacts[index] = artifacts[index] + '.tgz'
+        }
+      }
       await uploadReleaseAssets(uploadUrl, Number(releaseId), artifacts)
     }
   } catch (error) {
