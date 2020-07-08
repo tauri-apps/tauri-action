@@ -33,7 +33,7 @@ function execCommand(command: string, { cwd }: { cwd: string | undefined }): Pro
   }).then()
 }
 
-async function buildProject(root: string, args: string[], { configPath, distPath }: { configPath: string | null, distPath: string | null }): Promise<string[]> {
+async function buildProject(root: string, debug: boolean, { configPath, distPath }: { configPath: string | null, distPath: string | null }): Promise<string[]> {
   return new Promise<string>((resolve) => {
     if (hasTauriDependency(root)) {
       const runner = usesYarn(root) ? 'yarn tauri' : 'npx tauri'
@@ -61,15 +61,16 @@ async function buildProject(root: string, args: string[], { configPath, distPath
         writeFileSync(tauriConfPath, JSON.stringify(tauriConf))
       }
 
+      const args = debug ? ['--debug'] : []
       return execCommand(`${runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root }).then(() => {
-        const appName = 'app'
-        const artifactsPath = join(root, 'src-tauri/target/release')
+        const appName = 'app' // TODO read from Cargo.toml
+        const artifactsPath = join(root, `src-tauri/target/${debug ? 'debug' : 'release'}`)
 
         switch (platform()) {
           case 'darwin':
             return [
               join(artifactsPath, `bundle/dmg/${appName}.dmg`),
-              join(artifactsPath, `bundle/osx/${appName}.osx`)
+              join(artifactsPath, `bundle/osx/${appName}.app`)
             ]
           case 'win32':
             return [
@@ -81,7 +82,7 @@ async function buildProject(root: string, args: string[], { configPath, distPath
               join(artifactsPath, `bundle/appimage/${appName}.AppImage`)
             ]
         }
-      })
+      }).then(paths => paths.filter(p => existsSync(p)))
     })
 }
 
@@ -98,12 +99,7 @@ async function run(): Promise<void> {
       return
     }
 
-    let config = null
-    if (existsSync(configPath)) {
-      config = JSON.parse(readFileSync(configPath).toString())
-    }
-
-    const artifacts = await buildProject(projectPath, [], { configPath: config, distPath })
+    const artifacts = await buildProject(projectPath, false, { configPath: existsSync(configPath) ? configPath : null, distPath })
 
     if (uploadUrl && releaseId) {
       if (platform() === 'darwin') {
