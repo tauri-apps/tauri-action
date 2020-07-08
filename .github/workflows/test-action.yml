@@ -11,9 +11,13 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v1
-    - run: |
+    - name: build action
+      run: |
         yarn
         yarn build
+    - name: install example dependencies
+      run: yarn
+      working-directory: ./example
     - uses: ./
       with: 
         projectPath: ./example
