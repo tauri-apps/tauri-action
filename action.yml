@@ -2,8 +2,6 @@ name: 'Your name here'
 description: 'Provide a description here'
 author: 'Lucas Nogueira <lucas@tauri.studio>'
 inputs:
-  releaseId:
-    description: 'The id of the release to upload the assets'
   uploadUrl:
     description: 'The URL for uploading assets to the release'
   projectPath:
