@@ -4,17 +4,21 @@ import execa from 'execa'
 import { join, resolve } from 'path'
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
+import createRelease from './create-release'
 
-function hasTauriDependency(root: string): boolean {
+function getPackageJson(root: string): any {
   const packageJsonPath = join(root, 'package.json')
   if (existsSync(packageJsonPath)) {
     const packageJsonString = readFileSync(packageJsonPath).toString()
     const packageJson = JSON.parse(packageJsonString)
-    if (packageJson.dependencies && packageJson.dependencies.tauri) {
-      return true
-    }
+    return packageJson
   }
-  return false
+  return null
+}
+
+function hasTauriDependency(root: string): boolean {
+  const packageJson = getPackageJson(root)
+  return packageJson && packageJson.dependencies && packageJson.dependencies.tauri
 }
 
 function usesYarn(root: string): boolean {
@@ -91,9 +95,43 @@ async function run(): Promise<void> {
     const projectPath = resolve(process.cwd(), core.getInput('projectPath') || process.argv[2])
     const configPath = join(projectPath, core.getInput('configPath') || 'tauri.conf.json')
     const distPath = core.getInput('distPath')
-    const uploadUrl = core.getInput('uploadUrl')
+
+    let tagName = core.getInput('tagName').replace('refs/tags/', '');
+    let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
+    let body = core.getInput('releaseBody');
+    const draft = core.getInput('releaseDraft') === 'true';
+    const prerelease = core.getInput('prerelease') === 'true';
+    const commitish = core.getInput('releaseCommitish') || null;
+
+    if (Boolean(tagName) !== Boolean(releaseName)) {
+      throw new Error('`tag` is required along with `releaseName` when creating a release.')
+    }
 
     const artifacts = await buildProject(projectPath, false, { configPath: existsSync(configPath) ? configPath : null, distPath })
+
+    let uploadUrl: string
+    if (tagName) {
+      const packageJson = getPackageJson(projectPath)
+      const templates = [{
+        key: '__VERSION__',
+        value: packageJson?.version
+      }]
+
+      templates.forEach(template => {
+        const regex = new RegExp(template.key, 'g')
+        tagName = tagName.replace(regex, template.value)
+        releaseName = tagName.replace(releaseName, template.value)
+        body = tagName.replace(body, template.value)
+      })
+
+      const releaseData = await createRelease(tagName, releaseName, body, commitish || undefined, draft, prerelease)
+      uploadUrl = releaseData.uploadUrl
+      core.setOutput('releaseUploadUrl', uploadUrl)
+      core.setOutput('releaseId', releaseData.id)
+      core.setOutput('releaseHtmlUrl', releaseData.htmlUrl)
+    } else {
+      uploadUrl = core.getInput('uploadUrl')
+    }
 
     if (uploadUrl) {
       if (platform() === 'darwin') {

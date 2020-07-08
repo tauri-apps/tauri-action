@@ -4,6 +4,18 @@ author: 'Lucas Nogueira <lucas@tauri.studio>'
 inputs:
   uploadUrl:
     description: 'The URL for uploading assets to the release'
+  tagName:
+    description: 'The tag name of the release to create'
+  releaseName:
+    description: 'The name of the release to create'
+  releaseBody:
+    description: 'The body of the release to create'
+  releaseDraft:
+    description: 'Whether the release to create is a draft or not'
+  prerelease:
+    description: 'Whether the release to create is a prerelease or not'
+  releaseCommitish:
+    description: 'Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit'
   projectPath:
     description: 'path to the root of the project that will be built'
     default: '.'

@@ -37,16 +37,19 @@ const execa_1 = __importDefault(require("execa"));
 const path_1 = require("path");
 const fs_1 = require("fs");
 const upload_release_assets_1 = __importDefault(require("./upload-release-assets"));
-function hasTauriDependency(root) {
+const create_release_1 = __importDefault(require("./create-release"));
+function getPackageJson(root) {
     const packageJsonPath = path_1.join(root, 'package.json');
     if (fs_1.existsSync(packageJsonPath)) {
         const packageJsonString = fs_1.readFileSync(packageJsonPath).toString();
         const packageJson = JSON.parse(packageJsonString);
-        if (packageJson.dependencies && packageJson.dependencies.tauri) {
-            return true;
-        }
+        return packageJson;
     }
-    return false;
+    return null;
+}
+function hasTauriDependency(root) {
+    const packageJson = getPackageJson(root);
+    return packageJson && packageJson.dependencies && packageJson.dependencies.tauri;
 }
 function usesYarn(root) {
     return fs_1.existsSync(path_1.join(root, 'yarn.lock'));
@@ -121,8 +124,38 @@ function run() {
             const projectPath = path_1.resolve(process.cwd(), core.getInput('projectPath') || process.argv[2]);
             const configPath = path_1.join(projectPath, core.getInput('configPath') || 'tauri.conf.json');
             const distPath = core.getInput('distPath');
-            const uploadUrl = core.getInput('uploadUrl');
+            let tagName = core.getInput('tagName').replace('refs/tags/', '');
+            let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
+            let body = core.getInput('releaseBody');
+            const draft = core.getInput('releaseDraft') === 'true';
+            const prerelease = core.getInput('prerelease') === 'true';
+            const commitish = core.getInput('releaseCommitish') || null;
+            if (Boolean(tagName) !== Boolean(releaseName)) {
+                throw new Error('`tag` is required along with `releaseName` when creating a release.');
+            }
             const artifacts = yield buildProject(projectPath, false, { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath });
+            let uploadUrl;
+            if (tagName) {
+                const packageJson = getPackageJson(projectPath);
+                const templates = [{
+                        key: '__VERSION__',
+                        value: packageJson === null || packageJson === void 0 ? void 0 : packageJson.version
+                    }];
+                templates.forEach(template => {
+                    const regex = new RegExp(template.key, 'g');
+                    tagName = tagName.replace(regex, template.value);
+                    releaseName = tagName.replace(releaseName, template.value);
+                    body = tagName.replace(body, template.value);
+                });
+                const releaseData = yield create_release_1.default(tagName, releaseName, body, commitish || undefined, draft, prerelease);
+                uploadUrl = releaseData.uploadUrl;
+                core.setOutput('releaseUploadUrl', uploadUrl);
+                core.setOutput('releaseId', releaseData.id);
+                core.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
+            }
+            else {
+                uploadUrl = core.getInput('uploadUrl');
+            }
             if (uploadUrl) {
                 if (os_1.platform() === 'darwin') {
                     let index = -1;

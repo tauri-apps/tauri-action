@@ -15,33 +15,7 @@ on:
       - latest
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    outputs:
-      RELEASE_UPLOAD_URL: ${{ steps.create_tauri_release.outputs.upload_url }}
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: get version
-        run: echo ::set-env name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
-      - name: create release
-        id: create_tauri_release
-        uses: jbolda/create-release@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: example-v${{ env.PACKAGE_VERSION }}
-          release_name: "Desktop app v${{ env.PACKAGE_VERSION }}"
-          body: "See the assets to download this version and install."
-          draft: true
-          prerelease: false
-
   build:
-    needs: create-release
     strategy:
       fail-fast: false
       matrix:
@@ -75,14 +49,24 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
-        uploadUrl: ${{ needs.create-release.outputs.RELEASE_UPLOAD_URL }}
+        tagName: app-v__VERSION__
+        releaseName: "App v__VERSION__"
+        body: "See the assets to download this version and install."
+        draft: true
+        prerelease: false
 ```
 
 ## Inputs
 
-| Name          | Required | Description                                                                                 | Type   | Default         |
-| ------------- | :------: | ------------------------------------------------------------------------------------------- | ------ | --------------- |
-| `projectPath` |  false   | Path to the root of the project that will be built                                          | string | .               |
-| `configPath`  |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json |
-| `distPath`    |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                 |
-| `uploadUrl`   |  false   | The URL for uploading assets to the release                                                 | string |                 |
+| Name               | Required | Description                                                                                 | Type   | Default               |
+| ------------------ | :------: | ------------------------------------------------------------------------------------------- | ------ | --------------------- |
+| `projectPath`      |  false   | Path to the root of the project that will be built                                          | string | .                     |
+| `configPath`       |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json       |
+| `distPath`         |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                       |
+| `uploadUrl`        |  false   | The URL for uploading assets to the release                                                 | string |                       |
+| `tagName`          |  false   | The tag name of the release to create                                                       | string |                       |
+| `releaseName`      |  false   | The name of the release to create                                                           | string |                       |
+| `releaseBody`      |  false   | The body of the release to create                                                           | string |                       |
+| `releaseDraft`     |  false   | Whether the release to create is a draft or not                                             | bool   | false                 |
+| `prerelease`       |  false   | Whether the release to create is a prerelease or not                                        | bool   | false                 |
+| `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |

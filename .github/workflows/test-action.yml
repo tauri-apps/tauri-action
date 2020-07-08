@@ -4,34 +4,7 @@ on:
     branches: [dev]
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    outputs:
-      RELEASE_UPLOAD_URL: ${{ steps.create_tauri_release.outputs.upload_url }}
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: get version
-        run: echo ::set-env name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
-        working-directory: ./example
-      - name: create release
-        id: create_tauri_release
-        uses: jbolda/create-release@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: example-v${{ env.PACKAGE_VERSION }}
-          release_name: "Release example app v${{ env.PACKAGE_VERSION }}"
-          body: "See the assets to download this version and install."
-          draft: true
-          prerelease: false
-
   build:
-    needs: create-release
     strategy:
       fail-fast: false
       matrix:
@@ -67,4 +40,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
         projectPath: ./example
-        uploadUrl: ${{ needs.create-release.outputs.RELEASE_UPLOAD_URL }}
+        tagName: example-v__VERSION__
+        releaseName: "Release example app v__VERSION__"
+        body: "See the assets to download this version and install."
+        draft: true
+        prerelease: false
