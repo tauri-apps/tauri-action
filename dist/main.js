@@ -36,6 +36,7 @@ const core = __importStar(require("@actions/core"));
 const execa_1 = __importDefault(require("execa"));
 const path_1 = require("path");
 const fs_1 = require("fs");
+const upload_release_assets_1 = __importDefault(require("./upload-release-assets"));
 function hasTauriDependency(root) {
     const packageJsonPath = path_1.join(root, 'package.json');
     if (fs_1.existsSync(packageJsonPath)) {
@@ -119,13 +120,20 @@ function run() {
             const projectPath = core.getInput('projectPath') || process.argv[2];
             const configPath = path_1.join(projectPath, core.getInput('configPath') || 'tauri.conf.json');
             const distPath = core.getInput('distPath');
+            const uploadUrl = core.getInput('uploadUrl');
+            const releaseId = core.getInput('releaseId');
+            if ((!!uploadUrl) !== (!!releaseId)) {
+                core.setFailed('To upload artifacts to a release, you need to set both `releaseId` and `uploadUrl`.');
+                return;
+            }
             let config = null;
             if (fs_1.existsSync(configPath)) {
                 config = JSON.parse(fs_1.readFileSync(configPath).toString());
             }
             const artifacts = yield buildProject(projectPath, [], { configPath: config, distPath });
-            console.log(`artifacts: ${artifacts}`);
-            core.setOutput('artifacts', artifacts);
+            if (uploadUrl && releaseId) {
+                yield upload_release_assets_1.default(uploadUrl, Number(releaseId), artifacts);
+            }
         }
         catch (error) {
             core.setFailed(error.message);
