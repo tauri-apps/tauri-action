@@ -18,7 +18,7 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     outputs:
-      RELEASE_UPLOAD_URL: ${{ steps.create_tauri_release.outputs.upload_url }}
+      RELEASE_UPLOAD_ID: ${{ steps.create_tauri_release.outputs.upload_id }}
 
     steps:
       - uses: actions/checkout@v2
@@ -75,7 +75,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
-        uploadUrl: ${{ needs.create-release.outputs.RELEASE_UPLOAD_URL }}
+        releaseId: ${{ needs.create-release.outputs.RELEASE_UPLOAD_ID }}
 ```
 
 ## Inputs

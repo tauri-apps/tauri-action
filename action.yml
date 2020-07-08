@@ -3,9 +3,7 @@ description: 'Provide a description here'
 author: 'Lucas Nogueira <lucas@tauri.studio>'
 inputs:
   releaseId:
-    description: 'The id of the release to upload the assets'
-  uploadUrl:
-    description: 'The URL for uploading assets to the release'
+    description: 'The id of the release to upload assets'
   projectPath:
     description: 'path to the root of the project that will be built'
     default: '.'

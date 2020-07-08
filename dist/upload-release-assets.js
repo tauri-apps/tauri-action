@@ -35,7 +35,7 @@ const core = __importStar(require("@actions/core"));
 const github_1 = require("@actions/github");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-function uploadAssets(uploadUrl, releaseId, assets) {
+function uploadAssets(releaseId, assets) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (process.env.GITHUB_TOKEN === undefined) {
@@ -47,13 +47,12 @@ function uploadAssets(uploadUrl, releaseId, assets) {
             for (const assetPath of assets) {
                 const headers = { 'content-type': 'application/zip', 'content-length': contentLength(assetPath) };
                 yield github.repos.uploadReleaseAsset({
-                    url: uploadUrl,
+                    release_id: releaseId,
                     headers,
                     name: path_1.default.basename(assetPath),
                     data: fs_1.default.readFileSync(assetPath).toString(),
-                    owner: github_1.context.repo.owner,
                     repo: github_1.context.repo.repo,
-                    release_id: Number(releaseId)
+                    owner: github_1.context.repo.owner
                 });
             }
         }

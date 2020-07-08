@@ -3,7 +3,7 @@ import { getOctokit, context } from '@actions/github'
 import fs from 'fs'
 import path from 'path'
 
-export default async function uploadAssets(uploadUrl: string, releaseId: number, assets: string[]) {
+export default async function uploadAssets(releaseId: number, assets: string[]) {
   try {
     if (process.env.GITHUB_TOKEN === undefined) {
       throw new Error('GITHUB_TOKEN is required')
@@ -18,13 +18,12 @@ export default async function uploadAssets(uploadUrl: string, releaseId: number,
       const headers = { 'content-type': 'application/zip', 'content-length': contentLength(assetPath) }
 
       await github.repos.uploadReleaseAsset({
-        url: uploadUrl,
+        release_id: releaseId,
         headers,
         name: path.basename(assetPath),
         data: fs.readFileSync(assetPath).toString(),
-        owner: context.repo.owner,
         repo: context.repo.repo,
-        release_id: Number(releaseId)
+        owner: context.repo.owner
       })
     }
   } catch (error) {
