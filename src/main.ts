@@ -39,7 +39,8 @@ function execCommand(command: string, { cwd }: { cwd: string | undefined }): Pro
 }
 
 interface CargoManifest {
-  package: { version: string, name: string }
+  package: { version: string, name: string, 'default-run': string }
+  bin: any
 }
 
 interface Application {
@@ -78,8 +79,12 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
           const packageJson = getPackageJson(root)
           const appName = packageJson ? (packageJson.displayName || packageJson.name) : 'app'
           const version = packageJson ? packageJson.version : '0.1.0'
+
+          console.log(`Replacing cargo manifest options package.name=${appName} and package.version=${version}`)
           cargoManifest.package.name = appName
           cargoManifest.package.version = version
+          delete cargoManifest.package['default-run']
+          delete cargoManifest.bin
           writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
 
           const app = {
@@ -151,6 +156,11 @@ async function run(): Promise<void> {
     }
 
     const artifacts = await buildProject(projectPath, false, { configPath: existsSync(configPath) ? configPath : null, distPath, iconPath })
+
+    if (artifacts.length === 0) {
+      throw new Error('No artifacts were found.')
+    }
+
     console.log(`Artifacts: ${artifacts}.`)
 
     let uploadUrl: string
