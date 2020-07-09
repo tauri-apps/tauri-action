@@ -5,6 +5,7 @@ import { join, resolve } from 'path'
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 import createRelease from './create-release'
+import toml from '@iarna/toml'
 
 function getPackageJson(root: string): any {
   const packageJsonPath = join(root, 'package.json')
@@ -37,6 +38,16 @@ function execCommand(command: string, { cwd }: { cwd: string | undefined }): Pro
   }).then()
 }
 
+interface CargoManifest {
+  package: { version: string, name: string }
+}
+
+interface Application {
+  runner: string
+  name: string
+  version: string
+}
+
 async function buildProject(root: string, debug: boolean, { configPath, distPath }: { configPath: string | null, distPath: string | null }): Promise<string[]> {
   return new Promise<string>((resolve) => {
     if (hasTauriDependency(root)) {
@@ -47,13 +58,33 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
     }
   })
     .then((runner: string) => {
-      if (existsSync(join(root, 'src-tauri'))) {
-        return runner
+      const manifestPath = join(root, 'src-tauri/Cargo.toml')
+      if (existsSync(manifestPath)) {
+        const cargoManifest = toml.parse(readFileSync(manifestPath).toString()) as any as CargoManifest
+        return {
+          runner,
+          name: cargoManifest.package.name,
+          version: cargoManifest.package.version
+        }
       } else {
-        return execCommand(`${runner} init`, { cwd: root }).then(() => runner)
+        return execCommand(`${runner} init`, { cwd: root }).then(() => {
+          const cargoManifest = toml.parse(readFileSync(manifestPath).toString()) as any as CargoManifest
+          const packageJson = getPackageJson(root)
+          const appName = packageJson ? (packageJson.displayName || packageJson.name) : 'app'
+          const version = packageJson ? packageJson.version : '0.1.0'
+          cargoManifest.package.name = appName
+          cargoManifest.package.version = version
+          writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
+
+          return {
+            runner,
+            name: appName,
+            version
+          }
+        })
       }
     })
-    .then((runner: string) => {
+    .then((app: Application) => {
       const tauriConfPath = join(root, 'src-tauri/tauri.conf.json')
       if (configPath !== null) {
         copyFileSync(configPath, tauriConfPath)
@@ -66,8 +97,8 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
       }
 
       const args = debug ? ['--debug'] : []
-      return execCommand(`${runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root }).then(() => {
-        const appName = 'app' // TODO read from Cargo.toml
+      return execCommand(`${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root }).then(() => {
+        const appName = app.name
         const artifactsPath = join(root, `src-tauri/target/${debug ? 'debug' : 'release'}`)
 
         switch (platform()) {
@@ -82,7 +113,7 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
             ]
           default:
             return [
-              join(artifactsPath, `bundle/deb/${appName}.deb`),
+              join(artifactsPath, `bundle/deb/${appName}_${app.version}_amd64.deb`),
               join(artifactsPath, `bundle/appimage/${appName}.AppImage`)
             ]
         }

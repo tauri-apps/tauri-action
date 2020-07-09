@@ -42,6 +42,6 @@ jobs:
         projectPath: ./example
         tagName: example-v__VERSION__
         releaseName: "Release example app v__VERSION__"
-        body: "See the assets to download this version and install."
-        draft: true
+        releaseBody: "See the assets to download this version and install."
+        releaseDraft: true
         prerelease: false

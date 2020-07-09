@@ -38,6 +38,7 @@ const path_1 = require("path");
 const fs_1 = require("fs");
 const upload_release_assets_1 = __importDefault(require("./upload-release-assets"));
 const create_release_1 = __importDefault(require("./create-release"));
+const toml_1 = __importDefault(require("@iarna/toml"));
 function getPackageJson(root) {
     const packageJsonPath = path_1.join(root, 'package.json');
     if (fs_1.existsSync(packageJsonPath)) {
@@ -77,14 +78,33 @@ function buildProject(root, debug, { configPath, distPath }) {
             }
         })
             .then((runner) => {
-            if (fs_1.existsSync(path_1.join(root, 'src-tauri'))) {
-                return runner;
+            const manifestPath = path_1.join(root, 'src-tauri/Cargo.toml');
+            if (fs_1.existsSync(manifestPath)) {
+                const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
+                return {
+                    runner,
+                    name: cargoManifest.package.name,
+                    version: cargoManifest.package.version
+                };
             }
             else {
-                return execCommand(`${runner} init`, { cwd: root }).then(() => runner);
+                return execCommand(`${runner} init`, { cwd: root }).then(() => {
+                    const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
+                    const packageJson = getPackageJson(root);
+                    const appName = packageJson ? (packageJson.displayName || packageJson.name) : 'app';
+                    const version = packageJson ? packageJson.version : '0.1.0';
+                    cargoManifest.package.name = appName;
+                    cargoManifest.package.version = version;
+                    fs_1.writeFileSync(manifestPath, toml_1.default.stringify(cargoManifest));
+                    return {
+                        runner,
+                        name: appName,
+                        version
+                    };
+                });
             }
         })
-            .then((runner) => {
+            .then((app) => {
             const tauriConfPath = path_1.join(root, 'src-tauri/tauri.conf.json');
             if (configPath !== null) {
                 fs_1.copyFileSync(configPath, tauriConfPath);
@@ -95,8 +115,8 @@ function buildProject(root, debug, { configPath, distPath }) {
                 fs_1.writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
             }
             const args = debug ? ['--debug'] : [];
-            return execCommand(`${runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root }).then(() => {
-                const appName = 'app'; // TODO read from Cargo.toml
+            return execCommand(`${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root }).then(() => {
+                const appName = app.name;
                 const artifactsPath = path_1.join(root, `src-tauri/target/${debug ? 'debug' : 'release'}`);
                 switch (os_1.platform()) {
                     case 'darwin':
@@ -110,7 +130,7 @@ function buildProject(root, debug, { configPath, distPath }) {
                         ];
                     default:
                         return [
-                            path_1.join(artifactsPath, `bundle/deb/${appName}.deb`),
+                            path_1.join(artifactsPath, `bundle/deb/${appName}_${app.version}_amd64.deb`),
                             path_1.join(artifactsPath, `bundle/appimage/${appName}.AppImage`)
                         ];
                 }
