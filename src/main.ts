@@ -181,8 +181,8 @@ async function run(): Promise<void> {
       templates.forEach(template => {
         const regex = new RegExp(template.key, 'g')
         tagName = tagName.replace(regex, template.value)
-        releaseName = releaseName.replace(releaseName, template.value)
-        body = body.replace(body, template.value)
+        releaseName = releaseName.replace(regex, template.value)
+        body = body.replace(regex, template.value)
       })
 
       const releaseData = await createRelease(tagName, releaseName, body, commitish || undefined, draft, prerelease)
