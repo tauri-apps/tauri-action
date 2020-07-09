@@ -136,7 +136,7 @@ function buildProject(root, debug, { configPath, distPath, iconPath }) {
                         ];
                     case 'win32':
                         return [
-                            path_1.join(artifactsPath, `bundle/${appName}.x64.msi`),
+                            path_1.join(artifactsPath, `${appName}.x64.msi`),
                         ];
                     default:
                         return [

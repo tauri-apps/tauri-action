@@ -42,7 +42,7 @@ const core = __importStar(require("@actions/core"));
 const github_1 = require("@actions/github");
 const fs_1 = __importDefault(require("fs"));
 function allReleases(github) {
-    const params = Object.assign({ per_page: 100 }, github_1.context);
+    const params = Object.assign({ per_page: 100 }, github_1.context.repo);
     return github.paginate.iterator(github.repos.listReleases.endpoint.merge(params));
 }
 function createRelease(tagName, releaseName, body, commitish, draft = true, prerelease = true) {
@@ -70,9 +70,11 @@ function createRelease(tagName, releaseName, body, commitish, draft = true, prer
             // you can't get a an existing draft by tag
             // so we must find one in the list of all releases
             if (draft) {
+                console.log(`Looking for a draft release with tag ${tagName}...`);
                 try {
                     for (var _b = __asyncValues(allReleases(github)), _c; _c = yield _b.next(), !_c.done;) {
                         const response = _c.value;
+                        console.log(response);
                         let releaseWithTag = response.data.find(release => release.tag_name === tagName);
                         if (releaseWithTag) {
                             release = releaseWithTag;
