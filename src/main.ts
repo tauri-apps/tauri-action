@@ -83,7 +83,7 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
           console.log(`Replacing cargo manifest options package.name=${appName} and package.version=${version}`)
           cargoManifest.package.name = appName
           cargoManifest.package.version = version
-          delete cargoManifest.package['default-run']
+          cargoManifest.package['default-run'] = appName
           delete cargoManifest.bin
           writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
 
