@@ -88,7 +88,7 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
             version
           }
           if (iconPath) {
-            return execCommand(`${runner} icon --icon ${join(root, iconPath)}`, { cwd: root }).then(() => app)
+            return execCommand(`${runner} icon --i ${join(root, iconPath)}`, { cwd: root }).then(() => app)
           }
 
           return app
