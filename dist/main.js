@@ -91,7 +91,7 @@ function buildProject(root, debug, { configPath, distPath, iconPath }) {
                 return execCommand(`${runner} init`, { cwd: root }).then(() => {
                     const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
                     const packageJson = getPackageJson(root);
-                    const appName = packageJson ? (packageJson.displayName || packageJson.name) : 'app';
+                    const appName = packageJson ? (packageJson.displayName || packageJson.name).replace(/ /g, '-') : 'app';
                     const version = packageJson ? packageJson.version : '0.1.0';
                     console.log(`Replacing cargo manifest options package.name=package.default-run=${appName} and package.version=${version}`);
                     cargoManifest.package.name = appName;
@@ -179,8 +179,8 @@ function run() {
                 templates.forEach(template => {
                     const regex = new RegExp(template.key, 'g');
                     tagName = tagName.replace(regex, template.value);
-                    releaseName = tagName.replace(releaseName, template.value);
-                    body = tagName.replace(body, template.value);
+                    releaseName = releaseName.replace(releaseName, template.value);
+                    body = body.replace(body, template.value);
                 });
                 const releaseData = yield create_release_1.default(tagName, releaseName, body, commitish || undefined, draft, prerelease);
                 uploadUrl = releaseData.uploadUrl;

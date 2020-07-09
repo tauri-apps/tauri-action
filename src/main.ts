@@ -81,7 +81,7 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
         return execCommand(`${runner} init`, { cwd: root }).then(() => {
           const cargoManifest = toml.parse(readFileSync(manifestPath).toString()) as any as CargoManifest
           const packageJson = getPackageJson(root)
-          const appName = packageJson ? (packageJson.displayName || packageJson.name) : 'app'
+          const appName = packageJson ? (packageJson.displayName || packageJson.name).replace(/ /g, '-') : 'app'
           const version = packageJson ? packageJson.version : '0.1.0'
 
           console.log(`Replacing cargo manifest options package.name=package.default-run=${appName} and package.version=${version}`)

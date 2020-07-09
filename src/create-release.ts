@@ -52,7 +52,6 @@ export default async function createRelease(tagName: string, releaseName: string
     if (draft) {
       console.log(`Looking for a draft release with tag ${tagName}...`)
       for await (const response of allReleases(github)) {
-        console.log(response)
         let releaseWithTag = response.data.find(release => release.tag_name === tagName);
         if (releaseWithTag) {
           release = releaseWithTag

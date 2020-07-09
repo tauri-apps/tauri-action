@@ -74,7 +74,6 @@ function createRelease(tagName, releaseName, body, commitish, draft = true, prer
                 try {
                     for (var _b = __asyncValues(allReleases(github)), _c; _c = yield _b.next(), !_c.done;) {
                         const response = _c.value;
-                        console.log(response);
                         let releaseWithTag = response.data.find(release => release.tag_name === tagName);
                         if (releaseWithTag) {
                             release = releaseWithTag;
@@ -90,6 +89,9 @@ function createRelease(tagName, releaseName, body, commitish, draft = true, prer
                     }
                     finally { if (e_1) throw e_1.error; }
                 }
+                if (!release) {
+                    throw new Error('release not found');
+                }
             }
             else {
                 const foundRelease = yield github.repos.getReleaseByTag({
@@ -102,7 +104,7 @@ function createRelease(tagName, releaseName, body, commitish, draft = true, prer
             }
         }
         catch (error) {
-            if (error.status === 404) {
+            if (error.status === 404 || error.message === 'release not found') {
                 console.log(`Couldn't find release with tag ${tagName}. Creating one.`);
                 const createdRelease = yield github.repos.createRelease({
                     owner,
