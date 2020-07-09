@@ -24,6 +24,8 @@ inputs:
     default: 'tauri.conf.json'
   distPath:
     description: 'path to the distributable folder with your index.html and JS/CSS'
+  iconPath:
+    description: 'path to the PNG icon to use as app icon, relative to the projectPath'
 outputs:
   releaseId:
     description: 'The ID of the created release'

@@ -70,6 +70,7 @@ jobs:
 | `releaseDraft`     |  false   | Whether the release to create is a draft or not                                             | bool   | false                 |
 | `prerelease`       |  false   | Whether the release to create is a prerelease or not                                        | bool   | false                 |
 | `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
+| `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
 
 ## Outputs
 

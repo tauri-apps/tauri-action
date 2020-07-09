@@ -48,7 +48,13 @@ interface Application {
   version: string
 }
 
-async function buildProject(root: string, debug: boolean, { configPath, distPath }: { configPath: string | null, distPath: string | null }): Promise<string[]> {
+interface BuildOptions {
+  configPath: string | null
+  distPath: string | null
+  iconPath: string | null
+}
+
+async function buildProject(root: string, debug: boolean, { configPath, distPath, iconPath }: BuildOptions): Promise<string[]> {
   return new Promise<string>((resolve) => {
     if (hasTauriDependency(root)) {
       const runner = usesYarn(root) ? 'yarn tauri' : 'npx tauri'
@@ -76,11 +82,16 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
           cargoManifest.package.version = version
           writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
 
-          return {
+          const app = {
             runner,
             name: appName,
             version
           }
+          if (iconPath) {
+            return execCommand(`${runner} icon --icon ${join(root, iconPath)}`, { cwd: root }).then(() => app)
+          }
+
+          return app
         })
       }
     })
@@ -126,6 +137,7 @@ async function run(): Promise<void> {
     const projectPath = resolve(process.cwd(), core.getInput('projectPath') || process.argv[2])
     const configPath = join(projectPath, core.getInput('configPath') || 'tauri.conf.json')
     const distPath = core.getInput('distPath')
+    const iconPath = core.getInput('iconPath')
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
@@ -138,7 +150,7 @@ async function run(): Promise<void> {
       throw new Error('`tag` is required along with `releaseName` when creating a release.')
     }
 
-    const artifacts = await buildProject(projectPath, false, { configPath: existsSync(configPath) ? configPath : null, distPath })
+    const artifacts = await buildProject(projectPath, false, { configPath: existsSync(configPath) ? configPath : null, distPath, iconPath })
 
     let uploadUrl: string
     if (tagName) {

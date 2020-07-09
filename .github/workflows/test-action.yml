@@ -40,6 +40,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
         projectPath: ./example
+        iconPath: ./icon.png
         tagName: example-v__VERSION__
         releaseName: "Release example app v__VERSION__"
         releaseBody: "See the assets to download this version and install."
