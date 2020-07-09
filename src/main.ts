@@ -132,7 +132,7 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
             ]
           case 'win32':
             return [
-              join(artifactsPath, `bundle/${appName}.msi`),
+              join(artifactsPath, `bundle/${appName}.x64.msi`),
             ]
           default:
             return [

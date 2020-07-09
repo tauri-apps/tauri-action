@@ -93,8 +93,14 @@ function buildProject(root, debug, { configPath, distPath, iconPath }) {
                     const packageJson = getPackageJson(root);
                     const appName = packageJson ? (packageJson.displayName || packageJson.name) : 'app';
                     const version = packageJson ? packageJson.version : '0.1.0';
+                    console.log(`Replacing cargo manifest options package.name=package.default-run=${appName} and package.version=${version}`);
                     cargoManifest.package.name = appName;
                     cargoManifest.package.version = version;
+                    cargoManifest.package['default-run'] = appName;
+                    if (cargoManifest.bin && cargoManifest.bin.length) {
+                        console.log(`Setting cargo manifest's bin[0].name to ${appName}`);
+                        cargoManifest.bin[0].name = appName;
+                    }
                     fs_1.writeFileSync(manifestPath, toml_1.default.stringify(cargoManifest));
                     const app = {
                         runner,
@@ -130,7 +136,7 @@ function buildProject(root, debug, { configPath, distPath, iconPath }) {
                         ];
                     case 'win32':
                         return [
-                            path_1.join(artifactsPath, `bundle/${appName}.msi`),
+                            path_1.join(artifactsPath, `bundle/${appName}.x64.msi`),
                         ];
                     default:
                         return [
@@ -159,6 +165,9 @@ function run() {
                 throw new Error('`tag` is required along with `releaseName` when creating a release.');
             }
             const artifacts = yield buildProject(projectPath, false, { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath, iconPath });
+            if (artifacts.length === 0) {
+                throw new Error('No artifacts were found.');
+            }
             console.log(`Artifacts: ${artifacts}.`);
             let uploadUrl;
             if (tagName) {
