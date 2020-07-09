@@ -60,6 +60,9 @@ export default async function createRelease(tagName: string, releaseName: string
           break
         }
       }
+      if (!release) {
+        throw new Error('release not found')
+      }
     } else {
       const foundRelease = await github.repos.getReleaseByTag({
         owner,
@@ -70,7 +73,7 @@ export default async function createRelease(tagName: string, releaseName: string
       console.log(`Found release with tag ${tagName}.`)
     }
   } catch (error) {
-    if (error.status === 404) {
+    if (error.status === 404 || error.message === 'release not found') {
       console.log(`Couldn't find release with tag ${tagName}. Creating one.`)
       const createdRelease = await github.repos.createRelease({
         owner,
