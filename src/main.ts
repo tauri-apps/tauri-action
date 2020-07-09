@@ -38,9 +38,13 @@ function execCommand(command: string, { cwd }: { cwd: string | undefined }): Pro
   }).then()
 }
 
+interface CargoManifestBin {
+  name: string
+}
+
 interface CargoManifest {
   package: { version: string, name: string, 'default-run': string }
-  bin: any
+  bin: CargoManifestBin[]
 }
 
 interface Application {
@@ -80,11 +84,14 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
           const appName = packageJson ? (packageJson.displayName || packageJson.name) : 'app'
           const version = packageJson ? packageJson.version : '0.1.0'
 
-          console.log(`Replacing cargo manifest options package.name=${appName} and package.version=${version}`)
+          console.log(`Replacing cargo manifest options package.name=package.default-run=${appName} and package.version=${version}`)
           cargoManifest.package.name = appName
           cargoManifest.package.version = version
           cargoManifest.package['default-run'] = appName
-          delete cargoManifest.bin
+          if (cargoManifest.bin && cargoManifest.bin.length) {
+            console.log(`Setting cargo manifest's bin[0].name to ${appName}`)
+            cargoManifest.bin[0].name = appName
+          }
           writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
 
           const app = {
