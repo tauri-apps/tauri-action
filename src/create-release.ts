@@ -8,6 +8,22 @@ interface Release {
   htmlUrl: string
 }
 
+interface GitHubRelease {
+  id: number;
+  upload_url: string;
+  html_url: string;
+  tag_name: string;
+  body: string;
+  target_commitish: string;
+}
+
+function allReleases(github: GitHub): AsyncIterableIterator<{ data: GitHubRelease[] }> {
+  const params = { per_page: 100, ...context };
+  return github.paginate.iterator(
+    github.repos.listReleases.endpoint.merge(params)
+  );
+}
+
 export default async function createRelease(tagName: string, releaseName: string, body?: string, commitish?: string, draft = true, prerelease = true): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required')
@@ -29,16 +45,32 @@ export default async function createRelease(tagName: string, releaseName: string
     }
   }
 
-  let release
+  let release: GitHubRelease | null = null
   try {
-    release = await github.repos.getReleaseByTag({
-      owner,
-      repo,
-      tag: tagName
-    })
+    // you can't get a an existing draft by tag
+    // so we must find one in the list of all releases
+    if (draft) {
+      for await (const response of allReleases(github)) {
+        let releaseWithTag = response.data.find(release => release.tag_name === tagName);
+        if (releaseWithTag) {
+          release = releaseWithTag
+          console.log(`Found draft release with tag ${tagName} on the release list.`)
+          break
+        }
+      }
+    } else {
+      const foundRelease = await github.repos.getReleaseByTag({
+        owner,
+        repo,
+        tag: tagName
+      })
+      release = foundRelease.data
+      console.log(`Found release with tag ${tagName}.`)
+    }
   } catch (error) {
     if (error.status === 404) {
-      release = await github.repos.createRelease({
+      console.log(`Couldn't find release with tag ${tagName}. Creating one.`)
+      const createdRelease = await github.repos.createRelease({
         owner,
         repo,
         tag_name: tagName,
@@ -48,6 +80,8 @@ export default async function createRelease(tagName: string, releaseName: string
         prerelease,
         target_commitish: commitish || context.sha
       })
+
+      release = createdRelease.data
     } else {
       console.log(
         `⚠️ Unexpected error fetching GitHub release for tag ${tagName}: ${error}`
@@ -56,14 +90,13 @@ export default async function createRelease(tagName: string, releaseName: string
     }
   }
 
-  // Get the ID, html_url, and upload URL for the created Release from the response
-  const {
-    data: { id, html_url: htmlUrl, upload_url: uploadUrl }
-  } = release
+  if (!release) {
+    throw new Error('Release not found or created.')
+  }
 
   return {
-    id,
-    htmlUrl,
-    uploadUrl
+    id: release.id,
+    uploadUrl: release.upload_url,
+    htmlUrl: release.html_url
   }
 }

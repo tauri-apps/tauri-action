@@ -151,6 +151,7 @@ async function run(): Promise<void> {
     }
 
     const artifacts = await buildProject(projectPath, false, { configPath: existsSync(configPath) ? configPath : null, distPath, iconPath })
+    console.log(`Artifacts: ${artifacts}.`)
 
     let uploadUrl: string
     if (tagName) {

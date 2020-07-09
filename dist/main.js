@@ -66,7 +66,7 @@ function execCommand(command, { cwd }) {
         env: { FORCE_COLOR: '0' },
     }).then();
 }
-function buildProject(root, debug, { configPath, distPath }) {
+function buildProject(root, debug, { configPath, distPath, iconPath }) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve) => {
             if (hasTauriDependency(root)) {
@@ -96,11 +96,15 @@ function buildProject(root, debug, { configPath, distPath }) {
                     cargoManifest.package.name = appName;
                     cargoManifest.package.version = version;
                     fs_1.writeFileSync(manifestPath, toml_1.default.stringify(cargoManifest));
-                    return {
+                    const app = {
                         runner,
                         name: appName,
                         version
                     };
+                    if (iconPath) {
+                        return execCommand(`${runner} icon --i ${path_1.join(root, iconPath)}`, { cwd: root }).then(() => app);
+                    }
+                    return app;
                 });
             }
         })
@@ -144,6 +148,7 @@ function run() {
             const projectPath = path_1.resolve(process.cwd(), core.getInput('projectPath') || process.argv[2]);
             const configPath = path_1.join(projectPath, core.getInput('configPath') || 'tauri.conf.json');
             const distPath = core.getInput('distPath');
+            const iconPath = core.getInput('iconPath');
             let tagName = core.getInput('tagName').replace('refs/tags/', '');
             let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
             let body = core.getInput('releaseBody');
@@ -153,7 +158,8 @@ function run() {
             if (Boolean(tagName) !== Boolean(releaseName)) {
                 throw new Error('`tag` is required along with `releaseName` when creating a release.');
             }
-            const artifacts = yield buildProject(projectPath, false, { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath });
+            const artifacts = yield buildProject(projectPath, false, { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath, iconPath });
+            console.log(`Artifacts: ${artifacts}.`);
             let uploadUrl;
             if (tagName) {
                 const packageJson = getPackageJson(projectPath);
