@@ -2,7 +2,7 @@ name: covector version or publish
 on:
   push:
     branches:
-    - main
+    - dev
 
 jobs:
   covector:
