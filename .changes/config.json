@@ -10,10 +10,10 @@
     "action": {
       "path": "./",
       "manager": "javascript",
+      "getPublishedVersion": "git tag v${ pkgFile.version } 2> OUT= || echo ${ pkgFile.version }",
       "publish": [
         "git tag v${ pkgFile.versionMajor } -f",
         "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
-        "git tag v${ pkgFile.version }",
         "git push --tags -f"
       ]
     }
