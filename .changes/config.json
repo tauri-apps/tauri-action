@@ -1,5 +1,5 @@
 {
-  "gitSiteUrl": "https://github.com/lucasfernog/tauri-action/",
+  "gitSiteUrl": "https://github.com/tauri-apps/tauri-action/",
   "pkgManagers": {
     "javascript": {
       "version": true,
