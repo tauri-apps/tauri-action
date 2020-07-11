@@ -1,0 +1,20 @@
+{
+  "gitSiteUrl": "https://github.com/lucasfernog/tauri-action/",
+  "pkgManagers": {
+    "javascript": {
+      "version": true,
+      "publish": true
+    }
+  },
+  "packages": {
+    "action": {
+      "path": "./",
+      "manager": "javascript",
+      "publish": [
+        "git tag ${ pkg.pkg }-v${ pkgFile.versionMajor } -f",
+        "git tag ${ pkg.pkg }-v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
+        "git push --tags -f"
+      ]
+    }
+  }
+}
