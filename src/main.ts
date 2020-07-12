@@ -57,13 +57,17 @@ interface BuildOptions {
   configPath: string | null
   distPath: string | null
   iconPath: string | null
+  npmScript: string | null
 }
 
-async function buildProject(root: string, debug: boolean, { configPath, distPath, iconPath }: BuildOptions): Promise<string[]> {
+async function buildProject(root: string, debug: boolean, { configPath, distPath, iconPath, npmScript }: BuildOptions): Promise<string[]> {
   return new Promise<string>((resolve) => {
     if (hasTauriDependency(root)) {
-      const runner = usesYarn(root) ? 'yarn tauri' : 'npx tauri'
-      resolve(runner)
+      if (npmScript) {
+        resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
+      } else {
+        resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
+      }
     } else {
       execCommand('npm install -g tauri', { cwd: undefined }).then(() => resolve('tauri'))
     }
@@ -151,6 +155,7 @@ async function run(): Promise<void> {
     const distPath = core.getInput('distPath')
     const iconPath = core.getInput('iconPath')
     const includeDebug = core.getInput('includeDebug') === 'true'
+    const npmScript = core.getInput('npmScript')
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '')
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '')
@@ -163,7 +168,7 @@ async function run(): Promise<void> {
       throw new Error('`tag` is required along with `releaseName` when creating a release.')
     }
 
-    const options = { configPath: existsSync(configPath) ? configPath : null, distPath, iconPath }
+    const options: BuildOptions = { configPath: existsSync(configPath) ? configPath : null, distPath, iconPath, npmScript }
     const artifacts = await buildProject(projectPath, false, options)
     if (includeDebug) {
       const debugArtifacts = await buildProject(projectPath, true, options)

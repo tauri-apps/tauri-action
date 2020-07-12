@@ -72,6 +72,7 @@ jobs:
 | `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
 | `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
 | `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   |                       |
+| `npmScript`        |  false   | the package.json script to run to build the Tauri app                                       | string |                       |
 
 ## Outputs
 

@@ -28,6 +28,8 @@ inputs:
     description: 'path to the PNG icon to use as app icon, relative to the projectPath'
   includeDebug:
     description: 'whether to include a debug build or not'
+  npmScript:
+    description: 'the package.json script to run to build the Tauri app'
 outputs:
   releaseId:
     description: 'The ID of the created release'
