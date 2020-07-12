@@ -2,8 +2,8 @@ name: 'tauri-action'
 description: 'Provide a description here'
 author: 'Lucas Nogueira <lucas@tauri.studio>'
 inputs:
-  uploadUrl:
-    description: 'The URL for uploading assets to the release'
+  releaseId:
+    description: 'The id of the release to upload artifacts as release assets'
   tagName:
     description: 'The tag name of the release to create'
   releaseName:

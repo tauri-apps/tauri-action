@@ -202,7 +202,7 @@ async function run(): Promise<void> {
       core.setOutput('releaseId', releaseData.id)
       core.setOutput('releaseHtmlUrl', releaseData.htmlUrl)
     } else {
-      releaseId = Number(core.getInput('uploadUrl') || 0)
+      releaseId = Number(core.getInput('releaseId') || 0)
     }
 
     if (releaseId) {

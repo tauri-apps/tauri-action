@@ -200,7 +200,7 @@ function run() {
                 core.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
             }
             else {
-                releaseId = Number(core.getInput('uploadUrl') || 0);
+                releaseId = Number(core.getInput('releaseId') || 0);
             }
             if (releaseId) {
                 if (os_1.platform() === 'darwin') {
