@@ -1,4 +1,4 @@
-name: 'Your name here'
+name: 'tauri-action'
 description: 'Provide a description here'
 author: 'Lucas Nogueira <lucas@tauri.studio>'
 inputs:
