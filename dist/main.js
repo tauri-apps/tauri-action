@@ -66,12 +66,16 @@ function execCommand(command, { cwd }) {
         env: { FORCE_COLOR: '0' },
     }).then();
 }
-function buildProject(root, debug, { configPath, distPath, iconPath }) {
+function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve) => {
             if (hasTauriDependency(root)) {
-                const runner = usesYarn(root) ? 'yarn tauri' : 'npx tauri';
-                resolve(runner);
+                if (npmScript) {
+                    resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`);
+                }
+                else {
+                    resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri');
+                }
             }
             else {
                 execCommand('npm install -g tauri', { cwd: undefined }).then(() => resolve('tauri'));
@@ -156,6 +160,7 @@ function run() {
             const distPath = core.getInput('distPath');
             const iconPath = core.getInput('iconPath');
             const includeDebug = core.getInput('includeDebug') === 'true';
+            const npmScript = core.getInput('npmScript');
             let tagName = core.getInput('tagName').replace('refs/tags/', '');
             let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
             let body = core.getInput('releaseBody');
@@ -165,7 +170,7 @@ function run() {
             if (Boolean(tagName) !== Boolean(releaseName)) {
                 throw new Error('`tag` is required along with `releaseName` when creating a release.');
             }
-            const options = { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath, iconPath };
+            const options = { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath, iconPath, npmScript };
             const artifacts = yield buildProject(projectPath, false, options);
             if (includeDebug) {
                 const debugArtifacts = yield buildProject(projectPath, true, options);
