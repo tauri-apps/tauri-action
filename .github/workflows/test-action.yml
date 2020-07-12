@@ -1,5 +1,6 @@
 name: "test-action"
 on:
+  pull_request:
   push:
     branches: [dev]
 
@@ -46,7 +47,6 @@ jobs:
         releaseBody: "See the assets to download this version and install."
         releaseDraft: true
         prerelease: false
-        includeDebug: true
     - uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
