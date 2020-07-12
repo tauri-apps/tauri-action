@@ -45,7 +45,7 @@ jobs:
         yarn build
     - name: install app dependencies and build it
       run: yarn && yarn build
-    - uses: tauri-apps/tauri-action
+    - uses: tauri-apps/tauri-action@v0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
@@ -71,6 +71,7 @@ jobs:
 | `prerelease`       |  false   | Whether the release to create is a prerelease or not                                        | bool   | false                 |
 | `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
 | `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
+| `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   |                       |
 
 ## Outputs
 

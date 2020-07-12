@@ -155,6 +155,7 @@ function run() {
             const configPath = path_1.join(projectPath, core.getInput('configPath') || 'tauri.conf.json');
             const distPath = core.getInput('distPath');
             const iconPath = core.getInput('iconPath');
+            const includeDebug = core.getInput('includeDebug') === 'true';
             let tagName = core.getInput('tagName').replace('refs/tags/', '');
             let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
             let body = core.getInput('releaseBody');
@@ -164,7 +165,12 @@ function run() {
             if (Boolean(tagName) !== Boolean(releaseName)) {
                 throw new Error('`tag` is required along with `releaseName` when creating a release.');
             }
-            const artifacts = yield buildProject(projectPath, false, { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath, iconPath });
+            const options = { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath, iconPath };
+            const artifacts = yield buildProject(projectPath, false, options);
+            if (includeDebug) {
+                const debugArtifacts = yield buildProject(projectPath, true, options);
+                artifacts.push(...debugArtifacts);
+            }
             if (artifacts.length === 0) {
                 throw new Error('No artifacts were found.');
             }
@@ -179,8 +185,8 @@ function run() {
                 templates.forEach(template => {
                     const regex = new RegExp(template.key, 'g');
                     tagName = tagName.replace(regex, template.value);
-                    releaseName = releaseName.replace(releaseName, template.value);
-                    body = body.replace(body, template.value);
+                    releaseName = releaseName.replace(regex, template.value);
+                    body = body.replace(regex, template.value);
                 });
                 const releaseData = yield create_release_1.default(tagName, releaseName, body, commitish || undefined, draft, prerelease);
                 uploadUrl = releaseData.uploadUrl;

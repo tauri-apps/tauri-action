@@ -1,4 +1,3 @@
-import * as core from '@actions/core'
 import { GitHub } from '@actions/github'
 import fs from 'fs'
 import path from 'path'
@@ -16,10 +15,12 @@ export default async function uploadAssets(uploadUrl: string, assets: string[]) 
   for (const assetPath of assets) {
     const headers = { 'content-type': 'application/zip', 'content-length': contentLength(assetPath) }
 
+    const ext = path.extname(assetPath)
+    const filename = path.basename(assetPath).replace(ext, '')
     await github.repos.uploadReleaseAsset({
       url: uploadUrl,
       headers,
-      name: path.basename(assetPath),
+      name: path.dirname(assetPath).endsWith('debug') ? `${filename}-debug${ext}` : `${filename}${ext}`,
       data: fs.readFileSync(assetPath)
     })
   }
