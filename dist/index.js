@@ -11179,10 +11179,12 @@ function uploadAssets(uploadUrl, assets) {
             const headers = { 'content-type': 'application/zip', 'content-length': contentLength(assetPath) };
             const ext = path_1.default.extname(assetPath);
             const filename = path_1.default.basename(assetPath).replace(ext, '');
+            const assetName = path_1.default.dirname(assetPath).endsWith('debug') ? `${filename}-debug${ext}` : `${filename}${ext}`;
+            console.log(`Uploading ${assetName}...`);
             yield github.repos.uploadReleaseAsset({
                 url: uploadUrl,
                 headers,
-                name: path_1.default.dirname(assetPath).endsWith('debug') ? `${filename}-debug${ext}` : `${filename}${ext}`,
+                name: assetName,
                 data: fs_1.default.readFileSync(assetPath)
             });
         }
@@ -12380,17 +12382,13 @@ function run() {
             }
             if (uploadUrl) {
                 if (os_1.platform() === 'darwin') {
-                    let index = -1;
                     let i = 0;
                     for (const artifact of artifacts) {
                         if (artifact.endsWith('.app')) {
-                            index = i;
                             yield execCommand(`tar -czf ${artifact}.tgz ${artifact}`, { cwd: undefined });
+                            artifacts[i] += '.tgz';
                         }
                         i++;
-                    }
-                    if (index >= 0) {
-                        artifacts[index] = artifacts[index] + '.tgz';
                     }
                 }
                 yield upload_release_assets_1.default(uploadUrl, artifacts);

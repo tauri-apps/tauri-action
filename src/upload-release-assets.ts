@@ -17,10 +17,12 @@ export default async function uploadAssets(uploadUrl: string, assets: string[]) 
 
     const ext = path.extname(assetPath)
     const filename = path.basename(assetPath).replace(ext, '')
+    const assetName = path.dirname(assetPath).endsWith('debug') ? `${filename}-debug${ext}` : `${filename}${ext}`
+    console.log(`Uploading ${assetName}...`)
     await github.repos.uploadReleaseAsset({
       url: uploadUrl,
       headers,
-      name: path.dirname(assetPath).endsWith('debug') ? `${filename}-debug${ext}` : `${filename}${ext}`,
+      name: assetName,
       data: fs.readFileSync(assetPath)
     })
   }

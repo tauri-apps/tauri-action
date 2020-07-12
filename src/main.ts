@@ -207,17 +207,13 @@ async function run(): Promise<void> {
 
     if (uploadUrl) {
       if (platform() === 'darwin') {
-        let index = -1
         let i = 0
         for (const artifact of artifacts) {
           if (artifact.endsWith('.app')) {
-            index = i
             await execCommand(`tar -czf ${artifact}.tgz ${artifact}`, { cwd: undefined })
+            artifacts[i] += '.tgz'
           }
           i++
-        }
-        if (index >= 0) {
-          artifacts[index] = artifacts[index] + '.tgz'
         }
       }
       await uploadReleaseAssets(uploadUrl, artifacts)
