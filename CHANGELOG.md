@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5]
+
+-   Adds support to tauri listed as a dev dependency on package.json.
+    -   [a14bbef](https://github.com/tauri-apps/tauri-action/commit/a14bbefa2fd178a3a3e5621316aeda4124b91440) feat(action) add support to devDependencies' tauri on 2020-07-12
+-   Fixes the macOS .app compression to tar when using includeDebug.
+    -   [52c88ce](https://github.com/tauri-apps/tauri-action/commit/52c88ce6cfcd8e951b027cd1aadba562c93befe7) fix(action) macOS .app compression with `includeDir`= true on 2020-07-12
+
 ## [0.0.4]
 
 -   Fixes the action build script.
