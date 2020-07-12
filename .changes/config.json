@@ -10,7 +10,7 @@
     "action": {
       "path": "./",
       "manager": "javascript",
-      "preversion": "yarn build",
+      "preversion": ["yarn", "yarn build"],
       "getPublishedVersion": "git tag v${ pkgFile.version } 2> OUT= || echo ${ pkgFile.version }",
       "publish": [
         "git tag v${ pkgFile.versionMajor } -f",
