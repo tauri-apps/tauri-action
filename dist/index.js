@@ -12228,7 +12228,7 @@ function getPackageJson(root) {
 }
 function hasTauriDependency(root) {
     const packageJson = getPackageJson(root);
-    return packageJson && packageJson.dependencies && packageJson.dependencies.tauri;
+    return packageJson && ((packageJson.dependencies && packageJson.dependencies.tauri) || ((packageJson.devDependencies && packageJson.devDependencies.tauri)));
 }
 function usesYarn(root) {
     return fs_1.existsSync(path_1.join(root, 'yarn.lock'));

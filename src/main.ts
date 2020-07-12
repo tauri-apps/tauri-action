@@ -19,7 +19,7 @@ function getPackageJson(root: string): any {
 
 function hasTauriDependency(root: string): boolean {
   const packageJson = getPackageJson(root)
-  return packageJson && packageJson.dependencies && packageJson.dependencies.tauri
+  return packageJson && ((packageJson.dependencies && packageJson.dependencies.tauri) || ((packageJson.devDependencies && packageJson.devDependencies.tauri)))
 }
 
 function usesYarn(root: string): boolean {
