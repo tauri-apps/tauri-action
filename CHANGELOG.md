@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.6]
+
+-   Fixes the includeDebug input usage.
+    -   [58d7b86](https://github.com/tauri-apps/tauri-action/commit/58d7b8650a12ffc4a11729ce93d0072e22bc4aaa) fix(action) includeDebug usage on 2020-07-12
+-   Update @actions/github package version to v4.
+    -   [2e93aab](https://github.com/tauri-apps/tauri-action/commit/2e93aabc2a786719f0316d0677738d6a9ad06801) refactor(action) update @actions/github to v4 ([#13](https://github.com/tauri-apps/tauri-action/pull/13)) on 2020-07-12
+
 ## [0.0.5]
 
 -   Adds support to tauri listed as a dev dependency on package.json.
