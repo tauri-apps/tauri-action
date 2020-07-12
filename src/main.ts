@@ -181,7 +181,7 @@ async function run(): Promise<void> {
 
     console.log(`Artifacts: ${artifacts}.`)
 
-    let uploadUrl: string
+    let releaseId: number
     if (tagName) {
       const packageJson = getPackageJson(projectPath)
       const templates = [{
@@ -197,15 +197,15 @@ async function run(): Promise<void> {
       })
 
       const releaseData = await createRelease(tagName, releaseName, body, commitish || undefined, draft, prerelease)
-      uploadUrl = releaseData.uploadUrl
-      core.setOutput('releaseUploadUrl', uploadUrl)
+      releaseId = releaseData.id
+      core.setOutput('releaseUploadUrl', releaseData.uploadUrl)
       core.setOutput('releaseId', releaseData.id)
       core.setOutput('releaseHtmlUrl', releaseData.htmlUrl)
     } else {
-      uploadUrl = core.getInput('uploadUrl')
+      releaseId = Number(core.getInput('releaseId') || 0)
     }
 
-    if (uploadUrl) {
+    if (releaseId) {
       if (platform() === 'darwin') {
         let i = 0
         for (const artifact of artifacts) {
@@ -216,7 +216,7 @@ async function run(): Promise<void> {
           i++
         }
       }
-      await uploadReleaseAssets(uploadUrl, artifacts)
+      await uploadReleaseAssets(releaseId, artifacts)
     }
   } catch (error) {
     core.setFailed(error.message)

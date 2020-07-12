@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
-import { GitHub, context } from '@actions/github'
+import { getOctokit, context } from '@actions/github'
+import { GitHub } from '@actions/github/lib/utils'
 import fs from 'fs'
 
 interface Release {
@@ -17,7 +18,7 @@ interface GitHubRelease {
   target_commitish: string
 }
 
-function allReleases(github: GitHub): AsyncIterableIterator<{ data: GitHubRelease[] }> {
+function allReleases(github: InstanceType<typeof GitHub>): AsyncIterableIterator<{ data: GitHubRelease[] }> {
   const params = { per_page: 100, ...context.repo }
   return github.paginate.iterator(
     github.repos.listReleases.endpoint.merge(params)
@@ -30,7 +31,7 @@ export default async function createRelease(tagName: string, releaseName: string
   }
 
   // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-  const github = new GitHub(process.env.GITHUB_TOKEN)
+  const github = getOctokit(process.env.GITHUB_TOKEN)
 
   // Get owner and repo from context of payload that triggered the action
   const { owner, repo } = context.repo
