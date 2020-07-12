@@ -25,10 +25,12 @@ function uploadAssets(uploadUrl, assets) {
         const contentLength = (filePath) => fs_1.default.statSync(filePath).size;
         for (const assetPath of assets) {
             const headers = { 'content-type': 'application/zip', 'content-length': contentLength(assetPath) };
+            const ext = path_1.default.extname(assetPath);
+            const filename = path_1.default.basename(assetPath).replace(ext, '');
             yield github.repos.uploadReleaseAsset({
                 url: uploadUrl,
                 headers,
-                name: path_1.default.basename(assetPath),
+                name: path_1.default.dirname(assetPath).endsWith('debug') ? `${filename}-debug${ext}` : `${filename}${ext}`,
                 data: fs_1.default.readFileSync(assetPath)
             });
         }

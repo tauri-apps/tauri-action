@@ -3,22 +3,22 @@ import { GitHub, context } from '@actions/github'
 import fs from 'fs'
 
 interface Release {
-  id: number,
-  uploadUrl: string,
+  id: number
+  uploadUrl: string
   htmlUrl: string
 }
 
 interface GitHubRelease {
-  id: number;
-  upload_url: string;
-  html_url: string;
-  tag_name: string;
-  body: string;
-  target_commitish: string;
+  id: number
+  upload_url: string
+  html_url: string
+  tag_name: string
+  body: string
+  target_commitish: string
 }
 
 function allReleases(github: GitHub): AsyncIterableIterator<{ data: GitHubRelease[] }> {
-  const params = { per_page: 100, ...context.repo };
+  const params = { per_page: 100, ...context.repo }
   return github.paginate.iterator(
     github.repos.listReleases.endpoint.merge(params)
   );
@@ -52,7 +52,7 @@ export default async function createRelease(tagName: string, releaseName: string
     if (draft) {
       console.log(`Looking for a draft release with tag ${tagName}...`)
       for await (const response of allReleases(github)) {
-        let releaseWithTag = response.data.find(release => release.tag_name === tagName);
+        let releaseWithTag = response.data.find(release => release.tag_name === tagName)
         if (releaseWithTag) {
           release = releaseWithTag
           console.log(`Found draft release with tag ${tagName} on the release list.`)
@@ -89,8 +89,8 @@ export default async function createRelease(tagName: string, releaseName: string
     } else {
       console.log(
         `⚠️ Unexpected error fetching GitHub release for tag ${tagName}: ${error}`
-      );
-      throw error;
+      )
+      throw error
     }
   }
 

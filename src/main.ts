@@ -1,4 +1,4 @@
-import { platform } from 'os';
+import { platform } from 'os'
 import * as core from '@actions/core'
 import execa from 'execa'
 import { join, resolve } from 'path'
@@ -150,19 +150,25 @@ async function run(): Promise<void> {
     const configPath = join(projectPath, core.getInput('configPath') || 'tauri.conf.json')
     const distPath = core.getInput('distPath')
     const iconPath = core.getInput('iconPath')
+    const includeDebug = core.getInput('includeDebug') === 'true'
 
-    let tagName = core.getInput('tagName').replace('refs/tags/', '');
-    let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
-    let body = core.getInput('releaseBody');
-    const draft = core.getInput('releaseDraft') === 'true';
-    const prerelease = core.getInput('prerelease') === 'true';
-    const commitish = core.getInput('releaseCommitish') || null;
+    let tagName = core.getInput('tagName').replace('refs/tags/', '')
+    let releaseName = core.getInput('releaseName').replace('refs/tags/', '')
+    let body = core.getInput('releaseBody')
+    const draft = core.getInput('releaseDraft') === 'true'
+    const prerelease = core.getInput('prerelease') === 'true'
+    const commitish = core.getInput('releaseCommitish') || null
 
     if (Boolean(tagName) !== Boolean(releaseName)) {
       throw new Error('`tag` is required along with `releaseName` when creating a release.')
     }
 
-    const artifacts = await buildProject(projectPath, false, { configPath: existsSync(configPath) ? configPath : null, distPath, iconPath })
+    const options = { configPath: existsSync(configPath) ? configPath : null, distPath, iconPath }
+    const artifacts = await buildProject(projectPath, false, options)
+    if (includeDebug) {
+      const debugArtifacts = await buildProject(projectPath, true, options)
+      artifacts.push(...debugArtifacts)
+    }
 
     if (artifacts.length === 0) {
       throw new Error('No artifacts were found.')
