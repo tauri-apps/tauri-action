@@ -4,13 +4,8 @@
   "description": "Tauri GitHub Action",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "format": "prettier --write **/*.ts",
-    "format-check": "prettier --check **/*.ts",
-    "lint": "eslint src/**/*.ts",
-    "pack": "ncc build",
-    "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
+    "build": "tsc && ncc build dist/main.js -o dist",
+    "test": "jest"
   },
   "repository": {
     "type": "git",

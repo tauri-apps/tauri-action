@@ -39,4 +39,4 @@ outputs:
     description: 'The URL for uploading assets to the created release'
 runs:
   using: 'node12'
-  main: 'dist/main.js'
+  main: 'dist/index.js'
