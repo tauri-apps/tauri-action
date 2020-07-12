@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.4]
+
+-   Fixes the action build script.
+    -   [981f369](https://github.com/tauri-apps/tauri-action/commit/981f3691972cad500eaa5a2b7a1c8c30e8537c79) fix(action) build script on 2020-07-12
+
 ## [0.0.3]
 
 -   Build action on preversion so we can't forget to build when a version is updated.
