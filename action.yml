@@ -1,5 +1,7 @@
 name: 'tauri-action'
-description: 'Provide a description here'
+description: 'Build tauri binaries for MacOS, Windows and Linux'
+icon: 'download-cloud'
+color: 'blue'
 author: 'Lucas Nogueira <lucas@tauri.studio>'
 inputs:
   releaseId:
