@@ -131,17 +131,20 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
         switch (platform()) {
           case 'darwin':
             return [
-              join(artifactsPath, `bundle/dmg/${appName}.dmg`),
-              join(artifactsPath, `bundle/osx/${appName}.app`)
+              join(artifactsPath, `bundle/dmg/${appName}_${app.version}_${process.arch}.dmg`),
+              join(artifactsPath, `bundle/osx/${appName}_${app.version}_${process.arch}.app`)
             ]
           case 'win32':
             return [
-              join(artifactsPath, `${appName}.x64.msi`),
+              join(artifactsPath, `${appName}_${app.version}_${process.arch}.msi`),
             ]
           default:
+            const arch = process.arch === 'x64'
+              ? 'amd64'
+              : (process.arch === 'x32' ? 'i386' : process.arch)
             return [
-              join(artifactsPath, `bundle/deb/${appName}_${app.version}_amd64.deb`),
-              join(artifactsPath, `bundle/appimage/${appName}.AppImage`)
+              join(artifactsPath, `bundle/deb/${appName}_${app.version}_${arch}.deb`),
+              join(artifactsPath, `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`)
             ]
         }
       }).then(paths => paths.filter(p => existsSync(p)))
