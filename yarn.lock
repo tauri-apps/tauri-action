@@ -1771,10 +1771,10 @@ eslint-plugin-eslint-comments@>=3.0.1:
     escape-string-regexp "^1.0.5"
     ignore "^5.0.5"
 
-eslint-plugin-github@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-github/-/eslint-plugin-github-4.0.1.tgz#949b5425cd849d197695f7055c6ae9f2fbeec51b"
-  integrity sha512-DkiME1DhBSd4ZarVKiF2qnlSg934UMiMFpo0FKHahSxeiCiAR1pd8Xfv/a64TDxs/mfLwuBZZXf/BM5UsWNyEg==
+eslint-plugin-github@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-github/-/eslint-plugin-github-4.1.1.tgz#d3e38dbe3610043066edca622eb944aa02b09aee"
+  integrity sha512-MzCh4P4zVvR/13AHtumzZ3znq0cbUE7lXehyBEpFURD/EHdx/+7qW+0c+ySTrteImpX9LGLJFTYNtu10BifkbQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" ">=2.25.0"
     "@typescript-eslint/parser" ">=2.25.0"
