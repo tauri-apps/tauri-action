@@ -294,18 +294,20 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@covector/apply@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@covector/apply/-/apply-0.2.0.tgz#31d08128b85cf6c9d787c1fe4bcd44e3a36ef4cb"
-  integrity sha512-udd/nsXzPciTbEv0+zrrTQUiJFxkUhpI+B9sh2q1sYJKobrzNhpQOQ4s1J4mq++CAvSFSEOuvASx54ZlMwV79A==
+"@covector/apply@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@covector/apply/-/apply-0.2.1.tgz#213de74b8caed53ca547500108b640da2114100c"
+  integrity sha512-5K7RcmxU6zr8eGshP2dshWi3bOuwoCTWoqOlm6C35b7xNPtxdg9tlMlIC5nlOwH5ocRlphTSDTyuTSO/rccXBw==
   dependencies:
+    lodash.clonedeep "^4.5.0"
     semver "^7.3.2"
 
-"@covector/assemble@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@covector/assemble/-/assemble-0.2.2.tgz#259cb23f23e642e499fe4dadd1eecf066e0d8bb9"
-  integrity sha512-iqyJiNxDc2Q6lp4HhMitO48/UGzwfyj9HNONw5xb1OOOD6zw7hjLjbdp7rYSnPVQn0Zz9/OC1ME3MBk1t4U+Vg==
+"@covector/assemble@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@covector/assemble/-/assemble-0.3.0.tgz#354ea6cb941d0943477de1b3d155645f1cfd1372"
+  integrity sha512-DW0VMsZQo/OFdIeulGpltYysHqwPQFOb+DHQr2MowI5wzPjEV2apgfPhvWpJDz2ogTI17v9NNEWpxZSgOP8WRw==
   dependencies:
+    lodash.clonedeep "^4.5.0"
     lodash.template "^4.5.0"
     remark-frontmatter "^2.0.0"
     remark-parse "^8.0.2"
@@ -325,10 +327,10 @@
     to-vfile "^6.1.0"
     unified "^9.0.0"
 
-"@covector/command@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@covector/command/-/command-0.0.2.tgz#35f169b712e9d32f38b6d787af42443e25ecee83"
-  integrity sha512-xqat8uxMAdSQHBdJHgDq9GN+qXIwY1G4lGzMbyHEIJ2ZWQSrSriOIIH0uaDxvNA1ubseBq6TUbNPhu+VCn1zzg==
+"@covector/command@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@covector/command/-/command-0.1.0.tgz#14c122cf44f2534a196eb610fe609c8ebb4b7d75"
+  integrity sha512-f9JNcrsXbjAdHVJMZbPwmf2uFN3owHPAd5k5gIzOiPe9zMHVAOM9PkyRUaCHnL8Htk9A/Gzgc+2AWFFLZOt3Dw==
   dependencies:
     "@effection/events" "^0.7.6"
     effection "^0.7.0"
@@ -1454,15 +1456,15 @@ core-util-is@1.0.2:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-covector@0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/covector/-/covector-0.2.3.tgz#9fc0067b1266dc00997c97ce58bbefcb70025c51"
-  integrity sha512-RCW/Xi7YadzSuHArZXrM1DxOel+AjDMSdPycyj0efpGLwzj5H/YbyU8NaXajoJePBZbSG6QTFX9vIb8FcPhYgw==
+covector@0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/covector/-/covector-0.3.1.tgz#982678943610626fd607b359a70271fd04aa1302"
+  integrity sha512-OwVhpRdlBmSsrOeKqeBMN6sJUIBC//Rk84/IkUI8FO1+n/HvObc3vrEZ41nLTYW1aDlmeNxNpCnZ8joF7IwjlA==
   dependencies:
-    "@covector/apply" "0.2.0"
-    "@covector/assemble" "0.2.2"
+    "@covector/apply" "0.2.1"
+    "@covector/assemble" "0.3.0"
     "@covector/changelog" "0.2.1"
-    "@covector/command" "0.0.2"
+    "@covector/command" "0.1.0"
     "@covector/files" "0.2.0"
     "@effection/events" "0.7.5"
     "@effection/node" "0.7.0"
@@ -3340,6 +3342,11 @@ lodash._reinterpolate@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
   integrity sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=
+
+lodash.clonedeep@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
+  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
 
 lodash.memoize@4.x:
   version "4.1.2"
