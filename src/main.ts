@@ -82,20 +82,14 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
           version: cargoManifest.package.version
         }
       } else {
-        return execCommand(`${runner} init`, { cwd: root }).then(() => {
-          const cargoManifest = toml.parse(readFileSync(manifestPath).toString()) as any as CargoManifest
-          const packageJson = getPackageJson(root)
-          const appName = packageJson ? (packageJson.displayName || packageJson.name).replace(/ /g, '-') : 'app'
+        const cargoManifest = toml.parse(readFileSync(manifestPath).toString()) as any as CargoManifest
+        const packageJson = getPackageJson(root)
+        const appName = packageJson ? (packageJson.displayName || packageJson.name).replace(/ /g, '-') : 'app'
+        return execCommand(`${runner} init --ci --app-name ${appName}`, { cwd: root }).then(() => {
           const version = packageJson ? packageJson.version : '0.1.0'
 
-          console.log(`Replacing cargo manifest options package.name=package.default-run=${appName} and package.version=${version}`)
-          cargoManifest.package.name = appName
+          console.log(`Replacing cargo manifest options - package.version=${version}`)
           cargoManifest.package.version = version
-          cargoManifest.package['default-run'] = appName
-          if (cargoManifest.bin && cargoManifest.bin.length) {
-            console.log(`Setting cargo manifest's bin[0].name to ${appName}`)
-            cargoManifest.bin[0].name = appName
-          }
           writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
 
           const app = {
