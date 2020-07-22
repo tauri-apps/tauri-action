@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.7]
+
+-   Updates for tauri.js 0.10.0 and tauri-core 0.8.0.
+    -   [4c37642](https://github.com/tauri-apps/tauri-action/commit/4c37642f0621ad7508f39a40a41d979b41dd6a59) fix(action) update to latest tauri.js and tauri versions on 2020-07-22
+
 ## [0.0.6]
 
 -   Fixes the includeDebug input usage.
