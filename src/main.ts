@@ -130,7 +130,7 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
             ]
           case 'win32':
             return [
-              join(artifactsPath, `${appName}_${app.version}_${process.arch}.msi`),
+              join(artifactsPath, `bundle/msi/${appName}_${app.version}_${process.arch}.msi`),
             ]
           default:
             const arch = process.arch === 'x64'
