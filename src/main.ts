@@ -82,10 +82,10 @@ async function buildProject(root: string, debug: boolean, { configPath, distPath
           version: cargoManifest.package.version
         }
       } else {
-        const cargoManifest = toml.parse(readFileSync(manifestPath).toString()) as any as CargoManifest
         const packageJson = getPackageJson(root)
         const appName = packageJson ? (packageJson.displayName || packageJson.name).replace(/ /g, '-') : 'app'
         return execCommand(`${runner} init --ci --app-name ${appName}`, { cwd: root }).then(() => {
+          const cargoManifest = toml.parse(readFileSync(manifestPath).toString()) as any as CargoManifest
           const version = packageJson ? packageJson.version : '0.1.0'
 
           console.log(`Replacing cargo manifest options - package.version=${version}`)
