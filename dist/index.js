@@ -10701,19 +10701,13 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                 };
             }
             else {
-                return execCommand(`${runner} init`, { cwd: root }).then(() => {
+                const packageJson = getPackageJson(root);
+                const appName = packageJson ? (packageJson.displayName || packageJson.name).replace(/ /g, '-') : 'app';
+                return execCommand(`${runner} init --ci --app-name ${appName}`, { cwd: root }).then(() => {
                     const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
-                    const packageJson = getPackageJson(root);
-                    const appName = packageJson ? (packageJson.displayName || packageJson.name).replace(/ /g, '-') : 'app';
                     const version = packageJson ? packageJson.version : '0.1.0';
-                    console.log(`Replacing cargo manifest options package.name=package.default-run=${appName} and package.version=${version}`);
-                    cargoManifest.package.name = appName;
+                    console.log(`Replacing cargo manifest options - package.version=${version}`);
                     cargoManifest.package.version = version;
-                    cargoManifest.package['default-run'] = appName;
-                    if (cargoManifest.bin && cargoManifest.bin.length) {
-                        console.log(`Setting cargo manifest's bin[0].name to ${appName}`);
-                        cargoManifest.bin[0].name = appName;
-                    }
                     fs_1.writeFileSync(manifestPath, toml_1.default.stringify(cargoManifest));
                     const app = {
                         runner,
@@ -10744,17 +10738,20 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                 switch (os_1.platform()) {
                     case 'darwin':
                         return [
-                            path_1.join(artifactsPath, `bundle/dmg/${appName}.dmg`),
-                            path_1.join(artifactsPath, `bundle/osx/${appName}.app`)
+                            path_1.join(artifactsPath, `bundle/dmg/${appName}_${app.version}_${process.arch}.dmg`),
+                            path_1.join(artifactsPath, `bundle/osx/${appName}_${app.version}_${process.arch}.app`)
                         ];
                     case 'win32':
                         return [
-                            path_1.join(artifactsPath, `${appName}.x64.msi`),
+                            path_1.join(artifactsPath, `bundle/msi/${appName}_${app.version}_${process.arch}.msi`),
                         ];
                     default:
+                        const arch = process.arch === 'x64'
+                            ? 'amd64'
+                            : (process.arch === 'x32' ? 'i386' : process.arch);
                         return [
-                            path_1.join(artifactsPath, `bundle/deb/${appName}_${app.version}_amd64.deb`),
-                            path_1.join(artifactsPath, `bundle/appimage/${appName}.AppImage`)
+                            path_1.join(artifactsPath, `bundle/deb/${appName}_${app.version}_${arch}.deb`),
+                            path_1.join(artifactsPath, `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`)
                         ];
                 }
             }).then(paths => paths.filter(p => fs_1.existsSync(p)));
