@@ -102,7 +102,7 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     outputs:
-      RELEASE_UPLOAD_ID: ${{ steps.create_release.outputs.upload_id }}
+      RELEASE_UPLOAD_ID: ${{ steps.create_release.outputs.id }}
 
     steps:
       - uses: actions/checkout@v2
