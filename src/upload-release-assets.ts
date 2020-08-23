@@ -22,7 +22,8 @@ export default async function uploadAssets(releaseId: number, assets: string[]) 
     await github.repos.uploadReleaseAsset({
       headers,
       name: assetName,
-      data: fs.readFileSync(assetPath).toString(),
+      // @ts-ignore error TS2322: Type 'Buffer' is not assignable to type 'string'.
+      data: fs.readFileSync(assetPath),
       owner: context.repo.owner,
       repo: context.repo.repo,
       release_id: releaseId
