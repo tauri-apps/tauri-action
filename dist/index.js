@@ -9759,15 +9759,21 @@ function uploadAssets(releaseId, assets) {
         // Determine content-length for header to upload asset
         const contentLength = (filePath) => fs_1.default.statSync(filePath).size;
         for (const assetPath of assets) {
-            const headers = { 'content-type': 'application/zip', 'content-length': contentLength(assetPath) };
+            const headers = {
+                'content-type': 'application/zip',
+                'content-length': contentLength(assetPath)
+            };
             const ext = path_1.default.extname(assetPath);
             const filename = path_1.default.basename(assetPath).replace(ext, '');
-            const assetName = path_1.default.dirname(assetPath).includes(`target${path_1.default.sep}debug`) ? `${filename}-debug${ext}` : `${filename}${ext}`;
+            const assetName = path_1.default.dirname(assetPath).includes(`target${path_1.default.sep}debug`)
+                ? `${filename}-debug${ext}`
+                : `${filename}${ext}`;
             console.log(`Uploading ${assetName}...`);
             yield github.repos.uploadReleaseAsset({
                 headers,
                 name: assetName,
-                data: fs_1.default.readFileSync(assetPath).toString(),
+                // @ts-ignore error TS2322: Type 'Buffer' is not assignable to type 'string'.
+                data: fs_1.default.readFileSync(assetPath),
                 owner: github_1.context.repo.owner,
                 repo: github_1.context.repo.repo,
                 release_id: releaseId
@@ -10659,7 +10665,9 @@ function getPackageJson(root) {
 }
 function hasTauriDependency(root) {
     const packageJson = getPackageJson(root);
-    return packageJson && ((packageJson.dependencies && packageJson.dependencies.tauri) || ((packageJson.devDependencies && packageJson.devDependencies.tauri)));
+    return (packageJson &&
+        ((packageJson.dependencies && packageJson.dependencies.tauri) ||
+            (packageJson.devDependencies && packageJson.devDependencies.tauri)));
 }
 function usesYarn(root) {
     return fs_1.existsSync(path_1.join(root, 'yarn.lock'));
@@ -10672,12 +10680,12 @@ function execCommand(command, { cwd }) {
         shell: process.env.shell || true,
         windowsHide: true,
         stdio: 'inherit',
-        env: { FORCE_COLOR: '0' },
+        env: { FORCE_COLOR: '0' }
     }).then();
 }
 function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             if (hasTauriDependency(root)) {
                 if (npmScript) {
                     resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`);
@@ -10702,8 +10710,12 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
             }
             else {
                 const packageJson = getPackageJson(root);
-                const appName = packageJson ? (packageJson.displayName || packageJson.name).replace(/ /g, '-') : 'app';
-                return execCommand(`${runner} init --ci --app-name ${appName}`, { cwd: root }).then(() => {
+                const appName = packageJson
+                    ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
+                    : 'app';
+                return execCommand(`${runner} init --ci --app-name ${appName}`, {
+                    cwd: root
+                }).then(() => {
                     const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
                     const version = packageJson ? packageJson.version : '0.1.0';
                     console.log(`Replacing cargo manifest options - package.version=${version}`);
@@ -10715,7 +10727,9 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                         version
                     };
                     if (iconPath) {
-                        return execCommand(`${runner} icon --i ${path_1.join(root, iconPath)}`, { cwd: root }).then(() => app);
+                        return execCommand(`${runner} icon --i ${path_1.join(root, iconPath)}`, {
+                            cwd: root
+                        }).then(() => app);
                     }
                     return app;
                 });
@@ -10732,7 +10746,8 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                 fs_1.writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
             }
             const args = debug ? ['--debug'] : [];
-            return execCommand(`${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root }).then(() => {
+            return execCommand(`${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root })
+                .then(() => {
                 const appName = app.name;
                 const artifactsPath = path_1.join(root, `src-tauri/target/${debug ? 'debug' : 'release'}`);
                 switch (os_1.platform()) {
@@ -10743,18 +10758,21 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                         ];
                     case 'win32':
                         return [
-                            path_1.join(artifactsPath, `bundle/msi/${appName}_${app.version}_${process.arch}.msi`),
+                            path_1.join(artifactsPath, `bundle/msi/${appName}_${app.version}_${process.arch}.msi`)
                         ];
                     default:
                         const arch = process.arch === 'x64'
                             ? 'amd64'
-                            : (process.arch === 'x32' ? 'i386' : process.arch);
+                            : process.arch === 'x32'
+                                ? 'i386'
+                                : process.arch;
                         return [
                             path_1.join(artifactsPath, `bundle/deb/${appName}_${app.version}_${arch}.deb`),
                             path_1.join(artifactsPath, `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`)
                         ];
                 }
-            }).then(paths => paths.filter(p => fs_1.existsSync(p)));
+            })
+                .then(paths => paths.filter(p => fs_1.existsSync(p)));
         });
     });
 }
@@ -10776,7 +10794,12 @@ function run() {
             if (Boolean(tagName) !== Boolean(releaseName)) {
                 throw new Error('`tag` is required along with `releaseName` when creating a release.');
             }
-            const options = { configPath: fs_1.existsSync(configPath) ? configPath : null, distPath, iconPath, npmScript };
+            const options = {
+                configPath: fs_1.existsSync(configPath) ? configPath : null,
+                distPath,
+                iconPath,
+                npmScript
+            };
             const artifacts = yield buildProject(projectPath, false, options);
             if (includeDebug) {
                 const debugArtifacts = yield buildProject(projectPath, true, options);
@@ -10789,10 +10812,12 @@ function run() {
             let releaseId;
             if (tagName) {
                 const packageJson = getPackageJson(projectPath);
-                const templates = [{
+                const templates = [
+                    {
                         key: '__VERSION__',
                         value: packageJson === null || packageJson === void 0 ? void 0 : packageJson.version
-                    }];
+                    }
+                ];
                 templates.forEach(template => {
                     const regex = new RegExp(template.key, 'g');
                     tagName = tagName.replace(regex, template.value);
@@ -10813,7 +10838,9 @@ function run() {
                     let i = 0;
                     for (const artifact of artifacts) {
                         if (artifact.endsWith('.app')) {
-                            yield execCommand(`tar -czf ${artifact}.tgz ${artifact}`, { cwd: undefined });
+                            yield execCommand(`tar -czf ${artifact}.tgz ${artifact}`, {
+                                cwd: undefined
+                            });
                             artifacts[i] += '.tgz';
                         }
                         i++;
@@ -10823,6 +10850,7 @@ function run() {
             }
         }
         catch (error) {
+            console.log('this');
             core.setFailed(error.message);
         }
     });

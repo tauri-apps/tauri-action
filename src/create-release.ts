@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-import { getOctokit, context } from '@actions/github'
-import { GitHub } from '@actions/github/lib/utils'
+import {getOctokit, context} from '@actions/github'
+import {GitHub} from '@actions/github/lib/utils'
 import fs from 'fs'
 
 interface Release {
@@ -18,14 +18,23 @@ interface GitHubRelease {
   target_commitish: string
 }
 
-function allReleases(github: InstanceType<typeof GitHub>): AsyncIterableIterator<{ data: GitHubRelease[] }> {
-  const params = { per_page: 100, ...context.repo }
+function allReleases(
+  github: InstanceType<typeof GitHub>
+): AsyncIterableIterator<{data: GitHubRelease[]}> {
+  const params = {per_page: 100, ...context.repo}
   return github.paginate.iterator(
     github.repos.listReleases.endpoint.merge(params)
-  );
+  )
 }
 
-export default async function createRelease(tagName: string, releaseName: string, body?: string, commitish?: string, draft = true, prerelease = true): Promise<Release> {
+export default async function createRelease(
+  tagName: string,
+  releaseName: string,
+  body?: string,
+  commitish?: string,
+  draft = true,
+  prerelease = true
+): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required')
   }
@@ -34,13 +43,13 @@ export default async function createRelease(tagName: string, releaseName: string
   const github = getOctokit(process.env.GITHUB_TOKEN)
 
   // Get owner and repo from context of payload that triggered the action
-  const { owner, repo } = context.repo
+  const {owner, repo} = context.repo
 
-  const bodyPath = core.getInput('body_path', { required: false })
+  const bodyPath = core.getInput('body_path', {required: false})
   let bodyFileContent = null
   if (bodyPath !== '' && !!bodyPath) {
     try {
-      bodyFileContent = fs.readFileSync(bodyPath, { encoding: 'utf8' })
+      bodyFileContent = fs.readFileSync(bodyPath, {encoding: 'utf8'})
     } catch (error) {
       core.setFailed(error.message)
     }
@@ -53,10 +62,14 @@ export default async function createRelease(tagName: string, releaseName: string
     if (draft) {
       console.log(`Looking for a draft release with tag ${tagName}...`)
       for await (const response of allReleases(github)) {
-        let releaseWithTag = response.data.find(release => release.tag_name === tagName)
+        let releaseWithTag = response.data.find(
+          release => release.tag_name === tagName
+        )
         if (releaseWithTag) {
           release = releaseWithTag
-          console.log(`Found draft release with tag ${tagName} on the release list.`)
+          console.log(
+            `Found draft release with tag ${tagName} on the release list.`
+          )
           break
         }
       }

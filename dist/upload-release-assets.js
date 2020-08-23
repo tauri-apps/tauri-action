@@ -24,15 +24,21 @@ function uploadAssets(releaseId, assets) {
         // Determine content-length for header to upload asset
         const contentLength = (filePath) => fs_1.default.statSync(filePath).size;
         for (const assetPath of assets) {
-            const headers = { 'content-type': 'application/zip', 'content-length': contentLength(assetPath) };
+            const headers = {
+                'content-type': 'application/zip',
+                'content-length': contentLength(assetPath)
+            };
             const ext = path_1.default.extname(assetPath);
             const filename = path_1.default.basename(assetPath).replace(ext, '');
-            const assetName = path_1.default.dirname(assetPath).includes(`target${path_1.default.sep}debug`) ? `${filename}-debug${ext}` : `${filename}${ext}`;
+            const assetName = path_1.default.dirname(assetPath).includes(`target${path_1.default.sep}debug`)
+                ? `${filename}-debug${ext}`
+                : `${filename}${ext}`;
             console.log(`Uploading ${assetName}...`);
             yield github.repos.uploadReleaseAsset({
                 headers,
                 name: assetName,
-                data: fs_1.default.readFileSync(assetPath).toString(),
+                // @ts-ignore error TS2322: Type 'Buffer' is not assignable to type 'string'.
+                data: fs_1.default.readFileSync(assetPath),
                 owner: github_1.context.repo.owner,
                 repo: github_1.context.repo.repo,
                 release_id: releaseId
