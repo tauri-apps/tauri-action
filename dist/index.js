@@ -9772,6 +9772,7 @@ function uploadAssets(releaseId, assets) {
             yield github.repos.uploadReleaseAsset({
                 headers,
                 name: assetName,
+                // https://github.com/tauri-apps/tauri-action/pull/45
                 // @ts-ignore error TS2322: Type 'Buffer' is not assignable to type 'string'.
                 data: fs_1.default.readFileSync(assetPath),
                 owner: github_1.context.repo.owner,

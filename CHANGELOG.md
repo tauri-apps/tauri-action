@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.8]
+
+-   Uploaded assets break when `data` receives `fs.readFileSync(assetPath).toString()` even though types suggest it. Giving it a Buffer fixes the issue.
+    -   [cf98c66](https://github.com/tauri-apps/tauri-action/commit/cf98c661aea6841d7aff2b5f4df614b36a6f6726) fix: broken asset release upload ([#45](https://github.com/tauri-apps/tauri-action/pull/45)) on 2020-08-23
+
 ## [0.0.7]
 
 -   Updates for tauri.js 0.10.0 and tauri-core 0.8.0.
