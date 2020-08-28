@@ -143,6 +143,7 @@ async function buildProject(
       }
 
       const args = debug ? ['--debug'] : []
+      execCommand('ls', {cwd: root})
       return execCommand(
         `${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''),
         {cwd: root}
@@ -198,14 +199,14 @@ async function buildProject(
 
 async function run(): Promise<void> {
   try {
-    const projectPath = resolve([
+    const projectPath = resolve(
       process.cwd(),
       core.getInput('projectPath') || process.argv[2]
-    ])
-    const configPath = join([
+    )
+    const configPath = join(
       projectPath,
       core.getInput('configPath') || 'tauri.conf.json'
-    ])
+    )
     const distPath = core.getInput('distPath')
     const iconPath = core.getInput('iconPath')
     const includeDebug = core.getInput('includeDebug') === 'true'
