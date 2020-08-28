@@ -143,9 +143,9 @@ async function buildProject(
       }
 
       const args = debug ? ['--debug'] : []
-      execCommand('ls', {cwd: root})
+      // `${app.runner} build`
       return execCommand(
-        `${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''),
+        `ls` + (args.length ? ` ${args.join(' ')}` : ''),
         {cwd: root}
       )
         .then(() => {
