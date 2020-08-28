@@ -198,14 +198,14 @@ async function buildProject(
 
 async function run(): Promise<void> {
   try {
-    const projectPath = resolve(
+    const projectPath = resolve([
       process.cwd(),
       core.getInput('projectPath') || process.argv[2]
-    )
-    const configPath = join(
+    ])
+    const configPath = join([
       projectPath,
       core.getInput('configPath') || 'tauri.conf.json'
-    )
+    ])
     const distPath = core.getInput('distPath')
     const iconPath = core.getInput('iconPath')
     const includeDebug = core.getInput('includeDebug') === 'true'
