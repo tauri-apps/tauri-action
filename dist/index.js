@@ -10747,7 +10747,8 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                 fs_1.writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
             }
             const args = debug ? ['--debug'] : [];
-            return execCommand(`${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root })
+            // `${app.runner} build`
+            return execCommand(`ls` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root })
                 .then(() => {
                 const appName = app.name;
                 const artifactsPath = path_1.join(root, `src-tauri/target/${debug ? 'debug' : 'release'}`);
