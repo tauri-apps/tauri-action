@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.9]
+
+-   Add option to elect using an existing globally installed version of Tauri.
+    -   [a45f21b](https://github.com/tauri-apps/tauri-action/commit/a45f21b1732014a0dabc488197f277ad0cef6b06) feature: add preferGlobal option ([#48](https://github.com/tauri-apps/tauri-action/pull/48)) on 2020-09-02
+
 ## [0.0.8]
 
 -   Uploaded assets break when `data` receives `fs.readFileSync(assetPath).toString()` even though types suggest it. Giving it a Buffer fixes the issue.
