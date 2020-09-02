@@ -73,7 +73,9 @@ async function buildProject(
   {configPath, distPath, iconPath, npmScript}: BuildOptions
 ): Promise<string[]> {
   return new Promise<string>(resolve => {
-    if (hasTauriDependency(root)) {
+    if (core.getInput('preferGlobal') === "true") {
+      resolve('tauri')
+    } else if (hasTauriDependency(root)) {
       if (npmScript) {
         resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
       } else {

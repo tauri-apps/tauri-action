@@ -71,7 +71,10 @@ function execCommand(command, { cwd }) {
 function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise(resolve => {
-            if (hasTauriDependency(root)) {
+            if (core.getInput('preferGlobal') === "true") {
+                resolve('tauri');
+            }
+            else if (hasTauriDependency(root)) {
                 if (npmScript) {
                     resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`);
                 }
