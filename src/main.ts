@@ -55,7 +55,6 @@ interface CargoManifest {
 }
 
 interface Application {
-  runner: string
   name: string
   version: string
 }
@@ -67,134 +66,122 @@ interface BuildOptions {
   npmScript: string | null
 }
 
+async function prepareApplication(
+  root: string,
+  iconPath: string | null
+): Promise<Application> {
+  const manifestPath = join(root, 'src-tauri/Cargo.toml')
+  if (existsSync(manifestPath)) {
+    const cargoManifest = (toml.parse(
+      readFileSync(manifestPath).toString()
+    ) as any) as CargoManifest
+    return {
+      name: cargoManifest.package.name,
+      version: cargoManifest.package.version
+    }
+  } else {
+    const packageJson = getPackageJson(root)
+    const appName = packageJson
+      ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
+      : 'app'
+    return execCommand(`tauri init --ci --app-name ${appName}`, {
+      cwd: root
+    }).then(() => {
+      const cargoManifest = (toml.parse(
+        readFileSync(manifestPath).toString()
+      ) as any) as CargoManifest
+      const version = packageJson ? packageJson.version : '0.1.0'
+
+      console.log(
+        `Replacing cargo manifest options - package.version=${version}`
+      )
+      cargoManifest.package.version = version
+      writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
+
+      const app = {
+        name: appName,
+        version
+      }
+      if (iconPath) {
+        return execCommand(`tauri icon --i ${join(root, iconPath)}`, {
+          cwd: root
+        }).then(() => app)
+      }
+
+      return app
+    })
+  }
+}
+
 async function buildProject(
   root: string,
   debug: boolean,
   {configPath, distPath, iconPath, npmScript}: BuildOptions
 ): Promise<string[]> {
-  return new Promise<string>(resolve => {
-    if (hasTauriDependency(root)) {
-      if (npmScript) {
-        resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
-      } else {
-        resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
-      }
-    } else {
-      execCommand('npm install -g tauri', {cwd: undefined}).then(() =>
-        resolve('tauri')
-      )
+  return prepareApplication(root, iconPath).then((app: Application) => {
+    const tauriConfPath = join(root, 'src-tauri/tauri.conf.json')
+    if (configPath !== null) {
+      copyFileSync(configPath, tauriConfPath)
     }
-  })
-    .then((runner: string) => {
-      const manifestPath = join(root, 'src-tauri/Cargo.toml')
-      if (existsSync(manifestPath)) {
-        const cargoManifest = (toml.parse(
-          readFileSync(manifestPath).toString()
-        ) as any) as CargoManifest
-        return {
-          runner,
-          name: cargoManifest.package.name,
-          version: cargoManifest.package.version
+
+    if (distPath) {
+      const tauriConf = JSON.parse(readFileSync(tauriConfPath).toString())
+      tauriConf.build.distDir = distPath
+      writeFileSync(tauriConfPath, JSON.stringify(tauriConf))
+    }
+
+    const args = debug ? ['--debug'] : []
+    return execCommand(
+      `tauri build` + (args.length ? ` ${args.join(' ')}` : ''),
+      {cwd: root}
+    )
+      .then(() => {
+        const appName = app.name
+        const artifactsPath = join(
+          root,
+          `src-tauri/target/${debug ? 'debug' : 'release'}`
+        )
+
+        switch (platform()) {
+          case 'darwin':
+            return [
+              join(
+                artifactsPath,
+                `bundle/dmg/${appName}_${app.version}_${process.arch}.dmg`
+              ),
+              join(
+                artifactsPath,
+                `bundle/osx/${appName}_${app.version}_${process.arch}.app`
+              )
+            ]
+          case 'win32':
+            return [
+              join(
+                artifactsPath,
+                `bundle/msi/${appName}_${app.version}_${process.arch}.msi`
+              )
+            ]
+          default:
+            const arch =
+              process.arch === 'x64'
+                ? 'amd64'
+                : process.arch === 'x32'
+                ? 'i386'
+                : process.arch
+            return [
+              join(
+                artifactsPath,
+                `bundle/deb/${appName}_${app.version}_${arch}.deb`
+              ),
+              join(
+                artifactsPath,
+                `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`
+              )
+            ]
         }
-      } else {
-        const packageJson = getPackageJson(root)
-        const appName = packageJson
-          ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
-          : 'app'
-        return execCommand(`${runner} init --ci --app-name ${appName}`, {
-          cwd: root
-        }).then(() => {
-          const cargoManifest = (toml.parse(
-            readFileSync(manifestPath).toString()
-          ) as any) as CargoManifest
-          const version = packageJson ? packageJson.version : '0.1.0'
-
-          console.log(
-            `Replacing cargo manifest options - package.version=${version}`
-          )
-          cargoManifest.package.version = version
-          writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
-
-          const app = {
-            runner,
-            name: appName,
-            version
-          }
-          if (iconPath) {
-            return execCommand(`${runner} icon --i ${join(root, iconPath)}`, {
-              cwd: root
-            }).then(() => app)
-          }
-
-          return app
-        })
-      }
-    })
-    .then((app: Application) => {
-      const tauriConfPath = join(root, 'src-tauri/tauri.conf.json')
-      if (configPath !== null) {
-        copyFileSync(configPath, tauriConfPath)
-      }
-
-      if (distPath) {
-        const tauriConf = JSON.parse(readFileSync(tauriConfPath).toString())
-        tauriConf.build.distDir = distPath
-        writeFileSync(tauriConfPath, JSON.stringify(tauriConf))
-      }
-
-      const args = debug ? ['--debug'] : []
-      // `${app.runner} build`
-      return execCommand(
-        `ls` + (args.length ? ` ${args.join(' ')}` : ''),
-        {cwd: root}
-      )
-        .then(() => {
-          const appName = app.name
-          const artifactsPath = join(
-            root,
-            `src-tauri/target/${debug ? 'debug' : 'release'}`
-          )
-
-          switch (platform()) {
-            case 'darwin':
-              return [
-                join(
-                  artifactsPath,
-                  `bundle/dmg/${appName}_${app.version}_${process.arch}.dmg`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/osx/${appName}_${app.version}_${process.arch}.app`
-                )
-              ]
-            case 'win32':
-              return [
-                join(
-                  artifactsPath,
-                  `bundle/msi/${appName}_${app.version}_${process.arch}.msi`
-                )
-              ]
-            default:
-              const arch =
-                process.arch === 'x64'
-                  ? 'amd64'
-                  : process.arch === 'x32'
-                  ? 'i386'
-                  : process.arch
-              return [
-                join(
-                  artifactsPath,
-                  `bundle/deb/${appName}_${app.version}_${arch}.deb`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`
-                )
-              ]
-          }
-        })
-        .then(paths => paths.filter(p => existsSync(p)))
-    })
+      })
+      .then(paths => paths.filter(p => existsSync(p)))
+  })
 }
 
 async function run(): Promise<void> {

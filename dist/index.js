@@ -10684,59 +10684,46 @@ function execCommand(command, { cwd }) {
         env: { FORCE_COLOR: '0' }
     }).then();
 }
+function prepareApplication(root, iconPath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const manifestPath = path_1.join(root, 'src-tauri/Cargo.toml');
+        if (fs_1.existsSync(manifestPath)) {
+            const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
+            return {
+                name: cargoManifest.package.name,
+                version: cargoManifest.package.version
+            };
+        }
+        else {
+            const packageJson = getPackageJson(root);
+            const appName = packageJson
+                ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
+                : 'app';
+            return execCommand(`tauri init --ci --app-name ${appName}`, {
+                cwd: root
+            }).then(() => {
+                const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
+                const version = packageJson ? packageJson.version : '0.1.0';
+                console.log(`Replacing cargo manifest options - package.version=${version}`);
+                cargoManifest.package.version = version;
+                fs_1.writeFileSync(manifestPath, toml_1.default.stringify(cargoManifest));
+                const app = {
+                    name: appName,
+                    version
+                };
+                if (iconPath) {
+                    return execCommand(`tauri icon --i ${path_1.join(root, iconPath)}`, {
+                        cwd: root
+                    }).then(() => app);
+                }
+                return app;
+            });
+        }
+    });
+}
 function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise(resolve => {
-            if (hasTauriDependency(root)) {
-                if (npmScript) {
-                    resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`);
-                }
-                else {
-                    resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri');
-                }
-            }
-            else {
-                execCommand('npm install -g tauri', { cwd: undefined }).then(() => resolve('tauri'));
-            }
-        })
-            .then((runner) => {
-            const manifestPath = path_1.join(root, 'src-tauri/Cargo.toml');
-            if (fs_1.existsSync(manifestPath)) {
-                const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
-                return {
-                    runner,
-                    name: cargoManifest.package.name,
-                    version: cargoManifest.package.version
-                };
-            }
-            else {
-                const packageJson = getPackageJson(root);
-                const appName = packageJson
-                    ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
-                    : 'app';
-                return execCommand(`${runner} init --ci --app-name ${appName}`, {
-                    cwd: root
-                }).then(() => {
-                    const cargoManifest = toml_1.default.parse(fs_1.readFileSync(manifestPath).toString());
-                    const version = packageJson ? packageJson.version : '0.1.0';
-                    console.log(`Replacing cargo manifest options - package.version=${version}`);
-                    cargoManifest.package.version = version;
-                    fs_1.writeFileSync(manifestPath, toml_1.default.stringify(cargoManifest));
-                    const app = {
-                        runner,
-                        name: appName,
-                        version
-                    };
-                    if (iconPath) {
-                        return execCommand(`${runner} icon --i ${path_1.join(root, iconPath)}`, {
-                            cwd: root
-                        }).then(() => app);
-                    }
-                    return app;
-                });
-            }
-        })
-            .then((app) => {
+        return prepareApplication(root, iconPath).then((app) => {
             const tauriConfPath = path_1.join(root, 'src-tauri/tauri.conf.json');
             if (configPath !== null) {
                 fs_1.copyFileSync(configPath, tauriConfPath);
@@ -10747,8 +10734,7 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                 fs_1.writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
             }
             const args = debug ? ['--debug'] : [];
-            // `${app.runner} build`
-            return execCommand(`ls` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root })
+            return execCommand(`tauri build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root })
                 .then(() => {
                 const appName = app.name;
                 const artifactsPath = path_1.join(root, `src-tauri/target/${debug ? 'debug' : 'release'}`);
