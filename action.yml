@@ -32,6 +32,8 @@ inputs:
     description: 'whether to include a debug build or not'
   npmScript:
     description: 'the package.json script to run to build the Tauri app'
+  preferGlobal:
+    description: 'set this to true to use a globally installed tauri instead'
 outputs:
   releaseId:
     description: 'The ID of the created release'
