@@ -19,7 +19,7 @@
   "author": "Lucas Nogueira <lucas@tauri.studio>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.0",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "@iarna/toml": "^2.2.5",
     "execa": "^4.0.3"
