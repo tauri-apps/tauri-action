@@ -32,7 +32,7 @@
     "covector": "0.3.1",
     "eslint": "7.5.0",
     "eslint-plugin-github": "4.1.1",
-    "eslint-plugin-jest": "23.18.0",
+    "eslint-plugin-jest": "24.1.0",
     "jest": "26.1.0",
     "jest-circus": "26.1.0",
     "js-yaml": "3.14.0",
