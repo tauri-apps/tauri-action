@@ -4,6 +4,8 @@ icon: 'box'
 color: 'blue'
 author: 'Laurent Bernabé <laurent.bernabe@gmail.com>'
 inputs:
+  icon: 'box'
+  color: 'blue'
   releaseId:
     description: 'Github action for Tauri'
   tagName:
