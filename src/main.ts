@@ -195,6 +195,12 @@ async function buildProject(
 
               copyFileSync(oldAppImagePath, newAppImagePath);
 
+              //////////////////////////////////////////////////////////////////////
+              console.log('old app image path', oldAppImagePath);
+              console.log('new app image path', newAppImagePath);
+              console.log('new app image exists', existsSync(newAppImagePath));
+              /////////////////////////////////////////////////////////////////////////
+
               return [
                 join(
                   artifactsPath,

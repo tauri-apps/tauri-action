@@ -157,6 +157,11 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                         const oldAppImagePath = path_1.join(artifactsPath, `bundle/appimage/${appName}.AppImage`);
                         const newAppImagePath = path_1.join(artifactsPath, `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`);
                         fs_1.copyFileSync(oldAppImagePath, newAppImagePath);
+                        //////////////////////////////////////////////////////////////////////
+                        console.log('old app image path', oldAppImagePath);
+                        console.log('new app image path', newAppImagePath);
+                        console.log('new app image exists', fs_1.existsSync(newAppImagePath));
+                        /////////////////////////////////////////////////////////////////////////
                         return [
                             path_1.join(artifactsPath, `bundle/deb/${appName}_${app.version}_${arch}.deb`),
                             newAppImagePath,
