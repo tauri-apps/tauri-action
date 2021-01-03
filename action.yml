@@ -1,11 +1,11 @@
 name: 'tauri-action'
 description: 'Build tauri binaries for MacOS, Windows and Linux'
-icon: 'download-cloud'
+icon: 'box'
 color: 'blue'
-author: 'Lucas Nogueira <lucas@tauri.studio>'
+author: 'Laurent Bernabé <laurent.bernabe@gmail.com>'
 inputs:
   releaseId:
-    description: 'The id of the release to upload artifacts as release assets'
+    description: 'Github action for Tauri'
   tagName:
     description: 'The tag name of the release to create'
   releaseName:
