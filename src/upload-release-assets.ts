@@ -1,4 +1,4 @@
-import {getOctokit, context} from '@actions/github'
+import { getOctokit, context } from '@actions/github'
 import fs from 'fs'
 import path from 'path'
 
@@ -6,6 +6,9 @@ export default async function uploadAssets(
   releaseId: number,
   assets: string[]
 ) {
+  ////////////////////////////////////////////
+  console.log('assets', JSON.stringify(assets))
+  ///////////////////////////////////////////////
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required')
   }

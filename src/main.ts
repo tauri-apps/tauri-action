@@ -193,6 +193,11 @@ async function buildProject(
                 `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`
               );
 
+              ///////////////////////////////////////////////
+              console.log('old path', oldAppImagePath);
+              console.log('new path', newAppImagePath)
+              ///////////////////////////////////////////////
+
               copyFileSync(oldAppImagePath, newAppImagePath);
 
               return [
