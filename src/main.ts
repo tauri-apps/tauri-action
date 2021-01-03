@@ -2,7 +2,7 @@ import { platform } from 'os'
 import * as core from '@actions/core'
 import execa from 'execa'
 import { join, resolve } from 'path'
-import { readFileSync, existsSync, copyFileSync, writeFileSync, renameSync } from 'fs'
+import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 import createRelease from './create-release'
 import toml from '@iarna/toml'
@@ -193,7 +193,7 @@ async function buildProject(
                 `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`
               );
 
-              renameSync(oldAppImagePath, newAppImagePath);
+              copyFileSync(oldAppImagePath, newAppImagePath);
 
               return [
                 join(
