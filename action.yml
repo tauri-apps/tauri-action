@@ -1,4 +1,4 @@
-name: 'tauri-action-loloof64'
+name: 'tauri-action'
 description: 'Build tauri binaries for MacOS, Windows and Linux'
 icon: 'box'
 color: 'blue'
