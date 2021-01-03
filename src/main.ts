@@ -1,8 +1,8 @@
-import {platform} from 'os'
+import { platform } from 'os'
 import * as core from '@actions/core'
 import execa from 'execa'
-import {join, resolve} from 'path'
-import {readFileSync, existsSync, copyFileSync, writeFileSync} from 'fs'
+import { join, resolve } from 'path'
+import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 import createRelease from './create-release'
 import toml from '@iarna/toml'
@@ -32,7 +32,7 @@ function usesYarn(root: string): boolean {
 
 function execCommand(
   command: string,
-  {cwd}: {cwd: string | undefined}
+  { cwd }: { cwd: string | undefined }
 ): Promise<void> {
   console.log(`running ${command}`)
   const [cmd, ...args] = command.split(' ')
@@ -41,7 +41,7 @@ function execCommand(
     shell: process.env.shell || true,
     windowsHide: true,
     stdio: 'inherit',
-    env: {FORCE_COLOR: '0'}
+    env: { FORCE_COLOR: '0' }
   }).then()
 }
 
@@ -50,7 +50,7 @@ interface CargoManifestBin {
 }
 
 interface CargoManifest {
-  package: {version: string; name: string; 'default-run': string}
+  package: { version: string; name: string; 'default-run': string }
   bin: CargoManifestBin[]
 }
 
@@ -70,7 +70,7 @@ interface BuildOptions {
 async function buildProject(
   root: string,
   debug: boolean,
-  {configPath, distPath, iconPath, npmScript}: BuildOptions
+  { configPath, distPath, iconPath, npmScript }: BuildOptions
 ): Promise<string[]> {
   return new Promise<string>(resolve => {
     if (core.getInput('preferGlobal') === "true") {
@@ -82,7 +82,7 @@ async function buildProject(
         resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
       }
     } else {
-      execCommand('npm install -g tauri', {cwd: undefined}).then(() =>
+      execCommand('npm install -g tauri', { cwd: undefined }).then(() =>
         resolve('tauri')
       )
     }
@@ -147,7 +147,7 @@ async function buildProject(
       const args = debug ? ['--debug'] : []
       return execCommand(
         `${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''),
-        {cwd: root}
+        { cwd: root }
       )
         .then(() => {
           const appName = app.name
@@ -180,17 +180,27 @@ async function buildProject(
                 process.arch === 'x64'
                   ? 'amd64'
                   : process.arch === 'x32'
-                  ? 'i386'
-                  : process.arch
+                    ? 'i386'
+                    : process.arch
+
+              const oldAppImagePath = join(
+                artifactsPath,
+                `bundle/appimage/${appName}.AppImage`
+              );
+
+              const newAppImagePath = join(
+                artifactsPath,
+                `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`
+              );
+
+              copyFileSync(oldAppImagePath, newAppImagePath);
+
               return [
                 join(
                   artifactsPath,
                   `bundle/deb/${appName}_${app.version}_${arch}.deb`
                 ),
-                join(
-                  artifactsPath,
-                  `bundle/appimage/${appName}.AppImage`
-                )
+                newAppImagePath,
               ]
           }
         })

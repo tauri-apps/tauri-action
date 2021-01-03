@@ -10770,9 +10770,12 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                             : process.arch === 'x32'
                                 ? 'i386'
                                 : process.arch;
+                        const oldAppImagePath = path_1.join(artifactsPath, `bundle/appimage/${appName}.AppImage`);
+                        const newAppImagePath = path_1.join(artifactsPath, `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`);
+                        fs_1.copyFileSync(oldAppImagePath, newAppImagePath);
                         return [
                             path_1.join(artifactsPath, `bundle/deb/${appName}_${app.version}_${arch}.deb`),
-                            path_1.join(artifactsPath, `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`)
+                            newAppImagePath,
                         ];
                 }
             })

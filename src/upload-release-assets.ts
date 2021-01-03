@@ -6,9 +6,6 @@ export default async function uploadAssets(
   releaseId: number,
   assets: string[]
 ) {
-  ////////////////////////////////////////////
-  console.log('assets', JSON.stringify(assets))
-  ///////////////////////////////////////////////
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required')
   }
