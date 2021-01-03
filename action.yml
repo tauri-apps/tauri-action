@@ -1,11 +1,9 @@
-name: 'tauri-action'
+name: 'tauri-action-loloof64'
 description: 'Build tauri binaries for MacOS, Windows and Linux'
 icon: 'box'
 color: 'blue'
 author: 'Laurent Bernabé <laurent.bernabe@gmail.com>'
 inputs:
-  icon: 'box'
-  color: 'blue'
   releaseId:
     description: 'Github action for Tauri'
   tagName:
