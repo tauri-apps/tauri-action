@@ -192,12 +192,14 @@ async function buildProject(
                 artifactsPath,
                 `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`
               );
-
-              copyFileSync(oldAppImagePath, newAppImagePath);
-
               //////////////////////////////////////////////////////////////////////
               console.log('old app image path', oldAppImagePath);
               console.log('new app image path', newAppImagePath);
+              ////////////////////////////////////////////////////////////////////////////////////
+
+              copyFileSync(oldAppImagePath, newAppImagePath);
+
+              ////////////////////////////////////////////////////////////////////////////////////  
               console.log('new app image exists', existsSync(newAppImagePath));
               /////////////////////////////////////////////////////////////////////////
 
