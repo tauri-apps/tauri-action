@@ -80,6 +80,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y webkit2gtk-4.0
     - name: install app dependencies and build it
+    # If using the Vue CLI plugin, tauri:build will be run automatically by tauri-action
+    # and you can remove `&& yarn build` from this command
       run: yarn && yarn build
     - uses: tauri-apps/tauri-action@v0
       env:
@@ -149,6 +151,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y webkit2gtk-4.0
     - name: install app dependencies and build it
+    # If using the Vue CLI plugin, tauri:build will be run automatically by tauri-action
+    # and you can remove `&& yarn build` from this command
       run: yarn && yarn build
     - uses: tauri-apps/tauri-action@v0
       env:

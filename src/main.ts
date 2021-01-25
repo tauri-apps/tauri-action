@@ -17,12 +17,13 @@ function getPackageJson(root: string): any {
   return null
 }
 
-function hasTauriDependency(root: string): boolean {
+function hasDependency(dependencyName: string, root: string): boolean {
   const packageJson = getPackageJson(root)
   return (
     packageJson &&
-    ((packageJson.dependencies && packageJson.dependencies.tauri) ||
-      (packageJson.devDependencies && packageJson.devDependencies.tauri))
+    ((packageJson.dependencies && packageJson.dependencies[dependencyName]) ||
+      (packageJson.devDependencies &&
+        packageJson.devDependencies[dependencyName]))
   )
 }
 
@@ -73,9 +74,9 @@ async function buildProject(
   {configPath, distPath, iconPath, npmScript}: BuildOptions
 ): Promise<string[]> {
   return new Promise<string>(resolve => {
-    if (core.getInput('preferGlobal') === "true") {
+    if (core.getInput('preferGlobal') === 'true') {
       resolve('tauri')
-    } else if (hasTauriDependency(root)) {
+    } else if (hasDependency('tauri', root)) {
       if (npmScript) {
         resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
       } else {
@@ -145,8 +146,11 @@ async function buildProject(
       }
 
       const args = debug ? ['--debug'] : []
+      const buildCommand = hasDependency('vue-cli-plugin-tauri', root)
+        ? (usesYarn(root) ? 'yarn' : 'npm run') + ' tauri:build'
+        : `${app.runner} build`
       return execCommand(
-        `${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''),
+        buildCommand + (args.length ? ` ${args.join(' ')}` : ''),
         {cwd: root}
       )
         .then(() => {
