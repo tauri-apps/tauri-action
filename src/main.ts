@@ -76,7 +76,7 @@ async function buildProject(
   return new Promise<string>(resolve => {
     if (core.getInput('preferGlobal') === 'true') {
       resolve('tauri')
-    } else if (hasDependency('tauri', root)) {
+    } else if (hasDependency('tauri', root) || hasDependency('vue-cli-plugin-tauri', root)) {
       if (npmScript) {
         resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
       } else {
