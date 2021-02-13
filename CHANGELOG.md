@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0]
+## [0.0.10]
 
 -   If vue-cli-plugin-tauri is detected, the tauri:build command will be used.
     -   [f043343](https://github.com/tauri-apps/tauri-action/commit/f043343ae7ada30f30f67deeacb29eb9709283c3) feat: add support for building with vue cli ([#60](https://github.com/tauri-apps/tauri-action/pull/60)) on 2021-01-30

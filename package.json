@@ -1,6 +1,6 @@
 {
   "name": "tauri-action",
-  "version": "0.1.0",
+  "version": "0.0.10",
   "description": "Tauri GitHub Action",
   "main": "dist/index.js",
   "scripts": {
