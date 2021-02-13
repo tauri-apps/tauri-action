@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-import {getOctokit, context} from '@actions/github'
-import {GitHub} from '@actions/github/lib/utils'
+import { getOctokit, context } from '@actions/github'
+import { GitHub } from '@actions/github/lib/utils'
 import fs from 'fs'
 
 interface Release {
@@ -14,14 +14,12 @@ interface GitHubRelease {
   upload_url: string
   html_url: string
   tag_name: string
-  body: string
-  target_commitish: string
 }
 
 function allReleases(
   github: InstanceType<typeof GitHub>
-): AsyncIterableIterator<{data: GitHubRelease[]}> {
-  const params = {per_page: 100, ...context.repo}
+): AsyncIterableIterator<{ data: GitHubRelease[] }> {
+  const params = { per_page: 100, ...context.repo }
   return github.paginate.iterator(
     github.repos.listReleases.endpoint.merge(params)
   )
@@ -43,13 +41,13 @@ export default async function createRelease(
   const github = getOctokit(process.env.GITHUB_TOKEN)
 
   // Get owner and repo from context of payload that triggered the action
-  const {owner, repo} = context.repo
+  const { owner, repo } = context.repo
 
-  const bodyPath = core.getInput('body_path', {required: false})
+  const bodyPath = core.getInput('body_path', { required: false })
   let bodyFileContent = null
   if (bodyPath !== '' && !!bodyPath) {
     try {
-      bodyFileContent = fs.readFileSync(bodyPath, {encoding: 'utf8'})
+      bodyFileContent = fs.readFileSync(bodyPath, { encoding: 'utf8' })
     } catch (error) {
       core.setFailed(error.message)
     }

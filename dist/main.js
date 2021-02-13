@@ -14,7 +14,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -48,11 +48,12 @@ function getPackageJson(root) {
     }
     return null;
 }
-function hasTauriDependency(root) {
+function hasDependency(dependencyName, root) {
     const packageJson = getPackageJson(root);
     return (packageJson &&
-        ((packageJson.dependencies && packageJson.dependencies.tauri) ||
-            (packageJson.devDependencies && packageJson.devDependencies.tauri)));
+        ((packageJson.dependencies && packageJson.dependencies[dependencyName]) ||
+            (packageJson.devDependencies &&
+                packageJson.devDependencies[dependencyName])));
 }
 function usesYarn(root) {
     return fs_1.existsSync(path_1.join(root, 'yarn.lock'));
@@ -71,10 +72,10 @@ function execCommand(command, { cwd }) {
 function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise(resolve => {
-            if (core.getInput('preferGlobal') === "true") {
+            if (core.getInput('preferGlobal') === 'true') {
                 resolve('tauri');
             }
-            else if (hasTauriDependency(root)) {
+            else if (hasDependency('tauri', root) || hasDependency('vue-cli-plugin-tauri', root)) {
                 if (npmScript) {
                     resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`);
                 }
@@ -134,7 +135,10 @@ function buildProject(root, debug, { configPath, distPath, iconPath, npmScript }
                 fs_1.writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
             }
             const args = debug ? ['--debug'] : [];
-            return execCommand(`${app.runner} build` + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root })
+            const buildCommand = hasDependency('vue-cli-plugin-tauri', root)
+                ? (usesYarn(root) ? 'yarn' : 'npm run') + ' tauri:build'
+                : `${app.runner} build`;
+            return execCommand(buildCommand + (args.length ? ` ${args.join(' ')}` : ''), { cwd: root })
                 .then(() => {
                 const appName = app.name;
                 const artifactsPath = path_1.join(root, `src-tauri/target/${debug ? 'debug' : 'release'}`);
