@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/jest": "26.0.20",
     "@types/node": "14.14.28",
-    "@typescript-eslint/parser": "4.15.0",
+    "@typescript-eslint/parser": "4.15.1",
     "@zeit/ncc": "0.22.3",
     "covector": "0.4.4",
     "eslint": "7.20.0",
