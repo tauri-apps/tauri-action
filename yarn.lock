@@ -307,22 +307,22 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@covector/apply@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@covector/apply/-/apply-0.2.2.tgz#bbcbc92cb1c20fae47919b95a9f0ed71dfc08823"
-  integrity sha512-t+gWTKGnaM8xO6zWvVCBGZfDsTWdp3hvwyCXapjlfdiRx18piDD1MnZkFMhvchZWuOJODBUC5h5qihrTvD/c6w==
+"@covector/apply@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@covector/apply/-/apply-0.2.3.tgz#f4f3e4851786f197f375bd8fcb4cdfa99f4d7229"
+  integrity sha512-cniNpM71lNTHJYDsVjkL7bS3O8b4w6mo9qGOfr+Nc2JCpmsZsCd/ImN+/qEDz+4GmTSUp22adel3Pq75PmUsnQ==
   dependencies:
-    "@covector/files" "0.2.0"
+    "@covector/files" "0.2.1"
     lodash.clonedeep "^4.5.0"
     semver "^7.3.2"
 
-"@covector/assemble@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@covector/assemble/-/assemble-0.4.0.tgz#b145907c653d50656a2368f978cb68fc619c8054"
-  integrity sha512-UbPs3AbBGsdvMj42mvRO+IRxSQmG5fGU9G5Fbvf4ZXHGKQcNhrp+3f8A58ohVXrlSwllp7yVw75mVq4HYjS8jw==
+"@covector/assemble@0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@covector/assemble/-/assemble-0.4.1.tgz#c6b8973d7c001d4a684cb88fb0f4f6d9aacec540"
+  integrity sha512-Wr0d2Fc+Bqms5vYf37A4ZtDsJXZ+MklyQkVLpU3W5TQbUtt8lKADPpSFW+YkrlmM7x5JBxEdtAZs/z5PaU5PsQ==
   dependencies:
-    "@covector/command" "0.1.0"
-    "@covector/files" "0.2.0"
+    "@covector/command" "0.2.0"
+    "@covector/files" "0.2.1"
     lodash.clonedeep "^4.5.0"
     lodash.template "^4.5.0"
     remark-frontmatter "^2.0.0"
@@ -343,15 +343,6 @@
     to-vfile "^6.1.0"
     unified "^9.0.0"
 
-"@covector/command@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@covector/command/-/command-0.1.0.tgz#14c122cf44f2534a196eb610fe609c8ebb4b7d75"
-  integrity sha512-f9JNcrsXbjAdHVJMZbPwmf2uFN3owHPAd5k5gIzOiPe9zMHVAOM9PkyRUaCHnL8Htk9A/Gzgc+2AWFFLZOt3Dw==
-  dependencies:
-    "@effection/events" "^0.7.6"
-    effection "^0.7.0"
-    execa "^4.0.3"
-
 "@covector/command@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@covector/command/-/command-0.2.0.tgz#736406c42469e6556ddae5401644d2c88d3d146a"
@@ -359,17 +350,6 @@
   dependencies:
     effection "^0.7.0"
     strip-ansi "^6.0.0"
-
-"@covector/files@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@covector/files/-/files-0.2.0.tgz#bc9d3c492c16f44f801452e054d91618fbcd14e4"
-  integrity sha512-MtqWCQScB4jcCvH/HdKqUMFmbeqJPTuEfJgjcyKm+gV580mkVaJu53Y9Y/C0Rakyum6GPfmyndOh16fo7FrgGg==
-  dependencies:
-    "@iarna/toml" "^2.2.5"
-    "@tauri-apps/toml" "^2.2.4"
-    globby "^11.0.0"
-    semver "^7.3.2"
-    to-vfile "^6.1.0"
 
 "@covector/files@0.2.1":
   version "0.2.1"
@@ -391,7 +371,7 @@
     "@effection/subscription" "^0.12.0"
     effection "^0.8.0"
 
-"@effection/events@^0.7.6", "@effection/events@^0.7.8", "@effection/events@^0.7.9":
+"@effection/events@^0.7.8", "@effection/events@^0.7.9":
   version "0.7.9"
   resolved "https://registry.yarnpkg.com/@effection/events/-/events-0.7.9.tgz#398db75bbf73a4e2c357cddff39e9e8270092780"
   integrity sha512-AvuI/p991By3wJLQGM/DvINsS2RpQvXWt+ews6v4eGqUStyZZIYYRSNJd7wlAPzo5KtsQSjF001/dE8GkGCEsQ==
@@ -1654,13 +1634,13 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-covector@0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/covector/-/covector-0.4.4.tgz#3c6a793d0adbfc281d2ec6715bc4703ceae8ac2b"
-  integrity sha512-Y31GLAGk+OqGyNPuz8ySgvqXV5ORmhpU6G253Z1yEjWG3lj0himYvLQc8xcskR13DXCZR0TxVyAWP3x8xSyuyg==
+covector@0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/covector/-/covector-0.4.5.tgz#77b5bff80395358466b49fcaeb13a7248de42999"
+  integrity sha512-yu4nGeIfuPh4AZDELDl9ud8nVAaj+s6RKJgxrLlIRxlfxNZgaUkhvnQCFf/bcMqNr8354o3S0rTpOC5OFswMSQ==
   dependencies:
-    "@covector/apply" "0.2.2"
-    "@covector/assemble" "0.4.0"
+    "@covector/apply" "0.2.3"
+    "@covector/assemble" "0.4.1"
     "@covector/changelog" "0.2.2"
     "@covector/command" "0.2.0"
     "@covector/files" "0.2.1"
