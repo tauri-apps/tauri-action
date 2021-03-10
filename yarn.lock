@@ -1958,10 +1958,10 @@ escodegen@^1.14.1:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-prettier@>=6.10.1:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-7.2.0.tgz#f4a4bd2832e810e8cc7c1411ec85b3e85c0c53f9"
-  integrity sha512-rV4Qu0C3nfJKPOAhFujFxB7RMP+URFyQqqOZW9DMRD7ZDTFyjaIlETU3xzHELt++4ugC0+Jm084HQYkkJe+Ivg==
+eslint-config-prettier@>=8.0.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.1.0.tgz#4ef1eaf97afe5176e6a75ddfb57c335121abc5a6"
+  integrity sha512-oKMhGv3ihGbCIimCAjqkdzx2Q+jthoqnXSP+d86M9tptwugycmTFdVR4IpLgq2c4SHifbwO90z2fQ8/Aio73yw==
 
 eslint-import-resolver-node@^0.3.4:
   version "0.3.4"
@@ -1987,14 +1987,14 @@ eslint-plugin-eslint-comments@>=3.0.1:
     escape-string-regexp "^1.0.5"
     ignore "^5.0.5"
 
-eslint-plugin-github@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-github/-/eslint-plugin-github-4.1.1.tgz#d3e38dbe3610043066edca622eb944aa02b09aee"
-  integrity sha512-MzCh4P4zVvR/13AHtumzZ3znq0cbUE7lXehyBEpFURD/EHdx/+7qW+0c+ySTrteImpX9LGLJFTYNtu10BifkbQ==
+eslint-plugin-github@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-github/-/eslint-plugin-github-4.1.2.tgz#b2897af1398f8efaf9bc351a9f4dee98dc04fe04"
+  integrity sha512-ng738ugjNNF0BY4HQ9qo51xxQZZYtdYC//dhis+j8FL9BEsQ6x5BPmMbaKNP7PZ9wBUBTA7U8p4xFxUJlMi/PA==
   dependencies:
     "@typescript-eslint/eslint-plugin" ">=2.25.0"
     "@typescript-eslint/parser" ">=2.25.0"
-    eslint-config-prettier ">=6.10.1"
+    eslint-config-prettier ">=8.0.0"
     eslint-plugin-eslint-comments ">=3.0.1"
     eslint-plugin-import ">=2.20.1"
     eslint-plugin-prettier ">=3.1.2"
