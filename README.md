@@ -80,8 +80,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y webkit2gtk-4.0
     - name: install app dependencies and build it
-    # If using the Vue CLI plugin, tauri:build will be run automatically by tauri-action
-    # and you can remove `&& yarn build` from this command
       run: yarn && yarn build
     - uses: tauri-apps/tauri-action@v0
       env:
@@ -95,6 +93,8 @@ jobs:
 ```
 
 ## Uploading the artifacts to a release
+
+Note that `actions/create-release` isn't maintained so you should find an alternative or let the Tauri Action handle the release.
 
 ```yml
 name: "test-on-pr"
@@ -113,7 +113,7 @@ jobs:
         with:
           node-version: 12
       - name: get version
-        run: echo ::set-env name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
+        run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
       - name: create release
         id: create_release
         uses: actions/create-release@v1.1.0
@@ -151,8 +151,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y webkit2gtk-4.0
     - name: install app dependencies and build it
-    # If using the Vue CLI plugin, tauri:build will be run automatically by tauri-action
-    # and you can remove `&& yarn build` from this command
       run: yarn && yarn build
     - uses: tauri-apps/tauri-action@v0
       env:
@@ -192,5 +190,5 @@ jobs:
 - You can use this Action on a repo that doesn't have Tauri configured. We automatically initialize Tauri before building, and configure it to use your Web artifacts.
   - You can configure Tauri with the `configPath`, `distPath` and `iconPath` options.
 - You can run custom NPM scripts with the `npmScript` option. So instead of running `yarn tauri build` or `npx tauri build`, we'll execute `yarn ${npmScript}`.
-- Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
+  - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
 - When your app isn't on the root of the repo, use the `projectPath` input.

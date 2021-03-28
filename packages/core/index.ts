@@ -1,13 +1,10 @@
-import {platform} from 'os'
-import * as core from '@actions/core'
+import { platform } from 'os'
+import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import execa from 'execa'
-import {join, resolve} from 'path'
-import {readFileSync, existsSync, copyFileSync, writeFileSync} from 'fs'
-import uploadReleaseAssets from './upload-release-assets'
-import createRelease from './create-release'
 import toml from '@iarna/toml'
+import { join } from 'path'
 
-function getPackageJson(root: string): any {
+export function getPackageJson(root: string): any {
   const packageJsonPath = join(root, 'package.json')
   if (existsSync(packageJsonPath)) {
     const packageJsonString = readFileSync(packageJsonPath).toString()
@@ -31,9 +28,9 @@ function usesYarn(root: string): boolean {
   return existsSync(join(root, 'yarn.lock'))
 }
 
-function execCommand(
+export function execCommand(
   command: string,
-  {cwd}: {cwd: string | undefined}
+  { cwd }: { cwd: string | undefined }
 ): Promise<void> {
   console.log(`running ${command}`)
   const [cmd, ...args] = command.split(' ')
@@ -42,7 +39,7 @@ function execCommand(
     shell: process.env.shell || true,
     windowsHide: true,
     stdio: 'inherit',
-    env: {FORCE_COLOR: '0'}
+    env: { FORCE_COLOR: '0' }
   }).then()
 }
 
@@ -51,7 +48,7 @@ interface CargoManifestBin {
 }
 
 interface CargoManifest {
-  package: {version: string; name: string; 'default-run': string}
+  package: { version: string; name: string; 'default-run': string }
   bin: CargoManifestBin[]
 }
 
@@ -61,31 +58,32 @@ interface Application {
   version: string
 }
 
-interface BuildOptions {
+export interface BuildOptions {
   configPath: string | null
   distPath: string | null
   iconPath: string | null
   npmScript: string | null
 }
 
-async function buildProject(
+export async function buildProject(
+  preferGlobal: boolean,
   root: string,
   debug: boolean,
-  {configPath, distPath, iconPath, npmScript}: BuildOptions
+  { configPath, distPath, iconPath, npmScript }: BuildOptions
 ): Promise<string[]> {
-  return new Promise<string>(resolve => {
-    if (core.getInput('preferGlobal') === 'true') {
+  return new Promise<string>((resolve, reject) => {
+    if (preferGlobal) {
       resolve('tauri')
-    } else if (hasDependency('tauri', root) || hasDependency('vue-cli-plugin-tauri', root)) {
+    } else if (hasDependency('@tauri-apps/cli', root) || hasDependency('vue-cli-plugin-tauri', root)) {
       if (npmScript) {
         resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
       } else {
         resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
       }
     } else {
-      execCommand('npm install -g tauri', {cwd: undefined}).then(() =>
+      execCommand('npm install -g @tauri-apps/cli', { cwd: undefined }).then(() =>
         resolve('tauri')
-      )
+      ).catch(reject)
     }
   })
     .then((runner: string) => {
@@ -151,7 +149,7 @@ async function buildProject(
         : `${app.runner} build`
       return execCommand(
         buildCommand + (args.length ? ` ${args.join(' ')}` : ''),
-        {cwd: root}
+        { cwd: root }
       )
         .then(() => {
           const appName = app.name
@@ -169,7 +167,7 @@ async function buildProject(
                 ),
                 join(
                   artifactsPath,
-                  `bundle/osx/${appName}_${app.version}_${process.arch}.app`
+                  `bundle/macos/${appName}.app`
                 )
               ]
             case 'win32':
@@ -184,8 +182,8 @@ async function buildProject(
                 process.arch === 'x64'
                   ? 'amd64'
                   : process.arch === 'x32'
-                  ? 'i386'
-                  : process.arch
+                    ? 'i386'
+                    : process.arch
               return [
                 join(
                   artifactsPath,
@@ -201,105 +199,3 @@ async function buildProject(
         .then(paths => paths.filter(p => existsSync(p)))
     })
 }
-
-async function run(): Promise<void> {
-  try {
-    const projectPath = resolve(
-      process.cwd(),
-      core.getInput('projectPath') || process.argv[2]
-    )
-    const configPath = join(
-      projectPath,
-      core.getInput('configPath') || 'tauri.conf.json'
-    )
-    const distPath = core.getInput('distPath')
-    const iconPath = core.getInput('iconPath')
-    const includeDebug = core.getInput('includeDebug') === 'true'
-    const npmScript = core.getInput('npmScript')
-
-    let tagName = core.getInput('tagName').replace('refs/tags/', '')
-    let releaseName = core.getInput('releaseName').replace('refs/tags/', '')
-    let body = core.getInput('releaseBody')
-    const draft = core.getInput('releaseDraft') === 'true'
-    const prerelease = core.getInput('prerelease') === 'true'
-    const commitish = core.getInput('releaseCommitish') || null
-
-    if (Boolean(tagName) !== Boolean(releaseName)) {
-      throw new Error(
-        '`tag` is required along with `releaseName` when creating a release.'
-      )
-    }
-
-    const options: BuildOptions = {
-      configPath: existsSync(configPath) ? configPath : null,
-      distPath,
-      iconPath,
-      npmScript
-    }
-    const artifacts = await buildProject(projectPath, false, options)
-    if (includeDebug) {
-      const debugArtifacts = await buildProject(projectPath, true, options)
-      artifacts.push(...debugArtifacts)
-    }
-
-    if (artifacts.length === 0) {
-      throw new Error('No artifacts were found.')
-    }
-
-    console.log(`Artifacts: ${artifacts}.`)
-
-    let releaseId: number
-    if (tagName) {
-      const packageJson = getPackageJson(projectPath)
-      const templates = [
-        {
-          key: '__VERSION__',
-          value: packageJson?.version
-        }
-      ]
-
-      templates.forEach(template => {
-        const regex = new RegExp(template.key, 'g')
-        tagName = tagName.replace(regex, template.value)
-        releaseName = releaseName.replace(regex, template.value)
-        body = body.replace(regex, template.value)
-      })
-
-      const releaseData = await createRelease(
-        tagName,
-        releaseName,
-        body,
-        commitish || undefined,
-        draft,
-        prerelease
-      )
-      releaseId = releaseData.id
-      core.setOutput('releaseUploadUrl', releaseData.uploadUrl)
-      core.setOutput('releaseId', releaseData.id)
-      core.setOutput('releaseHtmlUrl', releaseData.htmlUrl)
-    } else {
-      releaseId = Number(core.getInput('releaseId') || 0)
-    }
-
-    if (releaseId) {
-      if (platform() === 'darwin') {
-        let i = 0
-        for (const artifact of artifacts) {
-          if (artifact.endsWith('.app')) {
-            await execCommand(`tar -czf ${artifact}.tgz ${artifact}`, {
-              cwd: undefined
-            })
-            artifacts[i] += '.tgz'
-          }
-          i++
-        }
-      }
-      await uploadReleaseAssets(releaseId, artifacts)
-    }
-  } catch (error) {
-    console.log('this')
-    core.setFailed(error.message)
-  }
-}
-
-run()
