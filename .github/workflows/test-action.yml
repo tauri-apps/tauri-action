@@ -31,7 +31,7 @@ jobs:
         yarn workspaces run build
     - name: install example dependencies
       run: yarn
-      working-directory: ./__fixtures__/example
+      working-directory: ./packages/action/__fixtures__/example
     - uses: ./packages/action
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
