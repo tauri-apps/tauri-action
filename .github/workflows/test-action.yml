@@ -32,7 +32,7 @@ jobs:
     - name: install example dependencies
       run: yarn
       working-directory: ./__fixtures__/example
-    - uses: ./
+    - uses: ./packages/action
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
