@@ -43,7 +43,7 @@ jobs:
         releaseBody: "See the assets to download this version and install."
         releaseDraft: true
         prerelease: false
-    - uses: ./
+    - uses: ./packages/action
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
