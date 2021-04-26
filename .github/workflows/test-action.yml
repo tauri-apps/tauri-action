@@ -28,7 +28,7 @@ jobs:
     - name: build action
       run: |
         yarn
-        yarn build
+        yarn workspaces run build
     - name: install example dependencies
       run: yarn
       working-directory: ./__fixtures__/example
