@@ -3,19 +3,23 @@
   "pkgManagers": {
     "javascript": {
       "version": true,
-      "publish": true
+      "build": false,
+      "preversion": "yarn pkg",
+      "publish": false,
+      "getPublishedVersion": false,
+      "assets": false
     }
   },
   "packages": {
+    "core": {
+      "path": "./packages/core",
+      "manager": "javascript"
+    },
     "action": {
-      "path": "./",
+      "path": "./packages/action",
       "manager": "javascript",
-      "preversion": ["yarn", "yarn build"],
-      "getPublishedVersion": "git tag v${ pkgFile.version } 2> OUT= || echo ${ pkgFile.version }",
-      "publish": [
-        "git tag v${ pkgFile.versionMajor } -f",
-        "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
-        "git push --tags -f"
+      "dependencies": [
+        "core"
       ]
     }
   }
