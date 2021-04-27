@@ -92,6 +92,7 @@ export async function buildProject(
   })
     .then((runner: string) => {
       const configPath = join(root, 'src-tauri/tauri.conf.json')
+      const manifestPath = join(root, 'src-tauri/Cargo.toml')
       if (existsSync(configPath)) {
         let name
         let version
@@ -103,7 +104,6 @@ export async function buildProject(
           version = config.package.version
         }
         if (!(name || version)) {
-          const manifestPath = join(root, 'src-tauri/Cargo.toml')
           const cargoManifest = (toml.parse(
             readFileSync(manifestPath).toString()
           ) as any) as CargoManifest
