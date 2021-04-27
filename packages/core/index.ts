@@ -40,7 +40,8 @@ export function execCommand(
     cwd,
     windowsHide: true,
     stdio: 'inherit',
-    env: { FORCE_COLOR: '0' }
+    env: { FORCE_COLOR: '0' },
+    shell: true
   }).then()
 }
 
