@@ -87,7 +87,7 @@ export async function buildProject(
       }
     } else {
       // join with `../` because this will run from dist/
-      resolve(join(__dirname, '../node_modules/.bin/tauri'))
+      resolve(process.argv[0] + ' ' + join(__dirname, '../node_modules/.bin/tauri'))
     }
   })
     .then((runner: string) => {
