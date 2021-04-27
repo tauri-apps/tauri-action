@@ -33,12 +33,10 @@ export function execCommand(
   command: string,
   { cwd }: { cwd: string | undefined }
 ): Promise<void> {
+  console.log(`running ${command}`)
   let [cmd, ...args] = command.split(' ')
-  cmd = whichSync(cmd)
-  console.log(`running ${cmd} ${args.join(' ')}`)
   return execa(cmd, args, {
     cwd,
-    shell: process.env.shell || true,
     windowsHide: true,
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' }
