@@ -2,6 +2,7 @@ import { platform } from 'os'
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import execa from 'execa'
 import toml from '@iarna/toml'
+import { sync as whichSync } from 'which'
 import { join } from 'path'
 
 export function getPackageJson(root: string): any {
@@ -32,8 +33,9 @@ export function execCommand(
   command: string,
   { cwd }: { cwd: string | undefined }
 ): Promise<void> {
-  console.log(`running ${command}`)
-  const [cmd, ...args] = command.split(' ')
+  let [cmd, ...args] = command.split(' ')
+  cmd = whichSync(cmd)
+  console.log(`running ${cmd} ${args.join(' ')}`)
   return execa(cmd, args, {
     cwd,
     shell: process.env.shell || true,
