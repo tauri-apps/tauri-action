@@ -2,7 +2,6 @@ import { platform } from 'os'
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import execa from 'execa'
 import toml from '@iarna/toml'
-import { sync as whichSync } from 'which'
 import { join } from 'path'
 
 export function getPackageJson(root: string): any {
@@ -35,16 +34,11 @@ export function execCommand(
 ): Promise<void> {
   console.log(`running ${command}`)
   const [cmd, ...args] = command.split(' ')
-  const options: execa.Options = {
+  return execa(cmd, args, {
     cwd,
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' }
-  }
-  if (cmd === 'node') {
-    const [script, ...scriptArgs] = args
-    return execa.node(script, scriptArgs, options).then()
-  }
-  return execa(cmd, args, options).then()
+  }).then()
 }
 
 interface CargoManifestBin {
@@ -82,10 +76,9 @@ export async function buildProject(
   debug: boolean,
   { configPath, distPath, iconPath, npmScript }: BuildOptions
 ): Promise<string[]> {
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<string>((resolve) => {
     if (preferGlobal) {
-      const tauriPath = whichSync('tauri')
-      resolve(`node ${tauriPath}`)
+      resolve('tauri')
     } else if (hasDependency('@tauri-apps/cli', root) || hasDependency('vue-cli-plugin-tauri', root)) {
       if (npmScript) {
         resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
@@ -93,10 +86,8 @@ export async function buildProject(
         resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
       }
     } else {
-      execCommand('npm install -g @tauri-apps/cli', { cwd: undefined }).then(() => {
-        const tauriPath = whichSync('tauri')
-        resolve(`node ${tauriPath}`)
-      }).catch(reject)
+      // join with `../` because this will run from dist/
+      resolve(join(__dirname, '../node_modules/.bin/tauri'))
     }
   })
     .then((runner: string) => {
