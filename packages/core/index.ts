@@ -54,6 +54,13 @@ interface CargoManifest {
   bin: CargoManifestBin[]
 }
 
+interface TauriConfig {
+  package?: {
+    productName?: string
+    version?: string
+  }
+}
+
 interface Application {
   runner: string
   name: string
@@ -89,15 +96,35 @@ export async function buildProject(
     }
   })
     .then((runner: string) => {
-      const manifestPath = join(root, 'src-tauri/Cargo.toml')
-      if (existsSync(manifestPath)) {
-        const cargoManifest = (toml.parse(
-          readFileSync(manifestPath).toString()
-        ) as any) as CargoManifest
+      const configPath = join(root, 'src-tauri/tauri.conf.json')
+      if (existsSync(configPath)) {
+        let name
+        let version
+        const config = JSON.parse(
+          readFileSync(configPath).toString()
+        ) as TauriConfig
+        if (config.package) {
+          name = config.package.productName
+          version = config.package.version
+        }
+        if (!(name || version)) {
+          const manifestPath = join(root, 'src-tauri/Cargo.toml')
+          const cargoManifest = (toml.parse(
+            readFileSync(manifestPath).toString()
+          ) as any) as CargoManifest
+          name = name || cargoManifest.package.name
+          version = version || cargoManifest.package.version
+        }
+
+        if (!(name || version)) {
+          console.error('Could not determine package name and version')
+          process.exit(1)
+        }
+
         return {
           runner,
-          name: cargoManifest.package.name,
-          version: cargoManifest.package.version
+          name,
+          version
         }
       } else {
         const packageJson = getPackageJson(root)
