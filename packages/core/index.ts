@@ -33,8 +33,9 @@ export function execCommand(
   command: string,
   { cwd }: { cwd: string | undefined }
 ): Promise<void> {
-  console.log(`running ${command}`)
   let [cmd, ...args] = command.split(' ')
+  cmd = whichSync(cmd)
+  console.log(`running \`${cmd}\` with args \`${args.join(' ')}\``)
   return execa(cmd, args, {
     cwd,
     windowsHide: true,
