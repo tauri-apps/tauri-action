@@ -7,7 +7,7 @@ import createRelease from './create-release'
 import { getPackageJson, buildProject, execCommand } from '@tauri-apps/action-core'
 import type { BuildOptions } from '@tauri-apps/action-core'
 
-export async function run(): Promise<void> {
+async function run(): Promise<void> {
   try {
     const preferGlobal = core.getInput('preferGlobal') === 'true'
     const projectPath = resolve(
@@ -106,3 +106,5 @@ export async function run(): Promise<void> {
     core.setFailed(error.message)
   }
 }
+
+run()
