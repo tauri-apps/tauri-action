@@ -33,16 +33,18 @@ export function execCommand(
   command: string,
   { cwd }: { cwd: string | undefined }
 ): Promise<void> {
-  let [cmd, ...args] = command.split(' ')
-  cmd = whichSync(cmd)
-  console.log(`running \`${cmd}\` with args \`${args.join(' ')}\``)
-  return execa(cmd, args, {
+  console.log(`running ${command}`)
+  const [cmd, ...args] = command.split(' ')
+  const options: execa.Options = {
     cwd,
-    windowsHide: true,
     stdio: 'inherit',
-    env: { FORCE_COLOR: '0' },
-    shell: true
-  }).then()
+    env: { FORCE_COLOR: '0' }
+  }
+  if (cmd === 'node') {
+    const [script, ...scriptArgs] = args
+    return execa.node(script, scriptArgs, options).then()
+  }
+  return execa(cmd, args, options).then()
 }
 
 interface CargoManifestBin {
