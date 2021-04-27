@@ -3,23 +3,54 @@
   "pkgManagers": {
     "javascript": {
       "version": true,
-      "build": false,
-      "preversion": "yarn pkg",
-      "publish": false,
-      "getPublishedVersion": false,
-      "assets": false
+      "getPublishedVersion": "npm view ${ pkg.pkg } version",
+      "prepublish": [
+        {
+          "command": "npm pack",
+          "dryRunCommand": true
+        }
+      ],
+      "publish": [
+        {
+          "command": "echo # Package Publish",
+          "dryRunCommand": "echo # Package Publish",
+          "pipe": true
+        },
+        {
+          "command": "npm publish --access public",
+          "dryRunCommand": "echo publish here",
+          "pipe": true
+        }
+      ]
     }
   },
   "packages": {
-    "core": {
-      "path": "./packages/core",
-      "manager": "javascript"
-    },
     "action": {
       "path": "./packages/action",
       "manager": "javascript",
+      "postpublish": [
+        "git tag ${ pkg.pkg }-v${ pkgFile.versionMajor } -f",
+        "git tag ${ pkg.pkg }-v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
+        "git push --tags -f"
+      ],
       "dependencies": [
         "core"
+      ],
+      "assets": [
+        {
+          "path": "./packages/action/tauri-action-${ pkgFile.version }.tgz",
+          "name": "tauri-action-${ pkgFile.version }.tgz"
+        }
+      ]
+    },
+    "core": {
+      "path": "./packages/core",
+      "manager": "javascript",
+      "assets": [
+        {
+          "path": "./packages/core/tauri-apps-action-core-${ pkgFile.version }.tgz",
+          "name": "action-core-${ pkgFile.version }.tgz"
+        }
       ]
     }
   }
