@@ -80,7 +80,8 @@ export async function buildProject(
 ): Promise<string[]> {
   return new Promise<string>((resolve, reject) => {
     if (preferGlobal) {
-      resolve('tauri')
+      const tauriPath = whichSync('tauri')
+      resolve(`node ${tauriPath}`)
     } else if (hasDependency('@tauri-apps/cli', root) || hasDependency('vue-cli-plugin-tauri', root)) {
       if (npmScript) {
         resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
@@ -88,9 +89,10 @@ export async function buildProject(
         resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
       }
     } else {
-      execCommand('npm install -g @tauri-apps/cli', { cwd: undefined }).then(() =>
-        resolve('tauri')
-      ).catch(reject)
+      execCommand('npm install -g @tauri-apps/cli', { cwd: undefined }).then(() => {
+        const tauriPath = whichSync('tauri')
+        resolve(`node ${tauriPath}`)
+      }).catch(reject)
     }
   })
     .then((runner: string) => {
