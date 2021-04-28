@@ -6,6 +6,10 @@
       "getPublishedVersion": "npm view ${ pkg.pkg } version",
       "prepublish": [
         {
+          "command": "yarn",
+          "dryRunCommand": true
+        },
+        {
           "command": "npm pack",
           "dryRunCommand": true
         }
