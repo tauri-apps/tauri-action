@@ -48,4 +48,3 @@ dist
 # but we want the action dist
 !packages/action/dist
 !packages/action/dist/**
-!packages/action/__fixtures__/**/dist

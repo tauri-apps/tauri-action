@@ -76,7 +76,7 @@ export async function buildProject(
   debug: boolean,
   { configPath, distPath, iconPath, npmScript }: BuildOptions
 ): Promise<string[]> {
-  return new Promise<string>((resolve) => {
+  return new Promise<string>((resolve, reject) => {
     if (preferGlobal) {
       resolve('tauri')
     } else if (hasDependency('@tauri-apps/cli', root) || hasDependency('vue-cli-plugin-tauri', root)) {
@@ -86,8 +86,9 @@ export async function buildProject(
         resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
       }
     } else {
-      // join with `../` because this will run from dist/
-      resolve(process.argv[0] + ' ' + join(__dirname, '../node_modules/.bin/tauri'))
+      execCommand('npm install -g @tauri-apps/cli', { cwd: undefined }).then(() => {
+        resolve('tauri')
+      }).catch(reject)
     }
   })
     .then((runner: string) => {

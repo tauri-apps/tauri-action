@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@iarna/toml": "2.2.5",
-    "@tauri-apps/cli": "1.0.0-beta-rc.4",
     "execa": "5.0.0"
   },
   "devDependencies": {
