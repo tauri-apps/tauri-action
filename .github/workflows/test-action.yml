@@ -36,7 +36,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
-        projectPath: ./__fixtures__/example
+        projectPath: ./packages/action/__fixtures__/example
         iconPath: ./icon.png
         tagName: example-v__VERSION__
         releaseName: "Release example app v__VERSION__"
@@ -47,7 +47,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
-        projectPath: ./__fixtures__/example-with-tauri
+        projectPath: ./packages/action/__fixtures__/example-with-tauri
         tagName: example-with-tauri-v__VERSION__
         releaseName: "Release example with preconfigured Tauri app v__VERSION__"
         releaseBody: "See the assets to download this version and install."
