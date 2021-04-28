@@ -20,7 +20,7 @@
   "dependencies": {
     "@actions/core": "1.2.0",
     "@actions/github": "4.0.0",
-    "@tauri-apps/action-core": "0.0.10"
+    "@tauri-apps/action-core": "0.1.0"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "8.2.1",

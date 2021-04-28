@@ -4,5 +4,8 @@
     "packages/core",
     "packages/cli",
     "packages/action"
-  ]
+  ],
+  "devDependencies": {
+    "covector": "0.5.3"
+  }
 }
