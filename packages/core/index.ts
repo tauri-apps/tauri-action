@@ -146,7 +146,7 @@ export async function buildProject(
             version
           }
           if (iconPath) {
-            return execCommand(`${runner} icon --i ${join(root, iconPath)}`, {
+            return execCommand(`${runner} icon ${join(root, iconPath)}`, {
               cwd: root
             }).then(() => app)
           }
