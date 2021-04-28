@@ -36,8 +36,6 @@ export function execCommand(
   const [cmd, ...args] = command.split(' ')
   return execa(cmd, args, {
     cwd,
-    shell: process.env.shell || true,
-    windowsHide: true,
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' }
   }).then()
@@ -50,6 +48,13 @@ interface CargoManifestBin {
 interface CargoManifest {
   package: { version: string; name: string; 'default-run': string }
   bin: CargoManifestBin[]
+}
+
+interface TauriConfig {
+  package?: {
+    productName?: string
+    version?: string
+  }
 }
 
 interface Application {
@@ -81,21 +86,41 @@ export async function buildProject(
         resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
       }
     } else {
-      execCommand('npm install -g @tauri-apps/cli', { cwd: undefined }).then(() =>
+      execCommand('npm install -g @tauri-apps/cli', { cwd: undefined }).then(() => {
         resolve('tauri')
-      ).catch(reject)
+      }).catch(reject)
     }
   })
     .then((runner: string) => {
-      const manifestPath = join(root, 'src-tauri/Cargo.toml')
-      if (existsSync(manifestPath)) {
-        const cargoManifest = (toml.parse(
-          readFileSync(manifestPath).toString()
-        ) as any) as CargoManifest
+      const configPath = join(root, 'src-tauri/tauri.conf.json')
+      if (existsSync(configPath)) {
+        let name
+        let version
+        const config = JSON.parse(
+          readFileSync(configPath).toString()
+        ) as TauriConfig
+        if (config.package) {
+          name = config.package.productName
+          version = config.package.version
+        }
+        if (!(name || version)) {
+          const manifestPath = join(root, 'src-tauri/Cargo.toml')
+          const cargoManifest = (toml.parse(
+            readFileSync(manifestPath).toString()
+          ) as any) as CargoManifest
+          name = name || cargoManifest.package.name
+          version = version || cargoManifest.package.version
+        }
+
+        if (!(name || version)) {
+          console.error('Could not determine package name and version')
+          process.exit(1)
+        }
+
         return {
           runner,
-          name: cargoManifest.package.name,
-          version: cargoManifest.package.version
+          name,
+          version
         }
       } else {
         const packageJson = getPackageJson(root)
@@ -105,16 +130,26 @@ export async function buildProject(
         return execCommand(`${runner} init --ci --app-name ${appName}`, {
           cwd: root
         }).then(() => {
-          const cargoManifest = (toml.parse(
-            readFileSync(manifestPath).toString()
-          ) as any) as CargoManifest
+          const config = JSON.parse(
+            readFileSync(configPath).toString()
+          ) as TauriConfig
           const version = packageJson ? packageJson.version : '0.1.0'
 
           console.log(
-            `Replacing cargo manifest options - package.version=${version}`
+            `Replacing tauri.conf.json config - package.version=${version}`
           )
-          cargoManifest.package.version = version
-          writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
+          const pkgConfig = {
+            ...config.package,
+            version
+          }
+          if (packageJson?.productName) {
+            console.log(
+              `Replacing tauri.conf.json config - package.productName=${packageJson.productName}`
+            )
+            pkgConfig.productName = packageJson.productName
+          }
+          config.package = pkgConfig
+          writeFileSync(configPath, JSON.stringify(config, null, 2))
 
           const app = {
             runner,
@@ -122,7 +157,7 @@ export async function buildProject(
             version
           }
           if (iconPath) {
-            return execCommand(`${runner} icon --i ${join(root, iconPath)}`, {
+            return execCommand(`${runner} icon ${join(root, iconPath)}`, {
               cwd: root
             }).then(() => app)
           }

@@ -4,7 +4,11 @@ import pkg from "./package.json";
 export default {
   treeshake: true,
   perf: true,
-  input: { index: "index.ts" },
+  input: {
+    index: "src/index.ts",
+    "create-release": "src/create-release.ts",
+    "upload-release-assets": "src/upload-release-assets.ts"
+  },
   output: {
     dir: "dist",
     format: "cjs",

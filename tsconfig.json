@@ -10,10 +10,5 @@
     "moduleResolution": "node",
     "importHelpers": true
   },
-  "baseUrl": ".",
-  "exclude": [
-    "__fixtures__",
-    "**/dist/**",
-    "**/bin/**"
-  ]
+  "baseUrl": "."
 }

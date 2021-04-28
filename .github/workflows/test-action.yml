@@ -15,7 +15,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v1
       with:
-        node-version: 12
+        node-version: 14
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
@@ -28,26 +28,26 @@ jobs:
     - name: build action
       run: |
         yarn
-        yarn build
+        yarn workspaces run build
     - name: install example dependencies
       run: yarn
-      working-directory: ./__fixtures__/example
-    - uses: ./
+      working-directory: ./packages/action/__fixtures__/example
+    - uses: ./packages/action
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
-        projectPath: ./__fixtures__/example
+        projectPath: ./packages/action/__fixtures__/example
         iconPath: ./icon.png
         tagName: example-v__VERSION__
         releaseName: "Release example app v__VERSION__"
         releaseBody: "See the assets to download this version and install."
         releaseDraft: true
         prerelease: false
-    - uses: ./
+    - uses: ./packages/action
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
-        projectPath: ./__fixtures__/example-with-tauri
+        projectPath: ./packages/action/__fixtures__/example-with-tauri
         tagName: example-with-tauri-v__VERSION__
         releaseName: "Release example with preconfigured Tauri app v__VERSION__"
         releaseBody: "See the assets to download this version and install."
