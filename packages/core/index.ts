@@ -93,7 +93,6 @@ export async function buildProject(
   })
     .then((runner: string) => {
       const configPath = join(root, 'src-tauri/tauri.conf.json')
-      const manifestPath = join(root, 'src-tauri/Cargo.toml')
       if (existsSync(configPath)) {
         let name
         let version
@@ -105,6 +104,7 @@ export async function buildProject(
           version = config.package.version
         }
         if (!(name || version)) {
+          const manifestPath = join(root, 'src-tauri/Cargo.toml')
           const cargoManifest = (toml.parse(
             readFileSync(manifestPath).toString()
           ) as any) as CargoManifest
@@ -130,16 +130,26 @@ export async function buildProject(
         return execCommand(`${runner} init --ci --app-name ${appName}`, {
           cwd: root
         }).then(() => {
-          const cargoManifest = (toml.parse(
-            readFileSync(manifestPath).toString()
-          ) as any) as CargoManifest
+          const config = JSON.parse(
+            readFileSync(configPath).toString()
+          ) as TauriConfig
           const version = packageJson ? packageJson.version : '0.1.0'
 
           console.log(
-            `Replacing cargo manifest options - package.version=${version}`
+            `Replacing tauri.conf.json config - package.version=${version}`
           )
-          cargoManifest.package.version = version
-          writeFileSync(manifestPath, toml.stringify(cargoManifest as any))
+          const pkgConfig = {
+            ...config.package,
+            version
+          }
+          if (packageJson?.productName) {
+            console.log(
+              `Replacing tauri.conf.json config - package.productName=${packageJson.productName}`
+            )
+            pkgConfig.productName = packageJson.productName
+          }
+          config.package = pkgConfig
+          writeFileSync(configPath, JSON.stringify(config, null, 2))
 
           const app = {
             runner,
