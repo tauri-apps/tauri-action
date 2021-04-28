@@ -72,7 +72,7 @@ function run() {
                     let i = 0;
                     for (const artifact of artifacts) {
                         if (artifact.endsWith('.app')) {
-                            yield action_core_1.execCommand(`tar -czf ${artifact}.tgz ${artifact}`, {
+                            yield action_core_1.execCommand(`tar czf ${artifact}.tgz ${artifact}`, {
                                 cwd: undefined
                             });
                             artifacts[i] += '.tgz';
