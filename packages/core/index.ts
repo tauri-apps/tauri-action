@@ -103,7 +103,7 @@ export async function buildProject(
           name = config.package.productName
           version = config.package.version
         }
-        if (!(name || version)) {
+        if (!(name && version)) {
           const manifestPath = join(root, 'src-tauri/Cargo.toml')
           const cargoManifest = (toml.parse(
             readFileSync(manifestPath).toString()
@@ -112,7 +112,7 @@ export async function buildProject(
           version = version || cargoManifest.package.version
         }
 
-        if (!(name || version)) {
+        if (!(name && version)) {
           console.error('Could not determine package name and version')
           process.exit(1)
         }
@@ -187,7 +187,14 @@ export async function buildProject(
         { cwd: root }
       )
         .then(() => {
-          const appName = app.name
+          let appName = app.name
+          // on Linux, the app product name is converted to kebab-case
+          if (!['darwin', 'win32'].includes(platform())) {
+            appName = appName.replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+              .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
+              .replace(/ /g, '-')
+              .toLowerCase()
+          }
           const artifactsPath = join(
             root,
             `src-tauri/target/${debug ? 'debug' : 'release'}`

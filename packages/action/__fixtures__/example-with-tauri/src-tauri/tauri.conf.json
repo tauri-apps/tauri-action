@@ -5,6 +5,9 @@
     "beforeDevCommand": "",
     "beforeBuildCommand": ""
   },
+  "package": {
+    "productName": "TauriExample App"
+  },
   "tauri": {
     "bundle": {
       "active": true,
