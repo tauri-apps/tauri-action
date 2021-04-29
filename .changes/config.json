@@ -43,8 +43,13 @@
       "path": "./packages/action",
       "manager": "javascript",
       "preversion": "npm run build",
-      "publish": false,
-      "getPublishedVersion": false,
+      "publish": [
+        "git tag v${ pkgFile.versionMajor } -f",
+        "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
+        "git tag v${ pkgFile.version } -f",
+        "git push --tags -f"
+      ],
+      "getPublishedVersion": "git tag -a -m \"v${ pkgFile.version }\" v${ pkgFile.version } 2>/dev/null || echo ${ pkgFile.version }",
       "dependencies": [
         "@tauri-apps/action-core"
       ],
