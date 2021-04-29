@@ -42,7 +42,6 @@
     "action": {
       "path": "./packages/action",
       "manager": "javascript",
-      "preversion": "npm run build",
       "publish": [
         "git tag v${ pkgFile.versionMajor } -f",
         "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
