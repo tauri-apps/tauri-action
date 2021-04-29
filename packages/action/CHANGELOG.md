@@ -1,5 +1,10 @@
 # Changelog
 
+## \[0.1.2]
+
+- Fixes `Artifacts not found` error on Linux when the `productName` is converted to `kebab-case`.
+  - [e6aa180](https://www.github.com/tauri-apps/tauri-action/commit/e6aa1807b6d2c80de70f78fb945e11a659037837) fix(core): product name on Linux is converted to kebab-case ([#125](https://www.github.com/tauri-apps/tauri-action/pull/125)) on 2021-04-29
+
 ## \[0.1.1]
 
 - Fixes action packaging.

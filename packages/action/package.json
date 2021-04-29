@@ -1,6 +1,6 @@
 {
   "name": "tauri-action",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Tauri GitHub Action",
   "author": "Lucas Nogueira <lucas@tauri.studio>",
   "license": "MIT",
@@ -19,7 +19,7 @@
   "dependencies": {
     "@actions/core": "1.2.7",
     "@actions/github": "4.0.0",
-    "@tauri-apps/action-core": "0.1.0",
+    "@tauri-apps/action-core": "0.1.1",
     "tslib": "2.2.0"
   },
   "devDependencies": {
