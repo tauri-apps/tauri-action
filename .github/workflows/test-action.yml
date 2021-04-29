@@ -28,7 +28,7 @@ jobs:
     - name: install example dependencies
       run: yarn
       working-directory: ./packages/action/__fixtures__/example
-    - uses: tauri-apps/tauri-action@fix/action-runtime
+    - uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
@@ -39,7 +39,7 @@ jobs:
         releaseBody: "See the assets to download this version and install."
         releaseDraft: true
         prerelease: false
-    - uses: tauri-apps/tauri-action@fix/action-runtime
+    - uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
