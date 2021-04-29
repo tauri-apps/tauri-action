@@ -2,4 +2,4 @@
 "action": patch
 ---
 
-Fixes `Cannot find module 'tslib'` error.
+Fixes action packaging.
