@@ -17,7 +17,7 @@
     "tauri"
   ],
   "dependencies": {
-    "@actions/core": "1.2.6",
+    "@actions/core": "1.2.7",
     "@actions/github": "4.0.0",
     "@tauri-apps/action-core": "0.1.0",
     "tslib": "2.2.0"
