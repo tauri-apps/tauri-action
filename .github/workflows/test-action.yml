@@ -32,7 +32,7 @@ jobs:
     - name: install example dependencies
       run: yarn
       working-directory: ./packages/action/__fixtures__/example
-    - uses: ./packages/action
+    - uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
@@ -43,7 +43,7 @@ jobs:
         releaseBody: "See the assets to download this version and install."
         releaseDraft: true
         prerelease: false
-    - uses: ./packages/action
+    - uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with: 
