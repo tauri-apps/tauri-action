@@ -210,6 +210,14 @@ export async function buildProject(
                 join(
                   artifactsPath,
                   `bundle/macos/${appName}.app`
+                ),
+                join(
+                  artifactsPath,
+                  `bundle/macos/${appName}.app.tar.gz`
+                ),
+                join(
+                  artifactsPath,
+                  `bundle/macos/${appName}.app.tar.gz.sig`
                 )
               ]
             case 'win32':
@@ -217,6 +225,14 @@ export async function buildProject(
                 join(
                   artifactsPath,
                   `bundle/msi/${appName}_${app.version}_${process.arch}.msi`
+                ),
+                join(
+                  artifactsPath,
+                  `bundle/msi/${appName}_${app.version}_${process.arch}.msi.zip`
+                ),
+                join(
+                  artifactsPath,
+                  `bundle/msi/${appName}_${app.version}_${process.arch}.msi.zip.sig`
                 )
               ]
             default:
@@ -234,6 +250,14 @@ export async function buildProject(
                 join(
                   artifactsPath,
                   `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`
+                ),
+                join(
+                  artifactsPath,
+                  `bundle/appimage/${appName}_${app.version}_${arch}.AppImage.zip`
+                ),
+                join(
+                  artifactsPath,
+                  `bundle/appimage/${appName}_${app.version}_${arch}.AppImage.zip.sig`
                 )
               ]
           }
