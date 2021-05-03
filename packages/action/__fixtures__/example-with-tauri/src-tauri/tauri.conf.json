@@ -38,7 +38,7 @@
       }
     },
     "updater": {
-      "enabled": true
+      "active": true
     },
     "allowlist": {
       "all": true
