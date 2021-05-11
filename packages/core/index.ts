@@ -30,11 +30,11 @@ function usesYarn(root: string): boolean {
 
 export function execCommand(
   command: string,
+  args: string[],
   { cwd }: { cwd: string | undefined }
 ): Promise<void> {
-  console.log(`running ${command}`)
-  const [cmd, ...args] = command.split(' ')
-  return execa(cmd, args, {
+  console.log(`running ${command}`, args)
+  return execa(command, args, {
     cwd,
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' }
@@ -58,7 +58,7 @@ interface TauriConfig {
 }
 
 interface Application {
-  runner: string
+  runner: Runner
   name: string
   version: string
 }
@@ -70,28 +70,41 @@ export interface BuildOptions {
   npmScript: string | null
 }
 
+export interface Runner {
+  runnerCommand: string
+  runnerArgs: string[]
+}
+
 export async function buildProject(
   preferGlobal: boolean,
   root: string,
   debug: boolean,
   { configPath, distPath, iconPath, npmScript }: BuildOptions
 ): Promise<string[]> {
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<Runner>((resolve, reject) => {
     if (preferGlobal) {
-      resolve('tauri')
+      resolve({ runnerCommand: 'tauri', runnerArgs: [] })
     } else if (hasDependency('@tauri-apps/cli', root) || hasDependency('vue-cli-plugin-tauri', root)) {
       if (npmScript) {
-        resolve(usesYarn(root) ? `yarn ${npmScript}` : `npm run ${npmScript}`)
+        resolve(
+          usesYarn(root)
+            ? { runnerCommand: 'yarn', runnerArgs: npmScript.split(' ') }
+            : { runnerCommand: 'npm', runnerArgs: ['run', ...npmScript.split(' ')] }
+        )
       } else {
-        resolve(usesYarn(root) ? 'yarn tauri' : 'npx tauri')
+        resolve(
+          usesYarn(root)
+            ? { runnerCommand: 'yarn', runnerArgs: ['tauri'] }
+            : { runnerCommand: 'npx', runnerArgs: ['tauri'] }
+        )
       }
     } else {
-      execCommand('npm install -g @tauri-apps/cli', { cwd: undefined }).then(() => {
-        resolve('tauri')
+      execCommand('npm', ['install', '-g', '@tauri-apps/cli'], { cwd: undefined }).then(() => {
+        resolve({ runnerCommand: 'tauri', runnerArgs: [] })
       }).catch(reject)
     }
   })
-    .then((runner: string) => {
+    .then((runner: Runner) => {
       const configPath = join(root, 'src-tauri/tauri.conf.json')
       if (existsSync(configPath)) {
         let name
@@ -127,7 +140,7 @@ export async function buildProject(
         const appName = packageJson
           ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
           : 'app'
-        return execCommand(`${runner} init --ci --app-name ${appName}`, {
+        return execCommand(runner.runnerCommand, [...runner.runnerArgs, 'init', '--ci', '--app-name', appName], {
           cwd: root
         }).then(() => {
           const config = JSON.parse(
@@ -157,7 +170,7 @@ export async function buildProject(
             version
           }
           if (iconPath) {
-            return execCommand(`${runner} icon ${join(root, iconPath)}`, {
+            return execCommand(runner.runnerCommand, [...runner.runnerArgs, 'icon', join(root, iconPath)], {
               cwd: root
             }).then(() => app)
           }
@@ -179,11 +192,24 @@ export async function buildProject(
       }
 
       const args = debug ? ['--debug'] : []
-      const buildCommand = hasDependency('vue-cli-plugin-tauri', root)
-        ? (usesYarn(root) ? 'yarn' : 'npm run') + ' tauri:build'
-        : `${app.runner} build`
+      let buildCommand
+      let buildArgs: string[] = []
+
+      if (hasDependency('vue-cli-plugin-tauri', root)) {
+        if (usesYarn(root)) {
+          buildCommand = 'yarn'
+        } else {
+          buildCommand = 'npx'
+          buildArgs = ['run', 'tauri:build']
+        }
+      } else {
+        buildCommand = app.runner.runnerCommand
+        buildArgs = [...app.runner.runnerArgs, 'build']
+      }
+
       return execCommand(
-        buildCommand + (args.length ? ` ${args.join(' ')}` : ''),
+        buildCommand,
+        [...buildArgs, ...args],
         { cwd: root }
       )
         .then(() => {
