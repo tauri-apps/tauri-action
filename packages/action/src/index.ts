@@ -92,7 +92,7 @@ async function run(): Promise<void> {
         let i = 0
         for (const artifact of artifacts) {
           if (artifact.endsWith('.app')) {
-            await execCommand(`tar czf ${artifact}.tgz ${artifact}`, {
+            await execCommand(`tar czf "${artifact}.tgz" "${artifact}"`, {
               cwd: undefined
             })
             artifacts[i] += '.tgz'
