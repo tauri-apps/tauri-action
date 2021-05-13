@@ -14,7 +14,7 @@
     "url": "git+https://github.com/tauri-apps/tauri-action.git"
   },
   "dependencies": {
-    "@tauri-apps/action-core": "0.1.0",
+    "@tauri-apps/action-core": "0.1.1",
     "minimist": "1.2.5",
     "tslib": "2.2.0"
   },

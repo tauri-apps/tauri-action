@@ -249,14 +249,6 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@tauri-apps/action-core@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/action-core/-/action-core-0.1.0.tgz#dec84eb4d6eb4e37c6772fa5edac5457331c7a10"
-  integrity sha512-apyQvpGejwqra2oWRhOHlC8wFS1MzqXKaDkwqutEmQ2G4COg2d1sON/UKYamlTTw33E8gsoz8HMhph8XXVkJsA==
-  dependencies:
-    "@iarna/toml" "2.2.5"
-    execa "5.0.0"
-
 "@tauri-apps/toml@^2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@tauri-apps/toml/-/toml-2.2.4.tgz#2b4f637aded7fc3a7302724605682c8fa3ac7505"
@@ -1604,6 +1596,11 @@ spdx-license-ids@^3.0.0:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.7.tgz#e9c18a410e5ed7e12442a549fbd8afa767038d65"
   integrity sha512-U+MTEOO0AiDzxwFvoa4JVnMV6mZlJKk2sBLt90s7G0Gd0Mlknc7kxEn3nuDPNZRta7O2uy8oLcZLVT+4sqNZHQ==
+
+string-argv@0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.3.1.tgz#95e2fbec0427ae19184935f816d74aaa4c5c19da"
+  integrity sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==
 
 string-width@^1.0.1:
   version "1.0.2"

@@ -11,7 +11,9 @@ export default {
     entryFileNames: "[name].js",
     exports: "named",
   },
-  plugins: [typescript()],
+  plugins: [typescript({
+    allowSyntheticDefaultImports: true
+  })],
   external: [
     ...Object.keys(pkg.dependencies || {}),
     "path",

@@ -21,12 +21,14 @@ export async function run(): Promise<void> {
   const iconPath = argv['icon-path']
   const includeDebug = argv['include-debug']
   const npmScript = argv['npm-script']
+  const args = argv._
 
   const options: BuildOptions = {
     configPath: existsSync(configPath) ? configPath : null,
     distPath,
     iconPath,
-    npmScript
+    npmScript,
+    args
   }
   const artifacts = await buildProject(preferGlobal, projectPath, false, options)
   if (includeDebug) {
