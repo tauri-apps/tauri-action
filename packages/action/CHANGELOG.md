@@ -1,5 +1,14 @@
 # Changelog
 
+## \[0.1.3]
+
+- Fixes execution of the `tar` command on `macOS` when the application name has spaces.
+  - [b4b20f9](https://www.github.com/tauri-apps/tauri-action/commit/b4b20f94709829e5e974255aa8034c78e70bb5d1) fix(core): command execution ([#132](https://www.github.com/tauri-apps/tauri-action/pull/132)) on 2021-05-11
+- Adds `args` option to pass arguments to the tauri command.
+  - [f564b01](https://www.github.com/tauri-apps/tauri-action/commit/f564b01e52fbf240e5e5c12577dd10625fe83580) feat: add `args` option, closes [#131](https://www.github.com/tauri-apps/tauri-action/pull/131) ([#134](https://www.github.com/tauri-apps/tauri-action/pull/134)) on 2021-05-13
+- Include updater artifacts if available.
+  - [0e9704e](https://www.github.com/tauri-apps/tauri-action/commit/0e9704eb73bcadd1c6acb3a2e9a73a100465db58) Add updater artifacts when available ([#129](https://www.github.com/tauri-apps/tauri-action/pull/129)) on 2021-05-13
+
 ## \[0.1.2]
 
 - Fixes `Artifacts not found` error on Linux when the `productName` is converted to `kebab-case`.
