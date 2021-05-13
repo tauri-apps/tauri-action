@@ -37,6 +37,9 @@
         "exceptionDomain": ""
       }
     },
+    "updater": {
+      "active": true
+    },
     "allowlist": {
       "all": true
     },
