@@ -6,6 +6,7 @@ import uploadReleaseAssets from './upload-release-assets'
 import createRelease from './create-release'
 import { getPackageJson, buildProject, execCommand } from '@tauri-apps/action-core'
 import type { BuildOptions } from '@tauri-apps/action-core'
+import stringArgv from 'string-argv'
 
 async function run(): Promise<void> {
   try {
@@ -22,6 +23,7 @@ async function run(): Promise<void> {
     const iconPath = core.getInput('iconPath')
     const includeDebug = core.getInput('includeDebug') === 'true'
     const npmScript = core.getInput('npmScript')
+    const args = stringArgv(core.getInput('args'))
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '')
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '')
@@ -40,7 +42,8 @@ async function run(): Promise<void> {
       configPath: existsSync(configPath) ? configPath : null,
       distPath,
       iconPath,
-      npmScript
+      npmScript,
+      args
     }
     const artifacts = await buildProject(preferGlobal, projectPath, false, options)
     if (includeDebug) {

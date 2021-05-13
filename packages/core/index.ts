@@ -1,7 +1,7 @@
 import { platform } from 'os'
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import execa from 'execa'
-import toml from '@iarna/toml'
+import { parse as parseToml } from '@iarna/toml'
 import { join } from 'path'
 
 export function getPackageJson(root: string): any {
@@ -68,6 +68,7 @@ export interface BuildOptions {
   distPath: string | null
   iconPath: string | null
   npmScript: string | null
+  args: string[] | null
 }
 
 export interface Runner {
@@ -79,7 +80,7 @@ export async function buildProject(
   preferGlobal: boolean,
   root: string,
   debug: boolean,
-  { configPath, distPath, iconPath, npmScript }: BuildOptions
+  { configPath, distPath, iconPath, npmScript, args }: BuildOptions
 ): Promise<string[]> {
   return new Promise<Runner>((resolve, reject) => {
     if (preferGlobal) {
@@ -118,7 +119,7 @@ export async function buildProject(
         }
         if (!(name && version)) {
           const manifestPath = join(root, 'src-tauri/Cargo.toml')
-          const cargoManifest = (toml.parse(
+          const cargoManifest = (parseToml(
             readFileSync(manifestPath).toString()
           ) as any) as CargoManifest
           name = name || cargoManifest.package.name
@@ -191,7 +192,7 @@ export async function buildProject(
         writeFileSync(tauriConfPath, JSON.stringify(tauriConf))
       }
 
-      const args = debug ? ['--debug'] : []
+      const tauriArgs = debug ? ['--debug', ...(args ?? [])] : (args ?? [])
       let buildCommand
       let buildArgs: string[] = []
 
@@ -209,7 +210,7 @@ export async function buildProject(
 
       return execCommand(
         buildCommand,
-        [...buildArgs, ...args],
+        [...buildArgs, ...tauriArgs],
         { cwd: root }
       )
         .then(() => {
