@@ -249,6 +249,15 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@tauri-apps/action-core@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/action-core/-/action-core-0.1.1.tgz#858019032e0ac3fcd44c334becee3654a3fcf20f"
+  integrity sha512-gFMSZRfDofZGCLPVoHNPz2Y+NA9TiMkecUXP87e2hIZsr5rl6MD+OlCmrX5hh7V5zPIqXPpmQNQt/j7OWLmX/g==
+  dependencies:
+    "@iarna/toml" "2.2.5"
+    execa "5.0.0"
+    tslib "2.2.0"
+
 "@tauri-apps/toml@^2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@tauri-apps/toml/-/toml-2.2.4.tgz#2b4f637aded7fc3a7302724605682c8fa3ac7505"
@@ -1352,9 +1361,9 @@ path-key@^3.0.0, path-key@^3.1.0:
   integrity sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==
 
 path-parse@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
-  integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz#fbc114b60ca42b30d9daf5858e4bd68bbedb6735"
+  integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
 
 path-type@^4.0.0:
   version "4.0.0"
