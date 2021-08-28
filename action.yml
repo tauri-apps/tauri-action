@@ -14,8 +14,10 @@ inputs:
     description: 'The body of the release to create'
   releaseDraft:
     description: 'Whether the release to create is a draft or not'
+    default: false
   prerelease:
     description: 'Whether the release to create is a prerelease or not'
+    default: false
   releaseCommitish:
     description: 'Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit'
   projectPath:
@@ -30,10 +32,12 @@ inputs:
     description: 'path to the PNG icon to use as app icon, relative to the projectPath'
   includeDebug:
     description: 'whether to include a debug build or not'
+    default: false
   npmScript:
     description: 'the package.json script to run to build the Tauri app'
   preferGlobal:
     description: 'set this to true to use a globally installed tauri instead'
+    default: false
   args:
     description: 'arguments for the tauri command'
 outputs:

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@actions/core@1.2.7":
-  version "1.2.7"
-  resolved "https://registry.yarnpkg.com/@actions/core/-/core-1.2.7.tgz#594f8c45b213f0146e4be7eda8ae5cf4e198e5ab"
-  integrity sha512-kzLFD5BgEvq6ubcxdgPbRKGD2Qrgya/5j+wh4LZzqT915I0V3rED+MvjH6NXghbvk1MXknpNNQ3uKjXSEN00Ig==
+"@actions/core@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@actions/core/-/core-1.5.0.tgz#885b864700001a1b9a6fba247833a036e75ad9d3"
+  integrity sha512-eDOLH1Nq9zh+PJlYLqEMkS/jLQxhksPNmUGNBHfa4G+tQmnIhzpctxmchETtVGyBOvXgOVVpYuE40+eS4cUnwQ==
 
 "@actions/github@4.0.0":
   version "4.0.0"
@@ -249,6 +249,15 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@tauri-apps/action-core@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/action-core/-/action-core-0.1.1.tgz#858019032e0ac3fcd44c334becee3654a3fcf20f"
+  integrity sha512-gFMSZRfDofZGCLPVoHNPz2Y+NA9TiMkecUXP87e2hIZsr5rl6MD+OlCmrX5hh7V5zPIqXPpmQNQt/j7OWLmX/g==
+  dependencies:
+    "@iarna/toml" "2.2.5"
+    execa "5.0.0"
+    tslib "2.2.0"
+
 "@tauri-apps/toml@^2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@tauri-apps/toml/-/toml-2.2.4.tgz#2b4f637aded7fc3a7302724605682c8fa3ac7505"
@@ -275,6 +284,11 @@
   version "14.14.27"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.27.tgz#c7127f8da0498993e13b1a42faf1303d3110d2f2"
   integrity sha512-Ecfmo4YDQPwuqTCl1yBxLV5ihKfRlkBmzUEDcfIRvDxOTGQEeikr317Ln7Gcv0tjA8dVgKI3rniqW2G1OyKDng==
+
+"@types/node@^16.7.4":
+  version "16.7.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.7.4.tgz#68a9384694af63ceab8848e95d76d9a3519e84b6"
+  integrity sha512-25QXpDsTiDnl2rZGUenagVMwO46way8dOUdvoC3R3p+6TrbpxeJBo/v87BEG1IHI31Jhaa8lPeSHcqwxsVBeYQ==
 
 "@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.3"
