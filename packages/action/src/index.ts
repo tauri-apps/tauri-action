@@ -1,6 +1,6 @@
 import { platform } from 'os'
 import * as core from '@actions/core'
-import { join, resolve } from 'path'
+import { join, resolve, dirname, basename } from 'path'
 import { existsSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 import createRelease from './create-release'
@@ -95,9 +95,7 @@ async function run(): Promise<void> {
         let i = 0
         for (const artifact of artifacts) {
           if (artifact.endsWith('.app')) {
-            await execCommand('tar', ['czf', `${artifact}.tgz`, artifact], {
-              cwd: undefined
-            })
+            await execCommand('tar', ['czf', `${artifact}.tgz`, '-C', dirname(artifact), basename(artifact)])
             artifacts[i] += '.tgz'
           }
           i++
