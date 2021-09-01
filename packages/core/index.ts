@@ -76,6 +76,53 @@ export interface Runner {
   runnerArgs: string[]
 }
 
+interface Info {
+  name: string
+  version: string
+}
+export function getInfo(root: string): Info {
+  const configPath = join(root, 'src-tauri/tauri.conf.json')
+  if (existsSync(configPath)) {
+    let name
+    let version
+    const config = JSON.parse(
+      readFileSync(configPath).toString()
+    ) as TauriConfig
+    if (config.package) {
+      name = config.package.productName
+      version = config.package.version
+    }
+    if (!(name && version)) {
+      const manifestPath = join(root, 'src-tauri/Cargo.toml')
+      const cargoManifest = (parseToml(
+        readFileSync(manifestPath).toString()
+      ) as any) as CargoManifest
+      name = name || cargoManifest.package.name
+      version = version || cargoManifest.package.version
+    }
+
+    if (!(name && version)) {
+      console.error('Could not determine package name and version')
+      process.exit(1)
+    }
+
+    return {
+      name,
+      version,
+    }
+  } else {
+    const packageJson = getPackageJson(root)
+    const appName = packageJson
+      ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
+      : 'app'
+    const version = packageJson ? packageJson.version : '0.1.0'
+    return {
+      name: appName,
+      version
+    }
+  }
+}
+
 export async function buildProject(
   preferGlobal: boolean,
   root: string,
@@ -107,54 +154,28 @@ export async function buildProject(
   })
     .then((runner: Runner) => {
       const configPath = join(root, 'src-tauri/tauri.conf.json')
+      const info = getInfo(root)
       if (existsSync(configPath)) {
-        let name
-        let version
-        const config = JSON.parse(
-          readFileSync(configPath).toString()
-        ) as TauriConfig
-        if (config.package) {
-          name = config.package.productName
-          version = config.package.version
-        }
-        if (!(name && version)) {
-          const manifestPath = join(root, 'src-tauri/Cargo.toml')
-          const cargoManifest = (parseToml(
-            readFileSync(manifestPath).toString()
-          ) as any) as CargoManifest
-          name = name || cargoManifest.package.name
-          version = version || cargoManifest.package.version
-        }
-
-        if (!(name && version)) {
-          console.error('Could not determine package name and version')
-          process.exit(1)
-        }
-
         return {
           runner,
-          name,
-          version
+          name: info.name,
+          version: info.version,
         }
       } else {
         const packageJson = getPackageJson(root)
-        const appName = packageJson
-          ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
-          : 'app'
-        return execCommand(runner.runnerCommand, [...runner.runnerArgs, 'init', '--ci', '--app-name', appName], {
+        return execCommand(runner.runnerCommand, [...runner.runnerArgs, 'init', '--ci', '--app-name', info.name], {
           cwd: root
         }).then(() => {
           const config = JSON.parse(
             readFileSync(configPath).toString()
           ) as TauriConfig
-          const version = packageJson ? packageJson.version : '0.1.0'
 
           console.log(
-            `Replacing tauri.conf.json config - package.version=${version}`
+            `Replacing tauri.conf.json config - package.version=${info.version}`
           )
           const pkgConfig = {
             ...config.package,
-            version
+            version: info.version
           }
           if (packageJson?.productName) {
             console.log(
@@ -167,8 +188,8 @@ export async function buildProject(
 
           const app = {
             runner,
-            name: appName,
-            version
+            name: info.name,
+            version: info.version,
           }
           if (iconPath) {
             return execCommand(runner.runnerCommand, [...runner.runnerArgs, 'icon', join(root, iconPath)], {
@@ -214,10 +235,10 @@ export async function buildProject(
         { cwd: root }
       )
         .then(() => {
-          let appName = app.name
+          let fileAppName = app.name
           // on Linux, the app product name is converted to kebab-case
           if (!['darwin', 'win32'].includes(platform())) {
-            appName = appName.replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+            fileAppName = fileAppName.replace(/([a-z0-9])([A-Z])/g, '$1-$2')
               .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
               .replace(/ /g, '-')
               .toLowerCase()
@@ -227,42 +248,41 @@ export async function buildProject(
             `src-tauri/target/${debug ? 'debug' : 'release'}`
           )
 
-          switch (platform()) {
-            case 'darwin':
+          if (platform() === 'darwin') {
               return [
                 join(
                   artifactsPath,
-                  `bundle/dmg/${appName}_${app.version}_${process.arch}.dmg`
+                  `bundle/dmg/${fileAppName}_${app.version}_${process.arch}.dmg`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/macos/${appName}.app`
+                  `bundle/macos/${fileAppName}.app`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/macos/${appName}.app.tar.gz`
+                  `bundle/macos/${fileAppName}.app.tar.gz`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/macos/${appName}.app.tar.gz.sig`
+                  `bundle/macos/${fileAppName}.app.tar.gz.sig`
                 )
               ]
-            case 'win32':
+          } else if (platform() === 'win32') {
               return [
                 join(
                   artifactsPath,
-                  `bundle/msi/${appName}_${app.version}_${process.arch}.msi`
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/msi/${appName}_${app.version}_${process.arch}.msi.zip`
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi.zip`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/msi/${appName}_${app.version}_${process.arch}.msi.zip.sig`
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi.zip.sig`
                 )
               ]
-            default:
+          } else {
               const arch =
                 process.arch === 'x64'
                   ? 'amd64'
@@ -272,19 +292,19 @@ export async function buildProject(
               return [
                 join(
                   artifactsPath,
-                  `bundle/deb/${appName}_${app.version}_${arch}.deb`
+                  `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/appimage/${appName}_${app.version}_${arch}.AppImage`
+                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/appimage/${appName}_${app.version}_${arch}.AppImage.tar.gz`
+                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/appimage/${appName}_${app.version}_${arch}.AppImage.tar.gz.sig`
+                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
                 )
               ]
           }

@@ -4,7 +4,7 @@ import { join, resolve, dirname, basename } from 'path'
 import { existsSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 import createRelease from './create-release'
-import { getPackageJson, buildProject, execCommand } from '@tauri-apps/action-core'
+import { getPackageJson, buildProject, getInfo, execCommand } from '@tauri-apps/action-core'
 import type { BuildOptions } from '@tauri-apps/action-core'
 import stringArgv from 'string-argv'
 
@@ -45,6 +45,7 @@ async function run(): Promise<void> {
       npmScript,
       args
     }
+    const info = getInfo(projectPath)
     const artifacts = await buildProject(preferGlobal, projectPath, false, options)
     if (includeDebug) {
       const debugArtifacts = await buildProject(preferGlobal, projectPath, true, options)
@@ -63,7 +64,7 @@ async function run(): Promise<void> {
       const templates = [
         {
           key: '__VERSION__',
-          value: packageJson?.version
+          value: info.version
         }
       ]
 
