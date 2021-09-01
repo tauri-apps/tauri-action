@@ -94,9 +94,11 @@ async function run(): Promise<void> {
       if (platform() === 'darwin') {
         let i = 0
         for (const artifact of artifacts) {
-          if (artifact.endsWith('.app')) {
-            await execCommand('tar', ['czf', `${artifact}.tgz`, '-C', dirname(artifact), basename(artifact)])
-            artifacts[i] += '.tgz'
+          // updater provide a .tar.gz, this will prevent duplicate and overwriting of
+          // signed archive
+          if (artifact.endsWith('.app')  && !existsSync(`${artifact}.tar.gz`)) {
+            await execCommand('tar', ['czf', `${artifact}.tar.gz`, '-C', dirname(artifact), basename(artifact)])
+            artifacts[i] += '.tar.gz'
           }
           i++
         }

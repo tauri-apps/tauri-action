@@ -48,9 +48,9 @@ jobs:
 ```yml
 name: "publish"
 on:
-push:
-  branches:
-    - release
+  push:
+    branches:
+      - release
 
 jobs:
   publish-tauri:
