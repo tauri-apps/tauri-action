@@ -100,6 +100,9 @@ async function run(): Promise<void> {
           if (artifact.endsWith('.app')  && !existsSync(`${artifact}.tar.gz`)) {
             await execCommand('tar', ['czf', `${artifact}.tar.gz`, '-C', dirname(artifact), basename(artifact)])
             artifacts[i] += '.tar.gz'
+          } else if (artifact.endsWith('.app')) {
+            // we can't upload a directory
+            delete artifacts[i]
           }
           i++
         }
