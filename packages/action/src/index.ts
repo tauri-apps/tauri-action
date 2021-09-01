@@ -1,6 +1,6 @@
 import { platform } from 'os'
 import * as core from '@actions/core'
-import { join, resolve } from 'path'
+import { join, resolve, dirname, basename } from 'path'
 import { existsSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 import createRelease from './create-release'
@@ -96,10 +96,8 @@ async function run(): Promise<void> {
         for (const artifact of artifacts) {
           // updater provide a .tar.gz, this will prevent duplicate and overwriting of
           // signed archive
-          if (artifact.endsWith('.app') && !existsSync(`${artifact}.tar.gz`)) {
-            await execCommand('tar', ['czf', `${artifact}.tar.gz`, artifact], {
-              cwd: undefined
-            })
+          if (artifact.endsWith('.app')  && !existsSync(`${artifact}.tar.gz`)) {
+            await execCommand('tar', ['czf', `${artifact}.tar.gz`, '-C', dirname(artifact), basename(artifact)])
             artifacts[i] += '.tar.gz'
           }
           i++

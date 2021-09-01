@@ -31,7 +31,7 @@ function usesYarn(root: string): boolean {
 export function execCommand(
   command: string,
   args: string[],
-  { cwd }: { cwd: string | undefined }
+  { cwd }: { cwd?: string } = {}
 ): Promise<void> {
   console.log(`running ${command}`, args)
   return execa(command, args, {
