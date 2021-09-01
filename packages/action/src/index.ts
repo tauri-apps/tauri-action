@@ -102,7 +102,7 @@ async function run(): Promise<void> {
             artifacts[i] += '.tar.gz'
           } else if (artifact.endsWith('.app')) {
             // we can't upload a directory
-            delete artifacts[i]
+            artifacts.splice(i, 1);
           }
           i++
         }
