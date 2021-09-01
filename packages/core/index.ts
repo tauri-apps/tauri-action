@@ -300,11 +300,11 @@ export async function buildProject(
                 ),
                 join(
                   artifactsPath,
-                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.zip`
+                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
                 ),
                 join(
                   artifactsPath,
-                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.zip.sig`
+                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
                 )
               ]
           }
