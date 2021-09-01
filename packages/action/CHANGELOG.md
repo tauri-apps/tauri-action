@@ -1,5 +1,10 @@
 # Changelog
 
+## \[0.1.5]
+
+- Fix action bundle.
+  - [a226a3d](https://www.github.com/tauri-apps/tauri-action/commit/a226a3da1dfa61b5c4cb764c250224ed5a8a52b8) fix: rebuild github action bundle ([#166](https://www.github.com/tauri-apps/tauri-action/pull/166)) on 2021-09-01
+
 ## \[0.1.4]
 
 - Fix `.app` tar being nested in folders
