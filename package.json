@@ -6,6 +6,6 @@
     "packages/action"
   ],
   "devDependencies": {
-    "covector": "0.5.3"
+    "covector": "0.7.3"
   }
 }

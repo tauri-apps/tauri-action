@@ -1,4 +1,4 @@
-import {getOctokit, context} from '@actions/github'
+import { getOctokit, context } from '@actions/github'
 import fs from 'fs'
 import path from 'path'
 
@@ -27,7 +27,7 @@ export default async function uploadAssets(
       ? `${filename}-debug${ext}`
       : `${filename}${ext}`
     console.log(`Uploading ${assetName}...`)
-    await github.repos.uploadReleaseAsset({
+    await github.rest.repos.uploadReleaseAsset({
       headers,
       name: assetName,
       // https://github.com/tauri-apps/tauri-action/pull/45

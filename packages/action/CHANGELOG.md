@@ -1,5 +1,20 @@
 # Changelog
 
+## \[0.1.5]
+
+- Fix action bundle.
+  - [a226a3d](https://www.github.com/tauri-apps/tauri-action/commit/a226a3da1dfa61b5c4cb764c250224ed5a8a52b8) fix: rebuild github action bundle ([#166](https://www.github.com/tauri-apps/tauri-action/pull/166)) on 2021-09-01
+
+## \[0.1.4]
+
+- Fix `.app` tar being nested in folders
+  - [2a35a8a](https://www.github.com/tauri-apps/tauri-action/commit/2a35a8a0243d33e1afc9f197601be3db187826d7) Fix `.app` tar being nested in folders ([#158](https://www.github.com/tauri-apps/tauri-action/pull/158)) on 2021-09-01
+- Linux: Upload AppImage updater artifacts if available.
+  macOS: Replace `[AppName].app.tgz` to `[AppName].app.tar.gz` to align with updater artifacts.
+  - [e7266ff](https://www.github.com/tauri-apps/tauri-action/commit/e7266fff1b42c35bfd7ff359d5c6a91ad1308dea) fix(action): Upload AppImage updater artifacts when available ([#163](https://www.github.com/tauri-apps/tauri-action/pull/163)) on 2021-08-31
+- Fix incorrect version being used in release names
+  - [110a0c6](https://www.github.com/tauri-apps/tauri-action/commit/110a0c6da6de9aa85c8e3186ad642650ebc95ab0) Fix version lookup ([#160](https://www.github.com/tauri-apps/tauri-action/pull/160)) on 2021-09-01
+
 ## \[0.1.3]
 
 - Fixes execution of the `tar` command on `macOS` when the application name has spaces.
