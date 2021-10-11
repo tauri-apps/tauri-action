@@ -48,9 +48,9 @@ jobs:
 ```yml
 name: "publish"
 on:
-push:
-  branches:
-    - release
+  push:
+    branches:
+      - release
 
 jobs:
   publish-tauri:
@@ -83,8 +83,8 @@ jobs:
       with:
         tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
         releaseName: "App v__VERSION__"
-        body: "See the assets to download this version and install."
-        draft: true
+        releaseBody: "See the assets to download this version and install."
+        releaseDraft: true
         prerelease: false
 ```
 

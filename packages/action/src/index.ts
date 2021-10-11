@@ -1,10 +1,10 @@
 import { platform } from 'os'
 import * as core from '@actions/core'
-import { join, resolve } from 'path'
+import { join, resolve, dirname, basename } from 'path'
 import { existsSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 import createRelease from './create-release'
-import { getPackageJson, buildProject, execCommand } from '@tauri-apps/action-core'
+import { getPackageJson, buildProject, getInfo, execCommand } from '@tauri-apps/action-core'
 import type { BuildOptions } from '@tauri-apps/action-core'
 import stringArgv from 'string-argv'
 
@@ -45,6 +45,7 @@ async function run(): Promise<void> {
       npmScript,
       args
     }
+    const info = getInfo(projectPath)
     const artifacts = await buildProject(preferGlobal, projectPath, false, options)
     if (includeDebug) {
       const debugArtifacts = await buildProject(preferGlobal, projectPath, true, options)
@@ -63,7 +64,7 @@ async function run(): Promise<void> {
       const templates = [
         {
           key: '__VERSION__',
-          value: packageJson?.version
+          value: info.version
         }
       ]
 
@@ -94,11 +95,14 @@ async function run(): Promise<void> {
       if (platform() === 'darwin') {
         let i = 0
         for (const artifact of artifacts) {
-          if (artifact.endsWith('.app')) {
-            await execCommand('tar', ['czf', `${artifact}.tgz`, artifact], {
-              cwd: undefined
-            })
-            artifacts[i] += '.tgz'
+          // updater provide a .tar.gz, this will prevent duplicate and overwriting of
+          // signed archive
+          if (artifact.endsWith('.app')  && !existsSync(`${artifact}.tar.gz`)) {
+            await execCommand('tar', ['czf', `${artifact}.tar.gz`, '-C', dirname(artifact), basename(artifact)])
+            artifacts[i] += '.tar.gz'
+          } else if (artifact.endsWith('.app')) {
+            // we can't upload a directory
+            artifacts.splice(i, 1);
           }
           i++
         }
