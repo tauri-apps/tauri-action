@@ -10,7 +10,7 @@ import stringArgv from 'string-argv'
 
 async function run(): Promise<void> {
   try {
-    const preferGlobal = core.getInput('preferGlobal') === 'true'
+    const preferGlobal = core.getBooleanInput('preferGlobal')
     const projectPath = resolve(
       process.cwd(),
       core.getInput('projectPath') || process.argv[2]
@@ -21,15 +21,15 @@ async function run(): Promise<void> {
     )
     const distPath = core.getInput('distPath')
     const iconPath = core.getInput('iconPath')
-    const includeDebug = core.getInput('includeDebug') === 'true'
+    const includeDebug = core.getBooleanInput('includeDebug')
     const npmScript = core.getInput('npmScript')
     const args = stringArgv(core.getInput('args'))
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '')
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '')
     let body = core.getInput('releaseBody')
-    const draft = core.getInput('releaseDraft') === 'true'
-    const prerelease = core.getInput('prerelease') === 'true'
+    const draft = core.getBooleanInput('releaseDraft')
+    const prerelease = core.getBooleanInput('prerelease')
     const commitish = core.getInput('releaseCommitish') || null
 
     if (Boolean(tagName) !== Boolean(releaseName)) {
