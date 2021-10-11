@@ -21,7 +21,7 @@ function allReleases(
 ): AsyncIterableIterator<{ data: GitHubRelease[] }> {
   const params = { per_page: 100, ...context.repo }
   return github.paginate.iterator(
-    github.repos.listReleases.endpoint.merge(params)
+    github.rest.repos.listReleases.endpoint.merge(params)
   )
 }
 
@@ -75,7 +75,7 @@ export default async function createRelease(
         throw new Error('release not found')
       }
     } else {
-      const foundRelease = await github.repos.getReleaseByTag({
+      const foundRelease = await github.rest.repos.getReleaseByTag({
         owner,
         repo,
         tag: tagName
@@ -86,7 +86,7 @@ export default async function createRelease(
   } catch (error) {
     if (error.status === 404 || error.message === 'release not found') {
       console.log(`Couldn't find release with tag ${tagName}. Creating one.`)
-      const createdRelease = await github.repos.createRelease({
+      const createdRelease = await github.rest.repos.createRelease({
         owner,
         repo,
         tag_name: tagName,
