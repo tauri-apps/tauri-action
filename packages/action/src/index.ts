@@ -10,7 +10,6 @@ import stringArgv from 'string-argv'
 
 async function run(): Promise<void> {
   try {
-    const preferGlobal = core.getBooleanInput('preferGlobal')
     const projectPath = resolve(
       process.cwd(),
       core.getInput('projectPath') || process.argv[2]
@@ -22,7 +21,7 @@ async function run(): Promise<void> {
     const distPath = core.getInput('distPath')
     const iconPath = core.getInput('iconPath')
     const includeDebug = core.getBooleanInput('includeDebug')
-    const npmScript = core.getInput('npmScript')
+    const tauriScript = core.getInput('tauriScript')
     const args = stringArgv(core.getInput('args'))
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '')
@@ -42,13 +41,13 @@ async function run(): Promise<void> {
       configPath: existsSync(configPath) ? configPath : null,
       distPath,
       iconPath,
-      npmScript,
+      tauriScript,
       args
     }
     const info = getInfo(projectPath)
-    const artifacts = await buildProject(preferGlobal, projectPath, false, options)
+    const artifacts = await buildProject(projectPath, false, options)
     if (includeDebug) {
-      const debugArtifacts = await buildProject(preferGlobal, projectPath, true, options)
+      const debugArtifacts = await buildProject(projectPath, true, options)
       artifacts.push(...debugArtifacts)
     }
 
@@ -97,7 +96,7 @@ async function run(): Promise<void> {
         for (const artifact of artifacts) {
           // updater provide a .tar.gz, this will prevent duplicate and overwriting of
           // signed archive
-          if (artifact.endsWith('.app')  && !existsSync(`${artifact}.tar.gz`)) {
+          if (artifact.endsWith('.app') && !existsSync(`${artifact}.tar.gz`)) {
             await execCommand('tar', ['czf', `${artifact}.tar.gz`, '-C', dirname(artifact), basename(artifact)])
             artifacts[i] += '.tar.gz'
           } else if (artifact.endsWith('.app')) {
