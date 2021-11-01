@@ -1,6 +1,6 @@
 {
   "name": "@tauri-apps/action-core",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "author": "Lucas Nogueira <lucas@tauri.studio>",
   "license": "MIT",
   "main": "dist",
