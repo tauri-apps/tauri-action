@@ -1,5 +1,10 @@
 # Changelog
 
+## \[0.2.0]
+
+- Removed the `preferGlobal` and `npmScript` inputs and added a `tauriScript` option.
+  - [a1050c9](https://www.github.com/tauri-apps/tauri-action/commit/a1050c9ec8903fc5c43696da7f07dcfc89475104) refactor: add `tauriScript` input, remove `preferGlobal` and `npmScript` ([#183](https://www.github.com/tauri-apps/tauri-action/pull/183)) on 2021-11-01
+
 ## \[0.1.3]
 
 - Linux: Upload AppImage updater artifacts if available.
