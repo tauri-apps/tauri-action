@@ -6,7 +6,7 @@ import parseArgs from 'minimist'
 
 export async function run(): Promise<void> {
   const argv = parseArgs(process.argv.slice(2), {
-    string: ['project-path', 'config-path', 'dist-path', 'icon-path', 'npm-script'],
+    string: ['project-path', 'config-path', 'dist-path', 'icon-path', 'tauri-script'],
     boolean: ['global-tauri', 'include-debug'],
     default: {
       'config-path': 'tauri.conf.json',
@@ -14,25 +14,24 @@ export async function run(): Promise<void> {
     }
   })
 
-  const preferGlobal = argv['global-tauri']
   const projectPath = resolve(process.cwd(), argv['project-path'])
   const configPath = join(projectPath, argv['config-path'])
   const distPath = argv['dist-path']
   const iconPath = argv['icon-path']
   const includeDebug = argv['include-debug']
-  const npmScript = argv['npm-script']
+  const tauriScript = argv['tauri-script']
   const args = argv._
 
   const options: BuildOptions = {
     configPath: existsSync(configPath) ? configPath : null,
     distPath,
     iconPath,
-    npmScript,
+    tauriScript,
     args
   }
-  const artifacts = await buildProject(preferGlobal, projectPath, false, options)
+  const artifacts = await buildProject(projectPath, false, options)
   if (includeDebug) {
-    const debugArtifacts = await buildProject(preferGlobal, projectPath, true, options)
+    const debugArtifacts = await buildProject(projectPath, true, options)
     artifacts.push(...debugArtifacts)
   }
 

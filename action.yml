@@ -33,11 +33,8 @@ inputs:
   includeDebug:
     description: 'whether to include a debug build or not'
     default: false
-  npmScript:
-    description: 'the package.json script to run to build the Tauri app'
-  preferGlobal:
-    description: 'set this to true to use a globally installed tauri instead'
-    default: false
+  tauriScript:
+    description: 'the script to run to build the Tauri app'
   args:
     description: 'arguments for the tauri command'
 outputs:

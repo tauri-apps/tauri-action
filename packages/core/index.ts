@@ -67,7 +67,7 @@ export interface BuildOptions {
   configPath: string | null
   distPath: string | null
   iconPath: string | null
-  npmScript: string | null
+  tauriScript: string | null
   args: string[] | null
 }
 
@@ -124,28 +124,21 @@ export function getInfo(root: string): Info {
 }
 
 export async function buildProject(
-  preferGlobal: boolean,
   root: string,
   debug: boolean,
-  { configPath, distPath, iconPath, npmScript, args }: BuildOptions
+  { configPath, distPath, iconPath, tauriScript, args }: BuildOptions
 ): Promise<string[]> {
   return new Promise<Runner>((resolve, reject) => {
-    if (preferGlobal) {
-      resolve({ runnerCommand: 'tauri', runnerArgs: [] })
-    } else if (hasDependency('@tauri-apps/cli', root) || hasDependency('vue-cli-plugin-tauri', root)) {
-      if (npmScript) {
-        resolve(
-          usesYarn(root)
-            ? { runnerCommand: 'yarn', runnerArgs: npmScript.split(' ') }
-            : { runnerCommand: 'npm', runnerArgs: ['run', ...npmScript.split(' ')] }
-        )
-      } else {
-        resolve(
-          usesYarn(root)
-            ? { runnerCommand: 'yarn', runnerArgs: ['tauri'] }
-            : { runnerCommand: 'npx', runnerArgs: ['tauri'] }
-        )
-      }
+    if (tauriScript) {
+      const [runnerCommand, ...runnerArgs] = tauriScript.split(' ')
+      resolve({ runnerCommand, runnerArgs })
+    }
+    else if (hasDependency('@tauri-apps/cli', root) || hasDependency('vue-cli-plugin-tauri', root)) {
+      resolve(
+        usesYarn(root)
+          ? { runnerCommand: 'yarn', runnerArgs: ['tauri'] }
+          : { runnerCommand: 'npx', runnerArgs: ['tauri'] }
+      )
     } else {
       execCommand('npm', ['install', '-g', '@tauri-apps/cli'], { cwd: undefined }).then(() => {
         resolve({ runnerCommand: 'tauri', runnerArgs: [] })
@@ -249,64 +242,64 @@ export async function buildProject(
           )
 
           if (platform() === 'darwin') {
-              return [
-                join(
-                  artifactsPath,
-                  `bundle/dmg/${fileAppName}_${app.version}_${process.arch}.dmg`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/macos/${fileAppName}.app`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/macos/${fileAppName}.app.tar.gz`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/macos/${fileAppName}.app.tar.gz.sig`
-                )
-              ]
+            return [
+              join(
+                artifactsPath,
+                `bundle/dmg/${fileAppName}_${app.version}_${process.arch}.dmg`
+              ),
+              join(
+                artifactsPath,
+                `bundle/macos/${fileAppName}.app`
+              ),
+              join(
+                artifactsPath,
+                `bundle/macos/${fileAppName}.app.tar.gz`
+              ),
+              join(
+                artifactsPath,
+                `bundle/macos/${fileAppName}.app.tar.gz.sig`
+              )
+            ]
           } else if (platform() === 'win32') {
-              return [
-                join(
-                  artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi.zip`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi.zip.sig`
-                )
-              ]
+            return [
+              join(
+                artifactsPath,
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi`
+              ),
+              join(
+                artifactsPath,
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi.zip`
+              ),
+              join(
+                artifactsPath,
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi.zip.sig`
+              )
+            ]
           } else {
-              const arch =
-                process.arch === 'x64'
-                  ? 'amd64'
-                  : process.arch === 'x32'
-                    ? 'i386'
-                    : process.arch
-              return [
-                join(
-                  artifactsPath,
-                  `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
-                ),
-                join(
-                  artifactsPath,
-                  `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
-                )
-              ]
+            const arch =
+              process.arch === 'x64'
+                ? 'amd64'
+                : process.arch === 'x32'
+                  ? 'i386'
+                  : process.arch
+            return [
+              join(
+                artifactsPath,
+                `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
+              ),
+              join(
+                artifactsPath,
+                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage`
+              ),
+              join(
+                artifactsPath,
+                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
+              ),
+              join(
+                artifactsPath,
+                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
+              )
+            ]
           }
         })
         .then(paths => paths.filter(p => existsSync(p)))
