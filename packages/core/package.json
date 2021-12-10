@@ -4,6 +4,7 @@
   "author": "Lucas Nogueira <lucas@tauri.studio>",
   "license": "MIT",
   "main": "dist",
+  "type": "module",
   "scripts": {
     "build": "rollup --config",
     "prepublishOnly": "rollup --config"

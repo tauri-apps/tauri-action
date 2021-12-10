@@ -7,7 +7,7 @@ export default {
   input: { index: "index.ts" },
   output: {
     dir: "dist",
-    format: "cjs",
+    format: "esm",
     entryFileNames: "[name].js",
     exports: "named",
   },

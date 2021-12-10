@@ -5,6 +5,7 @@
   "author": "Lucas Nogueira <lucas@tauri.studio>",
   "license": "MIT",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "ncc build src/index.ts -o dist -m"
   },
