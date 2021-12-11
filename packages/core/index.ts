@@ -2,7 +2,8 @@ import { platform } from 'os'
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import { execa } from 'execa'
 import { parse as parseToml } from '@iarna/toml'
-import { join } from 'path'
+import { join, resolve, normalize, sep } from 'path'
+import glob from 'glob'
 
 export function getPackageJson(root: string): any {
   const packageJsonPath = join(root, 'package.json')
@@ -12,6 +13,52 @@ export function getPackageJson(root: string): any {
     return packageJson
   }
   return null
+}
+
+function getWorkspaceDir(dir: string): string | null {
+  const rootPath = dir
+  while (dir.length && dir[dir.length - 1] !== sep) {
+    const manifestPath = join(dir, 'Cargo.toml')
+    if (existsSync(manifestPath)) {
+      const toml = parseToml(readFileSync(manifestPath).toString())
+      // @ts-expect-error
+      if (toml.workspace && toml.workspace.members) {
+        // @ts-expect-error
+        const members: string[] = toml.workspace.members
+        if (members.some(m => resolve(dir, m) === rootPath)) {
+          return dir
+        }
+      }
+    }
+
+    dir = normalize(join(dir, '..'))
+  }
+  return null
+}
+
+function getTargetDir(crateDir: string): string {
+  const def = join(crateDir, 'target')
+  if ('CARGO_TARGET_DIR' in process.env) {
+    return process.env.CARGO_TARGET_DIR ?? def
+  }
+  let dir = crateDir
+  while (dir.length && dir[dir.length - 1] !== sep) {
+    let cargoConfigPath = join(dir, '.cargo/config')
+    if (!existsSync(cargoConfigPath)) {
+      cargoConfigPath = join(dir, '.cargo/config.toml')
+    }
+    if (existsSync(cargoConfigPath)) {
+      const cargoConfig = parseToml(readFileSync(cargoConfigPath).toString())
+      // @ts-ignore
+      if (cargoConfig.build && cargoConfig.build['target-dir']) {
+        // @ts-ignore
+        return cargoConfig.build['target-dir']
+      }
+    }
+
+    dir = normalize(join(dir, '..'))
+  }
+  return def
 }
 
 function hasDependency(dependencyName: string, root: string): boolean {
@@ -236,10 +283,11 @@ export async function buildProject(
               .replace(/ /g, '-')
               .toLowerCase()
           }
-          const artifactsPath = join(
-            root,
-            `src-tauri/target/${debug ? 'debug' : 'release'}`
-          )
+          const tauriConfPath = glob.sync('**/tauri.conf.json')[0]
+          const tauriPath = resolve(process.cwd(), tauriConfPath, '..')
+          const cratePath = getWorkspaceDir(tauriPath) ?? tauriPath
+
+          const artifactsPath = join(getTargetDir(cratePath), debug ? 'debug' : 'release')
 
           if (platform() === 'darwin') {
             return [
