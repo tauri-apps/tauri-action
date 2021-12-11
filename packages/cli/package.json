@@ -5,6 +5,7 @@
   "author": "Lucas Nogueira <lucas@tauri.studio>",
   "license": "MIT",
   "main": "dist",
+  "type": "module",
   "scripts": {
     "build": "rollup --config",
     "prepublishOnly": "rollup --config"
@@ -14,7 +15,7 @@
     "url": "git+https://github.com/tauri-apps/tauri-action.git"
   },
   "dependencies": {
-    "@tauri-apps/action-core": "0.1.1",
+    "@tauri-apps/action-core": "0.2.0",
     "minimist": "1.2.5",
     "tslib": "2.3.1"
   },

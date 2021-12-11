@@ -1,2 +1,2 @@
-const { run } = require('../dist')
+import { run } from '../dist/index.js'
 run()
