@@ -34,6 +34,29 @@ function allReleases(
   )
 }
 
+
+function checkPlatform(platform: string, fileName: string) {
+
+	// macOS
+	if (
+		(fileName.includes(".app.tar.gz") || fileName.includes(".dmg")) &&
+		platform === "darwin"
+	) {
+		return 'darwin';
+	}
+
+	// Windows
+	if (fileName.includes('.msi') && platform === "win32") {
+		return 'win64';
+	}
+
+  // Linux
+	if ((fileName.includes('AppImage') || fileName.includes("deb")) && platform === "linux") {
+		return 'linux';
+	}
+}
+
+
 export default async function createRelease(
   tagName: string,
   releaseName: string,
@@ -75,10 +98,12 @@ export default async function createRelease(
         if (releaseWithTag) {
           // Remove all assets from the existing release
           for(const asset of releaseWithTag.assets) {
-            await github.rest.repos.deleteReleaseAsset({
-              asset_id: asset.id,
-              owner, repo
-            })
+            if(checkPlatform(process.platform, asset.name)) {
+              await github.rest.repos.deleteReleaseAsset({
+                asset_id: asset.id,
+                owner, repo
+              })
+            }
           }
           release = releaseWithTag
           console.log(
