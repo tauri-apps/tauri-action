@@ -9,11 +9,20 @@ interface Release {
   htmlUrl: string
 }
 
+interface GitHubReleaseAsset{
+  id: number
+  name: string
+  state: string
+  size: number
+  browser_download_url: string
+}
+
 interface GitHubRelease {
   id: number
   upload_url: string
   html_url: string
   tag_name: string
+  assets: GitHubReleaseAsset[]
 }
 
 function allReleases(
@@ -64,6 +73,13 @@ export default async function createRelease(
           release => release.tag_name === tagName
         )
         if (releaseWithTag) {
+          // Remove all assets from the existing release
+          for(const asset of releaseWithTag.assets) {
+            await github.rest.repos.deleteReleaseAsset({
+              asset_id: asset.id,
+              owner, repo
+            })
+          }
           release = releaseWithTag
           console.log(
             `Found draft release with tag ${tagName} on the release list.`
