@@ -325,30 +325,41 @@ export async function buildProject(
               )
             ]
           } else {
-            const arch =
-              process.arch === 'x64'
-                ? 'amd64'
-                : process.arch === 'x32'
-                  ? 'i386'
-                  : process.arch
-            return [
-              join(
-                artifactsPath,
-                `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
-              ),
-              join(
-                artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage`
-              ),
-              join(
-                artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
-              ),
-              join(
-                artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
-              )
-            ]
+            for (let i = 0; i < excludeBin.length; i++) {
+              const arch =
+                process.arch === 'x64'
+                  ? 'amd64'
+                  : process.arch === 'x32'
+                    ? 'i386'
+                    : process.arch
+              if (excludeBin[i] === 'Appimage') {
+                return [
+                  join(
+                    artifactsPath,
+                    `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
+                  )
+                ]
+              } else {
+                return [
+                  join(
+                    artifactsPath,
+                    `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
+                  ),
+                  join(
+                    artifactsPath,
+                    `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage`
+                  ),
+                  join(
+                    artifactsPath,
+                    `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
+                  ),
+                  join(
+                    artifactsPath,
+                    `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
+                  )
+                ]
+              }
+            }
           }
         })
         .then(paths => paths.filter(p => existsSync(p)))
