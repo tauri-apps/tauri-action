@@ -27,7 +27,7 @@ async function run(): Promise<void> {
     let tagName = core.getInput('tagName').replace('refs/tags/', '')
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '')
     let body = core.getInput('releaseBody')
-    let excludeDir = core.getInput('excludeBin')
+    let excludeBin = core.getInput('excludeBin')
     const draft = core.getBooleanInput('releaseDraft')
     const prerelease = core.getBooleanInput('prerelease')
     const commitish = core.getInput('releaseCommitish') || null
