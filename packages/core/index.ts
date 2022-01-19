@@ -116,6 +116,7 @@ export interface BuildOptions {
   iconPath: string | null
   tauriScript: string | null
   args: string[] | null
+  excludeBin: string[] | null
 }
 
 export interface Runner {
@@ -173,7 +174,7 @@ export function getInfo(root: string): Info {
 export async function buildProject(
   root: string,
   debug: boolean,
-  { configPath, distPath, iconPath, tauriScript, args }: BuildOptions
+  { configPath, distPath, iconPath, tauriScript, args, excludeBin }: BuildOptions
 ): Promise<string[]> {
   return new Promise<Runner>((resolve, reject) => {
     if (tauriScript) {
