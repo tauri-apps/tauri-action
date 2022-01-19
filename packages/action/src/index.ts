@@ -43,7 +43,8 @@ async function run(): Promise<void> {
       distPath,
       iconPath,
       tauriScript,
-      args
+      args, 
+      excludeBin
     }
     const info = getInfo(projectPath)
     const artifacts = await buildProject(projectPath, false, options)
