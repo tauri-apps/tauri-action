@@ -26,7 +26,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v1
       with:
-        node-version: 12
+        node-version: 16
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
@@ -65,7 +65,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v1
       with:
-        node-version: 12
+        node-version: 16
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
@@ -107,7 +107,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 16
       - name: get version
         run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
       - name: create release
@@ -134,7 +134,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v1
       with:
-        node-version: 12
+        node-version: 16
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
