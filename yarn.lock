@@ -314,10 +314,10 @@
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
   integrity sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
 
-"@vercel/ncc@0.33.1":
-  version "0.33.1"
-  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.33.1.tgz#b240080a3c1ded9446a30955a06a79851bb38f71"
-  integrity sha512-Mlsps/P0PLZwsCFtSol23FGqT3FhBGb4B1AuGQ52JTAtXhak+b0Fh/4T55r0/SVQPeRiX9pNItOEHwakGPmZYA==
+"@vercel/ncc@0.33.2":
+  version "0.33.2"
+  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.33.2.tgz#913ea6e0884921d3b8abce26409b01713e2d8581"
+  integrity sha512-rzl7vNljla3/qZeHDlk8k+4LYGI793LewFgrnPRBBMdpUdJNoy8wJ/bYDzKWbTbmPfWzHgkiBZsynW12JrAMdg==
 
 abbrev@1:
   version "1.1.1"
