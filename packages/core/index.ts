@@ -1,5 +1,5 @@
 import { platform } from 'os'
-import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
+import { readdirSync, readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import { execa } from 'execa'
 import { parse as parseToml } from '@iarna/toml'
 import { join, resolve, normalize, sep } from 'path'
@@ -328,6 +328,10 @@ export async function buildProject(
               )
             ]
           } else if (platform() === 'win32') {
+            console.log(`Windows bundling`)
+            console.log(`App Wix Language: ${app.wixLanguage}`)
+            const filesInDir = readdirSync(artifactsPath)
+            console.log(`Contents of ${artifactsPath}: ${JSON.stringify(filesInDir)}`)
             return [
               join(
                 artifactsPath,
