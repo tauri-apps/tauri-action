@@ -1,5 +1,5 @@
 import { platform } from 'os'
-import { readdirSync, readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
+import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import { execa } from 'execa'
 import { parse as parseToml } from '@iarna/toml'
 import { join, resolve, normalize, sep } from 'path'
