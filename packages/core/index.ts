@@ -106,7 +106,7 @@ interface TauriConfig {
     bundle?: {
       windows?: {
         wix?: {
-          language?: string
+          language?: string | string[] | { [language: string]: unknown }
         }
       }
     }
@@ -117,7 +117,7 @@ interface Application {
   runner: Runner
   name: string
   version: string
-  wixLanguage: string
+  wixLanguage: string | string[] | { [language: string]: unknown }
 }
 
 export interface BuildOptions {
@@ -136,14 +136,14 @@ export interface Runner {
 interface Info {
   name: string
   version: string
-  wixLanguage: string
+  wixLanguage: string | string[] | { [language: string]: unknown }
 }
 export function getInfo(root: string): Info {
   const configPath = join(root, 'src-tauri/tauri.conf.json')
   if (existsSync(configPath)) {
     let name
     let version
-    let wixLanguage = 'en-US'
+    let wixLanguage: string | string[] | { [language: string]: unknown } = 'en-US'
     const config = JSON.parse(
       readFileSync(configPath).toString()
     ) as TauriConfig
@@ -328,20 +328,32 @@ export async function buildProject(
               )
             ]
           } else if (platform() === 'win32') {
-            return [
-              join(
+            // If multiple Wix languages are specified, multiple installers (.msi) will be made
+            // The .zip and .sig are only generated for the first specified language
+            let langs
+            if (typeof app.wixLanguage === "string") {
+              langs = [app.wixLanguage]
+            } else if (Array.isArray(app.wixLanguage)) {
+              langs = app.wixLanguage
+            } else {
+              langs = Object.keys(app.wixLanguage)
+            }
+            const artifacts: string[] = []
+            langs.forEach(lang => {
+              artifacts.push(join(
                 artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${app.wixLanguage}.msi`
-              ),
-              join(
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi`
+              ))
+              artifacts.push(join(
                 artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${app.wixLanguage}.msi.zip`
-              ),
-              join(
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip`
+              ))
+              artifacts.push(join(
                 artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${app.wixLanguage}.msi.zip.sig`
-              )
-            ]
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip.sig`
+              ))
+            })
+            return artifacts
           } else {
             const arch =
               process.arch === 'x64'
