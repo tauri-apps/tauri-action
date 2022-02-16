@@ -328,10 +328,6 @@ export async function buildProject(
               )
             ]
           } else if (platform() === 'win32') {
-            console.log(`Windows bundling`)
-            console.log(`App Wix Language: ${app.wixLanguage}`)
-            const filesInDir = readdirSync(artifactsPath)
-            console.log(`Contents of ${artifactsPath}: ${JSON.stringify(filesInDir)}`)
             return [
               join(
                 artifactsPath,
