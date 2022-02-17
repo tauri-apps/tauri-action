@@ -312,15 +312,15 @@ export async function buildProject(
             return [
               join(
                 artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi`
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${Intl.DateTimeFormat().resolvedOptions().locale}.msi`
               ),
               join(
                 artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi.zip`
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${Intl.DateTimeFormat().resolvedOptions().locale}.msi.zip`
               ),
               join(
                 artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}.msi.zip.sig`
+                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${Intl.DateTimeFormat().resolvedOptions().locale}.msi.zip.sig`
               )
             ]
           } else {
