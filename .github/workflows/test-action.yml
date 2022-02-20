@@ -31,21 +31,25 @@ jobs:
     - uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Updater signature is exposed here to make sure it works in PR's
+        TAURI_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
       with: 
-        projectPath: ./packages/action/__fixtures__/example
-        iconPath: ./icon.png
-        tagName: example-v__VERSION__
-        releaseName: "Release example app v__VERSION__"
+        projectPath: ./packages/action/__fixtures__/example-with-tauri
+        tagName: example-with-tauri-v__VERSION__
+        releaseName: "Release example with preconfigured Tauri app v__VERSION__"
         releaseBody: "See the assets to download this version and install."
         releaseDraft: true
         prerelease: false
     - uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Updater signature is exposed here to make sure it works in PR's
+        TAURI_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
       with: 
-        projectPath: ./packages/action/__fixtures__/example-with-tauri
-        tagName: example-with-tauri-v__VERSION__
-        releaseName: "Release example with preconfigured Tauri app v__VERSION__"
+        projectPath: ./packages/action/__fixtures__/example
+        # iconPath: ./icon.png
+        tagName: example-v__VERSION__
+        releaseName: "Release example app v__VERSION__"
         releaseBody: "See the assets to download this version and install."
         releaseDraft: true
         prerelease: false

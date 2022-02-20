@@ -4,6 +4,7 @@ import { execa } from 'execa'
 import { parse as parseToml } from '@iarna/toml'
 import { join, resolve, normalize, sep } from 'path'
 import glob from 'glob'
+import JSON5 from 'json5'
 
 export function getPackageJson(root: string): any {
   const packageJsonPath = join(root, 'package.json')
@@ -138,15 +139,42 @@ interface Info {
   version: string
   wixLanguage: string | string[] | { [language: string]: unknown }
 }
+
+function _getJson5Config(contents: string): TauriConfig | null {
+  try {
+    const config = JSON5.parse(contents) as TauriConfig
+    return config
+  } catch (e) {
+    return null
+  }
+}
+
+function getConfig(path: string): TauriConfig {
+  const contents = readFileSync(path).toString()
+  try {
+    const config = JSON.parse(contents) as TauriConfig;
+    return config
+  } catch (e) {
+    let json5Conf = _getJson5Config(contents)
+    if (json5Conf === null) {
+      json5Conf = _getJson5Config(
+        readFileSync(join(path, "..", "tauri.conf.json5")).toString()
+      )
+    }
+    if (json5Conf) {
+      return json5Conf
+    }
+    throw e
+  }
+}
+
 export function getInfo(root: string): Info {
   const configPath = join(root, 'src-tauri/tauri.conf.json')
   if (existsSync(configPath)) {
     let name
     let version
     let wixLanguage: string | string[] | { [language: string]: unknown } = 'en-US'
-    const config = JSON.parse(
-      readFileSync(configPath).toString()
-    ) as TauriConfig
+    const config = getConfig(configPath)
     if (config.package) {
       name = config.package.productName
       version = config.package.version
@@ -224,9 +252,7 @@ export async function buildProject(
         return execCommand(runner.runnerCommand, [...runner.runnerArgs, 'init', '--ci', '--app-name', info.name], {
           cwd: root
         }).then(() => {
-          const config = JSON.parse(
-            readFileSync(configPath).toString()
-          ) as TauriConfig
+          const config = getConfig(configPath)
 
           console.log(
             `Replacing tauri.conf.json config - package.version=${info.version}`
