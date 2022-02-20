@@ -9,7 +9,7 @@ interface Release {
   htmlUrl: string
 }
 
-interface GitHubReleaseAsset{
+interface GitHubReleaseAsset {
   id: number
   name: string
   state: string
@@ -35,25 +35,26 @@ function allReleases(
 }
 
 
-function checkPlatform(platform: string, fileName: string) {
-
+function getAssetPlatform(platform: string, fileName: string): string | null {
 	// macOS
 	if (
 		(fileName.includes(".app.tar.gz") || fileName.includes(".dmg")) &&
 		platform === "darwin"
 	) {
-		return 'darwin';
+		return 'darwin'
 	}
 
 	// Windows
 	if (fileName.includes('.msi') && platform === "win32") {
-		return 'win64';
+		return 'win64'
 	}
 
   // Linux
 	if ((fileName.includes('AppImage') || fileName.includes("deb")) && platform === "linux") {
-		return 'linux';
+		return 'linux'
 	}
+
+  return null
 }
 
 
@@ -96,19 +97,23 @@ export default async function createRelease(
           release => release.tag_name === tagName
         )
         if (releaseWithTag) {
-          // Remove all assets from the existing release
-          for(const asset of releaseWithTag.assets) {
-            if(checkPlatform(process.platform, asset.name)) {
-              await github.rest.repos.deleteReleaseAsset({
-                asset_id: asset.id,
-                owner, repo
-              })
-            }
-          }
           release = releaseWithTag
           console.log(
             `Found draft release with tag ${tagName} on the release list.`
           )
+          // Remove all assets from the existing release
+          for (const asset of release.assets) {
+            if (getAssetPlatform(process.platform, asset.name)) {
+              console.log(
+                `Deleting asset ${asset.name} from the existing draft release`
+              )
+              await github.rest.repos.deleteReleaseAsset({
+                asset_id: asset.id,
+                owner,
+                repo,
+              })
+            }
+          }
           break
         }
       }
