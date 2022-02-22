@@ -12,7 +12,8 @@
   "dependencies": {
     "@iarna/toml": "2.2.5",
     "execa": "6.1.0",
-    "glob": "^7.2.0",
+    "glob-gitignore": "^1.0.14",
+    "ignore": "^5.2.0",
     "json5": "^2.2.0",
     "tslib": "2.3.1"
   },

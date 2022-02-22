@@ -3,7 +3,8 @@ import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
 import { execa } from 'execa'
 import { parse as parseToml } from '@iarna/toml'
 import { join, resolve, normalize, sep } from 'path'
-import glob from 'glob'
+import { sync as globSync } from 'glob-gitignore'
+import ignore from 'ignore'
 import JSON5 from 'json5'
 
 export function getPackageJson(root: string): any {
@@ -26,7 +27,7 @@ function getWorkspaceDir(dir: string): string | null {
       if (toml.workspace && toml.workspace.members) {
         // @ts-expect-error
         const members: string[] = toml.workspace.members
-        if (members.some(m => resolve(dir, m) === rootPath)) {
+        if (members.some((m) => resolve(dir, m) === rootPath)) {
           return dir
         }
       }
@@ -85,7 +86,7 @@ export function execCommand(
   return execa(command, args, {
     cwd,
     stdio: 'inherit',
-    env: { FORCE_COLOR: '0' }
+    env: { FORCE_COLOR: '0' },
   }).then()
 }
 
@@ -152,13 +153,13 @@ function _getJson5Config(contents: string): TauriConfig | null {
 function getConfig(path: string): TauriConfig {
   const contents = readFileSync(path).toString()
   try {
-    const config = JSON.parse(contents) as TauriConfig;
+    const config = JSON.parse(contents) as TauriConfig
     return config
   } catch (e) {
     let json5Conf = _getJson5Config(contents)
     if (json5Conf === null) {
       json5Conf = _getJson5Config(
-        readFileSync(join(path, "..", "tauri.conf.json5")).toString()
+        readFileSync(join(path, '..', 'tauri.conf.json5')).toString()
       )
     }
     if (json5Conf) {
@@ -181,9 +182,9 @@ export function getInfo(root: string): Info {
     }
     if (!(name && version)) {
       const manifestPath = join(root, 'src-tauri/Cargo.toml')
-      const cargoManifest = (parseToml(
+      const cargoManifest = parseToml(
         readFileSync(manifestPath).toString()
-      ) as any) as CargoManifest
+      ) as any as CargoManifest
       name = name || cargoManifest.package.name
       version = version || cargoManifest.package.version
     }
@@ -224,17 +225,23 @@ export async function buildProject(
     if (tauriScript) {
       const [runnerCommand, ...runnerArgs] = tauriScript.split(' ')
       resolve({ runnerCommand, runnerArgs })
-    }
-    else if (hasDependency('@tauri-apps/cli', root) || hasDependency('vue-cli-plugin-tauri', root)) {
+    } else if (
+      hasDependency('@tauri-apps/cli', root) ||
+      hasDependency('vue-cli-plugin-tauri', root)
+    ) {
       resolve(
         usesYarn(root)
           ? { runnerCommand: 'yarn', runnerArgs: ['tauri'] }
           : { runnerCommand: 'npx', runnerArgs: ['tauri'] }
       )
     } else {
-      execCommand('npm', ['install', '-g', '@tauri-apps/cli'], { cwd: undefined }).then(() => {
-        resolve({ runnerCommand: 'tauri', runnerArgs: [] })
-      }).catch(reject)
+      execCommand('npm', ['install', '-g', '@tauri-apps/cli'], {
+        cwd: undefined,
+      })
+        .then(() => {
+          resolve({ runnerCommand: 'tauri', runnerArgs: [] })
+        })
+        .catch(reject)
     }
   })
     .then((runner: Runner) => {
@@ -245,13 +252,17 @@ export async function buildProject(
           runner,
           name: info.name,
           version: info.version,
-          wixLanguage: info.wixLanguage
+          wixLanguage: info.wixLanguage,
         }
       } else {
         const packageJson = getPackageJson(root)
-        return execCommand(runner.runnerCommand, [...runner.runnerArgs, 'init', '--ci', '--app-name', info.name], {
-          cwd: root
-        }).then(() => {
+        return execCommand(
+          runner.runnerCommand,
+          [...runner.runnerArgs, 'init', '--ci', '--app-name', info.name],
+          {
+            cwd: root,
+          }
+        ).then(() => {
           const config = getConfig(configPath)
 
           console.log(
@@ -259,7 +270,7 @@ export async function buildProject(
           )
           const pkgConfig = {
             ...config.package,
-            version: info.version
+            version: info.version,
           }
           if (packageJson?.productName) {
             console.log(
@@ -277,9 +288,13 @@ export async function buildProject(
             wixLanguage: info.wixLanguage,
           }
           if (iconPath) {
-            return execCommand(runner.runnerCommand, [...runner.runnerArgs, 'icon', join(root, iconPath)], {
-              cwd: root
-            }).then(() => app)
+            return execCommand(
+              runner.runnerCommand,
+              [...runner.runnerArgs, 'icon', join(root, iconPath)],
+              {
+                cwd: root,
+              }
+            ).then(() => app)
           }
 
           return app
@@ -298,7 +313,7 @@ export async function buildProject(
         writeFileSync(tauriConfPath, JSON.stringify(tauriConf))
       }
 
-      const tauriArgs = debug ? ['--debug', ...(args ?? [])] : (args ?? [])
+      const tauriArgs = debug ? ['--debug', ...(args ?? [])] : args ?? []
       let buildCommand
       let buildArgs: string[] = []
 
@@ -314,25 +329,37 @@ export async function buildProject(
         buildArgs = [...app.runner.runnerArgs, 'build']
       }
 
-      return execCommand(
-        buildCommand,
-        [...buildArgs, ...tauriArgs],
-        { cwd: root }
-      )
+      return execCommand(buildCommand, [...buildArgs, ...tauriArgs], {
+        cwd: root,
+      })
         .then(() => {
           let fileAppName = app.name
           // on Linux, the app product name is converted to kebab-case
           if (!['darwin', 'win32'].includes(platform())) {
-            fileAppName = fileAppName.replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+            fileAppName = fileAppName
+              .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
               .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
               .replace(/ /g, '-')
               .toLowerCase()
           }
-          const tauriConfPath = glob.sync('**/tauri.conf.json')[0]
+          const ignoreRules = ignore()
+          const gitignorePath = join(root, '.gitignore')
+          if (existsSync(gitignorePath)) {
+            ignoreRules.add(readFileSync(gitignorePath).toString())
+          } else {
+            ignoreRules.add('node_modules').add('target')
+          }
+          const tauriConfPath = globSync('**/tauri.conf.json', {
+            cwd: root,
+            ignore: ignoreRules,
+          })[0]
           const tauriPath = resolve(process.cwd(), tauriConfPath, '..')
           const cratePath = getWorkspaceDir(tauriPath) ?? tauriPath
 
-          const artifactsPath = join(getTargetDir(cratePath), debug ? 'debug' : 'release')
+          const artifactsPath = join(
+            getTargetDir(cratePath),
+            debug ? 'debug' : 'release'
+          )
 
           if (platform() === 'darwin') {
             return [
@@ -340,24 +367,15 @@ export async function buildProject(
                 artifactsPath,
                 `bundle/dmg/${fileAppName}_${app.version}_${process.arch}.dmg`
               ),
-              join(
-                artifactsPath,
-                `bundle/macos/${fileAppName}.app`
-              ),
-              join(
-                artifactsPath,
-                `bundle/macos/${fileAppName}.app.tar.gz`
-              ),
-              join(
-                artifactsPath,
-                `bundle/macos/${fileAppName}.app.tar.gz.sig`
-              )
+              join(artifactsPath, `bundle/macos/${fileAppName}.app`),
+              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
+              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`),
             ]
           } else if (platform() === 'win32') {
             // If multiple Wix languages are specified, multiple installers (.msi) will be made
             // The .zip and .sig are only generated for the first specified language
             let langs
-            if (typeof app.wixLanguage === "string") {
+            if (typeof app.wixLanguage === 'string') {
               langs = [app.wixLanguage]
             } else if (Array.isArray(app.wixLanguage)) {
               langs = app.wixLanguage
@@ -365,19 +383,25 @@ export async function buildProject(
               langs = Object.keys(app.wixLanguage)
             }
             const artifacts: string[] = []
-            langs.forEach(lang => {
-              artifacts.push(join(
-                artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi`
-              ))
-              artifacts.push(join(
-                artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip`
-              ))
-              artifacts.push(join(
-                artifactsPath,
-                `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip.sig`
-              ))
+            langs.forEach((lang) => {
+              artifacts.push(
+                join(
+                  artifactsPath,
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi`
+                )
+              )
+              artifacts.push(
+                join(
+                  artifactsPath,
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip`
+                )
+              )
+              artifacts.push(
+                join(
+                  artifactsPath,
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip.sig`
+                )
+              )
             })
             return artifacts
           } else {
@@ -385,8 +409,8 @@ export async function buildProject(
               process.arch === 'x64'
                 ? 'amd64'
                 : process.arch === 'x32'
-                  ? 'i386'
-                  : process.arch
+                ? 'i386'
+                : process.arch
             return [
               join(
                 artifactsPath,
@@ -403,10 +427,13 @@ export async function buildProject(
               join(
                 artifactsPath,
                 `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
-              )
+              ),
             ]
           }
         })
-        .then(paths => paths.filter(p => existsSync(p)))
+        .then((paths) => {
+          console.log(`Expected artifacts paths:\n${paths.join('\n')}`)
+          return paths.filter((p) => existsSync(p))
+        })
     })
 }
