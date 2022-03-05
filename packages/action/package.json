@@ -28,6 +28,6 @@
     "@types/node": "16.11.26",
     "@vercel/ncc": "0.33.3",
     "rollup": "2.69.1",
-    "typescript": "4.5.5"
+    "typescript": "4.6.2"
   }
 }
