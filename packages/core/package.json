@@ -20,7 +20,7 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "8.3.1",
     "rollup": "2.69.1",
-    "typescript": "4.5.5"
+    "typescript": "4.6.2"
   },
   "engines": {
     "node": ">= 12.20.0",
