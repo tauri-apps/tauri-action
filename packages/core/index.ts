@@ -30,7 +30,7 @@ function getTauriDir(root: string): string | null {
     ignore: ignoreRules,
   })
   const tauriConfPath = paths[0]
-  return resolve(root, tauriConfPath, '..')
+  return tauriConfPath ? resolve(root, tauriConfPath, '..') : null
 }
 
 function getWorkspaceDir(dir: string): string | null {
