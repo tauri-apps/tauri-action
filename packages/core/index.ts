@@ -17,6 +17,22 @@ export function getPackageJson(root: string): any {
   return null
 }
 
+function getTauriDir(root: string): string | null {
+  const ignoreRules = ignore()
+  const gitignorePath = join(root, '.gitignore')
+  if (existsSync(gitignorePath)) {
+    ignoreRules.add(readFileSync(gitignorePath).toString())
+  } else {
+    ignoreRules.add('node_modules').add('target')
+  }
+  const paths = globSync('**/tauri.conf.json', {
+    cwd: root,
+    ignore: ignoreRules,
+  })
+  const tauriConfPath = paths[0]
+  return resolve(root, tauriConfPath, '..')
+}
+
 function getWorkspaceDir(dir: string): string | null {
   const rootPath = dir
   while (dir.length && dir[dir.length - 1] !== sep) {
@@ -116,6 +132,7 @@ interface TauriConfig {
 }
 
 interface Application {
+  tauriPath: string
   runner: Runner
   name: string
   version: string
@@ -136,6 +153,7 @@ export interface Runner {
 }
 
 interface Info {
+  tauriPath: string | null
   name: string
   version: string
   wixLanguage: string | string[] | { [language: string]: unknown }
@@ -170,8 +188,9 @@ function getConfig(path: string): TauriConfig {
 }
 
 export function getInfo(root: string): Info {
-  const configPath = join(root, 'src-tauri/tauri.conf.json')
-  if (existsSync(configPath)) {
+  const tauriDir = getTauriDir(root)
+  if (tauriDir !== null) {
+    const configPath = join(tauriDir, 'tauri.conf.json')
     let name
     let version
     let wixLanguage: string | string[] | { [language: string]: unknown } = 'en-US'
@@ -181,7 +200,7 @@ export function getInfo(root: string): Info {
       version = config.package.version
     }
     if (!(name && version)) {
-      const manifestPath = join(root, 'src-tauri/Cargo.toml')
+      const manifestPath = join(tauriDir, 'Cargo.toml')
       const cargoManifest = parseToml(
         readFileSync(manifestPath).toString()
       ) as any as CargoManifest
@@ -198,6 +217,7 @@ export function getInfo(root: string): Info {
     }
 
     return {
+      tauriPath: tauriDir,
       name,
       version,
       wixLanguage,
@@ -209,6 +229,7 @@ export function getInfo(root: string): Info {
       : 'app'
     const version = packageJson ? packageJson.version : '0.1.0'
     return {
+      tauriPath: null,
       name: appName,
       version,
       wixLanguage: 'en-US',
@@ -245,10 +266,10 @@ export async function buildProject(
     }
   })
     .then((runner: Runner) => {
-      const configPath = join(root, 'src-tauri/tauri.conf.json')
       const info = getInfo(root)
-      if (existsSync(configPath)) {
+      if (info.tauriPath) {
         return {
+          tauriPath: info.tauriPath,
           runner,
           name: info.name,
           version: info.version,
@@ -263,6 +284,12 @@ export async function buildProject(
             cwd: root,
           }
         ).then(() => {
+          const tauriPath = getTauriDir(root)
+          if (tauriPath === null) {
+            console.error('Failed to resolve Tauri path')
+            process.exit(1)
+          }
+          const configPath = join(tauriPath, 'tauri.conf.json')
           const config = getConfig(configPath)
 
           console.log(
@@ -282,6 +309,7 @@ export async function buildProject(
           writeFileSync(configPath, JSON.stringify(config, null, 2))
 
           const app = {
+            tauriPath,
             runner,
             name: info.name,
             version: info.version,
@@ -302,7 +330,7 @@ export async function buildProject(
       }
     })
     .then((app: Application) => {
-      const tauriConfPath = join(root, 'src-tauri/tauri.conf.json')
+      const tauriConfPath = join(app.tauriPath, 'tauri.conf.json')
       if (configPath !== null) {
         copyFileSync(configPath, tauriConfPath)
       }
@@ -342,21 +370,8 @@ export async function buildProject(
               .replace(/ /g, '-')
               .toLowerCase()
           }
-          const ignoreRules = ignore()
-          const gitignorePath = join(root, '.gitignore')
-          if (existsSync(gitignorePath)) {
-            ignoreRules.add(readFileSync(gitignorePath).toString())
-          } else {
-            ignoreRules.add('node_modules').add('target')
-          }
-          const confPaths = globSync('**/tauri.conf.json', {
-            cwd: root,
-            ignore: ignoreRules,
-          })
-          console.log(confPaths)
-          const tauriConfPath = confPaths[0]
-          const tauriPath = resolve(process.cwd(), tauriConfPath, '..')
-          const cratePath = getWorkspaceDir(tauriPath) ?? tauriPath
+
+          const cratePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath
 
           const artifactsPath = join(
             getTargetDir(cratePath),
@@ -411,8 +426,8 @@ export async function buildProject(
               process.arch === 'x64'
                 ? 'amd64'
                 : process.arch === 'x32'
-                ? 'i386'
-                : process.arch
+                  ? 'i386'
+                  : process.arch
             return [
               join(
                 artifactsPath,
