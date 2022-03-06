@@ -349,10 +349,12 @@ export async function buildProject(
           } else {
             ignoreRules.add('node_modules').add('target')
           }
-          const tauriConfPath = globSync('**/tauri.conf.json', {
+          const confPaths = globSync('**/tauri.conf.json', {
             cwd: root,
             ignore: ignoreRules,
-          })[0]
+          })
+          console.log(confPaths)
+          const tauriConfPath = confPaths[0]
           const tauriPath = resolve(process.cwd(), tauriConfPath, '..')
           const cratePath = getWorkspaceDir(tauriPath) ?? tauriPath
 
