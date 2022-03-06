@@ -277,6 +277,15 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@tauri-apps/action-core@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/action-core/-/action-core-0.2.0.tgz#9f404ca6f02e19fee96b532eb0d4cb407868cf94"
+  integrity sha512-xFM4h9ZurKfWC+cChhrf1dNCojs7YKDoIg8b80JeDF5kCdzbzb7XdN0FFDsFffV/IRrxwy4QZ3lnBUR2H/jYmw==
+  dependencies:
+    "@iarna/toml" "2.2.5"
+    execa "5.1.1"
+    tslib "2.3.1"
+
 "@tauri-apps/toml@^2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@tauri-apps/toml/-/toml-2.2.4.tgz#2b4f637aded7fc3a7302724605682c8fa3ac7505"
@@ -671,6 +680,21 @@ estree-walker@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-1.0.1.tgz#31bc5d612c96b704106b477e6dd5d8aa138cb700"
   integrity sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==
+
+execa@5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/execa/-/execa-5.1.1.tgz#f80ad9cbf4298f7bd1d4c9555c21e93741c411dd"
+  integrity sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==
+  dependencies:
+    cross-spawn "^7.0.3"
+    get-stream "^6.0.0"
+    human-signals "^2.1.0"
+    is-stream "^2.0.0"
+    merge-stream "^2.0.0"
+    npm-run-path "^4.0.1"
+    onetime "^5.1.2"
+    signal-exit "^3.0.3"
+    strip-final-newline "^2.0.0"
 
 execa@6.1.0:
   version "6.1.0"
