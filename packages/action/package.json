@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/node": "16.11.26",
-    "@vercel/ncc": "0.33.3",
+    "@vercel/ncc": "0.33.4",
     "rollup": "2.69.2",
     "typescript": "4.6.2"
   }
