@@ -122,6 +122,7 @@ interface TauriConfig {
   }
   tauri?: {
     bundle?: {
+      identifier: string
       windows?: {
         wix?: {
           language?: string | string[] | { [language: string]: unknown }
@@ -145,6 +146,7 @@ export interface BuildOptions {
   iconPath: string | null
   tauriScript: string | null
   args: string[] | null
+  bundleIdentifier: string | null
 }
 
 export interface Runner {
@@ -240,7 +242,7 @@ export function getInfo(root: string): Info {
 export async function buildProject(
   root: string,
   debug: boolean,
-  { configPath, distPath, iconPath, tauriScript, args }: BuildOptions
+  { configPath, distPath, iconPath, tauriScript, args, bundleIdentifier }: BuildOptions
 ): Promise<string[]> {
   return new Promise<Runner>((resolve, reject) => {
     if (tauriScript) {
@@ -306,6 +308,20 @@ export async function buildProject(
             pkgConfig.productName = packageJson.productName
           }
           config.package = pkgConfig
+
+          if (bundleIdentifier) {
+            console.log(
+              `Replacing tauri.conf.json config - tauri.bundle.identifier=${bundleIdentifier}`
+            )
+            config.tauri = {
+              ...config.tauri,
+              bundle: {
+                ...config.tauri?.bundle,
+                identifier: bundleIdentifier
+              }
+            }
+          }
+
           writeFileSync(configPath, JSON.stringify(config, null, 2))
 
           const app = {
