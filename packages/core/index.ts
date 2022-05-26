@@ -200,6 +200,10 @@ export function getInfo(root: string): Info {
     if (config.package) {
       name = config.package.productName
       version = config.package.version
+      if (config.package.version?.endsWith('package.json')) {
+        const contents = readFileSync(config.package.version).toString()
+        version = JSON.parse(contents).version
+      }
     }
     if (!(name && version)) {
       const manifestPath = join(tauriDir, 'Cargo.toml')
