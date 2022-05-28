@@ -18,16 +18,16 @@
     "tauri"
   ],
   "dependencies": {
-    "@actions/core": "1.5.0",
-    "@actions/github": "5.0.0",
+    "@actions/core": "1.8.2",
+    "@actions/github": "5.0.3",
     "@tauri-apps/action-core": "0.3.0",
     "string-argv": "0.3.1",
-    "tslib": "2.3.1"
+    "tslib": "2.4.0"
   },
   "devDependencies": {
-    "@types/node": "16.11.26",
-    "@vercel/ncc": "0.33.4",
-    "rollup": "2.70.1",
-    "typescript": "4.6.3"
+    "@types/node": "16.11.36",
+    "@vercel/ncc": "0.34.0",
+    "rollup": "2.75.0",
+    "typescript": "4.7.2"
   }
 }
