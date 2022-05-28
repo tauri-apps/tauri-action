@@ -200,7 +200,7 @@ export function getInfo(root: string): Info {
     if (config.package) {
       name = config.package.productName
       version = config.package.version
-      if (config.package.version?.endsWith('package.json')) {
+      if (config.package.version?.endsWith('.json')) {
         const packageJsonPath = join(tauriDir, config.package.version)
         const contents = readFileSync(packageJsonPath).toString()
         version = JSON.parse(contents).version
