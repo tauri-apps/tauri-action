@@ -1,5 +1,12 @@
 # Changelog
 
+## \[0.3.1]
+
+- Added the `bundleIdentifier` input to modify Tauri's default bundle identifier when initializing a new Tauri app.
+  - [743a37f](https://www.github.com/tauri-apps/tauri-action/commit/743a37fd53cbdd122910b818b9bef7b7aa019134) feat(core): add bundle identifier option ([#263](https://www.github.com/tauri-apps/tauri-action/pull/263)) on 2022-05-11
+- Added support to loading version from JSON file in `tauri.conf.json > package > version`.
+  - [16a8f02](https://www.github.com/tauri-apps/tauri-action/commit/16a8f02ad9b4cff2a0ed6205c7418c36f3e49fd0) build(action): rebuild after fixing version parse error ([#268](https://www.github.com/tauri-apps/tauri-action/pull/268)) on 2022-05-28
+
 ## \[0.3.0]
 
 - Added support to JSON5 on `tauri.conf.json[5]`.
