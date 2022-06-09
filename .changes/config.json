@@ -48,9 +48,6 @@
         "git push --tags -f"
       ],
       "getPublishedVersion": "git tag -a -m \"v${ pkgFile.version }\" v${ pkgFile.version } 2>/dev/null || echo ${ pkgFile.version }",
-      "dependencies": [
-        "@tauri-apps/action-core"
-      ],
       "assets": false
     }
   }
