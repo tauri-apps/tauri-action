@@ -90,16 +90,17 @@ jobs:
 
 ## Uploading the artifacts to a release
 
+Note that `actions/create-release` isn't maintained so you should find an alternative or let the Tauri Action handle the release.
+
 ```yml
 name: "test-on-pr"
-
-on: pull_request
+on: [pull_request]
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
     outputs:
-      RELEASE_ID: ${{ steps.create-release.outputs.result }}
+      RELEASE_UPLOAD_ID: ${{ steps.create_release.outputs.id }}
 
     steps:
       - uses: actions/checkout@v2
@@ -110,22 +111,16 @@ jobs:
       - name: get version
         run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
       - name: create release
-        id: create-release
-        uses: actions/github-script@v6
+        id: create_release
+        uses: actions/create-release@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          script: |
-            const { data } = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: app-v${{ env.PACKAGE_VERSION }},
-              name: "Desktop app v${{ env.PACKAGE_VERSION }}",
-              body: "See the assets to download this version and install.",
-              draft: true,
-              prerelease: false
-            })
-            
-            return data.id
-
+          tag_name: app-v${{ env.PACKAGE_VERSION }}
+          release_name: "Desktop app v${{ env.PACKAGE_VERSION }}"
+          body: "See the assets to download this version and install."
+          draft: true
+          prerelease: false
   build-tauri:
     needs: create-release
     strategy:
@@ -155,7 +150,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
+        releaseId: ${{ needs.create-release.outputs.RELEASE_UPLOAD_ID }}
 ```
 
 ## Inputs
