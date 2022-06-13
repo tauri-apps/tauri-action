@@ -403,11 +403,11 @@ export async function buildProject(
             return [
               join(
                 artifactsPath,
-                `bundle/dmg/${fileAppName}_${app.version}_${process.arch}.dmg`
+                `bundle/dmg/${fileAppName}_${app.version}_${process.arch}_macos.dmg`
               ),
-              join(artifactsPath, `bundle/macos/${fileAppName}.app`),
-              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
-              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`),
+              join(artifactsPath, `bundle/macos/${fileAppName}_macos.app`),
+              join(artifactsPath, `bundle/macos/${fileAppName}_macos.app.tar.gz`),
+              join(artifactsPath, `bundle/macos/${fileAppName}_macos.app.tar.gz.sig`),
             ]
           } else if (platform() === 'win32') {
             // If multiple Wix languages are specified, multiple installers (.msi) will be made
@@ -425,19 +425,19 @@ export async function buildProject(
               artifacts.push(
                 join(
                   artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi`
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}_windows.msi`
                 )
               )
               artifacts.push(
                 join(
                   artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip`
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}_windows.msi.zip`
                 )
               )
               artifacts.push(
                 join(
                   artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip.sig`
+                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}_windows.msi.zip.sig`
                 )
               )
             })
@@ -452,19 +452,19 @@ export async function buildProject(
             return [
               join(
                 artifactsPath,
-                `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
+                `bundle/deb/${fileAppName}_${app.version}_${arch}_linux.deb`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage`
+                `bundle/appimage/${fileAppName}_${app.version}_${arch}_linux.AppImage`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
+                `bundle/appimage/${fileAppName}_${app.version}_${arch}_linux.AppImage.tar.gz`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
+                `bundle/appimage/${fileAppName}_${app.version}_${arch}_linux.AppImage.tar.gz.sig`
               ),
             ]
           }
