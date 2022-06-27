@@ -117,8 +117,8 @@ jobs:
             const { data } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: app-v${{ env.PACKAGE_VERSION }},
-              name: "Desktop app v${{ env.PACKAGE_VERSION }}",
+              tag_name: app-v${process.env.PACKAGE_VERSION},
+              name: "Desktop app v${process.env.PACKAGE_VERSION}",
               body: "See the assets to download this version and install.",
               draft: true,
               prerelease: false
