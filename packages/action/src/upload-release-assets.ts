@@ -1,6 +1,7 @@
 import { getOctokit, context } from '@actions/github'
 import fs from 'fs'
 import path from 'path'
+import { getAssetName } from './utils'
 
 export default async function uploadAssets(
   releaseId: number,
@@ -21,11 +22,7 @@ export default async function uploadAssets(
       'content-length': contentLength(assetPath)
     }
 
-    const ext = path.extname(assetPath)
-    const filename = path.basename(assetPath).replace(ext, '')
-    const assetName = path.dirname(assetPath).includes(`target${path.sep}debug`)
-      ? `${filename}-debug${ext}`
-      : `${filename}${ext}`
+    const assetName = getAssetName(assetPath)
     console.log(`Uploading ${assetName}...`)
     await github.rest.repos.uploadReleaseAsset({
       headers,

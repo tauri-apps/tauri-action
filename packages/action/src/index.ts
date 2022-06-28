@@ -3,6 +3,7 @@ import * as core from '@actions/core'
 import { join, resolve, dirname, basename } from 'path'
 import { existsSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
+import uploadVersionJSON from './upload-version-json'
 import createRelease from './create-release'
 import { getPackageJson, buildProject, getInfo, execCommand } from '@tauri-apps/action-core'
 import type { BuildOptions } from '@tauri-apps/action-core'
@@ -109,6 +110,7 @@ async function run(): Promise<void> {
         }
       }
       await uploadReleaseAssets(releaseId, artifacts)
+      await uploadVersionJSON({ version: info.version, notes: body, releaseId, artifacts });
     }
   } catch (error) {
     core.setFailed(error.message)
