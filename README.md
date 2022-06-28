@@ -91,7 +91,7 @@ jobs:
 ## Uploading the artifacts to a release
 
 ```yml
-name: "test-on-pr"
+name: 'My Workflow'
 
 on: pull_request
 
@@ -99,7 +99,7 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     outputs:
-      RELEASE_ID: ${{ steps.create-release.outputs.result }}
+      release_id: ${{ steps.create-release.outputs.result }}
 
     steps:
       - uses: actions/checkout@v2
@@ -117,9 +117,9 @@ jobs:
             const { data } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: app-v${process.env.PACKAGE_VERSION},
-              name: "Desktop app v${process.env.PACKAGE_VERSION}",
-              body: "See the assets to download this version and install.",
+              tag_name: `app-v${process.env.PACKAGE_VERSION}`,
+              name: `Desktop App v${process.env.PACKAGE_VERSION}`,
+              body: 'Take a look at the assets to download and install this app.',
               draft: true,
               prerelease: false
             })
@@ -155,7 +155,27 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
+        releaseId: ${{ needs.create-release.outputs.release_id }}
+
+  publish-release:
+    runs-on: ubuntu-latest
+    needs: [ create-release, build-tauri ]
+    
+    steps:
+      - name: publish release
+        id: publish-release
+        uses: actions/github-script@v6
+        env:
+          release_id: ${{ needs.create-release.outputs.release_id }}
+        with:
+          script: |
+            github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.release_id,
+              draft: false,
+              prerelease: false
+            })
 ```
 
 ## Inputs
