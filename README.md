@@ -54,6 +54,8 @@ on:
 
 jobs:
   publish-tauri:
+    permissions: write-all
+    
     strategy:
       fail-fast: false
       matrix:
