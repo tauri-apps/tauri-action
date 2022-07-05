@@ -370,7 +370,7 @@ export async function buildProject(
         if (usesYarn(root)) {
           buildCommand = 'yarn'
         } else {
-          buildCommand = 'npx'
+          buildCommand = 'npm'
           buildArgs = ['run', 'tauri:build']
         }
       } else {
