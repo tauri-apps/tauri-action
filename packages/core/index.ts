@@ -369,8 +369,9 @@ export async function buildProject(
       if (hasDependency('vue-cli-plugin-tauri', root)) {
         if (usesYarn(root)) {
           buildCommand = 'yarn'
+          buildArgs = ['tauri:build']
         } else {
-          buildCommand = 'npx'
+          buildCommand = 'npm'
           buildArgs = ['run', 'tauri:build']
         }
       } else {
