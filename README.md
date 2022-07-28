@@ -195,6 +195,8 @@ jobs:
 | `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
 | `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   |                       |
 | `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npm tauri`     |
+| `args`             |  false   | Additional arguments to the current build command                                           | string |                       |
+
 
 ## Outputs
 
@@ -210,4 +212,5 @@ jobs:
   - You can configure Tauri with the `configPath`, `distPath` and `iconPath` options.
 - You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri build` or `npx tauri build`, we'll execute `${tauriScript}`.
   - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
+- If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
 - When your app isn't on the root of the repo, use the `projectPath` input.
