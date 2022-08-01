@@ -194,7 +194,7 @@ jobs:
 | `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
 | `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
 | `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   |                       |
-| `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npm tauri`     |
+| `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npx tauri`     |
 | `args`             |  false   | Additional arguments to the current build command                                           | string |                       |
 
 
@@ -210,7 +210,7 @@ jobs:
 
 - You can use this Action on a repo that doesn't have Tauri configured. We automatically initialize Tauri before building, and configure it to use your Web artifacts.
   - You can configure Tauri with the `configPath`, `distPath` and `iconPath` options.
-- You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri build` or `npx tauri build`, we'll execute `${tauriScript}`.
+- You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri <COMMAND> <ARGS>` or `npx tauri <COMMAND> <ARGS>`, we'll execute `${tauriScript} <COMMAND> <ARGS>`.
   - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
 - If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
 - When your app isn't on the root of the repo, use the `projectPath` input.
