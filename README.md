@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -32,7 +32,7 @@ jobs:
       with:
         toolchain: stable
     - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-latest'
+      if: matrix.platform == 'ubuntu-20.04'
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -71,7 +71,7 @@ jobs:
       with:
         toolchain: stable
     - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-latest'
+      if: matrix.platform == 'ubuntu-20.04'
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
@@ -97,7 +97,7 @@ on: pull_request
 
 jobs:
   create-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
       release_id: ${{ steps.create-release.outputs.result }}
 
@@ -131,7 +131,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -145,7 +145,7 @@ jobs:
       with:
         toolchain: stable
     - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-latest'
+      if: matrix.platform == 'ubuntu-20.04'
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
@@ -158,7 +158,7 @@ jobs:
         releaseId: ${{ needs.create-release.outputs.release_id }}
 
   publish-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [ create-release, build-tauri ]
     
     steps:
