@@ -6,11 +6,17 @@ import parseArgs from 'minimist'
 
 export async function run(): Promise<void> {
   const argv = parseArgs(process.argv.slice(2), {
-    string: ['project-path', 'config-path', 'dist-path', 'icon-path', 'tauri-script'],
+    string: [
+      'project-path',
+      'config-path',
+      'dist-path',
+      'icon-path',
+      'tauri-script'
+    ],
     boolean: ['global-tauri', 'include-debug'],
     default: {
       'config-path': 'tauri.conf.json',
-      'project-path': '',
+      'project-path': ''
     }
   })
 

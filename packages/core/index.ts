@@ -97,13 +97,13 @@ export function execCommand(
   command: string,
   args: string[],
   { cwd }: { cwd?: string } = {}
-): Promise<void> {
+): Promise<any> {
   console.log(`running ${command}`, args)
   return execa(command, args, {
     cwd,
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' },
-  }).then()
+  })
 }
 
 interface CargoManifestBin {
@@ -195,7 +195,8 @@ export function getInfo(root: string): Info {
     const configPath = join(tauriDir, 'tauri.conf.json')
     let name
     let version
-    let wixLanguage: string | string[] | { [language: string]: unknown } = 'en-US'
+    let wixLanguage: string | string[] | { [language: string]: unknown } =
+      'en-US'
     const config = getConfig(configPath)
     if (config.package) {
       name = config.package.productName
@@ -247,7 +248,14 @@ export function getInfo(root: string): Info {
 export async function buildProject(
   root: string,
   debug: boolean,
-  { configPath, distPath, iconPath, tauriScript, args, bundleIdentifier }: BuildOptions
+  {
+    configPath,
+    distPath,
+    iconPath,
+    tauriScript,
+    args,
+    bundleIdentifier,
+  }: BuildOptions
 ): Promise<string[]> {
   return new Promise<Runner>((resolve, reject) => {
     if (tauriScript) {
@@ -322,8 +330,8 @@ export async function buildProject(
               ...config.tauri,
               bundle: {
                 ...config.tauri?.bundle,
-                identifier: bundleIdentifier
-              }
+                identifier: bundleIdentifier,
+              },
             }
           }
 
@@ -382,7 +390,13 @@ export async function buildProject(
       return execCommand(buildCommand, [...buildArgs, ...tauriArgs], {
         cwd: root,
       })
-        .then(() => {
+        .then(({ stdout }) => {
+          console.log(
+            stdout
+              .split('bundles at:')[1]
+              .split('\n')
+              .map((s: string) => s.replace('(updater)', '').trim())
+          )
           let fileAppName = app.name
           // on Linux, the app product name is converted to kebab-case
           if (!['darwin', 'win32'].includes(platform())) {
@@ -448,8 +462,8 @@ export async function buildProject(
               process.arch === 'x64'
                 ? 'amd64'
                 : process.arch === 'x32'
-                  ? 'i386'
-                  : process.arch
+                ? 'i386'
+                : process.arch
             return [
               join(
                 artifactsPath,
