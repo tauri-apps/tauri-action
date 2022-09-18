@@ -27,7 +27,7 @@ function getTauriDir(root: string): string | null {
   }
   const paths = globSync('**/tauri.conf.json', {
     cwd: root,
-    ignore: ignoreRules,
+    ignore: ignoreRules
   })
   const tauriConfPath = paths[0]
   return tauriConfPath ? resolve(root, tauriConfPath, '..') : null
@@ -102,7 +102,7 @@ export function execCommand(
   return execa(command, args, {
     cwd,
     stdio: 'inherit',
-    env: { FORCE_COLOR: '0' },
+    env: { FORCE_COLOR: '0' }
   })
 }
 
@@ -228,7 +228,7 @@ export function getInfo(root: string): Info {
       tauriPath: tauriDir,
       name,
       version,
-      wixLanguage,
+      wixLanguage
     }
   } else {
     const packageJson = getPackageJson(root)
@@ -240,7 +240,7 @@ export function getInfo(root: string): Info {
       tauriPath: null,
       name: appName,
       version,
-      wixLanguage: 'en-US',
+      wixLanguage: 'en-US'
     }
   }
 }
@@ -254,7 +254,7 @@ export async function buildProject(
     iconPath,
     tauriScript,
     args,
-    bundleIdentifier,
+    bundleIdentifier
   }: BuildOptions
 ): Promise<string[]> {
   return new Promise<Runner>((resolve, reject) => {
@@ -272,7 +272,7 @@ export async function buildProject(
       )
     } else {
       execCommand('npm', ['install', '-g', '@tauri-apps/cli'], {
-        cwd: undefined,
+        cwd: undefined
       })
         .then(() => {
           resolve({ runnerCommand: 'tauri', runnerArgs: [] })
@@ -288,7 +288,7 @@ export async function buildProject(
           runner,
           name: info.name,
           version: info.version,
-          wixLanguage: info.wixLanguage,
+          wixLanguage: info.wixLanguage
         }
       } else {
         const packageJson = getPackageJson(root)
@@ -296,7 +296,7 @@ export async function buildProject(
           runner.runnerCommand,
           [...runner.runnerArgs, 'init', '--ci', '--app-name', info.name],
           {
-            cwd: root,
+            cwd: root
           }
         ).then(() => {
           const tauriPath = getTauriDir(root)
@@ -312,7 +312,7 @@ export async function buildProject(
           )
           const pkgConfig = {
             ...config.package,
-            version: info.version,
+            version: info.version
           }
           if (packageJson?.productName) {
             console.log(
@@ -330,8 +330,8 @@ export async function buildProject(
               ...config.tauri,
               bundle: {
                 ...config.tauri?.bundle,
-                identifier: bundleIdentifier,
-              },
+                identifier: bundleIdentifier
+              }
             }
           }
 
@@ -342,14 +342,14 @@ export async function buildProject(
             runner,
             name: info.name,
             version: info.version,
-            wixLanguage: info.wixLanguage,
+            wixLanguage: info.wixLanguage
           }
           if (iconPath) {
             return execCommand(
               runner.runnerCommand,
               [...runner.runnerArgs, 'icon', join(root, iconPath)],
               {
-                cwd: root,
+                cwd: root
               }
             ).then(() => app)
           }
@@ -388,15 +388,15 @@ export async function buildProject(
       }
 
       return execCommand(buildCommand, [...buildArgs, ...tauriArgs], {
-        cwd: root,
+        cwd: root
       })
         .then(({ stdout }) => {
-          console.log(
+          /* console.log()
             stdout
               .split('bundles at:')[1]
               .split('\n')
               .map((s: string) => s.replace('(updater)', '').trim())
-          )
+            ) */
           let fileAppName = app.name
           // on Linux, the app product name is converted to kebab-case
           if (!['darwin', 'win32'].includes(platform())) {
@@ -409,8 +409,14 @@ export async function buildProject(
 
           const cratePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath
 
+          const found = [...tauriArgs].findIndex(
+            (e) => e === '-t' || e === '--target'
+          )
+          const targetPath = found ? [...tauriArgs][found + 1] : ''
+
           const artifactsPath = join(
             getTargetDir(cratePath),
+            targetPath,
             debug ? 'debug' : 'release'
           )
 
@@ -422,7 +428,7 @@ export async function buildProject(
               ),
               join(artifactsPath, `bundle/macos/${fileAppName}.app`),
               join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
-              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`),
+              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`)
             ]
           } else if (platform() === 'win32') {
             // If multiple Wix languages are specified, multiple installers (.msi) will be made
@@ -480,7 +486,7 @@ export async function buildProject(
               join(
                 artifactsPath,
                 `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
-              ),
+              )
             ]
           }
         })
