@@ -412,7 +412,7 @@ export async function buildProject(
           const found = [...tauriArgs].findIndex(
             (e) => e === '-t' || e === '--target'
           )
-          const targetPath = found ? [...tauriArgs][found + 1] : ''
+          const targetPath = found >= 0 ? [...tauriArgs][found + 1] : ''
 
           const artifactsPath = join(
             getTargetDir(cratePath),
