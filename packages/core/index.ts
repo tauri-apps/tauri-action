@@ -102,7 +102,7 @@ export function execCommand(
   return execa(command, args, {
     cwd,
     stdio: 'inherit',
-    env: { FORCE_COLOR: '0' }
+    env: { FORCE_COLOR: '0' },
   }).then()
 }
 
@@ -227,7 +227,7 @@ export function getInfo(root: string): Info {
       tauriPath: tauriDir,
       name,
       version,
-      wixLanguage
+      wixLanguage,
     }
   } else {
     const packageJson = getPackageJson(root)
