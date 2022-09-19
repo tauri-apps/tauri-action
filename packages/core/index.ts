@@ -27,7 +27,7 @@ function getTauriDir(root: string): string | null {
   }
   const paths = globSync('**/tauri.conf.json', {
     cwd: root,
-    ignore: ignoreRules
+    ignore: ignoreRules,
   })
   const tauriConfPath = paths[0]
   return tauriConfPath ? resolve(root, tauriConfPath, '..') : null
@@ -97,13 +97,13 @@ export function execCommand(
   command: string,
   args: string[],
   { cwd }: { cwd?: string } = {}
-): Promise<any> {
+): Promise<void> {
   console.log(`running ${command}`, args)
   return execa(command, args, {
     cwd,
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' }
-  })
+  }).then()
 }
 
 interface CargoManifestBin {
@@ -195,8 +195,7 @@ export function getInfo(root: string): Info {
     const configPath = join(tauriDir, 'tauri.conf.json')
     let name
     let version
-    let wixLanguage: string | string[] | { [language: string]: unknown } =
-      'en-US'
+    let wixLanguage: string | string[] | { [language: string]: unknown } = 'en-US'
     const config = getConfig(configPath)
     if (config.package) {
       name = config.package.productName
@@ -240,7 +239,7 @@ export function getInfo(root: string): Info {
       tauriPath: null,
       name: appName,
       version,
-      wixLanguage: 'en-US'
+      wixLanguage: 'en-US',
     }
   }
 }
@@ -248,14 +247,7 @@ export function getInfo(root: string): Info {
 export async function buildProject(
   root: string,
   debug: boolean,
-  {
-    configPath,
-    distPath,
-    iconPath,
-    tauriScript,
-    args,
-    bundleIdentifier
-  }: BuildOptions
+  { configPath, distPath, iconPath, tauriScript, args, bundleIdentifier }: BuildOptions
 ): Promise<string[]> {
   return new Promise<Runner>((resolve, reject) => {
     if (tauriScript) {
@@ -272,7 +264,7 @@ export async function buildProject(
       )
     } else {
       execCommand('npm', ['install', '-g', '@tauri-apps/cli'], {
-        cwd: undefined
+        cwd: undefined,
       })
         .then(() => {
           resolve({ runnerCommand: 'tauri', runnerArgs: [] })
@@ -288,7 +280,7 @@ export async function buildProject(
           runner,
           name: info.name,
           version: info.version,
-          wixLanguage: info.wixLanguage
+          wixLanguage: info.wixLanguage,
         }
       } else {
         const packageJson = getPackageJson(root)
@@ -296,7 +288,7 @@ export async function buildProject(
           runner.runnerCommand,
           [...runner.runnerArgs, 'init', '--ci', '--app-name', info.name],
           {
-            cwd: root
+            cwd: root,
           }
         ).then(() => {
           const tauriPath = getTauriDir(root)
@@ -312,7 +304,7 @@ export async function buildProject(
           )
           const pkgConfig = {
             ...config.package,
-            version: info.version
+            version: info.version,
           }
           if (packageJson?.productName) {
             console.log(
@@ -342,14 +334,14 @@ export async function buildProject(
             runner,
             name: info.name,
             version: info.version,
-            wixLanguage: info.wixLanguage
+            wixLanguage: info.wixLanguage,
           }
           if (iconPath) {
             return execCommand(
               runner.runnerCommand,
               [...runner.runnerArgs, 'icon', join(root, iconPath)],
               {
-                cwd: root
+                cwd: root,
               }
             ).then(() => app)
           }
@@ -388,15 +380,9 @@ export async function buildProject(
       }
 
       return execCommand(buildCommand, [...buildArgs, ...tauriArgs], {
-        cwd: root
+        cwd: root,
       })
-        .then(({ stdout }) => {
-          /* console.log()
-            stdout
-              .split('bundles at:')[1]
-              .split('\n')
-              .map((s: string) => s.replace('(updater)', '').trim())
-            ) */
+        .then(() => {
           let fileAppName = app.name
           // on Linux, the app product name is converted to kebab-case
           if (!['darwin', 'win32'].includes(platform())) {
