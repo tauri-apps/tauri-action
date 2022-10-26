@@ -25,7 +25,11 @@ export default async function uploadAssets(
     const filename = path.basename(assetPath).replace(ext, '')
     let arch = ''
     if (assetPath.includes('.app.tar.gz')) {
-      arch = assetPath.includes('aarch64-apple-darwin') ? '_aarch64' : '_x86_64'
+      arch = assetPath.includes('universal-apple-darwin')
+        ? '_universal'
+        : assetPath.includes('aarch64-apple-darwin')
+        ? '_aarch64'
+        : '_x86_64'
     }
     const assetName = path.dirname(assetPath).includes(`target${path.sep}debug`)
       ? `${filename}-debug${arch}${ext}`
