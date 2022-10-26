@@ -45,7 +45,7 @@ export default async function uploadAssets(
         ? '_universal'
         : assetPath.includes('aarch64-apple-darwin')
         ? '_aarch64'
-        : '_x86_64'
+        : '_x64'
     }
 
     const assetName = assetPath.includes(`${path.sep}debug${path.sep}`)
