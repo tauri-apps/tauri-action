@@ -23,9 +23,13 @@ export default async function uploadAssets(
 
     const ext = path.extname(assetPath)
     const filename = path.basename(assetPath).replace(ext, '')
+    let arch = ''
+    if (assetPath.includes('.app.tar.gz')) {
+      arch = assetPath.includes('aarch64-apple-darwin') ? '_aarch64' : '_x86_64'
+    }
     const assetName = path.dirname(assetPath).includes(`target${path.sep}debug`)
-      ? `${filename}-debug${ext}`
-      : `${filename}${ext}`
+      ? `${filename}-debug${arch}${ext}`
+      : `${filename}${arch}${ext}`
     console.log(`Uploading ${assetName}...`)
     await github.rest.repos.uploadReleaseAsset({
       headers,
