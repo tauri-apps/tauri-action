@@ -48,7 +48,7 @@ export default async function uploadAssets(
         : '_x86_64'
     }
 
-    const assetName = path.dirname(assetPath).includes(`target${path.sep}debug`)
+    const assetName = assetPath.includes(`${path.sep}debug${path.sep}`)
       ? `${filename}-debug${arch}${ext}`
       : `${filename}${arch}${ext}`
 
