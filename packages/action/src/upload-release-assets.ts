@@ -10,6 +10,19 @@ export default async function uploadAssets(
     throw new Error('GITHUB_TOKEN is required')
   }
 
+  const extensions = [
+    '.app.tar.gz.sig',
+    '.app.tar.gz',
+    '.dmg',
+    '.AppImage.tar.gz.sig',
+    '.AppImage.tar.gz',
+    '.AppImage',
+    '.deb',
+    '.msi.zip.sig',
+    '.msi.zip',
+    '.msi'
+  ]
+
   const github = getOctokit(process.env.GITHUB_TOKEN)
 
   // Determine content-length for header to upload asset
@@ -21,20 +34,26 @@ export default async function uploadAssets(
       'content-length': contentLength(assetPath)
     }
 
-    const ext = path.extname(assetPath)
-    const filename = path.basename(assetPath).replace(ext, '')
+    const basename = path.basename(assetPath)
+    const exts = extensions.filter((s) => basename.includes(s))
+    const ext = exts[0] || path.extname(assetPath)
+    const filename = basename.replace(ext, '')
+
     let arch = ''
-    if (assetPath.includes('.app.tar.gz')) {
+    if (ext === '.app.tar.gz.sig' || ext === '.app.tar.gz') {
       arch = assetPath.includes('universal-apple-darwin')
         ? '_universal'
         : assetPath.includes('aarch64-apple-darwin')
         ? '_aarch64'
         : '_x86_64'
     }
+
     const assetName = path.dirname(assetPath).includes(`target${path.sep}debug`)
       ? `${filename}-debug${arch}${ext}`
       : `${filename}${arch}${ext}`
+
     console.log(`Uploading ${assetName}...`)
+
     await github.rest.repos.uploadReleaseAsset({
       headers,
       name: assetName,
