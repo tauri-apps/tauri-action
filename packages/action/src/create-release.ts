@@ -9,20 +9,11 @@ interface Release {
   htmlUrl: string
 }
 
-interface GitHubReleaseAsset {
-  id: number
-  name: string
-  state: string
-  size: number
-  browser_download_url: string
-}
-
 interface GitHubRelease {
   id: number
   upload_url: string
   html_url: string
   tag_name: string
-  assets: GitHubReleaseAsset[]
 }
 
 function allReleases(
@@ -33,30 +24,6 @@ function allReleases(
     github.rest.repos.listReleases.endpoint.merge(params)
   )
 }
-
-
-function getAssetPlatform(platform: string, fileName: string): string | null {
-	// macOS
-	if (
-		(fileName.includes(".app.tar.gz") || fileName.includes(".dmg")) &&
-		platform === "darwin"
-	) {
-		return 'darwin'
-	}
-
-	// Windows
-	if (fileName.includes('.msi') && platform === "win32") {
-		return 'win64'
-	}
-
-  // Linux
-	if ((fileName.includes('AppImage') || fileName.includes("deb")) && platform === "linux") {
-		return 'linux'
-	}
-
-  return null
-}
-
 
 export default async function createRelease(
   tagName: string,
@@ -94,26 +61,13 @@ export default async function createRelease(
       console.log(`Looking for a draft release with tag ${tagName}...`)
       for await (const response of allReleases(github)) {
         let releaseWithTag = response.data.find(
-          release => release.tag_name === tagName
+          (release) => release.tag_name === tagName
         )
         if (releaseWithTag) {
           release = releaseWithTag
           console.log(
             `Found draft release with tag ${tagName} on the release list.`
           )
-          // Remove all assets from the existing release
-          for (const asset of release.assets) {
-            if (getAssetPlatform(process.platform, asset.name)) {
-              console.log(
-                `Deleting asset ${asset.name} from the existing draft release`
-              )
-              await github.rest.repos.deleteReleaseAsset({
-                asset_id: asset.id,
-                owner,
-                repo,
-              })
-            }
-          }
           break
         }
       }

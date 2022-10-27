@@ -25,6 +25,14 @@ export default async function uploadAssets(
 
   const github = getOctokit(process.env.GITHUB_TOKEN)
 
+  const existingAssets = (
+    await github.rest.repos.listReleaseAssets({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      release_id: releaseId
+    })
+  ).data
+
   // Determine content-length for header to upload asset
   const contentLength = (filePath: string) => fs.statSync(filePath).size
 
@@ -51,6 +59,16 @@ export default async function uploadAssets(
     const assetName = assetPath.includes(`${path.sep}debug${path.sep}`)
       ? `${filename}-debug${arch}${ext}`
       : `${filename}${arch}${ext}`
+
+    const existingAsset = existingAssets.find((a) => a.name === assetName)
+    if (existingAsset) {
+      console.log(`Deleting existing ${assetName}...`)
+      await github.rest.repos.deleteReleaseAsset({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        asset_id: existingAsset.id
+      })
+    }
 
     console.log(`Uploading ${assetName}...`)
 
