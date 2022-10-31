@@ -11,7 +11,28 @@ export default async function uploadAssets(
     throw new Error('GITHUB_TOKEN is required')
   }
 
+  const extensions = [
+    '.app.tar.gz.sig',
+    '.app.tar.gz',
+    '.dmg',
+    '.AppImage.tar.gz.sig',
+    '.AppImage.tar.gz',
+    '.AppImage',
+    '.deb',
+    '.msi.zip.sig',
+    '.msi.zip',
+    '.msi'
+  ]
+
   const github = getOctokit(process.env.GITHUB_TOKEN)
+
+  const existingAssets = (
+    await github.rest.repos.listReleaseAssets({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      release_id: releaseId
+    })
+  ).data
 
   // Determine content-length for header to upload asset
   const contentLength = (filePath: string) => fs.statSync(filePath).size
@@ -22,8 +43,36 @@ export default async function uploadAssets(
       'content-length': contentLength(assetPath)
     }
 
-    const assetName = getAssetName(assetPath)
+    const basename = path.basename(assetPath)
+    const exts = extensions.filter((s) => basename.includes(s))
+    const ext = exts[0] || path.extname(assetPath)
+    const filename = basename.replace(ext, '')
+
+    let arch = ''
+    if (ext === '.app.tar.gz.sig' || ext === '.app.tar.gz') {
+      arch = assetPath.includes('universal-apple-darwin')
+        ? '_universal'
+        : assetPath.includes('aarch64-apple-darwin')
+        ? '_aarch64'
+        : '_x64'
+    }
+
+    const assetName = assetPath.includes(`${path.sep}debug${path.sep}`)
+      ? `${filename}-debug${arch}${ext}`
+      : `${filename}${arch}${ext}`
+
+    const existingAsset = existingAssets.find((a) => a.name === assetName)
+    if (existingAsset) {
+      console.log(`Deleting existing ${assetName}...`)
+      await github.rest.repos.deleteReleaseAsset({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        asset_id: existingAsset.id
+      })
+    }
+
     console.log(`Uploading ${assetName}...`)
+
     await github.rest.repos.uploadReleaseAsset({
       headers,
       name: assetName,

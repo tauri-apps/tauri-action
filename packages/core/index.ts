@@ -369,8 +369,9 @@ export async function buildProject(
       if (hasDependency('vue-cli-plugin-tauri', root)) {
         if (usesYarn(root)) {
           buildCommand = 'yarn'
+          buildArgs = ['tauri:build']
         } else {
-          buildCommand = 'npx'
+          buildCommand = 'npm'
           buildArgs = ['run', 'tauri:build']
         }
       } else {
@@ -388,28 +389,43 @@ export async function buildProject(
             fileAppName = fileAppName
               .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
               .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
-              .replace(/ /g, '-')
+              .replace(/[ _.]/g, '-')
               .toLowerCase()
           }
 
           const cratePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath
 
+          const found = [...tauriArgs].findIndex(
+            (e) => e === '-t' || e === '--target'
+          )
+          const targetPath = found >= 0 ? [...tauriArgs][found + 1] : ''
+
           const artifactsPath = join(
             getTargetDir(cratePath),
+            targetPath,
             debug ? 'debug' : 'release'
           )
 
+          let arch =
+            targetPath.search('-') >= 0
+              ? targetPath.split('-')[0]
+              : process.arch
+
           if (platform() === 'darwin') {
+            if (arch === "x86_64") arch = "x64"
+
             return [
               join(
                 artifactsPath,
-                `bundle/dmg/${fileAppName}_${app.version}_${process.arch}.dmg`
+                `bundle/dmg/${fileAppName}_${app.version}_${arch}.dmg`
               ),
               join(artifactsPath, `bundle/macos/${fileAppName}.app`),
               join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
-              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`),
+              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`)
             ]
           } else if (platform() === 'win32') {
+            arch = arch.startsWith('i') ? 'x86' : 'x64'
+
             // If multiple Wix languages are specified, multiple installers (.msi) will be made
             // The .zip and .sig are only generated for the first specified language
             let langs
@@ -425,47 +441,58 @@ export async function buildProject(
               artifacts.push(
                 join(
                   artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi`
+                  `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi`
                 )
               )
               artifacts.push(
                 join(
                   artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip`
+                  `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip`
                 )
               )
               artifacts.push(
                 join(
                   artifactsPath,
-                  `bundle/msi/${fileAppName}_${app.version}_${process.arch}_${lang}.msi.zip.sig`
+                  `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip.sig`
                 )
               )
             })
             return artifacts
           } else {
-            const arch =
-              process.arch === 'x64'
+            const debianArch =
+              arch === 'x64' || arch === 'x86_64'
                 ? 'amd64'
-                : process.arch === 'x32'
+                : arch === 'x32' || arch === 'i686'
                   ? 'i386'
-                  : process.arch
+                  : arch === 'arm'
+                    ? 'armhf'
+                    : arch === 'aarch64'
+                      ? 'arm64'
+                      : arch
+            const appImageArch =
+              arch === 'x64' || arch === 'x86_64'
+                ? 'amd64'
+                : arch === 'x32' || arch === 'i686'
+                  ? 'i386'
+                  : arch
+
             return [
               join(
                 artifactsPath,
-                `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
+                `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage`
+                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
+                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
-              ),
+                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`
+              )
             ]
           }
         })

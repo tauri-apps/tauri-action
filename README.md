@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -32,7 +32,7 @@ jobs:
       with:
         toolchain: stable
     - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-latest'
+      if: matrix.platform == 'ubuntu-20.04'
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -71,7 +71,7 @@ jobs:
       with:
         toolchain: stable
     - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-latest'
+      if: matrix.platform == 'ubuntu-20.04'
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
@@ -91,15 +91,15 @@ jobs:
 ## Uploading the artifacts to a release
 
 ```yml
-name: "test-on-pr"
+name: 'My Workflow'
 
 on: pull_request
 
 jobs:
   create-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
-      RELEASE_ID: ${{ steps.create-release.outputs.result }}
+      release_id: ${{ steps.create-release.outputs.result }}
 
     steps:
       - uses: actions/checkout@v2
@@ -117,9 +117,9 @@ jobs:
             const { data } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: app-v${process.env.PACKAGE_VERSION},
-              name: "Desktop app v${process.env.PACKAGE_VERSION}",
-              body: "See the assets to download this version and install.",
+              tag_name: `app-v${process.env.PACKAGE_VERSION}`,
+              name: `Desktop App v${process.env.PACKAGE_VERSION}`,
+              body: 'Take a look at the assets to download and install this app.',
               draft: true,
               prerelease: false
             })
@@ -131,7 +131,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -145,7 +145,7 @@ jobs:
       with:
         toolchain: stable
     - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-latest'
+      if: matrix.platform == 'ubuntu-20.04'
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
@@ -155,7 +155,27 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
+        releaseId: ${{ needs.create-release.outputs.release_id }}
+
+  publish-release:
+    runs-on: ubuntu-20.04
+    needs: [ create-release, build-tauri ]
+    
+    steps:
+      - name: publish release
+        id: publish-release
+        uses: actions/github-script@v6
+        env:
+          release_id: ${{ needs.create-release.outputs.release_id }}
+        with:
+          script: |
+            github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.release_id,
+              draft: false,
+              prerelease: false
+            })
 ```
 
 ## Inputs
@@ -174,7 +194,9 @@ jobs:
 | `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
 | `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
 | `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   |                       |
-| `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npm tauri`     |
+| `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npx tauri`     |
+| `args`             |  false   | Additional arguments to the current build command                                           | string |                       |
+
 
 ## Outputs
 
@@ -188,6 +210,7 @@ jobs:
 
 - You can use this Action on a repo that doesn't have Tauri configured. We automatically initialize Tauri before building, and configure it to use your Web artifacts.
   - You can configure Tauri with the `configPath`, `distPath` and `iconPath` options.
-- You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri build` or `npx tauri build`, we'll execute `${tauriScript}`.
+- You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri <COMMAND> <ARGS>` or `npx tauri <COMMAND> <ARGS>`, we'll execute `${tauriScript} <COMMAND> <ARGS>`.
   - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
+- If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
 - When your app isn't on the root of the repo, use the `projectPath` input.
