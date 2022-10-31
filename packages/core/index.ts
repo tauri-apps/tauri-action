@@ -410,9 +410,10 @@ export async function buildProject(
             targetPath.search('-') >= 0
               ? targetPath.split('-')[0]
               : process.arch
-          if (arch === "x86_64") arch = "x64"
 
           if (platform() === 'darwin') {
+            if (arch === "x86_64") arch = "x64"
+
             return [
               join(
                 artifactsPath,
@@ -423,6 +424,8 @@ export async function buildProject(
               join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`)
             ]
           } else if (platform() === 'win32') {
+            arch = arch.startsWith('i') ? 'x86' : 'x64'
+
             // If multiple Wix languages are specified, multiple installers (.msi) will be made
             // The .zip and .sig are only generated for the first specified language
             let langs
@@ -456,36 +459,39 @@ export async function buildProject(
             })
             return artifacts
           } else {
-            arch =
-              arch === 'x64'
+            const debianArch =
+              arch === 'x64' || arch === 'x86_64'
                 ? 'amd64'
-                : arch === 'x86_64'
+                : arch === 'x32' || arch === 'i686'
+                  ? 'i386'
+                  : arch === 'arm'
+                    ? 'armhf'
+                    : arch === 'aarch64'
+                      ? 'arm64'
+                      : arch
+            const appImageArch =
+              arch === 'x64' || arch === 'x86_64'
                 ? 'amd64'
-                : arch === 'x32'
-                ? 'i386'
-                : arch === 'i686'
-                ? 'i386'
-                : arch === 'arm'
-                ? 'armhf'
-                : arch === 'aarch64'
-                ? 'arm64'
-                : arch
+                : arch === 'x32' || arch === 'i686'
+                  ? 'i386'
+                  : arch
+
             return [
               join(
                 artifactsPath,
-                `bundle/deb/${fileAppName}_${app.version}_${arch}.deb`
+                `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage`
+                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz`
+                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`
               ),
               join(
                 artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${arch}.AppImage.tar.gz.sig`
+                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`
               )
             ]
           }
