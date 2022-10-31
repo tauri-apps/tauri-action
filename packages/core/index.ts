@@ -161,6 +161,11 @@ interface Info {
   wixLanguage: string | string[] | { [language: string]: unknown }
 }
 
+export interface Artifact {
+  path: string
+  arch: string
+}
+
 function _getJson5Config(contents: string): TauriConfig | null {
   try {
     const config = JSON5.parse(contents) as TauriConfig
@@ -248,7 +253,7 @@ export async function buildProject(
   root: string,
   debug: boolean,
   { configPath, distPath, iconPath, tauriScript, args, bundleIdentifier }: BuildOptions
-): Promise<string[]> {
+): Promise<Artifact[]> {
   return new Promise<Runner>((resolve, reject) => {
     if (tauriScript) {
       const [runnerCommand, ...runnerArgs] = tauriScript.split(' ')
@@ -422,7 +427,7 @@ export async function buildProject(
               join(artifactsPath, `bundle/macos/${fileAppName}.app`),
               join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
               join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`)
-            ]
+            ].map(path => ({ path, arch }))
           } else if (platform() === 'win32') {
             arch = arch.startsWith('i') ? 'x86' : 'x64'
 
@@ -457,7 +462,7 @@ export async function buildProject(
                 )
               )
             })
-            return artifacts
+            return artifacts.map(path => ({ path, arch }))
           } else {
             const debianArch =
               arch === 'x64' || arch === 'x86_64'
@@ -477,28 +482,40 @@ export async function buildProject(
                   : arch
 
             return [
-              join(
-                artifactsPath,
-                `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`
-              ),
-              join(
-                artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage`
-              ),
-              join(
-                artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`
-              ),
-              join(
-                artifactsPath,
-                `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`
-              )
+              {
+                path: join(
+                  artifactsPath,
+                  `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`
+                ),
+                arch: debianArch
+              },
+              {
+                path: join(
+                  artifactsPath,
+                  `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage`
+                ),
+                arch: appImageArch
+              },
+              {
+                path: join(
+                  artifactsPath,
+                  `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`
+                ),
+                arch: appImageArch
+              },
+              {
+                path: join(
+                  artifactsPath,
+                  `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`
+                ),
+                arch: appImageArch
+              }
             ]
           }
         })
-        .then((paths) => {
-          console.log(`Expected artifacts paths:\n${paths.join('\n')}`)
-          return paths.filter((p) => existsSync(p))
+        .then((artifacts) => {
+          console.log(`Expected artifacts paths:\n${artifacts.map(a => a.path).join('\n')}`)
+          return artifacts.filter((p) => existsSync(p.path))
         })
     })
 }
