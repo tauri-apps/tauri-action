@@ -3,6 +3,7 @@ import * as core from '@actions/core'
 import { join, resolve, dirname, basename } from 'path'
 import { existsSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
+import uploadVersionJSON from './upload-version-json'
 import createRelease from './create-release'
 import { getPackageJson, buildProject, getInfo, execCommand } from '@tauri-apps/action-core'
 import type { BuildOptions } from '@tauri-apps/action-core'
@@ -57,7 +58,7 @@ async function run(): Promise<void> {
       throw new Error('No artifacts were found.')
     }
 
-    console.log(`Artifacts: ${artifacts}.`)
+    console.log(`Artifacts: ${artifacts.map(a => a.path)}.`)
 
     let releaseId: number
     if (tagName) {
@@ -65,7 +66,7 @@ async function run(): Promise<void> {
       const templates = [
         {
           key: '__VERSION__',
-          value: info.version
+          value: info.version || packageJson.version
         }
       ]
 
@@ -98,10 +99,10 @@ async function run(): Promise<void> {
         for (const artifact of artifacts) {
           // updater provide a .tar.gz, this will prevent duplicate and overwriting of
           // signed archive
-          if (artifact.endsWith('.app') && !existsSync(`${artifact}.tar.gz`)) {
-            await execCommand('tar', ['czf', `${artifact}.tar.gz`, '-C', dirname(artifact), basename(artifact)])
-            artifacts[i] += '.tar.gz'
-          } else if (artifact.endsWith('.app')) {
+          if (artifact.path.endsWith('.app') && !existsSync(`${artifact.path}.tar.gz`)) {
+            await execCommand('tar', ['czf', `${artifact}.tar.gz`, '-C', dirname(artifact.path), basename(artifact.path)])
+            artifact[i].path += '.tar.gz'
+          } else if (artifact.path.endsWith('.app')) {
             // we can't upload a directory
             artifacts.splice(i, 1);
           }
@@ -109,6 +110,7 @@ async function run(): Promise<void> {
         }
       }
       await uploadReleaseAssets(releaseId, artifacts)
+      await uploadVersionJSON({ version: info.version, notes: body, releaseId, artifacts });
     }
   } catch (error) {
     core.setFailed(error.message)
