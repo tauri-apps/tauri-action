@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@tauri-apps/action-core": "0.2.0",
-    "minimist": "1.2.6",
+    "minimist": "1.2.7",
     "tslib": "2.4.0"
   },
   "devDependencies": {
