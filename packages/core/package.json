@@ -15,7 +15,7 @@
     "glob-gitignore": "^1.0.14",
     "ignore": "^5.2.0",
     "json5": "^2.2.0",
-    "tslib": "2.4.0"
+    "tslib": "2.4.1"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "8.5.0",
