@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "declaration": true,
     "outDir": "./dist",
     "rootDir": ".",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["index.ts"]
+  "include": ["index.ts", "index.d.ts"]
 }
