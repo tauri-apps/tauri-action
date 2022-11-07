@@ -36,7 +36,8 @@ export default async function uploadVersionJSON({
   const assets = await github.rest.repos.listReleaseAssets({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    release_id: releaseId
+    release_id: releaseId,
+    per_page: 50
   })
   const asset = assets.data.find((e) => e.name === versionFilename)
   console.log(asset)
