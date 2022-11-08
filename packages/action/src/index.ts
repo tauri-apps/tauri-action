@@ -5,7 +5,12 @@ import { existsSync } from 'fs'
 import uploadReleaseAssets from './upload-release-assets'
 import uploadVersionJSON from './upload-version-json'
 import createRelease from './create-release'
-import { getPackageJson, buildProject, getInfo, execCommand } from '@tauri-apps/action-core'
+import {
+  getPackageJson,
+  buildProject,
+  getInfo,
+  execCommand
+} from '@tauri-apps/action-core'
 import type { BuildOptions } from '@tauri-apps/action-core'
 import stringArgv from 'string-argv'
 
@@ -58,7 +63,7 @@ async function run(): Promise<void> {
       throw new Error('No artifacts were found.')
     }
 
-    console.log(`Artifacts: ${artifacts.map(a => a.path)}.`)
+    console.log(`Found artifacts:\n${artifacts.map((a) => a.path).join('\n')}`)
 
     let releaseId: number
     if (tagName) {
@@ -70,7 +75,7 @@ async function run(): Promise<void> {
         }
       ]
 
-      templates.forEach(template => {
+      templates.forEach((template) => {
         const regex = new RegExp(template.key, 'g')
         tagName = tagName.replace(regex, template.value)
         releaseName = releaseName.replace(regex, template.value)
@@ -99,18 +104,33 @@ async function run(): Promise<void> {
         for (const artifact of artifacts) {
           // updater provide a .tar.gz, this will prevent duplicate and overwriting of
           // signed archive
-          if (artifact.path.endsWith('.app') && !existsSync(`${artifact.path}.tar.gz`)) {
-            await execCommand('tar', ['czf', `${artifact}.tar.gz`, '-C', dirname(artifact.path), basename(artifact.path)])
+          if (
+            artifact.path.endsWith('.app') &&
+            !existsSync(`${artifact.path}.tar.gz`)
+          ) {
+            await execCommand('tar', [
+              'czf',
+              `${artifact}.tar.gz`,
+              '-C',
+              dirname(artifact.path),
+              basename(artifact.path)
+            ])
             artifact[i].path += '.tar.gz'
           } else if (artifact.path.endsWith('.app')) {
             // we can't upload a directory
-            artifacts.splice(i, 1);
+            artifacts.splice(i, 1)
           }
           i++
         }
       }
+      console.log(artifacts)
       await uploadReleaseAssets(releaseId, artifacts)
-      await uploadVersionJSON({ version: info.version, notes: body, releaseId, artifacts });
+      await uploadVersionJSON({
+        version: info.version,
+        notes: body,
+        releaseId,
+        artifacts
+      })
     }
   } catch (error) {
     core.setFailed(error.message)
