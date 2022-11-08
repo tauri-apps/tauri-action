@@ -99,6 +99,7 @@ async function run(): Promise<void> {
     }
 
     if (releaseId) {
+      console.log(artifacts)
       if (platform() === 'darwin') {
         let i = 0
         for (const artifact of artifacts) {
