@@ -99,7 +99,6 @@ async function run(): Promise<void> {
     }
 
     if (releaseId) {
-      console.log(artifacts)
       if (platform() === 'darwin') {
         let i = 0
         for (const artifact of artifacts) {
@@ -124,7 +123,6 @@ async function run(): Promise<void> {
           i++
         }
       }
-      console.log(artifacts)
       await uploadReleaseAssets(releaseId, artifacts)
       await uploadVersionJSON({
         version: info.version,
