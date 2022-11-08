@@ -11,15 +11,14 @@ export default async function uploadAssets(
     throw new Error('GITHUB_TOKEN is required')
   }
 
-
-
   const github = getOctokit(process.env.GITHUB_TOKEN)
 
   const existingAssets = (
     await github.rest.repos.listReleaseAssets({
       owner: context.repo.owner,
       repo: context.repo.repo,
-      release_id: releaseId
+      release_id: releaseId,
+      per_page: 50
     })
   ).data
 
