@@ -40,7 +40,6 @@ export default async function uploadVersionJSON({
     per_page: 50
   })
   const asset = assets.data.find((e) => e.name === versionFilename)
-  console.log(asset)
 
   if (asset) {
     const assetData = (
