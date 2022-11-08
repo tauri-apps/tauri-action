@@ -111,7 +111,7 @@ async function run(): Promise<void> {
           ) {
             await execCommand('tar', [
               'czf',
-              `${artifact}.tar.gz`,
+              `${artifact.path}.tar.gz`,
               '-C',
               dirname(artifact.path),
               basename(artifact.path)
