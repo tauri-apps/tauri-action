@@ -79,7 +79,7 @@ export default async function uploadVersionJSON({
       (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip')
     )?.browser_download_url
   // Untagged release downloads won't work after the release was published
-  downloadUrl = downloadUrl.replace(
+  downloadUrl = downloadUrl?.replace(
     /\/download\/(untagged-[^\/]+)\//, 
     `/download/${tagName}/`
   )
