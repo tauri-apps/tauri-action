@@ -10,11 +10,13 @@ import { Artifact } from '@tauri-apps/action-core'
 export default async function uploadVersionJSON({
   version,
   notes,
+  tagName,
   releaseId,
   artifacts
 }: {
   version: string
   notes: string
+  tagName: string
   releaseId: number
   artifacts: Artifact[]
 }) {
@@ -71,11 +73,16 @@ export default async function uploadVersionJSON({
 
   const sigFile = artifacts.find((s) => s.path.endsWith('.sig'))
   const assetNames = new Set(artifacts.map((p) => getAssetName(p.path)))
-  const downloadUrl = assets.data
+  let downloadUrl = assets.data
     .filter((e) => assetNames.has(e.name))
     .find(
       (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip')
     )?.browser_download_url
+  // Untagged release downloads won't work after the release was published
+  downloadUrl = downloadUrl.replace(
+    /\/download\/(untagged-[^\/]+)\//, 
+    `/download/${tagName}/`
+  )
 
   let os = platform() as string
   if (os === 'win32') os = 'windows'
