@@ -10,11 +10,13 @@ import { Artifact } from '@tauri-apps/action-core'
 export default async function uploadVersionJSON({
   version,
   notes,
+  tagName,
   releaseId,
   artifacts
 }: {
   version: string
   notes: string
+  tagName: string
   releaseId: number
   artifacts: Artifact[]
 }) {
@@ -71,26 +73,32 @@ export default async function uploadVersionJSON({
 
   const sigFile = artifacts.find((s) => s.path.endsWith('.sig'))
   const assetNames = new Set(artifacts.map((p) => getAssetName(p.path)))
-  const downloadUrl = assets.data
+  let downloadUrl = assets.data
     .filter((e) => assetNames.has(e.name))
     .find(
       (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip')
     )?.browser_download_url
+  // Untagged release downloads won't work after the release was published
+  downloadUrl = downloadUrl?.replace(
+    /\/download\/(untagged-[^\/]+)\//, 
+    `/download/${tagName}/`
+  )
 
   let os = platform() as string
   if (os === 'win32') os = 'windows'
 
   if (downloadUrl && sigFile) {
     let arch = sigFile.arch
-    arch === 'amd64' || arch === 'x86_64' || arch === 'x64'
-      ? 'x86_64'
-      : arch === 'x86' || arch === 'i386'
-      ? 'i686'
-      : arch === 'arm'
-      ? 'armv7'
-      : arch === 'arm64'
-      ? 'aarch64'
-      : arch
+    arch = 
+      arch === 'amd64' || arch === 'x86_64' || arch === 'x64'
+        ? 'x86_64'
+        : arch === 'x86' || arch === 'i386'
+        ? 'i686'
+        : arch === 'arm'
+        ? 'armv7'
+        : arch === 'arm64'
+        ? 'aarch64'
+        : arch
 
     // https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
     versionContent.platforms[`${os}-${arch}`] = {
