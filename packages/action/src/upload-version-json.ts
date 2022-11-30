@@ -79,12 +79,10 @@ export default async function uploadVersionJSON({
       (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip')
     )?.browser_download_url;
 
-  console.log(tagName);
-
   // Untagged release downloads won't work after the release was published
   downloadUrl = downloadUrl?.replace(
     /\/download\/(untagged-[^\/]+)\//,
-    Boolean(tagName) ? '/latest/download/' : `/download/${tagName}/`
+    tagName ? `/download/${tagName}/` : '/latest/download/'
   );
 
   let os = platform() as string;
