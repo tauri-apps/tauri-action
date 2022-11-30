@@ -2,7 +2,7 @@ name: covector version or publish
 on:
   push:
     branches:
-    - dev
+      - dev
 
 jobs:
   covector:
@@ -36,7 +36,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: release/version-updates
           title: Apply Version Updates From Current Changes
-          commit-message: "apply version updates"
-          labels: "version updates"
+          commit-message: 'apply version updates'
+          labels: 'version updates'
           body: ${{ steps.covector.outputs.change }}
-

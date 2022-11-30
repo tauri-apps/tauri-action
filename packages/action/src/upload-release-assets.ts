@@ -1,49 +1,49 @@
-import { getOctokit, context } from '@actions/github'
-import { Artifact } from '@tauri-apps/action-core'
-import fs from 'fs'
-import { getAssetName } from './utils'
+import { getOctokit, context } from '@actions/github';
+import { Artifact } from '@tauri-apps/action-core';
+import fs from 'fs';
+import { getAssetName } from './utils';
 
 export default async function uploadAssets(
   releaseId: number,
   assets: Artifact[]
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
-    throw new Error('GITHUB_TOKEN is required')
+    throw new Error('GITHUB_TOKEN is required');
   }
 
-  const github = getOctokit(process.env.GITHUB_TOKEN)
+  const github = getOctokit(process.env.GITHUB_TOKEN);
 
   const existingAssets = (
     await github.rest.repos.listReleaseAssets({
       owner: context.repo.owner,
       repo: context.repo.repo,
       release_id: releaseId,
-      per_page: 50
+      per_page: 50,
     })
-  ).data
+  ).data;
 
   // Determine content-length for header to upload asset
-  const contentLength = (filePath: string) => fs.statSync(filePath).size
+  const contentLength = (filePath: string) => fs.statSync(filePath).size;
 
   for (const asset of assets) {
     const headers = {
       'content-type': 'application/zip',
-      'content-length': contentLength(asset.path)
-    }
+      'content-length': contentLength(asset.path),
+    };
 
-    const assetName = getAssetName(asset.path)
+    const assetName = getAssetName(asset.path);
 
-    const existingAsset = existingAssets.find((a) => a.name === assetName)
+    const existingAsset = existingAssets.find((a) => a.name === assetName);
     if (existingAsset) {
-      console.log(`Deleting existing ${assetName}...`)
+      console.log(`Deleting existing ${assetName}...`);
       await github.rest.repos.deleteReleaseAsset({
         owner: context.repo.owner,
         repo: context.repo.repo,
-        asset_id: existingAsset.id
-      })
+        asset_id: existingAsset.id,
+      });
     }
 
-    console.log(`Uploading ${assetName}...`)
+    console.log(`Uploading ${assetName}...`);
 
     await github.rest.repos.uploadReleaseAsset({
       headers,
@@ -53,7 +53,7 @@ export default async function uploadAssets(
       data: fs.readFileSync(asset.path),
       owner: context.repo.owner,
       repo: context.repo.repo,
-      release_id: releaseId
-    })
+      release_id: releaseId,
+    });
   }
 }
