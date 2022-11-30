@@ -82,7 +82,7 @@ export default async function uploadVersionJSON({
   // Untagged release downloads won't work after the release was published
   downloadUrl = downloadUrl?.replace(
     /\/download\/(untagged-[^\/]+)\//,
-    `/download/${tagName}/`
+    tagName ? '/latest/download/' : `/download/${tagName}/`
   );
 
   let os = platform() as string;
