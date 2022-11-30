@@ -78,10 +78,22 @@ export default async function uploadVersionJSON({
     .find(
       (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip')
     )?.browser_download_url;
+
+  // get tagName if not provided in action.
+  // This happens if tauri-action is not used to create the release.
+  const tag =
+    tagName.length === 0
+      ? await github.rest.repos.getRelease({
+          owner: context.repo.owner,
+          repo: context.repo.owner,
+          release_id: releaseId,
+        })
+      : tagName;
+
   // Untagged release downloads won't work after the release was published
   downloadUrl = downloadUrl?.replace(
     /\/download\/(untagged-[^\/]+)\//,
-    `/download/${tagName}/`
+    `/download/${tag}/`
   );
 
   let os = platform() as string;
