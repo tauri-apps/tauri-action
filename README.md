@@ -180,7 +180,7 @@ jobs:
 | `configPath`       |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json       |
 | `distPath`         |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                       |
 | `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                 | string |                       |
-| `tagName`          |  false   | The tag name of the release to create                                                       | string |                       |
+| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`    | string |                       |
 | `releaseName`      |  false   | The name of the release to create                                                           | string |                       |
 | `releaseBody`      |  false   | The body of the release to create                                                           | string |                       |
 | `releaseDraft`     |  false   | Whether the release to create is a draft or not                                             | bool   | false                 |
@@ -207,3 +207,4 @@ jobs:
   - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
 - If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
 - When your app isn't on the root of the repo, use the `projectPath` input.
+- If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
