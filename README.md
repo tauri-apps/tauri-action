@@ -180,6 +180,7 @@ jobs:
 | `configPath`       |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json       |
 | `distPath`         |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                       |
 | `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                 | string |                       |
+| `binryName`        |  false   | Custom name of the app, default to name property into tauri conf file'.                     | string |                       |
 | `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`    | string |                       |
 | `releaseName`      |  false   | The name of the release to create                                                           | string |                       |
 | `releaseBody`      |  false   | The body of the release to create                                                           | string |                       |
