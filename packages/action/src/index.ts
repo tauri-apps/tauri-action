@@ -67,8 +67,11 @@ async function run(): Promise<void> {
     }
 
     console.log(`Found artifacts:\n${artifacts.map((a) => a.path).join('\n')}`);
-    core.setOutput('artifactPath', JSON.stringify(artifacts.map((a) => a.path));
-                   
+    core.setOutput(
+      'artifactPath',
+      JSON.stringify(artifacts.map((a) => a.path))
+    );
+
     if (tagName && !releaseId) {
       const packageJson = getPackageJson(projectPath);
       const templates = [
