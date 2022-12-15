@@ -25,6 +25,7 @@ async function run(): Promise<void> {
       core.getInput('configPath') || 'tauri.conf.json'
     );
     const distPath = core.getInput('distPath');
+    const binaryName = core.getInput('binaryName');
     const iconPath = core.getInput('iconPath');
     const includeDebug = core.getBooleanInput('includeDebug');
     const tauriScript = core.getInput('tauriScript');
@@ -49,6 +50,7 @@ async function run(): Promise<void> {
 
     const options: BuildOptions = {
       configPath: existsSync(configPath) ? configPath : null,
+      binaryName,    
       distPath,
       iconPath,
       tauriScript,
