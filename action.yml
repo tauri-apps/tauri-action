@@ -20,6 +20,8 @@ inputs:
     default: false
   releaseCommitish:
     description: 'Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit'
+  binaryName:
+    description: 'Custom name of the app, default to name property into tauri conf file' 
   projectPath:
     description: 'path to the root of the project that will be built'
     default: '.'
