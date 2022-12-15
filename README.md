@@ -1,6 +1,6 @@
 # Tauri GitHub Action
 
-This GitHub Action builds your Web application as a Tauri native binary for MacOS, Linux and Windows.
+This GitHub Action builds your Web application as a Tauri native binary for macOS, Linux and Windows.
 If your project doesn't include the Tauri files, we create it at compile time, so if you don't need to use Tauri's API, you can just ship native apps through this Action.
 
 # Usage
