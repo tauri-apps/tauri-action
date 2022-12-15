@@ -1,3 +1,4 @@
+
 import { platform } from 'os';
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs';
 import { execa } from 'execa';
@@ -141,6 +142,7 @@ interface Application {
 
 export interface BuildOptions {
   configPath: string | null;
+  binaryName: string | null;
   distPath: string | null;
   iconPath: string | null;
   tauriScript: string | null;
@@ -254,6 +256,7 @@ export async function buildProject(
   debug: boolean,
   {
     configPath,
+    binaryName,
     distPath,
     iconPath,
     tauriScript,
@@ -395,7 +398,13 @@ export async function buildProject(
         cwd: root,
       })
         .then(() => {
-          let fileAppName = app.name;
+          let fileAppName;
+	  if (binaryName !== null) {
+            fileAppName = binaryName;
+	  } 
+	  else {
+	    fileAppName = app.name;
+          } 
           // on Linux, the app product name is converted to kebab-case
           if (!['darwin', 'win32'].includes(platform())) {
             fileAppName = fileAppName
