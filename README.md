@@ -198,6 +198,7 @@ jobs:
 | `releaseId`        | The ID of the created release                                      |
 | `releaseHtmlUrl`   | The URL users can navigate to in order to view the created release |
 | `releaseUploadUrl` | The URL for uploading assets to the created release                |
+| `artifactPath`     | The artifacts path of the created binaries                         |
 
 # Caveats
 
