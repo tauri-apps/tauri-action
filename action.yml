@@ -46,8 +46,8 @@ outputs:
     description: 'The URL users can navigate to in order to view the created release'
   releaseUploadUrl:
     description: 'The URL for uploading assets to the created release'
-  artifactPath:
-    description: 'The artifacts path of the created binaries'
+  artifactPaths:
+    description: 'The paths of the generated artifacts'
 runs:
   using: 'node16'
   main: 'packages/action/dist/index.js'
