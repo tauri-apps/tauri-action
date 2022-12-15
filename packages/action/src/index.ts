@@ -68,7 +68,7 @@ async function run(): Promise<void> {
 
     console.log(`Found artifacts:\n${artifacts.map((a) => a.path).join('\n')}`);
     core.setOutput(
-      'artifactPath',
+      'artifactPaths',
       JSON.stringify(artifacts.map((a) => a.path))
     );
 
