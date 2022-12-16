@@ -398,7 +398,7 @@ export async function buildProject(
         cwd: root,
       })
         .then(() => {
-          let fileAppName;
+          let fileAppName: string;
 	  if (binaryName !== null) {
             fileAppName = binaryName;
 	  } 
