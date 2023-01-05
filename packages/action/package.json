@@ -21,14 +21,14 @@
     "@actions/core": "1.10.0",
     "@actions/github": "5.1.1",
     "@tauri-apps/action-core": "0.3.1",
-    "node-fetch": "3.2.10",
+    "node-fetch": "3.3.0",
     "string-argv": "0.3.1",
     "tslib": "2.4.1"
   },
   "devDependencies": {
-    "@types/node": "16.18.3",
-    "@vercel/ncc": "0.34.0",
+    "@types/node": "16.18.11",
+    "@vercel/ncc": "0.36.0",
     "rollup": "2.79.1",
-    "typescript": "4.8.4"
+    "typescript": "4.9.4"
   }
 }

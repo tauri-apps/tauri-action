@@ -1,2 +1,2 @@
-import { run } from '../dist/index.js'
-run()
+import { run } from '../dist/index.js';
+run();

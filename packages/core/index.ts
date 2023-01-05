@@ -1,96 +1,95 @@
-import { platform } from 'os'
-import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs'
-import { execa } from 'execa'
-import { parse as parseToml } from '@iarna/toml'
-import { join, resolve, normalize, sep } from 'path'
-import { sync as globSync } from 'glob-gitignore'
-import ignore from 'ignore'
-import JSON5 from 'json5'
+import { platform } from 'os';
+import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs';
+import { execa } from 'execa';
+import { parse as parseToml } from '@iarna/toml';
+import { join, resolve, normalize, sep } from 'path';
+import { sync as globSync } from 'glob-gitignore';
+import ignore from 'ignore';
+import JSON5 from 'json5';
 
 export function getPackageJson(root: string): any {
-  const packageJsonPath = join(root, 'package.json')
+  const packageJsonPath = join(root, 'package.json');
   if (existsSync(packageJsonPath)) {
-    const packageJsonString = readFileSync(packageJsonPath).toString()
-    const packageJson = JSON.parse(packageJsonString)
-    return packageJson
+    const packageJsonString = readFileSync(packageJsonPath).toString();
+    const packageJson = JSON.parse(packageJsonString);
+    return packageJson;
   }
-  return null
+  return null;
 }
 
 function getTauriDir(root: string): string | null {
-  const ignoreRules = ignore()
-  const gitignorePath = join(root, '.gitignore')
+  const ignoreRules = ignore();
+  const gitignorePath = join(root, '.gitignore');
   if (existsSync(gitignorePath)) {
-    ignoreRules.add(readFileSync(gitignorePath).toString())
+    ignoreRules.add(readFileSync(gitignorePath).toString());
   } else {
-    ignoreRules.add('node_modules').add('target')
+    ignoreRules.add('node_modules').add('target');
   }
   const paths = globSync('**/tauri.conf.json', {
     cwd: root,
     ignore: ignoreRules,
-  })
-  const tauriConfPath = paths[0]
-  return tauriConfPath ? resolve(root, tauriConfPath, '..') : null
+  });
+  const tauriConfPath = paths[0];
+  return tauriConfPath ? resolve(root, tauriConfPath, '..') : null;
 }
 
 function getWorkspaceDir(dir: string): string | null {
-  const rootPath = dir
+  const rootPath = dir;
   while (dir.length && dir[dir.length - 1] !== sep) {
-    const manifestPath = join(dir, 'Cargo.toml')
+    const manifestPath = join(dir, 'Cargo.toml');
     if (existsSync(manifestPath)) {
-      const toml = parseToml(readFileSync(manifestPath).toString())
+      const toml = parseToml(readFileSync(manifestPath).toString());
       // @ts-expect-error
-      if (toml.workspace && toml.workspace.members) {
+      if (toml.workspace?.members) {
         // @ts-expect-error
-        const members: string[] = toml.workspace.members
+        const members: string[] = toml.workspace.members;
         if (members.some((m) => resolve(dir, m) === rootPath)) {
-          return dir
+          return dir;
         }
       }
     }
 
-    dir = normalize(join(dir, '..'))
+    dir = normalize(join(dir, '..'));
   }
-  return null
+  return null;
 }
 
 function getTargetDir(crateDir: string): string {
-  const def = join(crateDir, 'target')
+  const def = join(crateDir, 'target');
   if ('CARGO_TARGET_DIR' in process.env) {
-    return process.env.CARGO_TARGET_DIR ?? def
+    return process.env.CARGO_TARGET_DIR ?? def;
   }
-  let dir = crateDir
+  let dir = crateDir;
   while (dir.length && dir[dir.length - 1] !== sep) {
-    let cargoConfigPath = join(dir, '.cargo/config')
+    let cargoConfigPath = join(dir, '.cargo/config');
     if (!existsSync(cargoConfigPath)) {
-      cargoConfigPath = join(dir, '.cargo/config.toml')
+      cargoConfigPath = join(dir, '.cargo/config.toml');
     }
     if (existsSync(cargoConfigPath)) {
-      const cargoConfig = parseToml(readFileSync(cargoConfigPath).toString())
+      const cargoConfig = parseToml(readFileSync(cargoConfigPath).toString());
       // @ts-ignore
-      if (cargoConfig.build && cargoConfig.build['target-dir']) {
+      if (cargoConfig.build?.['target-dir']) {
         // @ts-ignore
-        return cargoConfig.build['target-dir']
+        return cargoConfig.build['target-dir'];
       }
     }
 
-    dir = normalize(join(dir, '..'))
+    dir = normalize(join(dir, '..'));
   }
-  return def
+  return def;
 }
 
 function hasDependency(dependencyName: string, root: string): boolean {
-  const packageJson = getPackageJson(root)
+  const packageJson = getPackageJson(root);
   return (
     packageJson &&
-    ((packageJson.dependencies && packageJson.dependencies[dependencyName]) ||
-      (packageJson.devDependencies &&
-        packageJson.devDependencies[dependencyName]))
-  )
+    (packageJson.dependencies?.[dependencyName] ||
+      packageJson.devDependencies?.[dependencyName])
+  );
 }
 
 function usesYarn(root: string): boolean {
-  return existsSync(join(root, 'yarn.lock'))
+  return existsSync(join(root, 'yarn.lock'));
 }
 
 export function execCommand(
@@ -98,134 +97,135 @@ export function execCommand(
   args: string[],
   { cwd }: { cwd?: string } = {}
 ): Promise<void> {
-  console.log(`running ${command}`, args)
+  console.log(`running ${command}`, args);
   return execa(command, args, {
     cwd,
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' },
-  }).then()
+  }).then();
 }
 
 interface CargoManifestBin {
-  name: string
+  name: string;
 }
 
 interface CargoManifest {
-  package: { version: string; name: string; 'default-run': string }
-  bin: CargoManifestBin[]
+  package: { version: string; name: string; 'default-run': string };
+  bin: CargoManifestBin[];
 }
 
 interface TauriConfig {
   package?: {
-    productName?: string
-    version?: string
-  }
+    productName?: string;
+    version?: string;
+  };
   tauri?: {
     bundle?: {
-      identifier: string
+      identifier: string;
       windows?: {
         wix?: {
-          language?: string | string[] | { [language: string]: unknown }
-        }
-      }
-    }
-  }
+          language?: string | string[] | { [language: string]: unknown };
+        };
+      };
+    };
+  };
 }
 
 interface Application {
-  tauriPath: string
-  runner: Runner
-  name: string
-  version: string
-  wixLanguage: string | string[] | { [language: string]: unknown }
+  tauriPath: string;
+  runner: Runner;
+  name: string;
+  version: string;
+  wixLanguage: string | string[] | { [language: string]: unknown };
 }
 
 export interface BuildOptions {
-  configPath: string | null
-  distPath: string | null
-  iconPath: string | null
-  tauriScript: string | null
-  args: string[] | null
-  bundleIdentifier: string | null
+  configPath: string | null;
+  distPath: string | null;
+  iconPath: string | null;
+  tauriScript: string | null;
+  args: string[] | null;
+  bundleIdentifier: string | null;
 }
 
 export interface Runner {
-  runnerCommand: string
-  runnerArgs: string[]
+  runnerCommand: string;
+  runnerArgs: string[];
 }
 
 interface Info {
-  tauriPath: string | null
-  name: string
-  version: string
-  wixLanguage: string | string[] | { [language: string]: unknown }
+  tauriPath: string | null;
+  name: string;
+  version: string;
+  wixLanguage: string | string[] | { [language: string]: unknown };
 }
 
 export interface Artifact {
-  path: string
-  arch: string
+  path: string;
+  arch: string;
 }
 
 function _getJson5Config(contents: string): TauriConfig | null {
   try {
-    const config = JSON5.parse(contents) as TauriConfig
-    return config
+    const config = JSON5.parse(contents) as TauriConfig;
+    return config;
   } catch (e) {
-    return null
+    return null;
   }
 }
 
 function getConfig(path: string): TauriConfig {
-  const contents = readFileSync(path).toString()
+  const contents = readFileSync(path).toString();
   try {
-    const config = JSON.parse(contents) as TauriConfig
-    return config
+    const config = JSON.parse(contents) as TauriConfig;
+    return config;
   } catch (e) {
-    let json5Conf = _getJson5Config(contents)
+    let json5Conf = _getJson5Config(contents);
     if (json5Conf === null) {
       json5Conf = _getJson5Config(
         readFileSync(join(path, '..', 'tauri.conf.json5')).toString()
-      )
+      );
     }
     if (json5Conf) {
-      return json5Conf
+      return json5Conf;
     }
-    throw e
+    throw e;
   }
 }
 
 export function getInfo(root: string, inConfigPath: string | null = null): Info {
   const tauriDir = getTauriDir(root)
   if (tauriDir !== null) {
-    const configPath = inConfigPath ?? join(tauriDir, 'tauri.conf.json')
-    let name
-    let version
-    let wixLanguage: string | string[] | { [language: string]: unknown } = 'en-US'
-    const config = getConfig(configPath)
+    const configPath = inConfigPath ?? join(tauriDir, 'tauri.conf.json');
+    let name;
+    let version;
+    let wixLanguage: string | string[] | { [language: string]: unknown } =
+      'en-US';
+    const config = getConfig(configPath);
     if (config.package) {
-      name = config.package.productName
-      version = config.package.version
+      name = config.package.productName;
+      version = config.package.version;
       if (config.package.version?.endsWith('.json')) {
-        const packageJsonPath = join(tauriDir, config.package.version)
-        const contents = readFileSync(packageJsonPath).toString()
-        version = JSON.parse(contents).version
+        const packageJsonPath = join(tauriDir, config.package.version);
+        const contents = readFileSync(packageJsonPath).toString();
+        version = JSON.parse(contents).version;
       }
     }
     if (!(name && version)) {
-      const manifestPath = join(tauriDir, 'Cargo.toml')
+      const manifestPath = join(tauriDir, 'Cargo.toml');
       const cargoManifest = parseToml(
         readFileSync(manifestPath).toString()
-      ) as any as CargoManifest
-      name = name || cargoManifest.package.name
-      version = version || cargoManifest.package.version
+      ) as any as CargoManifest;
+      name = name || cargoManifest.package.name;
+      version = version || cargoManifest.package.version;
     }
     if (config.tauri?.bundle?.windows?.wix?.language) {
-      wixLanguage = config.tauri.bundle.windows.wix.language
+      wixLanguage = config.tauri.bundle.windows.wix.language;
     }
 
     if (!(name && version)) {
-      console.error('Could not determine package name and version')
-      process.exit(1)
+      console.error('Could not determine package name and version');
+      process.exit(1);
     }
 
     return {
@@ -233,31 +233,38 @@ export function getInfo(root: string, inConfigPath: string | null = null): Info 
       name,
       version,
       wixLanguage,
-    }
+    };
   } else {
-    const packageJson = getPackageJson(root)
+    const packageJson = getPackageJson(root);
     const appName = packageJson
       ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
-      : 'app'
-    const version = packageJson ? packageJson.version : '0.1.0'
+      : 'app';
+    const version = packageJson ? packageJson.version : '0.1.0';
     return {
       tauriPath: null,
       name: appName,
       version,
       wixLanguage: 'en-US',
-    }
+    };
   }
 }
 
 export async function buildProject(
   root: string,
   debug: boolean,
-  { configPath, distPath, iconPath, tauriScript, args, bundleIdentifier }: BuildOptions
+  {
+    configPath,
+    distPath,
+    iconPath,
+    tauriScript,
+    args,
+    bundleIdentifier,
+  }: BuildOptions
 ): Promise<Artifact[]> {
   return new Promise<Runner>((resolve, reject) => {
     if (tauriScript) {
-      const [runnerCommand, ...runnerArgs] = tauriScript.split(' ')
-      resolve({ runnerCommand, runnerArgs })
+      const [runnerCommand, ...runnerArgs] = tauriScript.split(' ');
+      resolve({ runnerCommand, runnerArgs });
     } else if (
       hasDependency('@tauri-apps/cli', root) ||
       hasDependency('vue-cli-plugin-tauri', root)
@@ -266,19 +273,19 @@ export async function buildProject(
         usesYarn(root)
           ? { runnerCommand: 'yarn', runnerArgs: ['tauri'] }
           : { runnerCommand: 'npx', runnerArgs: ['tauri'] }
-      )
+      );
     } else {
       execCommand('npm', ['install', '-g', '@tauri-apps/cli'], {
         cwd: undefined,
       })
         .then(() => {
-          resolve({ runnerCommand: 'tauri', runnerArgs: [] })
+          resolve({ runnerCommand: 'tauri', runnerArgs: [] });
         })
-        .catch(reject)
+        .catch(reject);
     }
   })
     .then((runner: Runner) => {
-      const info = getInfo(root, configPath)
+      const info = getInfo(root, configPath);
       if (info.tauriPath) {
         return {
           tauriPath: info.tauriPath,
@@ -286,9 +293,9 @@ export async function buildProject(
           name: info.name,
           version: info.version,
           wixLanguage: info.wixLanguage,
-        }
+        };
       } else {
-        const packageJson = getPackageJson(root)
+        const packageJson = getPackageJson(root);
         return execCommand(
           runner.runnerCommand,
           [...runner.runnerArgs, 'init', '--ci', '--app-name', info.name],
@@ -296,43 +303,43 @@ export async function buildProject(
             cwd: root,
           }
         ).then(() => {
-          const tauriPath = getTauriDir(root)
+          const tauriPath = getTauriDir(root);
           if (tauriPath === null) {
-            console.error('Failed to resolve Tauri path')
-            process.exit(1)
+            console.error('Failed to resolve Tauri path');
+            process.exit(1);
           }
-          const configPath = join(tauriPath, 'tauri.conf.json')
-          const config = getConfig(configPath)
+          const configPath = join(tauriPath, 'tauri.conf.json');
+          const config = getConfig(configPath);
 
           console.log(
             `Replacing tauri.conf.json config - package.version=${info.version}`
-          )
+          );
           const pkgConfig = {
             ...config.package,
             version: info.version,
-          }
+          };
           if (packageJson?.productName) {
             console.log(
               `Replacing tauri.conf.json config - package.productName=${packageJson.productName}`
-            )
-            pkgConfig.productName = packageJson.productName
+            );
+            pkgConfig.productName = packageJson.productName;
           }
-          config.package = pkgConfig
+          config.package = pkgConfig;
 
           if (bundleIdentifier) {
             console.log(
               `Replacing tauri.conf.json config - tauri.bundle.identifier=${bundleIdentifier}`
-            )
+            );
             config.tauri = {
               ...config.tauri,
               bundle: {
                 ...config.tauri?.bundle,
-                identifier: bundleIdentifier
-              }
-            }
+                identifier: bundleIdentifier,
+              },
+            };
           }
 
-          writeFileSync(configPath, JSON.stringify(config, null, 2))
+          writeFileSync(configPath, JSON.stringify(config, null, 2));
 
           const app = {
             tauriPath,
@@ -340,7 +347,7 @@ export async function buildProject(
             name: info.name,
             version: info.version,
             wixLanguage: info.wixLanguage,
-          }
+          };
           if (iconPath) {
             return execCommand(
               runner.runnerCommand,
@@ -348,76 +355,78 @@ export async function buildProject(
               {
                 cwd: root,
               }
-            ).then(() => app)
+            ).then(() => app);
           }
 
-          return app
-        })
+          return app;
+        });
       }
     })
     .then((app: Application) => {
-      const tauriConfPath = join(app.tauriPath, 'tauri.conf.json')
+      const tauriConfPath = join(app.tauriPath, 'tauri.conf.json');
       if (configPath !== null) {
-        copyFileSync(configPath, tauriConfPath)
+        copyFileSync(configPath, tauriConfPath);
       }
 
       if (distPath) {
-        const tauriConf = JSON.parse(readFileSync(tauriConfPath).toString())
-        tauriConf.build.distDir = distPath
-        writeFileSync(tauriConfPath, JSON.stringify(tauriConf))
+        const tauriConf = JSON.parse(readFileSync(tauriConfPath).toString());
+        tauriConf.build.distDir = distPath;
+        writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
       }
 
-      const tauriArgs = debug ? ['--debug', ...(args ?? [])] : args ?? []
-      let buildCommand
-      let buildArgs: string[] = []
+      const tauriArgs = debug ? ['--debug', ...(args ?? [])] : args ?? [];
+      let buildCommand;
+      let buildArgs: string[] = [];
 
       if (hasDependency('vue-cli-plugin-tauri', root)) {
         if (usesYarn(root)) {
-          buildCommand = 'yarn'
-          buildArgs = ['tauri:build']
+          buildCommand = 'yarn';
+          buildArgs = ['tauri:build'];
         } else {
-          buildCommand = 'npm'
-          buildArgs = ['run', 'tauri:build']
+          buildCommand = 'npm';
+          buildArgs = ['run', 'tauri:build'];
         }
       } else {
-        buildCommand = app.runner.runnerCommand
-        buildArgs = [...app.runner.runnerArgs, 'build']
+        buildCommand = app.runner.runnerCommand;
+        buildArgs = [...app.runner.runnerArgs, 'build'];
       }
 
       return execCommand(buildCommand, [...buildArgs, ...tauriArgs], {
         cwd: root,
       })
         .then(() => {
-          let fileAppName = app.name
+          let fileAppName = app.name;
           // on Linux, the app product name is converted to kebab-case
           if (!['darwin', 'win32'].includes(platform())) {
             fileAppName = fileAppName
               .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
               .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
               .replace(/[ _.]/g, '-')
-              .toLowerCase()
+              .toLowerCase();
           }
 
-          const cratePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath
+          const cratePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
 
           const found = [...tauriArgs].findIndex(
             (e) => e === '-t' || e === '--target'
-          )
-          const targetPath = found >= 0 ? [...tauriArgs][found + 1] : ''
+          );
+          const targetPath = found >= 0 ? [...tauriArgs][found + 1] : '';
 
           const artifactsPath = join(
             getTargetDir(cratePath),
             targetPath,
             debug ? 'debug' : 'release'
-          )
+          );
 
           let arch =
             targetPath.search('-') >= 0
               ? targetPath.split('-')[0]
-              : process.arch
+              : process.arch;
 
           if (platform() === 'darwin') {
-            if (arch === "x86_64") arch = "x64"
+            if (arch === 'x86_64') {
+              arch = 'x64';
+            }
 
             return [
               join(
@@ -426,60 +435,60 @@ export async function buildProject(
               ),
               join(artifactsPath, `bundle/macos/${fileAppName}.app`),
               join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
-              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`)
-            ].map(path => ({ path, arch }))
+              join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`),
+            ].map((path) => ({ path, arch }));
           } else if (platform() === 'win32') {
-            arch = arch.startsWith('i') ? 'x86' : 'x64'
+            arch = arch.startsWith('i') ? 'x86' : 'x64';
 
             // If multiple Wix languages are specified, multiple installers (.msi) will be made
             // The .zip and .sig are only generated for the first specified language
-            let langs
+            let langs;
             if (typeof app.wixLanguage === 'string') {
-              langs = [app.wixLanguage]
+              langs = [app.wixLanguage];
             } else if (Array.isArray(app.wixLanguage)) {
-              langs = app.wixLanguage
+              langs = app.wixLanguage;
             } else {
-              langs = Object.keys(app.wixLanguage)
+              langs = Object.keys(app.wixLanguage);
             }
-            const artifacts: string[] = []
+            const artifacts: string[] = [];
             langs.forEach((lang) => {
               artifacts.push(
                 join(
                   artifactsPath,
                   `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi`
                 )
-              )
+              );
               artifacts.push(
                 join(
                   artifactsPath,
                   `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip`
                 )
-              )
+              );
               artifacts.push(
                 join(
                   artifactsPath,
                   `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip.sig`
                 )
-              )
-            })
-            return artifacts.map(path => ({ path, arch }))
+              );
+            });
+            return artifacts.map((path) => ({ path, arch }));
           } else {
             const debianArch =
               arch === 'x64' || arch === 'x86_64'
                 ? 'amd64'
                 : arch === 'x32' || arch === 'i686'
-                  ? 'i386'
-                  : arch === 'arm'
-                    ? 'armhf'
-                    : arch === 'aarch64'
-                      ? 'arm64'
-                      : arch
+                ? 'i386'
+                : arch === 'arm'
+                ? 'armhf'
+                : arch === 'aarch64'
+                ? 'arm64'
+                : arch;
             const appImageArch =
               arch === 'x64' || arch === 'x86_64'
                 ? 'amd64'
                 : arch === 'x32' || arch === 'i686'
-                  ? 'i386'
-                  : arch
+                ? 'i386'
+                : arch;
 
             return [
               {
@@ -487,35 +496,39 @@ export async function buildProject(
                   artifactsPath,
                   `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`
                 ),
-                arch: debianArch
+                arch: debianArch,
               },
               {
                 path: join(
                   artifactsPath,
                   `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage`
                 ),
-                arch: appImageArch
+                arch: appImageArch,
               },
               {
                 path: join(
                   artifactsPath,
                   `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`
                 ),
-                arch: appImageArch
+                arch: appImageArch,
               },
               {
                 path: join(
                   artifactsPath,
                   `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`
                 ),
-                arch: appImageArch
-              }
-            ]
+                arch: appImageArch,
+              },
+            ];
           }
         })
         .then((artifacts) => {
-          console.log(`Expected artifacts paths:\n${artifacts.map(a => a.path).join('\n')}`)
-          return artifacts.filter((p) => existsSync(p.path))
-        })
-    })
+          console.log(
+            `Expected artifacts paths:\n${artifacts
+              .map((a) => a.path)
+              .join('\n')}`
+          );
+          return artifacts.filter((p) => existsSync(p.path));
+        });
+    });
 }

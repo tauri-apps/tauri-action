@@ -1,26 +1,25 @@
-import typescript from "@rollup/plugin-typescript";
-import pkg from "./package.json";
+import typescript from '@rollup/plugin-typescript';
+import pkg from './package.json';
 
 export default {
   treeshake: true,
   perf: true,
-  input: { index: "index.ts" },
+  input: { index: 'index.ts' },
   output: {
-    dir: "dist",
-    format: "esm",
-    entryFileNames: "[name].js",
-    exports: "named",
+    dir: 'dist',
+    format: 'esm',
+    entryFileNames: '[name].js',
+    exports: 'named',
   },
-  plugins: [typescript({
-    tsconfig: './tsconfig.json'
-  })],
-  external: [
-    ...Object.keys(pkg.dependencies || {}),
-    "path",
+  plugins: [
+    typescript({
+      tsconfig: './tsconfig.json',
+    }),
   ],
+  external: [...Object.keys(pkg.dependencies || {}), 'path'],
   watch: {
     chokidar: true,
-    include: "src/**",
-    exclude: "node_modules/**",
+    include: 'src/**',
+    exclude: 'node_modules/**',
   },
 };

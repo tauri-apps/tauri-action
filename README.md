@@ -1,6 +1,6 @@
 # Tauri GitHub Action
 
-This GitHub Action builds your Web application as a Tauri native binary for MacOS, Linux and Windows.
+This GitHub Action builds your Web application as a Tauri native binary for macOS, Linux and Windows.
 If your project doesn't include the Tauri files, we create it at compile time, so if you don't need to use Tauri's API, you can just ship native apps through this Action.
 
 # Usage
@@ -10,7 +10,7 @@ This GitHub Action has three main usages: test the build pipeline of your Tauri 
 ## Testing the Build
 
 ```yml
-name: "test-on-pr"
+name: 'test-on-pr'
 on: [pull_request]
 
 jobs:
@@ -22,31 +22,29 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2
-    - name: setup node
-      uses: actions/setup-node@v1
-      with:
-        node-version: 16
-    - name: install Rust stable
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-20.04'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-    - name: install app dependencies and build it
-      run: yarn && yarn build
-    - uses: tauri-apps/tauri-action@v0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-20.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: install app dependencies and build it
+        run: yarn && yarn build
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ## Creating a release and uploading the Tauri bundles
 
 ```yml
-name: "publish"
+name: 'publish'
 on:
   push:
     branches:
@@ -61,31 +59,29 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2
-    - name: setup node
-      uses: actions/setup-node@v1
-      with:
-        node-version: 16
-    - name: install Rust stable
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-20.04'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-    - name: install app dependencies and build it
-      run: yarn && yarn build
-    - uses: tauri-apps/tauri-action@v0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
-        releaseName: "App v__VERSION__"
-        releaseBody: "See the assets to download this version and install."
-        releaseDraft: true
-        prerelease: false
+      - uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-20.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: install app dependencies and build it
+        run: yarn && yarn build
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          releaseName: 'App v__VERSION__'
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: true
+          prerelease: false
 ```
 
 ## Uploading the artifacts to a release
@@ -102,9 +98,9 @@ jobs:
       release_id: ${{ steps.create-release.outputs.result }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
       - name: get version
@@ -123,7 +119,7 @@ jobs:
               draft: true,
               prerelease: false
             })
-            
+
             return data.id
 
   build-tauri:
@@ -135,32 +131,30 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2
-    - name: setup node
-      uses: actions/setup-node@v1
-      with:
-        node-version: 16
-    - name: install Rust stable
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - name: install dependencies (ubuntu only)
-      if: matrix.platform == 'ubuntu-20.04'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-    - name: install app dependencies and build it
-      run: yarn && yarn build
-    - uses: tauri-apps/tauri-action@v0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        releaseId: ${{ needs.create-release.outputs.release_id }}
+      - uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-20.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: install app dependencies and build it
+        run: yarn && yarn build
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          releaseId: ${{ needs.create-release.outputs.release_id }}
 
   publish-release:
     runs-on: ubuntu-20.04
-    needs: [ create-release, build-tauri ]
-    
+    needs: [create-release, build-tauri]
+
     steps:
       - name: publish release
         id: publish-release
@@ -186,7 +180,7 @@ jobs:
 | `configPath`       |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json       |
 | `distPath`         |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                       |
 | `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                 | string |                       |
-| `tagName`          |  false   | The tag name of the release to create                                                       | string |                       |
+| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`    | string |                       |
 | `releaseName`      |  false   | The name of the release to create                                                           | string |                       |
 | `releaseBody`      |  false   | The body of the release to create                                                           | string |                       |
 | `releaseDraft`     |  false   | Whether the release to create is a draft or not                                             | bool   | false                 |
@@ -197,7 +191,6 @@ jobs:
 | `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npx tauri`     |
 | `args`             |  false   | Additional arguments to the current build command                                           | string |                       |
 
-
 ## Outputs
 
 | Name               | Description                                                        |
@@ -205,6 +198,7 @@ jobs:
 | `releaseId`        | The ID of the created release                                      |
 | `releaseHtmlUrl`   | The URL users can navigate to in order to view the created release |
 | `releaseUploadUrl` | The URL for uploading assets to the created release                |
+| `artifactPaths`    | The paths of the generated artifacts                               |
 
 # Caveats
 
@@ -214,3 +208,4 @@ jobs:
   - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
 - If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
 - When your app isn't on the root of the repo, use the `projectPath` input.
+- If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
