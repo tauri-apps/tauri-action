@@ -6,7 +6,7 @@
       "getPublishedVersion": "npm view ${ pkgFile.pkg.name } version",
       "prepublish": [
         {
-          "command": "yarn",
+          "command": "pnpm install",
           "dryRunCommand": true
         },
         {

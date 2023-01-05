@@ -20,13 +20,17 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7.x.x
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
       - name: install example dependencies
-        run: yarn
+        run: pnpm install
         working-directory: ./packages/action/__fixtures__/example
       - uses: ./
         env:
