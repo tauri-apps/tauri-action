@@ -193,10 +193,10 @@ function getConfig(path: string): TauriConfig {
   }
 }
 
-export function getInfo(root: string): Info {
+export function getInfo(root: string, inConfigPath: string | null = null): Info {
   const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
-    const configPath = join(tauriDir, 'tauri.conf.json');
+    const configPath = inConfigPath ?? join(tauriDir, 'tauri.conf.json');
     let name;
     let version;
     let wixLanguage: string | string[] | { [language: string]: unknown } =
@@ -285,7 +285,7 @@ export async function buildProject(
     }
   })
     .then((runner: Runner) => {
-      const info = getInfo(root);
+      const info = getInfo(root, configPath);
       if (info.tauriPath) {
         return {
           tauriPath: info.tauriPath,
