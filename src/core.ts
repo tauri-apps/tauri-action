@@ -7,7 +7,7 @@ import { sync as globSync } from 'glob-gitignore';
 import ignore from 'ignore';
 import JSON5 from 'json5';
 
-export function getPackageJson(root: string): any {
+export function getPackageJson(root: string) {
   const packageJsonPath = join(root, 'package.json');
   if (existsSync(packageJsonPath)) {
     const packageJsonString = readFileSync(packageJsonPath).toString();
@@ -193,7 +193,10 @@ function getConfig(path: string): TauriConfig {
   }
 }
 
-export function getInfo(root: string, inConfigPath: string | null = null): Info {
+export function getInfo(
+  root: string,
+  inConfigPath: string | null = null
+): Info {
   const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
     const configPath = inConfigPath ?? join(tauriDir, 'tauri.conf.json');
@@ -215,7 +218,7 @@ export function getInfo(root: string, inConfigPath: string | null = null): Info 
       const manifestPath = join(tauriDir, 'Cargo.toml');
       const cargoManifest = parseToml(
         readFileSync(manifestPath).toString()
-      ) as any as CargoManifest;
+      ) as unknown as CargoManifest;
       name = name || cargoManifest.package.name;
       version = version || cargoManifest.package.version;
     }

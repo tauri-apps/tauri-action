@@ -2,13 +2,12 @@
   "compilerOptions": {
     "strict": true,
     "module": "esnext",
-    "target": "es6",
-    "allowJs": true,
+    "target": "es2015",
     "pretty": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "importHelpers": true
   },
-  "baseUrl": "."
+  "include": ["./src"]
 }

@@ -44,11 +44,12 @@ export default async function createRelease(
   const { owner, repo } = context.repo;
 
   const bodyPath = core.getInput('body_path', { required: false });
-  let bodyFileContent = null;
+  let bodyFileContent: string | null = null;
   if (bodyPath !== '' && !!bodyPath) {
     try {
       bodyFileContent = fs.readFileSync(bodyPath, { encoding: 'utf8' });
     } catch (error) {
+      //@ts-ignore
       core.setFailed(error.message);
     }
   }
@@ -84,6 +85,7 @@ export default async function createRelease(
       console.log(`Found release with tag ${tagName}.`);
     }
   } catch (error) {
+    // @ts-ignore
     if (error.status === 404 || error.message === 'release not found') {
       console.log(`Couldn't find release with tag ${tagName}. Creating one.`);
       const createdRelease = await github.rest.repos.createRelease({

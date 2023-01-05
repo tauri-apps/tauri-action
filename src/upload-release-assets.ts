@@ -1,5 +1,5 @@
 import { getOctokit, context } from '@actions/github';
-import { Artifact } from '@tauri-apps/action-core';
+import { Artifact } from './core';
 import fs from 'fs';
 import { getAssetName } from './utils';
 

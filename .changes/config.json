@@ -29,18 +29,8 @@
     }
   },
   "packages": {
-    "@tauri-apps/action-core": {
-      "path": "./packages/core",
-      "manager": "javascript",
-      "assets": [
-        {
-          "path": "./packages/core/tauri-apps-action-core-${ pkgFile.version }.tgz",
-          "name": "action-core-${ pkgFile.version }.tgz"
-        }
-      ]
-    },
     "action": {
-      "path": "./packages/action",
+      "path": "./",
       "manager": "javascript",
       "publish": [
         "git tag v${ pkgFile.versionMajor } -f",

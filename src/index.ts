@@ -5,13 +5,8 @@ import { existsSync } from 'fs';
 import uploadReleaseAssets from './upload-release-assets';
 import uploadVersionJSON from './upload-version-json';
 import createRelease from './create-release';
-import {
-  getPackageJson,
-  buildProject,
-  getInfo,
-  execCommand,
-} from '@tauri-apps/action-core';
-import type { BuildOptions } from '@tauri-apps/action-core';
+import { getPackageJson, buildProject, getInfo, execCommand } from './core';
+import type { BuildOptions } from './core';
 import stringArgv from 'string-argv';
 
 async function run(): Promise<void> {
@@ -137,6 +132,7 @@ async function run(): Promise<void> {
       });
     }
   } catch (error) {
+    // @ts-ignore
     core.setFailed(error.message);
   }
 }
