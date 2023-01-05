@@ -50,4 +50,4 @@ outputs:
     description: 'The paths of the generated artifacts'
 runs:
   using: 'node16'
-  main: 'index.js'
+  main: 'dist/index.js'
