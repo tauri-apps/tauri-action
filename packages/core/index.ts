@@ -194,7 +194,7 @@ function getConfig(path: string): TauriConfig {
 }
 
 export function getInfo(root: string, inConfigPath: string | null = null): Info {
-  const tauriDir = getTauriDir(root)
+  const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
     const configPath = inConfigPath ?? join(tauriDir, 'tauri.conf.json');
     let name;
