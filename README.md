@@ -1,211 +1,255 @@
 # Tauri GitHub Action
 
 This GitHub Action builds your Web application as a Tauri native binary for macOS, Linux and Windows.
-If your project doesn't include the Tauri files, we create it at compile time, so if you don't need to use Tauri's API, you can just ship native apps through this Action.
 
-# Usage
+Version `1.x` of this action and newer is a thin convenience wrapper around `tauri build` and is designed to conveniently compose together with other actions such as `actions/upload-artifact`, `actions/download-artifact` or `softprops/action-gh-release`. 
 
-This GitHub Action has three main usages: test the build pipeline of your Tauri app, uploading Tauri artifacts to an existing release, and creating a new release with the Tauri artifacts.
+## Usage
 
-## Testing the Build
+This action requires that you set up both Node.JS and Cargo in previous steps.
 
-```yml
-name: 'test-on-pr'
-on: [pull_request]
+The @rev of this action **always** corresponds to the Tauri CLI version. For example `tauri-apps/tauri-action@1.2.2` will build using the CLI version 1.2.2, while `tauri-apps/tauri-action@1.2.1` will build using version 1.2.1.
+You can also also require a less specific version by using only a prefix of the full version, such as `@v1` or `@v1.2`.
 
-jobs:
-  test-tauri:
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
+Additionally specifying `tauri-apps/tauri-action@latest` will always pull in the latest CLI version. Choose this option carefully though, as it might break your workflows in the future!
 
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-      - name: install app dependencies and build it
-        run: yarn && yarn build
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
+### Minimal
 
-## Creating a release and uploading the Tauri bundles
+The following example workflow builds artifacts on all 3 supported platforms (Window, macOS and Linux).
 
-```yml
+```yaml
 name: 'publish'
+
 on:
   push:
     branches:
       - release
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  publish-tauri:
+  build-binaries:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
+        platform: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+
       - name: setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: 16
+
       - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
+        if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-      - name: install app dependencies and build it
-        run: yarn && yarn build
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
-          releaseName: 'App v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
+          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+
+      - uses: tauri-apps/tauri-action@1
+        id: tauri_build
+
+    # You can now use the JSON array of artifacts under `steps.tauri_build.outputs.artifacts` to post-process/upload your bundles
 ```
 
-## Uploading the artifacts to a release
+### Bundling the app and creating a release
 
-```yml
-name: 'My Workflow'
+Chances are you want to do *something* with the artifacts that you produced. The following action will produce artifacts for Windows, macOS and Linux upload them as workflow artifacts, so that a final job (called `publish`) can create a GitHub release and attach all prouced artifacts to it. This would also be the place where you could upload artifacts to an AWS Bucket or similar.
 
-on: pull_request
+```yaml
+name: 'publish'
+
+on:
+  push:
+    branches:
+      - release
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  create-release:
-    runs-on: ubuntu-20.04
-    outputs:
-      release_id: ${{ steps.create-release.outputs.result }}
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: get version
-        run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-      - name: create release
-        id: create-release
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { data } = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: `app-v${process.env.PACKAGE_VERSION}`,
-              name: `Desktop App v${process.env.PACKAGE_VERSION}`,
-              body: 'Take a look at the assets to download and install this app.',
-              draft: true,
-              prerelease: false
-            })
-
-            return data.id
-
-  build-tauri:
-    needs: create-release
+  build-binaries:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
+        platform: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+
       - name: setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: 16
+
       - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
+        if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-      - name: install app dependencies and build it
-        run: yarn && yarn build
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+
+      - uses: tauri-apps/tauri-action@1
+        id: tauri_build
+
+      # The `artifacts` output can now be used by a different action to upload the artifacts
+      - uses: actions/upload-artifact@v3
         with:
-          releaseId: ${{ needs.create-release.outputs.release_id }}
+          name: artifacts
+          path: "${{ join(fromJSON(steps.tauri_build.outputs.artifacts), '\n') }}"
 
-  publish-release:
-    runs-on: ubuntu-20.04
-    needs: [create-release, build-tauri]
-
+  publish:
+    needs: build-binaries
+    runs-on: ubuntu-latest
     steps:
-      - name: publish release
-        id: publish-release
-        uses: actions/github-script@v6
-        env:
-          release_id: ${{ needs.create-release.outputs.release_id }}
+      - uses: actions/checkout@v2
+      # Download the previously uploaded artifacts
+      - uses: actions/download-artifact@v3
+        id: download
         with:
-          script: |
-            github.rest.repos.updateRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: process.env.release_id,
-              draft: false,
-              prerelease: false
-            })
+          name: artifacts
+          path: artifacts
+      # And create a release with the artifacts attached
+      - name: 'create release'
+        uses: softprops/action-gh-release@master
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          draft: false
+          files: ./artifacts/**/*
+```
+
+### Building for Apple Silicon
+
+This example workflow will run produce binaries for Apple Silicon (aarch64) as well as the previously shown 3 platforms. This leverages the build matrix. This can be expanded to produce binaries for other target combinations too.
+
+```yaml
+name: 'publish'
+
+on:
+  push:
+    branches:
+      - release
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-binaries:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - os: ubuntu-latest
+            rust_target: x86_64-unknown-linux-gnu
+          - os: macos-latest
+            rust_target: x86_64-apple-darwin
+          - os: macos-latest
+            rust_target: aarch64-apple-darwin
+          - os: windows-latest
+            rust_target: x86_64-pc-windows-msvc
+
+    runs-on: ${{ matrix.platform.os }}
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: 'Setup Rust'
+      uses: actions-rs/toolchain@v1
+      with:
+        default: true
+        override: true
+        profile: minimal
+        toolchain: stable
+        target: ${{ matrix.platform.rust_target }}
+
+    - uses: Swatinem/rust-cache@v2
+
+    - name: install dependencies (ubuntu only)
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+
+    - uses: tauri-apps/tauri-action@1
+      id: tauri_build
+      with:
+        target: ${{ matrix.platform.rust_target }}
+
+    # The artifacts output can now be used to upload the artifacts
+    - uses: actions/upload-artifact@v3
+      with:
+        name: artifacts
+        path: "${{ join(fromJSON(steps.tauri_build.outputs.artifacts), '\n') }}"
+
+  publish:
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Download the previously uploaded artifacts
+      - uses: actions/download-artifact@v3
+        id: download
+        with:
+          name: artifacts
+          path: artifacts
+      # And create a release with the artifacts attached
+      - name: 'create release'
+        uses: softprops/action-gh-release@master
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        with:
+          draft: false
+          files: ./artifacts/**/*
 ```
 
 ## Inputs
 
-| Name               | Required | Description                                                                                 | Type   | Default               |
-| ------------------ | :------: | ------------------------------------------------------------------------------------------- | ------ | --------------------- |
-| `projectPath`      |  false   | Path to the root of the project that will be built                                          | string | .                     |
-| `configPath`       |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json       |
-| `distPath`         |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                       |
-| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                 | string |                       |
-| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`    | string |                       |
-| `releaseName`      |  false   | The name of the release to create                                                           | string |                       |
-| `releaseBody`      |  false   | The body of the release to create                                                           | string |                       |
-| `releaseDraft`     |  false   | Whether the release to create is a draft or not                                             | bool   | false                 |
-| `prerelease`       |  false   | Whether the release to create is a prerelease or not                                        | bool   | false                 |
-| `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
-| `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
-| `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   |                       |
-| `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npx tauri`     |
-| `args`             |  false   | Additional arguments to the current build command                                           | string |                       |
+| Name          | Type    | Description                                                 | Default           |
+| ------------- | ------- | ----------------------------------------------------------- | ----------------- |
+| `runner`      | String  | Binary to use to build the application                      |                   |
+| `args`        | String  | Additional arguments for the build command                  |                   |
+| `projectPath` | String  | Path to the root of the Tauri project                       | .                 |
+| `configPath`  | String  | Path to the tauri.conf.json file, relative to `projectPath` | `tauri.conf.json` |
+| `target`      | String  | Rust target triple to build against                         |                   |
+| `debug`       | Boolean | Wether to build _debug_ or _release_ binaries               | false             |
 
 ## Outputs
 
-| Name               | Description                                                        |
-| ------------------ | ------------------------------------------------------------------ |
-| `releaseId`        | The ID of the created release                                      |
-| `releaseHtmlUrl`   | The URL users can navigate to in order to view the created release |
-| `releaseUploadUrl` | The URL for uploading assets to the created release                |
-| `artifactPaths`    | The paths of the generated artifacts                               |
+| Name        | Type   | Description                                                |
+| ----------- | ------ | ---------------------------------------------------------- |
+| `artifacts` | String | JSON array of artifact paths produced by the build command |
 
-# Caveats
+## Permissions
 
-- You can use this Action on a repo that doesn't have Tauri configured. We automatically initialize Tauri before building, and configure it to use your Web artifacts.
-  - You can configure Tauri with the `configPath`, `distPath` and `iconPath` options.
-- You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri <COMMAND> <ARGS>` or `npx tauri <COMMAND> <ARGS>`, we'll execute `${tauriScript} <COMMAND> <ARGS>`.
-  - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
-- If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
-- When your app isn't on the root of the repo, use the `projectPath` input.
-- If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
+This Action requires the following permissions on the GitHub integration token:
+
+```yaml
+permissions:
+  contents: write
+```
+
+## License
+
+[MIT © Jonas Kruckenberg](./LICENSE)

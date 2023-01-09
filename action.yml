@@ -1,53 +1,25 @@
-name: 'tauri-action'
+name: 'tauri-build'
 description: 'Build tauri binaries for MacOS, Windows and Linux'
-icon: 'download-cloud'
+icon: 'box'
 color: 'blue'
-author: 'Lucas Nogueira <lucas@tauri.studio>'
+author: 'Tauri Programme within The Commons Conservancy'
 inputs:
-  releaseId:
-    description: 'The id of the release to upload artifacts as release assets'
-  tagName:
-    description: 'The tag name of the release to create'
-  releaseName:
-    description: 'The name of the release to create'
-  releaseBody:
-    description: 'The body of the release to create'
-  releaseDraft:
-    description: 'Whether the release to create is a draft or not'
-    default: false
-  prerelease:
-    description: 'Whether the release to create is a prerelease or not'
-    default: false
-  releaseCommitish:
-    description: 'Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit'
-  projectPath:
-    description: 'path to the root of the project that will be built'
-    default: '.'
-  configPath:
-    description: 'path to the tauri.conf.json file if you want a configuration different from the default one'
-    default: 'tauri.conf.json'
-  distPath:
-    description: 'path to the distributable folder with your index.html and JS/CSS'
-  iconPath:
-    description: 'path to the PNG icon to use as app icon, relative to the projectPath'
-  includeDebug:
-    description: 'whether to include a debug build or not'
-    default: false
-  tauriScript:
-    description: 'the script to run to build the Tauri app'
+  runner:
+    description: 'Binary to use to build the application'
   args:
-    description: 'arguments for the tauri command'
-  bundleIdentifier:
-    description: 'the bundle identifier to inject when initializing the Tauri app'
+    description: 'Additional arguments for the build command'
+  projectPath:
+    description: 'Path to the root of the project'
+  configPath:
+    description: 'Path to the tauri.conf.json file if you want a configuration different from the default one'
+  target:
+    description: 'The target triple to build against'
+  debug:
+    description: 'Builds with the debug flag'
+    default: false
 outputs:
-  releaseId:
-    description: 'The ID of the created release'
-  releaseHtmlUrl:
-    description: 'The URL users can navigate to in order to view the created release'
-  releaseUploadUrl:
-    description: 'The URL for uploading assets to the created release'
-  artifactPaths:
-    description: 'The paths of the generated artifacts'
+  artifacts:
+    description: 'JSON array of artifact paths produced by the build command'
 runs:
-  using: 'node16'
-  main: 'packages/action/dist/index.js'
+  using: 'node18'
+  main: 'dist/index.js'

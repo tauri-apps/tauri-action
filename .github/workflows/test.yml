@@ -1,0 +1,74 @@
+name: "Test"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/test.yml'
+      - 'src/**'
+      - 'test/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  pull_request:
+    paths:
+      - '.github/workflows/test.yml'
+      - 'src/**'
+      - 'test/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-binaries:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - os: ubuntu-latest
+            rust_target: x86_64-unknown-linux-gnu
+          - os: macos-latest
+            rust_target: x86_64-apple-darwin
+          - os: macos-latest
+            rust_target: aarch64-apple-darwin
+          - os: windows-latest
+            rust_target: x86_64-pc-windows-msvc
+
+    runs-on: ${{ matrix.platform.os }}
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: 'Setup Rust'
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.platform.rust_target }}
+
+    - uses: Swatinem/rust-cache@v2
+
+    - name: install dependencies (ubuntu only)
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+
+    - uses: JonasKruckenberg/tauri-build@v1.2.2
+      id: tauri_build
+      with:
+        target: ${{ matrix.platform.rust_target }}
+        projectPath: ./test/fixture
+    - run: |
+        echo "${{ steps.tauri_build.outputs.artifacts }}"
+    # The artifacts output can now be used to upload the artifacts
+    - uses: actions/upload-artifact@v3
+      with:
+        name: artifacts
+        path: "${{ join(fromJSON(steps.tauri_build.outputs.artifacts), '\n') }}"

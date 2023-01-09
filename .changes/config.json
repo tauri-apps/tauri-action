@@ -1,54 +1,26 @@
 {
-  "gitSiteUrl": "https://www.github.com/tauri-apps/tauri-action/",
+  "gitSiteUrl": "https://github.com/JonasKruckenberg/tauri-build/",
   "pkgManagers": {
-    "javascript": {
+    "github action": {
       "version": true,
-      "getPublishedVersion": "npm view ${ pkgFile.pkg.name } version",
-      "prepublish": [
-        {
-          "command": "yarn",
-          "dryRunCommand": true
-        },
-        {
-          "command": "npm pack",
-          "dryRunCommand": true
-        }
+      "preversion": [
+        "pnpm install --no-optional",
+        "pnpm build",
+        "pnpm package"
       ],
+      "getPublishedVersion": "git describe --tags --abbrev=0",
       "publish": [
-        {
-          "command": "echo # Package Publish",
-          "dryRunCommand": "echo # Package Publish",
-          "pipe": true
-        },
-        {
-          "command": "npm publish --access public",
-          "dryRunCommand": "echo publish here",
-          "pipe": true
-        }
+        "git tag v${ pkgFile.versionMajor } -f",
+        "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
+        "git tag v${ pkgFile.version } -f",
+        "git push --tags -f"
       ]
     }
   },
   "packages": {
-    "@tauri-apps/action-core": {
-      "path": "./packages/core",
-      "manager": "javascript",
-      "assets": [
-        {
-          "path": "./packages/core/tauri-apps-action-core-${ pkgFile.version }.tgz",
-          "name": "action-core-${ pkgFile.version }.tgz"
-        }
-      ]
-    },
-    "action": {
-      "path": "./packages/action",
-      "manager": "javascript",
-      "publish": [
-        "git tag v${ pkgFile.versionMajor } -f",
-        "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
-        "git push --tags -f"
-      ],
-      "getPublishedVersion": "git tag -a -m \"v${ pkgFile.version }\" v${ pkgFile.version } 2>/dev/null || echo ${ pkgFile.version }",
-      "assets": false
+    "tauri-build": {
+      "path": ".",
+      "manager": "github action"
     }
   }
 }
