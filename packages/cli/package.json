@@ -17,7 +17,7 @@
   "dependencies": {
     "@tauri-apps/action-core": "0.2.0",
     "minimist": "1.2.7",
-    "tslib": "2.4.1"
+    "tslib": "2.5.0"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "10.0.1",
