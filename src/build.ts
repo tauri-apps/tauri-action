@@ -129,7 +129,7 @@ export async function buildProject(
       arch = 'x64';
     }
 
-    return [
+    artifacts = [
       join(
         artifactsPath,
         `bundle/dmg/${fileAppName}_${app.version}_${arch}.dmg`
@@ -151,7 +151,9 @@ export async function buildProject(
     } else {
       langs = Object.keys(app.wixLanguage);
     }
+
     const winArtifacts: string[] = [];
+
     langs.forEach((lang) => {
       winArtifacts.push(
         join(
@@ -172,6 +174,7 @@ export async function buildProject(
         )
       );
     });
+
     artifacts = winArtifacts.map((path) => ({ path, arch }));
   } else {
     const debianArch =
