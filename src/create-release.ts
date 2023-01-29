@@ -1,7 +1,8 @@
+import fs from 'fs';
+
 import * as core from '@actions/core';
 import { getOctokit, context } from '@actions/github';
 import { GitHub } from '@actions/github/lib/utils';
-import fs from 'fs';
 
 interface Release {
   id: number;
@@ -25,7 +26,7 @@ function allReleases(
   );
 }
 
-export default async function createRelease(
+export async function createRelease(
   tagName: string,
   releaseName: string,
   body?: string,
@@ -61,7 +62,7 @@ export default async function createRelease(
     if (draft) {
       console.log(`Looking for a draft release with tag ${tagName}...`);
       for await (const response of allReleases(github)) {
-        let releaseWithTag = response.data.find(
+        const releaseWithTag = response.data.find(
           (release) => release.tag_name === tagName
         );
         if (releaseWithTag) {

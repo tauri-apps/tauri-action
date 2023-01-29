@@ -7,7 +7,8 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "ncc build src/index.ts -o dist -m"
+    "build": "ncc build src/index.ts -o dist -m",
+    "lint": "eslint src/**"
   },
   "repository": {
     "type": "git",
@@ -30,8 +31,16 @@
   },
   "devDependencies": {
     "@types/node": "16.18.11",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.46.1",
     "@vercel/ncc": "0.36.0",
     "covector": "0.7.3",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^33.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
     "prettier": "2.8.1",
     "typescript": "4.9.4"
   }

@@ -1,13 +1,17 @@
-import { platform } from 'os';
-import * as core from '@actions/core';
-import { join, resolve, dirname, basename } from 'path';
 import { existsSync } from 'fs';
-import uploadReleaseAssets from './upload-release-assets';
-import uploadVersionJSON from './upload-version-json';
-import createRelease from './create-release';
-import { getPackageJson, buildProject, getInfo, execCommand } from './core';
-import type { BuildOptions } from './core';
+import { platform } from 'os';
+import { join, resolve, dirname, basename } from 'path';
+
+import * as core from '@actions/core';
 import stringArgv from 'string-argv';
+
+import { createRelease } from './create-release';
+import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
+import { uploadVersionJSON } from './upload-version-json';
+import { buildProject } from './build';
+import { execCommand, getInfo, getPackageJson } from './utils';
+
+import type { BuildOptions } from './types';
 
 async function run(): Promise<void> {
   try {

@@ -1,12 +1,11 @@
-import { getOctokit, context } from '@actions/github';
-import { Artifact } from './core';
 import fs from 'fs';
-import { getAssetName } from './utils';
 
-export default async function uploadAssets(
-  releaseId: number,
-  assets: Artifact[]
-) {
+import { getOctokit, context } from '@actions/github';
+
+import { getAssetName } from './utils';
+import type { Artifact } from './types';
+
+export async function uploadAssets(releaseId: number, assets: Artifact[]) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }

@@ -1,10 +1,13 @@
-import { getOctokit, context } from '@actions/github';
-import { resolve } from 'path';
 import { readFileSync, writeFileSync } from 'fs';
-import uploadAssets from './upload-release-assets';
 import { platform } from 'os';
+import { resolve } from 'path';
+
+import { getOctokit, context } from '@actions/github';
+
+import { uploadAssets } from './upload-release-assets';
 import { getAssetName } from './utils';
-import { Artifact } from './core';
+
+import type { Artifact } from './types';
 
 type Platform = {
   signature: string;
@@ -20,7 +23,7 @@ type VersionContent = {
   };
 };
 
-export default async function uploadVersionJSON({
+export async function uploadVersionJSON({
   version,
   notes,
   tagName,
@@ -94,7 +97,7 @@ export default async function uploadVersionJSON({
 
   // Untagged release downloads won't work after the release was published
   downloadUrl = downloadUrl?.replace(
-    /\/download\/(untagged-[^\/]+)\//,
+    /\/download\/(untagged-[^/]+)\//,
     tagName ? `/download/${tagName}/` : '/latest/download/'
   );
 
