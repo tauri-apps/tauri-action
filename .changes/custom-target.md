@@ -1,5 +1,4 @@
 ---
-"@tauri-apps/action-core": patch
 "action": patch
 ---
 
