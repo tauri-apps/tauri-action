@@ -3,6 +3,7 @@ import { existsSync } from 'fs';
 import { buildProject } from '@tauri-apps/action-core';
 import type { BuildOptions } from '@tauri-apps/action-core';
 import parseArgs from 'minimist';
+import { Artifact } from '@tauri-apps/action-core';
 
 export async function run(): Promise<void> {
   const argv = parseArgs(process.argv.slice(2), {
@@ -13,7 +14,7 @@ export async function run(): Promise<void> {
       'icon-path',
       'tauri-script',
     ],
-    boolean: ['global-tauri', 'include-debug'],
+    boolean: ['global-tauri', 'include-debug', 'exclude-release'],
     default: {
       'config-path': 'tauri.conf.json',
       'project-path': '',
@@ -25,6 +26,7 @@ export async function run(): Promise<void> {
   const distPath = argv['dist-path'];
   const iconPath = argv['icon-path'];
   const includeDebug = argv['include-debug'];
+  const excludeRelease = argv['exclude-release'];
   const tauriScript = argv['tauri-script'];
   const args = argv._;
 
@@ -35,7 +37,11 @@ export async function run(): Promise<void> {
     tauriScript,
     args,
   };
-  const artifacts = await buildProject(projectPath, false, options);
+  const artifacts: Artifact[] = [];
+  if (!excludeRelease) {
+    const releaseArtifacts = await buildProject(projectPath, false, options);
+    artifacts.push(...releaseArtifacts);
+  } 
   if (includeDebug) {
     const debugArtifacts = await buildProject(projectPath, true, options);
     artifacts.push(...debugArtifacts);
