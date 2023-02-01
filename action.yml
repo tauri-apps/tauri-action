@@ -35,7 +35,7 @@ inputs:
     default: false
   includeRelease:
     description: 'whether to include a release build or not'
-    default: false
+    default: true
   tauriScript:
     description: 'the script to run to build the Tauri app'
   args:
