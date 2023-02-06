@@ -4,7 +4,7 @@ specifiers:
   '@actions/core': 1.10.0
   '@actions/github': 5.1.1
   '@iarna/toml': 2.2.5
-  '@types/node': 16.18.12
+  '@types/node': 18.11.19
   '@typescript-eslint/eslint-plugin': 5.50.0
   '@typescript-eslint/parser': 5.50.0
   '@vercel/ncc': 0.36.1
@@ -36,7 +36,7 @@ dependencies:
   tslib: 2.5.0
 
 devDependencies:
-  '@types/node': 16.18.12
+  '@types/node': 18.11.19
   '@typescript-eslint/eslint-plugin': 5.50.0_go4drrxstycfikanvu45pi4vgq
   '@typescript-eslint/parser': 5.50.0_4vsywjlpuriuw3tl5oq6zy5a64
   '@vercel/ncc': 0.36.1
@@ -367,8 +367,8 @@ packages:
       '@types/unist': 2.0.6
     dev: true
 
-  /@types/node/16.18.12:
-    resolution: {integrity: sha512-vzLe5NaNMjIE3mcddFVGlAXN1LEWueUsMsOJWaT6wWMJGyljHAWHznqfnKUQWGzu7TLPrGvWdNAsvQYW+C0xtw==}
+  /@types/node/18.11.19:
+    resolution: {integrity: sha512-YUgMWAQBWLObABqrvx8qKO1enAvBUdjZOAWQ5grBAkp5LQv45jBvYKZ3oFS9iKRCQyFjqw6iuEa1vmFqtxYLZw==}
     dev: true
 
   /@types/semver/7.3.13:
