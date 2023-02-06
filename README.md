@@ -195,7 +195,8 @@ jobs:
 | `prerelease`       |  false   | Whether the release to create is a prerelease or not                                        | bool   | false                 |
 | `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
 | `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
-| `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   |                       |
+| `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   | false                 |
+| `includeRelease`   |  false   | whether to include a release build or not                                                   | bool   | true                  |
 | `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npx tauri`     |
 | `args`             |  false   | Additional arguments to the current build command                                           | string |                       |
 

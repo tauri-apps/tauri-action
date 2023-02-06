@@ -11,7 +11,7 @@ import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
 import { execCommand, getInfo, getPackageJson } from './utils';
 
-import type { BuildOptions } from './types';
+import type { Artifact, BuildOptions } from './types';
 
 async function run(): Promise<void> {
   try {
@@ -25,6 +25,7 @@ async function run(): Promise<void> {
     );
     const distPath = core.getInput('distPath');
     const iconPath = core.getInput('iconPath');
+    const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
@@ -55,7 +56,11 @@ async function run(): Promise<void> {
       bundleIdentifier,
     };
     const info = getInfo(projectPath);
-    const artifacts = await buildProject(projectPath, false, options);
+    const artifacts: Artifact[] = [];
+    if (includeRelease) {
+      const releaseArtifacts = await buildProject(projectPath, false, options);
+      artifacts.push(...releaseArtifacts);
+    }
     if (includeDebug) {
       const debugArtifacts = await buildProject(projectPath, true, options);
       artifacts.push(...debugArtifacts);
