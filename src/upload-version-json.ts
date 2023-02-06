@@ -1,13 +1,29 @@
-import { getOctokit, context } from '@actions/github';
-import { resolve } from 'path';
 import { readFileSync, writeFileSync } from 'fs';
-import uploadAssets from './upload-release-assets';
-import fetch from 'node-fetch';
-import { arch, platform } from 'os';
-import { getAssetName } from './utils';
-import { Artifact } from '@tauri-apps/action-core';
+import { platform } from 'os';
+import { resolve } from 'path';
 
-export default async function uploadVersionJSON({
+import { getOctokit, context } from '@actions/github';
+
+import { uploadAssets } from './upload-release-assets';
+import { getAssetName } from './utils';
+
+import type { Artifact } from './types';
+
+type Platform = {
+  signature: string;
+  url: string;
+};
+
+type VersionContent = {
+  version: string;
+  notes: string;
+  pub_date: string;
+  platforms: {
+    [key: string]: Platform;
+  };
+};
+
+export async function uploadVersionJSON({
   version,
   notes,
   tagName,
@@ -28,7 +44,7 @@ export default async function uploadVersionJSON({
 
   const versionFilename = 'latest.json';
   const versionFile = resolve(process.cwd(), versionFilename);
-  const versionContent = {
+  const versionContent: VersionContent = {
     version,
     notes,
     pub_date: new Date().toISOString(),
@@ -56,7 +72,7 @@ export default async function uploadVersionJSON({
           },
         }
       )
-    ).data as any as ArrayBuffer;
+    ).data as unknown as ArrayBuffer;
 
     versionContent.platforms = JSON.parse(
       Buffer.from(assetData).toString()
@@ -81,7 +97,7 @@ export default async function uploadVersionJSON({
 
   // Untagged release downloads won't work after the release was published
   downloadUrl = downloadUrl?.replace(
-    /\/download\/(untagged-[^\/]+)\//,
+    /\/download\/(untagged-[^/]+)\//,
     tagName ? `/download/${tagName}/` : '/latest/download/'
   );
 
@@ -104,7 +120,7 @@ export default async function uploadVersionJSON({
         : arch;
 
     // https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
-    versionContent.platforms[`${os}-${arch}`] = {
+    (versionContent.platforms[`${os}-${arch}`] as unknown) = {
       signature: readFileSync(sigFile.path).toString(),
       url: downloadUrl,
     };

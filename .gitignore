@@ -44,10 +44,3 @@ target
 
 # lockfiles, as a lib we don't need to lock
 yarn.lock
-
-# rollup output
-dist
-# but we want the action dist
-!packages/action/dist
-!packages/action/dist/**
-!packages/action/__fixtures__/**/dist
