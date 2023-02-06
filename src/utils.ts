@@ -62,10 +62,13 @@ export function getTauriDir(root: string): string | null {
   } else {
     ignoreRules.add('node_modules').add('target');
   }
-  const paths = globSync('**/tauri.conf.json', {
-    cwd: root,
-    ignore: ignoreRules,
-  });
+  const paths = globSync(
+    ['**/tauri.conf.json', '**/tauri.conf.json5', '**/Tauri.toml'],
+    {
+      cwd: root,
+      ignore: ignoreRules,
+    }
+  );
   const tauriConfPath = paths[0];
   return tauriConfPath ? resolve(root, tauriConfPath, '..') : null;
 }
@@ -156,6 +159,15 @@ function _getJson5Config(contents: string): TauriConfig | null {
   }
 }
 
+function _getTomlConfig(contents: string): TauriConfig | null {
+  try {
+    const config = parseToml(contents) as TauriConfig;
+    return config;
+  } catch (e) {
+    return null;
+  }
+}
+
 export function getConfig(path: string): TauriConfig {
   const contents = readFileSync(path).toString();
   try {
@@ -171,6 +183,17 @@ export function getConfig(path: string): TauriConfig {
     if (json5Conf) {
       return json5Conf;
     }
+
+    let tomlConf = _getTomlConfig(contents);
+    if (tomlConf === null) {
+      tomlConf = _getTomlConfig(
+        readFileSync(join(path, '..', 'Tauri.toml')).toString()
+      );
+    }
+    if (tomlConf) {
+      return tomlConf;
+    }
+
     throw e;
   }
 }
