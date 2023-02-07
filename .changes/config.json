@@ -3,8 +3,6 @@
   "packages": {
     "action": {
       "path": ".",
-      "manager": "javascript",
-      "prepublish": ["pnpm install --no-optional", "pnpm build"],
       "publish": [
         "git tag v${ pkgFile.versionMajor } -f",
         "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
