@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'fs';
-import path, { join, normalize, resolve, sep } from 'path';
+import path, { extname, join, normalize, resolve, sep } from 'path';
 
 import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
@@ -184,48 +184,55 @@ function _tryParseTomlConfig(contents: string): TauriConfig | null {
 }
 
 export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
-  let config;
-
   if (customPath) {
     if (!existsSync(customPath)) {
       throw `Provided config path \`${customPath}\` does not exist.`;
     }
 
     const contents = readFileSync(customPath).toString();
+    const ext = extname(customPath);
 
-    config = _tryParseJsonConfig(contents);
-    if (config) return config;
+    if (ext === '.json') {
+      const config = _tryParseJsonConfig(contents);
+      if (config) return config;
+    }
 
-    config = _tryParseJson5Config(contents);
-    if (config) return config;
+    if (ext === '.json5') {
+      const config = _tryParseJson5Config(contents);
+      if (config) return config;
+    }
 
-    config = _tryParseTomlConfig(contents);
-    if (config) return config;
+    if (ext === '.toml') {
+      const config = _tryParseTomlConfig(contents);
+      if (config) return config;
+    }
 
-    throw `Couldn't parse \`${customPath}\` as JSON, JSON5 or TOML.`;
+    throw `Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`;
   }
 
   if (existsSync(join(tauriDir, 'tauri.conf.json'))) {
     const contents = readFileSync(join(tauriDir, 'tauri.conf.json')).toString();
-    config = _tryParseJsonConfig(contents);
+    const config = _tryParseJsonConfig(contents);
     if (config) return config;
-    console.error("Found tauri.conf.json file but couldn't parse it as JSON");
+    console.error("Found tauri.conf.json file but couldn't parse it as JSON.");
   }
 
   if (existsSync(join(tauriDir, 'tauri.conf.json5'))) {
     const contents = readFileSync(
       join(tauriDir, 'tauri.conf.json5')
     ).toString();
-    config = _tryParseJson5Config(contents);
+    const config = _tryParseJson5Config(contents);
     if (config) return config;
-    console.error("Found tauri.conf.json5 file but couldn't parse it as JSON5");
+    console.error(
+      "Found tauri.conf.json5 file but couldn't parse it as JSON5."
+    );
   }
 
   if (existsSync(join(tauriDir, 'Tauri.toml'))) {
     const contents = readFileSync(join(tauriDir, 'Tauri.toml')).toString();
-    config = _tryParseTomlConfig(contents);
+    const config = _tryParseTomlConfig(contents);
     if (config) return config;
-    console.error("Found Tauri.toml file but couldn't parse it as TOML");
+    console.error("Found Tauri.toml file but couldn't parse it as TOML.");
   }
 
   throw "Couldn't locate or parse tauri config.";
@@ -261,7 +268,7 @@ export function getInfo(root: string, inConfigPath?: string): Info {
     }
 
     if (!(name && version)) {
-      console.error('Could not determine package name and version');
+      console.error('Could not determine package name and version.');
       process.exit(1);
     }
 
