@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'fs';
-import path, { extname, join, normalize, resolve, sep } from 'path';
+import path, { join, normalize, resolve, sep } from 'path';
 
 import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
@@ -190,7 +190,7 @@ export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
     }
 
     const contents = readFileSync(customPath).toString();
-    const ext = extname(customPath);
+    const ext = path.extname(customPath);
 
     if (ext === '.json') {
       const config = _tryParseJsonConfig(contents);
