@@ -155,6 +155,7 @@ function _tryParseJsonConfig(contents: string): TauriConfig | null {
     const config = JSON.parse(contents) as TauriConfig;
     return config;
   } catch (e) {
+    console.error(e);
     return null;
   }
 }
@@ -164,6 +165,7 @@ function _tryParseJson5Config(contents: string): TauriConfig | null {
     const config = JSON5.parse(contents) as TauriConfig;
     return config;
   } catch (e) {
+    console.error(e);
     return null;
   }
 }
@@ -173,6 +175,7 @@ function _tryParseTomlConfig(contents: string): TauriConfig | null {
     const config = parseToml(contents) as TauriConfig;
     return config;
   } catch (e) {
+    console.error(e);
     return null;
   }
 }
