@@ -43,6 +43,10 @@ jobs:
 
 ## Creating a release and uploading the Tauri bundles
 
+In this example `tauri-action` will create the GitHub release itself. It will build and upload the app bundles to the newly created release.
+
+This is generally the simplest way to release your Tauri app.
+
 ```yml
 name: 'publish'
 on:
@@ -88,8 +92,10 @@ jobs:
 
 ## Uploading the artifacts to a release
 
+`tauri-action` can also upload app bundles to an existing GitHub release. This workflow uses different actions to create and publish the release. `tauri-action` will only build and upload the app bundles to the specified release.
+
 ```yml
-name: 'My Workflow'
+name: 'publish'
 
 on: pull_request
 
@@ -123,7 +129,6 @@ jobs:
               draft: true,
               prerelease: false
             })
-
             return data.id
 
   build-tauri:
@@ -182,23 +187,41 @@ jobs:
 
 ## Inputs
 
-| Name               | Required | Description                                                                                 | Type   | Default               |
-| ------------------ | :------: | ------------------------------------------------------------------------------------------- | ------ | --------------------- |
-| `projectPath`      |  false   | Path to the root of the project that will be built                                          | string | .                     |
-| `configPath`       |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json       |
-| `distPath`         |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                       |
-| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                 | string |                       |
-| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`    | string |                       |
-| `releaseName`      |  false   | The name of the release to create                                                           | string |                       |
-| `releaseBody`      |  false   | The body of the release to create                                                           | string |                       |
-| `releaseDraft`     |  false   | Whether the release to create is a draft or not                                             | bool   | false                 |
-| `prerelease`       |  false   | Whether the release to create is a prerelease or not                                        | bool   | false                 |
-| `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists  | string | SHA of current commit |
-| `iconPath`         |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                       |
-| `includeDebug`     |  false   | whether to include a debug build or not                                                     | bool   | false                 |
-| `includeRelease`   |  false   | whether to include a release build or not                                                   | bool   | true                  |
-| `tauriScript`      |  false   | the script to execute the Tauri CLI                                                         | string | `yarn\|npx tauri`     |
-| `args`             |  false   | Additional arguments to the current build command                                           | string |                       |
+### Project Initialization
+
+These inputs are _typically_ only used if your GitHub repo does not contain an existing Tauri project and you want the action to initialize it for you.
+
+| Name          | Required | Description                                                                                 | Type   | Default         |
+| ------------- | :------: | ------------------------------------------------------------------------------------------- | ------ | --------------- |
+| `projectPath` |  false   | The path to the root of the tauri project relative to the current working directory         | string | .               |
+| `configPath`  |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json |
+| `distPath`    |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                 |
+| `iconPath`    |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                 |
+
+### Build Options
+
+These inputs allow you to change how your Tauri project will be build.
+
+| Name             | Required | Description                                                                                | Type   | Default           |
+| ---------------- | :------: | ------------------------------------------------------------------------------------------ | ------ | ----------------- |
+| `includeDebug`   |  false   | whether to include a debug build or not                                                    | bool   | false             |
+| `includeRelease` |  false   | whether to include a release build or not                                                  | bool   | true              |
+| `tauriScript`    |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build` | string | `yarn\|npx tauri` |
+| `args`           |  false   | Additional arguments to the current build command                                          | string |                   |
+
+### Release Configuration
+
+These inputs allow you to modify the GitHub release.
+
+| Name               | Required | Description                                                                                | Type   | Default               |
+| ------------------ | :------: | ------------------------------------------------------------------------------------------ | ------ | --------------------- |
+| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                | string |                       |
+| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`   | string |                       |
+| `releaseName`      |  false   | The name of the release to create                                                          | string |                       |
+| `releaseBody`      |  false   | The body of the release to create                                                          | string |                       |
+| `releaseDraft`     |  false   | Whether the release to create is a draft or not                                            | bool   | false                 |
+| `prerelease`       |  false   | Whether the release to create is a prerelease or not                                       | bool   | false                 |
+| `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists | string | SHA of current commit |
 
 ## Outputs
 
