@@ -48,7 +48,7 @@ export async function buildProject(
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
-  const info = getInfo(root, buildOpts.configPath);
+  const info = getInfo(root, buildOpts.configPath ?? undefined);
 
   const app = info.tauriPath
     ? {
