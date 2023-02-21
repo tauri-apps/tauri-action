@@ -43,7 +43,7 @@ jobs:
 
 ## Creating a release and uploading the Tauri bundles
 
-`tauri-action` will create the GitHub release itself. It will build and upload the app bundles to the newly created release.
+In this example `tauri-action` will create the GitHub release itself. It will build and upload the app bundles to the newly created release.
 
 This is generally the simplest way to release your Tauri app.
 
