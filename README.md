@@ -92,7 +92,7 @@ jobs:
 
 ## Uploading the artifacts to a release
 
-`tauri-action` can upload app bundles to an existing GitHub release. This workflow uses different actions to create and publish the release. `tauri-action` will only build and upload the app bundles to the specified release.
+`tauri-action` can also upload app bundles to an existing GitHub release. This workflow uses different actions to create and publish the release. `tauri-action` will only build and upload the app bundles to the specified release.
 
 ```yml
 name: 'publish'
