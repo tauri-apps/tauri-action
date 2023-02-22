@@ -16,7 +16,7 @@ class Runner {
 
   async execTauriCommand(
     command: string[],
-    commandOptions?: string[],
+    commandOptions: string[],
     cwd?: string
   ): Promise<void> {
     const args: string[] = [];
@@ -32,8 +32,10 @@ class Runner {
     args.push(...command);
 
     if (this.bin === 'npm' && commandOptions) {
-      args.push('--', ...commandOptions);
+      args.push('--');
     }
+
+    args.push(...commandOptions);
 
     return execCommand(this.bin, args, { cwd });
   }
