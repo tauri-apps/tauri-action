@@ -31,7 +31,7 @@ class Runner {
 
     args.push(...command);
 
-    if (this.bin === 'npm' && commandOptions) {
+    if (this.bin === 'npm' && commandOptions.length) {
       args.push('--');
     }
 
