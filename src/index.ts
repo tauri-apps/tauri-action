@@ -48,7 +48,7 @@ async function run(): Promise<void> {
     }
 
     const options: BuildOptions = {
-      configPath: existsSync(configPath) ? configPath : null,
+      configPath: existsSync(configPath) ? configPath : undefined,
       distPath,
       iconPath,
       tauriScript,

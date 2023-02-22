@@ -48,7 +48,7 @@ export async function buildProject(
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
-  const info = getInfo(root, buildOpts.configPath ?? undefined);
+  const info = getInfo(root, buildOpts.configPath);
 
   const app = info.tauriPath
     ? {
@@ -61,7 +61,7 @@ export async function buildProject(
     : await initProject(root, runner, info, buildOpts);
 
   const tauriConfPath = join(app.tauriPath, 'tauri.conf.json');
-  if (buildOpts.configPath !== null) {
+  if (buildOpts.configPath) {
     copyFileSync(buildOpts.configPath, tauriConfPath);
   }
 
