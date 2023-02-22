@@ -61,7 +61,7 @@ export async function buildProject(
     : await initProject(root, runner, info, buildOpts);
 
   const tauriConfPath = join(app.tauriPath, 'tauri.conf.json');
-  if (buildOpts.configPath !== null) {
+  if (buildOpts.configPath) {
     copyFileSync(buildOpts.configPath, tauriConfPath);
   }
 

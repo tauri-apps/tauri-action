@@ -12,7 +12,7 @@ export interface Artifact {
 }
 
 export interface BuildOptions {
-  configPath: string | null;
+  configPath?: string;
   distPath: string | null;
   iconPath: string | null;
   tauriScript: string | null;

@@ -62,10 +62,13 @@ export function getTauriDir(root: string): string | null {
   } else {
     ignoreRules.add('node_modules').add('target');
   }
-  const paths = globSync('**/tauri.conf.json', {
-    cwd: root,
-    ignore: ignoreRules,
-  });
+  const paths = globSync(
+    ['**/tauri.conf.json', '**/tauri.conf.json5', '**/Tauri.toml'],
+    {
+      cwd: root,
+      ignore: ignoreRules,
+    }
+  );
   const tauriConfPath = paths[0];
   return tauriConfPath ? resolve(root, tauriConfPath, '..') : null;
 }
@@ -147,46 +150,102 @@ export function execCommand(
   }).then();
 }
 
-function _getJson5Config(contents: string): TauriConfig | null {
-  try {
-    const config = JSON5.parse(contents) as TauriConfig;
-    return config;
-  } catch (e) {
-    return null;
-  }
-}
-
-export function getConfig(path: string): TauriConfig {
-  const contents = readFileSync(path).toString();
+function _tryParseJsonConfig(contents: string): TauriConfig | null {
   try {
     const config = JSON.parse(contents) as TauriConfig;
     return config;
   } catch (e) {
-    let json5Conf = _getJson5Config(contents);
-    if (json5Conf === null) {
-      json5Conf = _getJson5Config(
-        readFileSync(join(path, '..', 'tauri.conf.json5')).toString()
-      );
-    }
-    if (json5Conf) {
-      return json5Conf;
-    }
-    throw e;
+    // @ts-ignore
+    console.error(e.message);
+    return null;
   }
 }
 
-export function getInfo(
-  root: string,
-  inConfigPath: string | null = null
-): Info {
+function _tryParseJson5Config(contents: string): TauriConfig | null {
+  try {
+    const config = JSON5.parse(contents) as TauriConfig;
+    return config;
+  } catch (e) {
+    // @ts-ignore
+    console.error(e.message);
+    return null;
+  }
+}
+
+function _tryParseTomlConfig(contents: string): TauriConfig | null {
+  try {
+    const config = parseToml(contents) as TauriConfig;
+    return config;
+  } catch (e) {
+    // @ts-ignore
+    console.error(e.message);
+    return null;
+  }
+}
+
+export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
+  if (customPath) {
+    if (!existsSync(customPath)) {
+      throw `Provided config path \`${customPath}\` does not exist.`;
+    }
+
+    const contents = readFileSync(customPath).toString();
+    const ext = path.extname(customPath);
+
+    if (ext === '.json') {
+      const config = _tryParseJsonConfig(contents);
+      if (config) return config;
+    }
+
+    if (ext === '.json5') {
+      const config = _tryParseJson5Config(contents);
+      if (config) return config;
+    }
+
+    if (ext === '.toml') {
+      const config = _tryParseTomlConfig(contents);
+      if (config) return config;
+    }
+
+    throw `Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`;
+  }
+
+  if (existsSync(join(tauriDir, 'tauri.conf.json'))) {
+    const contents = readFileSync(join(tauriDir, 'tauri.conf.json')).toString();
+    const config = _tryParseJsonConfig(contents);
+    if (config) return config;
+    console.error("Found tauri.conf.json file but couldn't parse it as JSON.");
+  }
+
+  if (existsSync(join(tauriDir, 'tauri.conf.json5'))) {
+    const contents = readFileSync(
+      join(tauriDir, 'tauri.conf.json5')
+    ).toString();
+    const config = _tryParseJson5Config(contents);
+    if (config) return config;
+    console.error(
+      "Found tauri.conf.json5 file but couldn't parse it as JSON5."
+    );
+  }
+
+  if (existsSync(join(tauriDir, 'Tauri.toml'))) {
+    const contents = readFileSync(join(tauriDir, 'Tauri.toml')).toString();
+    const config = _tryParseTomlConfig(contents);
+    if (config) return config;
+    console.error("Found Tauri.toml file but couldn't parse it as TOML.");
+  }
+
+  throw "Couldn't locate or parse tauri config.";
+}
+
+export function getInfo(root: string, inConfigPath?: string): Info {
   const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
-    const configPath = inConfigPath ?? join(tauriDir, 'tauri.conf.json');
     let name;
     let version;
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
-    const config = getConfig(configPath);
+    const config = getConfig(tauriDir, inConfigPath);
     if (config.package) {
       name = config.package.productName;
       version = config.package.version;
@@ -209,7 +268,7 @@ export function getInfo(
     }
 
     if (!(name && version)) {
-      console.error('Could not determine package name and version');
+      console.error('Could not determine package name and version.');
       process.exit(1);
     }
 
