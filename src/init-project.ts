@@ -1,9 +1,10 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { execCommand, getConfig, getPackageJson, getTauriDir } from './utils';
+import { Runner } from './runner';
+import { getConfig, getPackageJson, getTauriDir } from './utils';
 
-import type { Application, BuildOptions, Info, Runner } from './types';
+import type { Application, BuildOptions, Info } from './types';
 
 export async function initProject(
   root: string,
@@ -14,12 +15,10 @@ export async function initProject(
   const packageJson = getPackageJson(root);
   const tauriPath = getTauriDir(root);
 
-  await execCommand(
-    runner.runnerCommand,
-    [...runner.runnerArgs, 'init', '--ci', '--app-name', info.name],
-    {
-      cwd: root,
-    }
+  await runner.execTauriCommand(
+    ['init'],
+    ['--ci', '--app-name', info.name],
+    root
   );
 
   if (tauriPath === null) {
@@ -68,13 +67,7 @@ export async function initProject(
   };
 
   if (iconPath) {
-    await execCommand(
-      runner.runnerCommand,
-      [...runner.runnerArgs, 'icon', join(root, iconPath)],
-      {
-        cwd: root,
-      }
-    );
+    await runner.execTauriCommand(['icon', join(root, iconPath)], [], root);
   }
 
   return app;

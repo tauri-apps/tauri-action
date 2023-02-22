@@ -1,3 +1,5 @@
+import { Runner } from './runner';
+
 export interface Application {
   tauriPath: string;
   runner: Runner;
@@ -34,11 +36,6 @@ export interface Info {
   name: string;
   version: string;
   wixLanguage: string | string[] | { [language: string]: unknown };
-}
-
-export interface Runner {
-  runnerCommand: string;
-  runnerArgs: string[];
 }
 
 export interface TauriConfig {
