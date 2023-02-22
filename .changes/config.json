@@ -1,44 +1,17 @@
 {
   "gitSiteUrl": "https://www.github.com/tauri-apps/tauri-action/",
-  "pkgManagers": {
-    "javascript": {
-      "version": true,
-      "getPublishedVersion": "npm view ${ pkgFile.pkg.name } version",
-      "prepublish": [
-        {
-          "command": "pnpm install",
-          "dryRunCommand": true
-        },
-        {
-          "command": "npm pack",
-          "dryRunCommand": true
-        }
-      ],
-      "publish": [
-        {
-          "command": "echo # Package Publish",
-          "dryRunCommand": "echo # Package Publish",
-          "pipe": true
-        },
-        {
-          "command": "npm publish --access public",
-          "dryRunCommand": "echo publish here",
-          "pipe": true
-        }
-      ]
-    }
-  },
   "packages": {
     "action": {
-      "path": "./",
-      "manager": "javascript",
+      "path": ".",
       "publish": [
         "git tag v${ pkgFile.versionMajor } -f",
         "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
         "git push --tags -f"
       ],
       "getPublishedVersion": "git tag -a -m \"v${ pkgFile.version }\" v${ pkgFile.version } 2>/dev/null || echo ${ pkgFile.version }",
-      "assets": false
+      "postversion": ["pnpm install --no-optional", "pnpm build"],
+      "assets": false,
+      "createRelease": true
     }
   }
 }
