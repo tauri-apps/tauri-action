@@ -60,7 +60,7 @@ export function getTauriDir(root: string): string | null {
   if (existsSync(gitignorePath)) {
     ignoreRules.add(readFileSync(gitignorePath).toString());
   } else {
-    ignoreRules.add('node_modules').add('target');
+    ignoreRules.add('**/node_modules').add('**/target');
   }
   const paths = globSync(
     ['**/tauri.conf.json', '**/tauri.conf.json5', '**/Tauri.toml'],
