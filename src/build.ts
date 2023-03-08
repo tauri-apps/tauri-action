@@ -3,43 +3,10 @@ import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 import { initProject } from './init-project';
-import {
-  execCommand,
-  getInfo,
-  getTargetDir,
-  getWorkspaceDir,
-  hasDependency,
-  usesPnpm,
-  usesYarn,
-} from './utils';
+import { getRunner } from './runner';
+import { getInfo, getTargetDir, getWorkspaceDir, hasDependency } from './utils';
 
-import type { Artifact, BuildOptions, Runner } from './types';
-
-async function getRunner(
-  root: string,
-  tauriScript: string | null
-): Promise<Runner> {
-  if (tauriScript) {
-    const [runnerCommand, ...runnerArgs] = tauriScript.split(' ');
-    return { runnerCommand, runnerArgs };
-  }
-
-  if (
-    hasDependency('@tauri-apps/cli', root) ||
-    hasDependency('vue-cli-plugin-tauri', root)
-  ) {
-    if (usesYarn(root)) return { runnerCommand: 'yarn', runnerArgs: ['tauri'] };
-    if (usesPnpm(root)) return { runnerCommand: 'pnpm', runnerArgs: ['tauri'] };
-    // FIXME: This can trigger a download of the tauri alpha package. Likely when the tauri frontend is part of a workspace and projectPath is undefined.
-    return { runnerCommand: 'npx', runnerArgs: ['tauri'] };
-  }
-
-  await execCommand('npm', ['install', '-g', '@tauri-apps/cli'], {
-    cwd: undefined,
-  });
-
-  return { runnerCommand: 'tauri', runnerArgs: [] };
-}
+import type { Artifact, BuildOptions } from './types';
 
 export async function buildProject(
   root: string,
@@ -74,29 +41,15 @@ export async function buildProject(
   const tauriArgs = debug
     ? ['--debug', ...(buildOpts.args ?? [])]
     : buildOpts.args ?? [];
-  let buildCommand;
-  let buildArgs: string[] = [];
 
+  let buildCommand;
   if (hasDependency('vue-cli-plugin-tauri', root)) {
-    if (usesYarn(root)) {
-      buildCommand = 'yarn';
-      buildArgs = ['tauri:build'];
-    }
-    if (usesPnpm(root)) {
-      buildCommand = 'pnpm';
-      buildArgs = ['tauri:build'];
-    } else {
-      buildCommand = 'npm';
-      buildArgs = ['run', 'tauri:build'];
-    }
+    buildCommand = 'tauri:build';
   } else {
-    buildCommand = app.runner.runnerCommand;
-    buildArgs = [...app.runner.runnerArgs, 'build'];
+    buildCommand = 'build';
   }
 
-  await execCommand(buildCommand, [...buildArgs, ...tauriArgs], {
-    cwd: root,
-  });
+  await runner.execTauriCommand([buildCommand], [...tauriArgs], root);
 
   let fileAppName = app.name;
   // on Linux, the app product name is converted to kebab-case
