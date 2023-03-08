@@ -25,9 +25,9 @@ export async function buildProject(
     : buildOpts.args ?? [];
 
   const found = [...tauriArgs].findIndex((e) => e === '-t' || e === '--target');
-  const targetPath = found >= 0 ? [...tauriArgs][found + 1] : '';
+  const targetPath = found >= 0 ? [...tauriArgs][found + 1] : undefined;
 
-  const targetInfo = getTargetInfo();
+  const targetInfo = getTargetInfo(targetPath);
 
   const info = getInfo(root, buildOpts.configPath, targetInfo);
 
@@ -77,7 +77,7 @@ export async function buildProject(
 
   const artifactsPath = join(
     getTargetDir(cratePath),
-    targetPath,
+    targetPath ?? '',
     debug ? 'debug' : 'release'
   );
 

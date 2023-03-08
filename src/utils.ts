@@ -244,6 +244,11 @@ export function getTargetInfo(targetPath?: string): TargetInfo {
       arch = targetPath.split('-')[0];
     }
   }
+  console.log(
+    'targetPath includes',
+    targetPath?.includes('-'),
+    targetPath?.split('-')[0]
+  );
 
   return { arch, platform };
 }
