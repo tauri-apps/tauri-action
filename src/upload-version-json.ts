@@ -103,6 +103,7 @@ export async function uploadVersionJSON({
     tagName ? `/download/${tagName}/` : '/latest/download/'
   );
 
+  // TODO:
   let os = platform() as string;
   if (os === 'win32') {
     os = 'windows';
