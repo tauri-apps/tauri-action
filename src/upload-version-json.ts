@@ -89,7 +89,7 @@ export async function uploadVersionJSON({
 
   const sigFile = artifacts.find((s) => s.path.endsWith('.sig'));
   const assetNames = new Set(
-    artifacts.map((p) => getAssetName(p.path).trim().replace(' ', '.')) // GitHub replaces spaces in asset names with dots
+    artifacts.map((p) => getAssetName(p.path).trim().replace(/ /g, '.')) // GitHub replaces spaces in asset names with dots
   );
   let downloadUrl = assets.data
     .filter((e) => assetNames.has(e.name))

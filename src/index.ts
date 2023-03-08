@@ -55,6 +55,7 @@ async function run(): Promise<void> {
       args,
       bundleIdentifier,
     };
+    // TODO: wrong version
     const info = getInfo(projectPath);
     const artifacts: Artifact[] = [];
     if (includeRelease) {
@@ -107,6 +108,7 @@ async function run(): Promise<void> {
     }
 
     if (releaseId) {
+      // TODO:
       if (platform() === 'darwin') {
         let i = 0;
         for (const artifact of artifacts) {

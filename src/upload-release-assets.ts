@@ -32,8 +32,10 @@ export async function uploadAssets(releaseId: number, assets: Artifact[]) {
 
     const assetName = getAssetName(asset.path);
 
+    console.log(assetName, assetName.trim().replace(/ /g, '.'));
+
     const existingAsset = existingAssets.find(
-      (a) => a.name === assetName.trim().replace(' ', '.')
+      (a) => a.name === assetName.trim().replace(/ /g, '.')
     );
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
