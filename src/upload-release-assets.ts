@@ -34,9 +34,10 @@ export async function uploadAssets(releaseId: number, assets: Artifact[]) {
 
     console.log(assetName, assetName.trim().replace(/ /g, '.'));
 
-    const existingAsset = existingAssets.find(
-      (a) => a.name === assetName.trim().replace(/ /g, '.')
-    );
+    const existingAsset = existingAssets.find((a) => {
+      console.log(a.name, a.name === assetName.trim().replace(/ /g, '.'));
+      return a.name === assetName.trim().replace(/ /g, '.');
+    });
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
       await github.rest.repos.deleteReleaseAsset({
