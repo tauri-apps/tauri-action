@@ -31,8 +31,6 @@ export async function buildProject(
 
   const info = getInfo(root, buildOpts.configPath, targetInfo);
 
-  console.log(JSON.stringify(info));
-
   const app = info.tauriPath
     ? {
         tauriPath: info.tauriPath,

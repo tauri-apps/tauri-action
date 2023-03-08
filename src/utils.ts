@@ -163,13 +163,10 @@ export function getInfo(
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
 
-    console.log(targetInfo);
     const config = getConfig(tauriDir, inConfigPath);
-    console.log(config);
     if (targetInfo) {
       mergePlatformConfig(config, tauriDir, targetInfo.platform);
     }
-    console.log(config);
 
     if (config.package) {
       name = config.package.productName;
@@ -244,11 +241,6 @@ export function getTargetInfo(targetPath?: string): TargetInfo {
       arch = targetPath.split('-')[0];
     }
   }
-  console.log(
-    'targetPath includes',
-    targetPath?.includes('-'),
-    targetPath?.split('-')[0]
-  );
 
   return { arch, platform };
 }
