@@ -19,6 +19,7 @@ specifiers:
   glob-gitignore: ^1.0.14
   ignore: 5.2.4
   json5: 2.2.3
+  lodash.merge: ^4.6.2
   prettier: 2.8.4
   string-argv: 0.3.1
   tslib: 2.5.0
@@ -32,6 +33,7 @@ dependencies:
   glob-gitignore: 1.0.14
   ignore: 5.2.4
   json5: 2.2.3
+  lodash.merge: 4.6.2
   string-argv: 0.3.1
   tslib: 2.5.0
 
@@ -1811,7 +1813,6 @@ packages:
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
-    dev: true
 
   /lodash.union/4.6.0:
     resolution: {integrity: sha512-c4pB2CdGrGdjMKYLA+XiRDO7Y0PRQbm/Gzg8qMj+QH+pFVAoTp5sBpO0odL3FjoPCGjK96p6qsP+yQoiLoOBcw==}

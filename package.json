@@ -26,6 +26,7 @@
     "glob-gitignore": "^1.0.14",
     "ignore": "5.2.4",
     "json5": "2.2.3",
+    "lodash.merge": "^4.6.2",
     "string-argv": "0.3.1",
     "tslib": "2.5.0"
   },

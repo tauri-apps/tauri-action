@@ -6,8 +6,15 @@ import { parse as parseToml } from '@iarna/toml';
 import { sync as globSync } from 'glob-gitignore';
 import ignore from 'ignore';
 import JSON5 from 'json5';
+import merge from 'lodash.merge';
 
-import type { CargoManifest, Info, TauriConfig } from './types';
+import type {
+  CargoManifest,
+  Info,
+  TargetInfo,
+  TargetPlatform,
+  TauriConfig,
+} from './types';
 
 /*** constants ***/
 export const extensions = [
@@ -183,6 +190,47 @@ function _tryParseTomlConfig(contents: string): TauriConfig | null {
   }
 }
 
+function readPlatformConfig(
+  tauriDir: string,
+  platform: string
+): TauriConfig | null {
+  let path = join(tauriDir, `tauri.${platform}.conf.json`);
+  if (existsSync(path)) {
+    const contents = readFileSync(path).toString();
+    const config = _tryParseJsonConfig(contents);
+    if (config) return config;
+  }
+
+  path = join(tauriDir, `tauri.${platform}.conf.json5`);
+  if (existsSync(path)) {
+    const contents = readFileSync(path).toString();
+    const config = _tryParseJson5Config(contents);
+    if (config) return config;
+  }
+
+  path = join(tauriDir, `Tauri.${platform}.toml`);
+  if (existsSync(path)) {
+    const contents = readFileSync(path).toString();
+    const config = _tryParseTomlConfig(contents);
+    if (config) return config;
+  }
+
+  return null;
+}
+
+/// This modifies baseConfig in-place!
+function mergePlatformConfig(
+  baseConfig: TauriConfig,
+  tauriDir: string,
+  target: string
+) {
+  const config = readPlatformConfig(tauriDir, target);
+
+  if (config) {
+    merge(baseConfig, config);
+  }
+}
+
 export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
   if (customPath) {
     if (!existsSync(customPath)) {
@@ -238,14 +286,23 @@ export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
   throw "Couldn't locate or parse tauri config.";
 }
 
-export function getInfo(root: string, inConfigPath?: string): Info {
+export function getInfo(
+  root: string,
+  inConfigPath?: string,
+  targetInfo?: TargetInfo
+): Info {
   const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
     let name;
     let version;
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
+
     const config = getConfig(tauriDir, inConfigPath);
+    if (targetInfo) {
+      mergePlatformConfig(config, tauriDir, targetInfo.platform);
+    }
+
     if (config.package) {
       name = config.package.productName;
       version = config.package.version;
@@ -291,4 +348,34 @@ export function getInfo(root: string, inConfigPath?: string): Info {
       wixLanguage: 'en-US',
     };
   }
+}
+
+export function getTargetInfo(targetPath?: string): TargetInfo {
+  let arch = process.arch;
+  let platform: TargetPlatform =
+    process.platform === 'win32'
+      ? 'windows'
+      : process.platform === 'darwin'
+      ? 'macos'
+      : 'linux';
+
+  if (targetPath) {
+    if (targetPath.includes('windows')) {
+      platform = 'windows';
+    } else if (targetPath.includes('darwin') || targetPath.includes('macos')) {
+      platform = 'macos';
+    } else if (targetPath.includes('linux')) {
+      platform = 'linux';
+    } else if (targetPath.includes('android')) {
+      platform = 'android';
+    } else if (targetPath.includes('ios')) {
+      platform = 'ios';
+    }
+
+    if (targetPath.includes('-')) {
+      arch = targetPath.split('-')[0];
+    }
+  }
+
+  return { arch, platform };
 }

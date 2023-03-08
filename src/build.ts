@@ -1,10 +1,15 @@
-import { platform } from 'os';
 import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 import { initProject } from './init-project';
 import { getRunner } from './runner';
-import { getInfo, getTargetDir, getWorkspaceDir, hasDependency } from './utils';
+import {
+  getInfo,
+  getTargetDir,
+  getTargetInfo,
+  getWorkspaceDir,
+  hasDependency,
+} from './utils';
 
 import type { Artifact, BuildOptions } from './types';
 
@@ -14,6 +19,15 @@ export async function buildProject(
   buildOpts: BuildOptions
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
+
+  const tauriArgs = debug
+    ? ['--debug', ...(buildOpts.args ?? [])]
+    : buildOpts.args ?? [];
+
+  const found = [...tauriArgs].findIndex((e) => e === '-t' || e === '--target');
+  const targetPath = found >= 0 ? [...tauriArgs][found + 1] : '';
+
+  const targetInfo = getTargetInfo();
 
   const info = getInfo(root, buildOpts.configPath);
 
@@ -38,10 +52,6 @@ export async function buildProject(
     writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
   }
 
-  const tauriArgs = debug
-    ? ['--debug', ...(buildOpts.args ?? [])]
-    : buildOpts.args ?? [];
-
   let buildCommand;
   if (hasDependency('vue-cli-plugin-tauri', root)) {
     buildCommand = 'tauri:build';
@@ -53,7 +63,7 @@ export async function buildProject(
 
   let fileAppName = app.name;
   // on Linux, the app product name is converted to kebab-case
-  if (!['darwin', 'win32'].includes(platform())) {
+  if (targetInfo.platform === 'linux') {
     fileAppName = fileAppName
       .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
       .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
@@ -63,21 +73,17 @@ export async function buildProject(
 
   const cratePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
 
-  const found = [...tauriArgs].findIndex((e) => e === '-t' || e === '--target');
-  const targetPath = found >= 0 ? [...tauriArgs][found + 1] : '';
-
   const artifactsPath = join(
     getTargetDir(cratePath),
     targetPath,
     debug ? 'debug' : 'release'
   );
 
-  let arch =
-    targetPath.search('-') >= 0 ? targetPath.split('-')[0] : process.arch;
-
   let artifacts: Artifact[] = [];
 
-  if (platform() === 'darwin') {
+  let arch = targetInfo.arch;
+
+  if (targetInfo.platform === 'macos') {
     if (arch === 'x86_64') {
       arch = 'x64';
     }
@@ -91,7 +97,7 @@ export async function buildProject(
       join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
       join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`),
     ].map((path) => ({ path, arch }));
-  } else if (platform() === 'win32') {
+  } else if (targetInfo.platform === 'windows') {
     arch = arch.startsWith('i') ? 'x86' : 'x64';
 
     // If multiple Wix languages are specified, multiple installers (.msi) will be made
