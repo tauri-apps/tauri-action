@@ -29,7 +29,7 @@ export async function buildProject(
 
   const targetInfo = getTargetInfo();
 
-  const info = getInfo(root, buildOpts.configPath);
+  const info = getInfo(root, buildOpts.configPath, targetInfo);
 
   console.log(JSON.stringify(info));
 
