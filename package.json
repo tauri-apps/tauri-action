@@ -30,13 +30,13 @@
     "tslib": "2.5.0"
   },
   "devDependencies": {
-    "@types/node": "16.18.12",
-    "@typescript-eslint/eslint-plugin": "5.53.0",
-    "@typescript-eslint/parser": "5.53.0",
+    "@types/node": "16.18.14",
+    "@typescript-eslint/eslint-plugin": "5.54.1",
+    "@typescript-eslint/parser": "5.54.1",
     "@vercel/ncc": "0.36.1",
     "covector": "0.8.0",
-    "eslint": "8.34.0",
-    "eslint-config-prettier": "8.6.0",
+    "eslint": "8.35.0",
+    "eslint-config-prettier": "8.7.0",
     "eslint-config-standard-with-typescript": "34.0.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-n": "15.6.1",
