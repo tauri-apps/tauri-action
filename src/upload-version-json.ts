@@ -7,7 +7,7 @@ import { getOctokit, context } from '@actions/github';
 import { uploadAssets } from './upload-release-assets';
 import { getAssetName } from './utils';
 
-import type { Artifact } from './types';
+import type { Artifact, TargetInfo } from './types';
 
 type Platform = {
   signature: string;
@@ -29,12 +29,14 @@ export async function uploadVersionJSON({
   tagName,
   releaseId,
   artifacts,
+  targetInfo,
 }: {
   version: string;
   notes: string;
   tagName: string;
   releaseId: number;
   artifacts: Artifact[];
+  targetInfo: TargetInfo;
 }) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -103,10 +105,9 @@ export async function uploadVersionJSON({
     tagName ? `/download/${tagName}/` : '/latest/download/'
   );
 
-  // TODO:
-  let os = platform() as string;
-  if (os === 'win32') {
-    os = 'windows';
+  let os = targetInfo.platform as string;
+  if (os === 'macos') {
+    os = 'darwin';
   }
 
   if (downloadUrl && sigFile) {
