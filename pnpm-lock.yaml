@@ -15,7 +15,7 @@ specifiers:
   eslint-plugin-import: 2.27.5
   eslint-plugin-n: 15.6.1
   eslint-plugin-promise: 6.1.1
-  execa: 7.1.0
+  execa: 7.1.1
   glob-gitignore: ^1.0.14
   ignore: 5.2.4
   json5: 2.2.3
@@ -28,7 +28,7 @@ dependencies:
   '@actions/core': 1.10.0
   '@actions/github': 5.1.1
   '@iarna/toml': 2.2.5
-  execa: 7.1.0
+  execa: 7.1.1
   glob-gitignore: 1.0.14
   ignore: 5.2.4
   json5: 2.2.3
@@ -1252,8 +1252,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /execa/7.1.0:
-    resolution: {integrity: sha512-T6nIJO3LHxUZ6ahVRaxXz9WLEruXLqdcluA+UuTptXmLM7nDAn9lx9IfkxPyzEL21583qSt4RmL44pO71EHaJQ==}
+  /execa/7.1.1:
+    resolution: {integrity: sha512-wH0eMf/UXckdUYnO21+HDztteVv05rq2GXksxT4fCGeHkBhw1DROXh40wcjMcRqDOWE7iPJ4n3M7e2+YFP+76Q==}
     engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
     dependencies:
       cross-spawn: 7.0.3
