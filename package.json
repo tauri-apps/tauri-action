@@ -22,7 +22,7 @@
     "@actions/core": "1.10.0",
     "@actions/github": "5.1.1",
     "@iarna/toml": "2.2.5",
-    "execa": "7.0.0",
+    "execa": "7.1.1",
     "glob-gitignore": "^1.0.14",
     "ignore": "5.2.4",
     "json5": "2.2.3",
@@ -31,18 +31,18 @@
     "tslib": "2.5.0"
   },
   "devDependencies": {
-    "@types/node": "16.18.14",
-    "@typescript-eslint/eslint-plugin": "5.54.1",
-    "@typescript-eslint/parser": "5.54.1",
+    "@types/node": "16.18.18",
+    "@typescript-eslint/eslint-plugin": "5.56.0",
+    "@typescript-eslint/parser": "5.56.0",
     "@vercel/ncc": "0.36.1",
     "covector": "0.8.0",
-    "eslint": "8.35.0",
-    "eslint-config-prettier": "8.7.0",
-    "eslint-config-standard-with-typescript": "34.0.0",
+    "eslint": "8.36.0",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-config-standard-with-typescript": "34.0.1",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-n": "15.6.1",
     "eslint-plugin-promise": "6.1.1",
-    "prettier": "2.8.4",
-    "typescript": "4.9.5"
+    "prettier": "2.8.6",
+    "typescript": "5.0.2"
   }
 }
