@@ -1,8 +1,9 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
+import { getConfig } from './config';
 import { Runner } from './runner';
-import { getConfig, getPackageJson, getTauriDir } from './utils';
+import { getPackageJson, getTauriDir } from './utils';
 
 import type { Application, BuildOptions, Info } from './types';
 

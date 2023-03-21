@@ -7,7 +7,7 @@ import { getOctokit, context } from '@actions/github';
 import { uploadAssets } from './upload-release-assets';
 import { getAssetName } from './utils';
 
-import type { Artifact } from './types';
+import type { Artifact, TargetInfo } from './types';
 
 type Platform = {
   signature: string;
@@ -29,12 +29,14 @@ export async function uploadVersionJSON({
   tagName,
   releaseId,
   artifacts,
+  targetInfo,
 }: {
   version: string;
   notes: string;
   tagName: string;
   releaseId: number;
   artifacts: Artifact[];
+  targetInfo: TargetInfo;
 }) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -89,7 +91,7 @@ export async function uploadVersionJSON({
 
   const sigFile = artifacts.find((s) => s.path.endsWith('.sig'));
   const assetNames = new Set(
-    artifacts.map((p) => getAssetName(p.path).trim().replace(' ', '.')) // GitHub replaces spaces in asset names with dots
+    artifacts.map((p) => getAssetName(p.path).trim().replace(/ /g, '.')) // GitHub replaces spaces in asset names with dots
   );
   let downloadUrl = assets.data
     .filter((e) => assetNames.has(e.name))
@@ -103,9 +105,9 @@ export async function uploadVersionJSON({
     tagName ? `/download/${tagName}/` : '/latest/download/'
   );
 
-  let os = platform() as string;
-  if (os === 'win32') {
-    os = 'windows';
+  let os = targetInfo.platform as string;
+  if (os === 'macos') {
+    os = 'darwin';
   }
 
   if (downloadUrl && sigFile) {

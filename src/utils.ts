@@ -5,9 +5,10 @@ import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
 import { sync as globSync } from 'glob-gitignore';
 import ignore from 'ignore';
-import JSON5 from 'json5';
 
-import type { CargoManifest, Info, TauriConfig } from './types';
+import { getConfig, mergePlatformConfig } from './config';
+
+import type { CargoManifest, Info, TargetInfo, TargetPlatform } from './types';
 
 /*** constants ***/
 export const extensions = [
@@ -150,102 +151,23 @@ export function execCommand(
   }).then();
 }
 
-function _tryParseJsonConfig(contents: string): TauriConfig | null {
-  try {
-    const config = JSON.parse(contents) as TauriConfig;
-    return config;
-  } catch (e) {
-    // @ts-ignore
-    console.error(e.message);
-    return null;
-  }
-}
-
-function _tryParseJson5Config(contents: string): TauriConfig | null {
-  try {
-    const config = JSON5.parse(contents) as TauriConfig;
-    return config;
-  } catch (e) {
-    // @ts-ignore
-    console.error(e.message);
-    return null;
-  }
-}
-
-function _tryParseTomlConfig(contents: string): TauriConfig | null {
-  try {
-    const config = parseToml(contents) as TauriConfig;
-    return config;
-  } catch (e) {
-    // @ts-ignore
-    console.error(e.message);
-    return null;
-  }
-}
-
-export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
-  if (customPath) {
-    if (!existsSync(customPath)) {
-      throw `Provided config path \`${customPath}\` does not exist.`;
-    }
-
-    const contents = readFileSync(customPath).toString();
-    const ext = path.extname(customPath);
-
-    if (ext === '.json') {
-      const config = _tryParseJsonConfig(contents);
-      if (config) return config;
-    }
-
-    if (ext === '.json5') {
-      const config = _tryParseJson5Config(contents);
-      if (config) return config;
-    }
-
-    if (ext === '.toml') {
-      const config = _tryParseTomlConfig(contents);
-      if (config) return config;
-    }
-
-    throw `Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`;
-  }
-
-  if (existsSync(join(tauriDir, 'tauri.conf.json'))) {
-    const contents = readFileSync(join(tauriDir, 'tauri.conf.json')).toString();
-    const config = _tryParseJsonConfig(contents);
-    if (config) return config;
-    console.error("Found tauri.conf.json file but couldn't parse it as JSON.");
-  }
-
-  if (existsSync(join(tauriDir, 'tauri.conf.json5'))) {
-    const contents = readFileSync(
-      join(tauriDir, 'tauri.conf.json5')
-    ).toString();
-    const config = _tryParseJson5Config(contents);
-    if (config) return config;
-    console.error(
-      "Found tauri.conf.json5 file but couldn't parse it as JSON5."
-    );
-  }
-
-  if (existsSync(join(tauriDir, 'Tauri.toml'))) {
-    const contents = readFileSync(join(tauriDir, 'Tauri.toml')).toString();
-    const config = _tryParseTomlConfig(contents);
-    if (config) return config;
-    console.error("Found Tauri.toml file but couldn't parse it as TOML.");
-  }
-
-  throw "Couldn't locate or parse tauri config.";
-}
-
-export function getInfo(root: string, inConfigPath?: string): Info {
+export function getInfo(
+  root: string,
+  inConfigPath?: string,
+  targetInfo?: TargetInfo
+): Info {
   const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
     let name;
     let version;
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
+
     const config = getConfig(tauriDir, inConfigPath);
+    if (targetInfo) {
+      mergePlatformConfig(config, tauriDir, targetInfo.platform);
+    }
+
     if (config.package) {
       name = config.package.productName;
       version = config.package.version;
@@ -291,4 +213,34 @@ export function getInfo(root: string, inConfigPath?: string): Info {
       wixLanguage: 'en-US',
     };
   }
+}
+
+export function getTargetInfo(targetPath?: string): TargetInfo {
+  let arch = process.arch;
+  let platform: TargetPlatform =
+    process.platform === 'win32'
+      ? 'windows'
+      : process.platform === 'darwin'
+      ? 'macos'
+      : 'linux';
+
+  if (targetPath) {
+    if (targetPath.includes('windows')) {
+      platform = 'windows';
+    } else if (targetPath.includes('darwin') || targetPath.includes('macos')) {
+      platform = 'macos';
+    } else if (targetPath.includes('linux')) {
+      platform = 'linux';
+    } else if (targetPath.includes('android')) {
+      platform = 'android';
+    } else if (targetPath.includes('ios')) {
+      platform = 'ios';
+    }
+
+    if (targetPath.includes('-')) {
+      arch = targetPath.split('-')[0];
+    }
+  }
+
+  return { arch, platform };
 }

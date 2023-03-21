@@ -38,6 +38,12 @@ export interface Info {
   wixLanguage: string | string[] | { [language: string]: unknown };
 }
 
+export type TargetPlatform = 'android' | 'ios' | 'macos' | 'linux' | 'windows';
+export interface TargetInfo {
+  arch: string;
+  platform: TargetPlatform;
+}
+
 export interface TauriConfig {
   package?: {
     productName?: string;

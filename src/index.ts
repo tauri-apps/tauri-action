@@ -9,7 +9,7 @@ import { createRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
-import { execCommand, getInfo, getPackageJson } from './utils';
+import { execCommand, getInfo, getPackageJson, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions } from './types';
 
@@ -55,7 +55,12 @@ async function run(): Promise<void> {
       args,
       bundleIdentifier,
     };
-    const info = getInfo(projectPath);
+
+    const _found = args.findIndex((e) => e === '-t' || e === '--target');
+    const targetPath = _found >= 0 ? args[_found + 1] : undefined;
+    const targetInfo = getTargetInfo(targetPath);
+    const info = getInfo(projectPath, undefined, targetInfo);
+
     const artifacts: Artifact[] = [];
     if (includeRelease) {
       const releaseArtifacts = await buildProject(projectPath, false, options);
@@ -107,7 +112,7 @@ async function run(): Promise<void> {
     }
 
     if (releaseId) {
-      if (platform() === 'darwin') {
+      if (targetInfo.platform === 'macos') {
         let i = 0;
         for (const artifact of artifacts) {
           // updater provide a .tar.gz, this will prevent duplicate and overwriting of
@@ -138,6 +143,7 @@ async function run(): Promise<void> {
         tagName,
         releaseId,
         artifacts,
+        targetInfo,
       });
     }
   } catch (error) {
