@@ -19,7 +19,7 @@ specifiers:
   glob-gitignore: ^1.0.14
   ignore: 5.2.4
   json5: 2.2.3
-  prettier: 2.8.5
+  prettier: 2.8.6
   string-argv: 0.3.1
   tslib: 2.5.0
   typescript: 5.0.2
@@ -47,7 +47,7 @@ devDependencies:
   eslint-plugin-import: 2.27.5_cnkxirszkzb4o6ts7gbclno24e
   eslint-plugin-n: 15.6.1_eslint@8.36.0
   eslint-plugin-promise: 6.1.1_eslint@8.36.0
-  prettier: 2.8.5
+  prettier: 2.8.6
   typescript: 5.0.2
 
 packages:
@@ -2126,8 +2126,8 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier/2.8.5:
-    resolution: {integrity: sha512-3gzuxrHbKUePRBB4ZeU08VNkUcqEHaUaouNt0m7LGP4Hti/NuB07C7PPTM/LkWqXoJYJn2McEo5+kxPNrtQkLQ==}
+  /prettier/2.8.6:
+    resolution: {integrity: sha512-mtuzdiBbHwPEgl7NxWlqOkithPyp4VN93V7VeHVWBF+ad3I5avc0RVDT4oImXQy9H/AqxA2NSQH8pSxHW6FYbQ==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
