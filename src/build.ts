@@ -24,12 +24,21 @@ export async function buildProject(
     ? ['--debug', ...(buildOpts.args ?? [])]
     : buildOpts.args ?? [];
 
-  const found = [...tauriArgs].findIndex((e) => e === '-t' || e === '--target');
-  const targetPath = found >= 0 ? [...tauriArgs][found + 1] : undefined;
+  const targetArgIdx = [...tauriArgs].findIndex(
+    (e) => e === '-t' || e === '--target'
+  );
+  const targetPath =
+    targetArgIdx >= 0 ? [...tauriArgs][targetArgIdx + 1] : undefined;
+
+  const configArgIdx = [...tauriArgs].findIndex(
+    (e) => e === '-c' || e === '--config'
+  );
+  const configArgPath =
+    configArgIdx >= 0 ? [...tauriArgs][configArgIdx + 1] : undefined;
 
   const targetInfo = getTargetInfo(targetPath);
 
-  const info = getInfo(root, buildOpts.configPath, targetInfo);
+  const info = getInfo(root, buildOpts.configPath, targetInfo, configArgPath);
 
   const app = info.tauriPath
     ? {

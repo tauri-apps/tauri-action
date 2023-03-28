@@ -56,10 +56,20 @@ async function run(): Promise<void> {
       bundleIdentifier,
     };
 
-    const _found = args.findIndex((e) => e === '-t' || e === '--target');
-    const targetPath = _found >= 0 ? args[_found + 1] : undefined;
+    const targetArgIdx = [...args].findIndex(
+      (e) => e === '-t' || e === '--target'
+    );
+    const targetPath =
+      targetArgIdx >= 0 ? [...args][targetArgIdx + 1] : undefined;
+
+    const configArgIdx = [...args].findIndex(
+      (e) => e === '-c' || e === '--config'
+    );
+    const configArgPath =
+      configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
+
     const targetInfo = getTargetInfo(targetPath);
-    const info = getInfo(projectPath, undefined, targetInfo);
+    const info = getInfo(projectPath, undefined, targetInfo, configArgPath);
 
     const artifacts: Artifact[] = [];
     if (includeRelease) {
