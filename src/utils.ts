@@ -6,7 +6,7 @@ import { parse as parseToml } from '@iarna/toml';
 import { sync as globSync } from 'glob-gitignore';
 import ignore from 'ignore';
 
-import { getConfig, mergePlatformConfig } from './config';
+import { getConfig, mergePlatformConfig, mergeUserConfig } from './config';
 
 import type { CargoManifest, Info, TargetInfo, TargetPlatform } from './types';
 
@@ -154,7 +154,8 @@ export function execCommand(
 export function getInfo(
   root: string,
   inConfigPath?: string,
-  targetInfo?: TargetInfo
+  targetInfo?: TargetInfo,
+  configFlag?: string
 ): Info {
   const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
@@ -166,6 +167,9 @@ export function getInfo(
     const config = getConfig(tauriDir, inConfigPath);
     if (targetInfo) {
       mergePlatformConfig(config, tauriDir, targetInfo.platform);
+    }
+    if (configFlag) {
+      mergeUserConfig(config, configFlag);
     }
 
     if (config.package) {

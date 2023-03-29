@@ -81,31 +81,18 @@ export function mergePlatformConfig(
   }
 }
 
+/// This modifies baseConfig in-place!
+export function mergeUserConfig(baseConfig: TauriConfig, configPath: string) {
+  const config = readCustomConfig(configPath);
+
+  if (config) {
+    merge(baseConfig, config);
+  }
+}
+
 export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
   if (customPath) {
-    if (!existsSync(customPath)) {
-      throw `Provided config path \`${customPath}\` does not exist.`;
-    }
-
-    const contents = readFileSync(customPath).toString();
-    const ext = path.extname(customPath);
-
-    if (ext === '.json') {
-      const config = _tryParseJsonConfig(contents);
-      if (config) return config;
-    }
-
-    if (ext === '.json5') {
-      const config = _tryParseJson5Config(contents);
-      if (config) return config;
-    }
-
-    if (ext === '.toml') {
-      const config = _tryParseTomlConfig(contents);
-      if (config) return config;
-    }
-
-    throw `Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`;
+    return readCustomConfig(customPath);
   }
 
   if (existsSync(join(tauriDir, 'tauri.conf.json'))) {
@@ -134,4 +121,30 @@ export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
   }
 
   throw "Couldn't locate or parse tauri config.";
+}
+
+function readCustomConfig(customPath: string) {
+  if (!existsSync(customPath)) {
+    throw `Provided config path \`${customPath}\` does not exist.`;
+  }
+
+  const contents = readFileSync(customPath).toString();
+  const ext = path.extname(customPath);
+
+  if (ext === '.json') {
+    const config = _tryParseJsonConfig(contents);
+    if (config) return config;
+  }
+
+  if (ext === '.json5') {
+    const config = _tryParseJson5Config(contents);
+    if (config) return config;
+  }
+
+  if (ext === '.toml') {
+    const config = _tryParseTomlConfig(contents);
+    if (config) return config;
+  }
+
+  throw `Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`;
 }
