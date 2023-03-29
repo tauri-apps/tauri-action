@@ -34,8 +34,8 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: 16.18.21
-    version: 16.18.21
+    specifier: 16.18.22
+    version: 16.18.22
   '@typescript-eslint/eslint-plugin':
     specifier: 5.57.0
     version: 5.57.0(@typescript-eslint/parser@5.57.0)(eslint@8.36.0)(typescript@5.0.2)
@@ -410,8 +410,8 @@ packages:
       '@types/unist': 2.0.6
     dev: true
 
-  /@types/node@16.18.21:
-    resolution: {integrity: sha512-TassPGd0AEZWA10qcNnXnSNwHlLfSth8XwUaWc3gTSDmBz/rKb613Qw5qRf6o2fdRBrLbsgeC9PMZshobkuUqg==}
+  /@types/node@16.18.22:
+    resolution: {integrity: sha512-LJSIirgASa1LicFGTUFwDY7BfKDtLIbijqDLkH47LxEo/jtdrtiZ4/kLPD99bEQhTcPcuh6KhDllHqRxygJD2w==}
     dev: true
 
   /@types/semver@7.3.13:
