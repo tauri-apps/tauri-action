@@ -27,6 +27,7 @@ async function run(): Promise<void> {
     const iconPath = core.getInput('iconPath');
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
+    const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
     const bundleIdentifier = core.getInput('bundleIdentifier');
@@ -146,15 +147,19 @@ async function run(): Promise<void> {
           i++;
         }
       }
+
       await uploadReleaseAssets(releaseId, artifacts);
-      await uploadVersionJSON({
-        version: info.version,
-        notes: body,
-        tagName,
-        releaseId,
-        artifacts,
-        targetInfo,
-      });
+
+      if (includeUpdaterJson) {
+        await uploadVersionJSON({
+          version: info.version,
+          notes: body,
+          tagName,
+          releaseId,
+          artifacts,
+          targetInfo,
+        });
+      }
     }
   } catch (error) {
     // @ts-ignore
