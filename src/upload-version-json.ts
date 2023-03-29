@@ -79,14 +79,6 @@ export async function uploadVersionJSON({
     versionContent.platforms = JSON.parse(
       Buffer.from(assetData).toString()
     ).platforms;
-
-    // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
-    await github.rest.repos.deleteReleaseAsset({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      release_id: releaseId,
-      asset_id: asset.id,
-    });
   }
 
   const sigFile = artifacts.find((s) => s.path.endsWith('.sig'));
@@ -128,17 +120,29 @@ export async function uploadVersionJSON({
       signature: readFileSync(sigFile.path).toString(),
       url: downloadUrl,
     };
+
+    writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
+
+    if (asset) {
+      // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
+      await github.rest.repos.deleteReleaseAsset({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        release_id: releaseId,
+        asset_id: asset.id,
+      });
+    }
+
+    console.log(`Uploading ${versionFile}...`);
+    await uploadAssets(releaseId, [{ path: versionFile, arch: '' }]);
   } else {
     const missing = downloadUrl
       ? 'Signature'
       : sigFile
       ? 'Asset'
       : 'Asset and signature';
-    console.warn(`${missing} not found for the updater JSON.`);
+    console.warn(
+      `${missing} not found for the updater JSON. Skipping upload...`
+    );
   }
-
-  writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
-
-  console.log(`Uploading ${versionFile}...`);
-  await uploadAssets(releaseId, [{ path: versionFile, arch: '' }]);
 }
