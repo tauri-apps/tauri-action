@@ -191,12 +191,12 @@ jobs:
 
 These inputs are _typically_ only used if your GitHub repo does not contain an existing Tauri project and you want the action to initialize it for you.
 
-| Name               |          Required          | Description                                                                         | Type   | Default |
-| ------------------ | :------------------------: | ----------------------------------------------------------------------------------- | ------ | ------- |
-| `projectPath`      |           false            | The path to the root of the tauri project relative to the current working directory | string | .       |
-| `distPath`         |           false            | Path to the distributable folder with your index.html and JS/CSS                    | string |         |
-| `iconPath`         |           false            | path to the PNG icon to use as app icon, relative to the projectPath                | string |         |
-| `bundleIdentifier` | yes, if not set via config | the bundle identifier to inject when initializing the Tauri app                     | string |         |
+| Name               |           Required           | Description                                                                         | Type   | Default |
+| ------------------ | :--------------------------: | ----------------------------------------------------------------------------------- | ------ | ------- |
+| `projectPath`      |            false             | The path to the root of the tauri project relative to the current working directory | string | .       |
+| `distPath`         |            false             | Path to the distributable folder with your index.html and JS/CSS                    | string |         |
+| `iconPath`         |            false             | path to the PNG icon to use as app icon, relative to the projectPath                | string |         |
+| `bundleIdentifier` | yes, if not set via --config | the bundle identifier to inject when initializing the Tauri app                     | string |         |
 
 ### Build Options
 
