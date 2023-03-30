@@ -33,12 +33,12 @@ export async function buildProject(
   const configArgIdx = [...tauriArgs].findIndex(
     (e) => e === '-c' || e === '--config'
   );
-  const configArgPath =
+  const configArg =
     configArgIdx >= 0 ? [...tauriArgs][configArgIdx + 1] : undefined;
 
   const targetInfo = getTargetInfo(targetPath);
 
-  const info = getInfo(root, targetInfo, configArgPath);
+  const info = getInfo(root, targetInfo, configArg);
 
   const app = info.tauriPath
     ? {

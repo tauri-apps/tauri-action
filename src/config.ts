@@ -82,8 +82,12 @@ export function mergePlatformConfig(
 }
 
 /// This modifies baseConfig in-place!
-export function mergeUserConfig(baseConfig: TauriConfig, configPath: string) {
-  const config = readCustomConfig(configPath);
+export function mergeUserConfig(baseConfig: TauriConfig, mergeConfig: string) {
+  let config = _tryParseJsonConfig(mergeConfig);
+
+  if (!config) {
+    config = readCustomConfig(mergeConfig);
+  }
 
   if (config) {
     merge(baseConfig, config);

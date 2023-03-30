@@ -61,11 +61,11 @@ async function run(): Promise<void> {
     const configArgIdx = [...args].findIndex(
       (e) => e === '-c' || e === '--config'
     );
-    const configArgPath =
+    const configArg =
       configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
 
     const targetInfo = getTargetInfo(targetPath);
-    const info = getInfo(projectPath, targetInfo, configArgPath);
+    const info = getInfo(projectPath, targetInfo, configArg);
 
     const artifacts: Artifact[] = [];
     if (includeRelease) {
