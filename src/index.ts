@@ -19,10 +19,6 @@ async function run(): Promise<void> {
       process.cwd(),
       core.getInput('projectPath') || process.argv[2]
     );
-    const configPath = join(
-      projectPath,
-      core.getInput('configPath') || 'tauri.conf.json'
-    );
     const distPath = core.getInput('distPath');
     const iconPath = core.getInput('iconPath');
     const includeRelease = core.getBooleanInput('includeRelease');
@@ -49,7 +45,6 @@ async function run(): Promise<void> {
     }
 
     const options: BuildOptions = {
-      configPath: existsSync(configPath) ? configPath : undefined,
       distPath,
       iconPath,
       tauriScript,
@@ -70,7 +65,7 @@ async function run(): Promise<void> {
       configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
 
     const targetInfo = getTargetInfo(targetPath);
-    const info = getInfo(projectPath, undefined, targetInfo, configArgPath);
+    const info = getInfo(projectPath, targetInfo, configArgPath);
 
     const artifacts: Artifact[] = [];
     if (includeRelease) {

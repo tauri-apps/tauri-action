@@ -153,7 +153,6 @@ export function execCommand(
 
 export function getInfo(
   root: string,
-  inConfigPath?: string,
   targetInfo?: TargetInfo,
   configFlag?: string
 ): Info {
@@ -164,7 +163,7 @@ export function getInfo(
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
 
-    const config = getConfig(tauriDir, inConfigPath);
+    const config = getConfig(tauriDir);
     if (targetInfo) {
       mergePlatformConfig(config, tauriDir, targetInfo.platform);
     }

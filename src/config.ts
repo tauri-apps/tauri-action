@@ -90,10 +90,12 @@ export function mergeUserConfig(baseConfig: TauriConfig, configPath: string) {
   }
 }
 
-export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
-  if (customPath) {
+export function getConfig(
+  tauriDir: string /* customPath?: string */
+): TauriConfig {
+  /* if (customPath) {
     return readCustomConfig(customPath);
-  }
+  } */
 
   if (existsSync(join(tauriDir, 'tauri.conf.json'))) {
     const contents = readFileSync(join(tauriDir, 'tauri.conf.json')).toString();
