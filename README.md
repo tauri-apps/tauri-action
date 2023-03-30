@@ -191,23 +191,25 @@ jobs:
 
 These inputs are _typically_ only used if your GitHub repo does not contain an existing Tauri project and you want the action to initialize it for you.
 
-| Name          | Required | Description                                                                                 | Type   | Default         |
-| ------------- | :------: | ------------------------------------------------------------------------------------------- | ------ | --------------- |
-| `projectPath` |  false   | The path to the root of the tauri project relative to the current working directory         | string | .               |
-| `configPath`  |  false   | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json |
-| `distPath`    |  false   | Path to the distributable folder with your index.html and JS/CSS                            | string |                 |
-| `iconPath`    |  false   | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                 |
+| Name               |             Required             | Description                                                                                 | Type   | Default         |
+| ------------------ | :------------------------------: | ------------------------------------------------------------------------------------------- | ------ | --------------- |
+| `projectPath`      |              false               | The path to the root of the tauri project relative to the current working directory         | string | .               |
+| `configPath`       |              false               | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json |
+| `distPath`         |              false               | Path to the distributable folder with your index.html and JS/CSS                            | string |                 |
+| `iconPath`         |              false               | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                 |
+| `bundleIdentifier` | yes, if not changed via --config | the bundle identifier to inject when initializing the Tauri app                             | string |                 |
 
 ### Build Options
 
 These inputs allow you to change how your Tauri project will be build.
 
-| Name             | Required | Description                                                                                | Type   | Default                     |
-| ---------------- | :------: | ------------------------------------------------------------------------------------------ | ------ | --------------------------- |
-| `includeDebug`   |  false   | whether to include a debug build or not                                                    | bool   | false                       |
-| `includeRelease` |  false   | whether to include a release build or not                                                  | bool   | true                        |
-| `tauriScript`    |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build` | string | `npm run\|pnpm\|yarn tauri` |
-| `args`           |  false   | Additional arguments to the current build command                                          | string |                             |
+| Name                 | Required | Description                                                                                       | Type   | Default                     |
+| -------------------- | :------: | ------------------------------------------------------------------------------------------------- | ------ | --------------------------- |
+| `includeDebug`       |  false   | whether to include a debug build or not                                                           | bool   | false                       |
+| `includeRelease`     |  false   | whether to include a release build or not                                                         | bool   | true                        |
+| `includeUpdaterJson` |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured) | bool   | true                        |
+| `tauriScript`        |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build`        | string | `npm run\|pnpm\|yarn tauri` |
+| `args`               |  false   | Additional arguments to the current build command                                                 | string |                             |
 
 ### Release Configuration
 
@@ -235,7 +237,9 @@ These inputs allow you to modify the GitHub release.
 # Caveats
 
 - You can use this Action on a repo that doesn't have Tauri configured. We automatically initialize Tauri before building, and configure it to use your Web artifacts.
-  - You can configure Tauri with the `configPath`, `distPath` and `iconPath` options.
+  - You can configure the project initialization with the `distPath` and `iconPath` options.
+  - If you need to further customize the default `tauri.conf.json` file you can add a custom config that will be merged with the default one at build time.
+    - `args: --config custom-config.json`
 - You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri <COMMAND> <ARGS>` or `npm run tauri <COMMAND> <ARGS>`, we'll execute `${tauriScript} <COMMAND> <ARGS>`.
   - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
   - `tauriScript` can also be an absolute file path pointing to a `tauri-cli` binary. The path currently cannot contain spaces.
