@@ -168,7 +168,7 @@ export function getInfo(
       mergePlatformConfig(config, tauriDir, targetInfo.platform);
     }
     if (configFlag) {
-      mergeUserConfig(config, configFlag);
+      mergeUserConfig(root, config, configFlag);
     }
 
     if (config.package) {
