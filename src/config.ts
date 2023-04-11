@@ -99,6 +99,8 @@ export function mergeUserConfig(
 
   if (config) {
     merge(baseConfig, config);
+  } else {
+    console.error(`Couldn't read --config: ${mergeConfig}`);
   }
 }
 
