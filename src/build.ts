@@ -33,12 +33,12 @@ export async function buildProject(
   const configArgIdx = [...tauriArgs].findIndex(
     (e) => e === '-c' || e === '--config'
   );
-  const configArgPath =
+  const configArg =
     configArgIdx >= 0 ? [...tauriArgs][configArgIdx + 1] : undefined;
 
   const targetInfo = getTargetInfo(targetPath);
 
-  const info = getInfo(root, buildOpts.configPath, targetInfo, configArgPath);
+  const info = getInfo(root, targetInfo, configArg);
 
   const app = info.tauriPath
     ? {
@@ -49,17 +49,6 @@ export async function buildProject(
         wixLanguage: info.wixLanguage,
       }
     : await initProject(root, runner, info, buildOpts);
-
-  const tauriConfPath = join(app.tauriPath, 'tauri.conf.json');
-  if (buildOpts.configPath) {
-    copyFileSync(buildOpts.configPath, tauriConfPath);
-  }
-
-  if (buildOpts.distPath) {
-    const tauriConf = JSON.parse(readFileSync(tauriConfPath).toString());
-    tauriConf.build.distDir = buildOpts.distPath;
-    writeFileSync(tauriConfPath, JSON.stringify(tauriConf));
-  }
 
   let buildCommand;
   if (hasDependency('vue-cli-plugin-tauri', root)) {

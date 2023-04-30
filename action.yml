@@ -23,9 +23,6 @@ inputs:
   projectPath:
     description: 'path to the root of the project that will be built'
     default: '.'
-  configPath:
-    description: 'path to the tauri.conf.json file if you want a configuration different from the default one'
-    default: 'tauri.conf.json'
   distPath:
     description: 'path to the distributable folder with your index.html and JS/CSS'
   iconPath:

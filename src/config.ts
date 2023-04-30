@@ -82,18 +82,34 @@ export function mergePlatformConfig(
 }
 
 /// This modifies baseConfig in-place!
-export function mergeUserConfig(baseConfig: TauriConfig, configPath: string) {
-  const config = readCustomConfig(configPath);
+export function mergeUserConfig(
+  root: string,
+  baseConfig: TauriConfig,
+  mergeConfig: string
+) {
+  let config = _tryParseJsonConfig(mergeConfig);
+
+  if (!config) {
+    const configPath = path.isAbsolute(mergeConfig)
+      ? mergeConfig
+      : path.join(root, mergeConfig);
+
+    config = readCustomConfig(configPath);
+  }
 
   if (config) {
     merge(baseConfig, config);
+  } else {
+    console.error(`Couldn't read --config: ${mergeConfig}`);
   }
 }
 
-export function getConfig(tauriDir: string, customPath?: string): TauriConfig {
-  if (customPath) {
+export function getConfig(
+  tauriDir: string /* customPath?: string */
+): TauriConfig {
+  /* if (customPath) {
     return readCustomConfig(customPath);
-  }
+  } */
 
   if (existsSync(join(tauriDir, 'tauri.conf.json'))) {
     const contents = readFileSync(join(tauriDir, 'tauri.conf.json')).toString();

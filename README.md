@@ -191,13 +191,12 @@ jobs:
 
 These inputs are _typically_ only used if your GitHub repo does not contain an existing Tauri project and you want the action to initialize it for you.
 
-| Name               |             Required             | Description                                                                                 | Type   | Default         |
-| ------------------ | :------------------------------: | ------------------------------------------------------------------------------------------- | ------ | --------------- |
-| `projectPath`      |              false               | The path to the root of the tauri project relative to the current working directory         | string | .               |
-| `configPath`       |              false               | Path to the tauri.conf.json file if you want a configuration different from the default one | string | tauri.conf.json |
-| `distPath`         |              false               | Path to the distributable folder with your index.html and JS/CSS                            | string |                 |
-| `iconPath`         |              false               | path to the PNG icon to use as app icon, relative to the projectPath                        | string |                 |
-| `bundleIdentifier` | yes, if not changed via --config | the bundle identifier to inject when initializing the Tauri app                             | string |                 |
+| Name               |           Required           | Description                                                                         | Type   | Default |
+| ------------------ | :--------------------------: | ----------------------------------------------------------------------------------- | ------ | ------- |
+| `projectPath`      |            false             | The path to the root of the tauri project relative to the current working directory | string | .       |
+| `distPath`         |            false             | Path to the distributable folder with your index.html and JS/CSS                    | string |         |
+| `iconPath`         |            false             | path to the PNG icon to use as app icon, relative to the projectPath                | string |         |
+| `bundleIdentifier` | yes, if not set via --config | the bundle identifier to inject when initializing the Tauri app                     | string |         |
 
 ### Build Options
 
@@ -205,6 +204,7 @@ These inputs allow you to change how your Tauri project will be build.
 
 | Name                 | Required | Description                                                                                       | Type   | Default                     |
 | -------------------- | :------: | ------------------------------------------------------------------------------------------------- | ------ | --------------------------- |
+| `projectPath`        |  false   | The path to the root of the tauri project relative to the current working directory               | string | .                           |
 | `includeDebug`       |  false   | whether to include a debug build or not                                                           | bool   | false                       |
 | `includeRelease`     |  false   | whether to include a release build or not                                                         | bool   | true                        |
 | `includeUpdaterJson` |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured) | bool   | true                        |
@@ -246,4 +246,5 @@ These inputs allow you to modify the GitHub release.
 - If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
 - When your Tauri app is not in the root of the repo, use the `projectPath` input.
   - Usually it will work without it, but the action will install and use a global `@tauri-apps/cli` installation instead of your project's CLI which can cause issues if you also configured `tauriScript` or if you have multiple `tauri.conf.json` files in your repo.
+  - Additionally, relative paths provided via the `--config` flag will be resolved relative to the `projectPath` to match Tauri's behavior.
 - If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
