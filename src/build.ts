@@ -132,6 +132,25 @@ export async function buildProject(
       );
     });
 
+    winArtifacts.push(
+      join(
+        artifactsPath,
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe`
+      )
+    );
+    winArtifacts.push(
+      join(
+        artifactsPath,
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe.zip`
+      )
+    );
+    winArtifacts.push(
+      join(
+        artifactsPath,
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe.zip.sig`
+      )
+    );
+
     artifacts = winArtifacts.map((path) => ({ path, arch }));
   } else {
     const debianArch =
