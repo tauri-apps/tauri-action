@@ -22,8 +22,8 @@ export const extensions = [
   '.msi.zip.sig',
   '.msi.zip',
   '.msi',
-  '.exe.zip.sig',
-  '.exe.zip',
+  '.nsis.zip.sig',
+  '.nsis.zip',
   '.exe',
 ];
 

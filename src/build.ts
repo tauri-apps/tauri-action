@@ -141,13 +141,13 @@ export async function buildProject(
     winArtifacts.push(
       join(
         artifactsPath,
-        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe.zip`
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip`
       )
     );
     winArtifacts.push(
       join(
         artifactsPath,
-        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe.zip.sig`
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip.sig`
       )
     );
 

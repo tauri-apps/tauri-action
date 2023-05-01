@@ -84,9 +84,7 @@ export async function uploadVersionJSON({
   }
 
   let sigFile = artifacts.find((s) =>
-    s.path.endsWith(
-      updaterJsonPreferNsis ? '-setup.exe.zip.sig' : 'msi.zip.sig'
-    )
+    s.path.endsWith(updaterJsonPreferNsis ? '.nsis.zip.sig' : 'msi.zip.sig')
   );
 
   if (!sigFile) {
@@ -100,7 +98,7 @@ export async function uploadVersionJSON({
   {
     const filteredAssets = assets.data.filter((e) => assetNames.has(e.name));
     const filtAsset = filteredAssets.find((s) =>
-      s.name.endsWith(updaterJsonPreferNsis ? '-setup.exe.zip' : '.msi.zip')
+      s.name.endsWith(updaterJsonPreferNsis ? '.nsis.zip' : '.msi.zip')
     );
     if (filtAsset) {
       downloadUrl = filtAsset.browser_download_url;
