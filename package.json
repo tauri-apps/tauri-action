@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "build": "ncc build src/index.ts -o dist -m",
-    "lint": "eslint src/**"
+    "lint": "eslint src/**",
+    "format": "prettier -w src/** action.yml README.md"
   },
   "repository": {
     "type": "git",
