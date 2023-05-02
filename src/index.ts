@@ -23,6 +23,9 @@ async function run(): Promise<void> {
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
+    const updaterJsonKeepUniversal = core.getBooleanInput(
+      'updaterJsonKeepUniversal'
+    );
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
     const bundleIdentifier = core.getInput('bundleIdentifier');
@@ -152,6 +155,7 @@ async function run(): Promise<void> {
           releaseId,
           artifacts,
           targetInfo,
+          updaterJsonKeepUniversal,
         });
       }
     }
