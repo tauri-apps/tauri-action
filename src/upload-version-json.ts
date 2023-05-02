@@ -1,5 +1,4 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { platform } from 'os';
 import { resolve } from 'path';
 
 import { getOctokit, context } from '@actions/github';

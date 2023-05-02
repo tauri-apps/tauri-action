@@ -1,6 +1,5 @@
 import { existsSync } from 'fs';
-import { platform } from 'os';
-import { join, resolve, dirname, basename } from 'path';
+import { resolve, dirname, basename } from 'path';
 
 import * as core from '@actions/core';
 import stringArgv from 'string-argv';
