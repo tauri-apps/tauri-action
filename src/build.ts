@@ -203,7 +203,7 @@ export async function buildProject(
   }
 
   console.log(
-    `Expected artifacts paths:\n${artifacts.map((a) => a.path).join('\n')}`
+    `Looking for artifacts in:\n${artifacts.map((a) => a.path).join('\n')}`
   );
   return artifacts.filter((p) => existsSync(p.path));
 }
