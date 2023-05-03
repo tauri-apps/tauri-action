@@ -36,6 +36,9 @@ inputs:
   includeUpdaterJson:
     description: 'whether to upload a static JSON file for the updater using GitHub Releases as the CDN'
     default: true
+  updaterJsonKeepUniversal:
+    description: 'whether the updater JSON file should add universal macOS as darwin-universal. By default it will add darwin-aarch64 and darwin-x86_64 fields pointing to the universal build if no native builds exist.'
+    default: false
   tauriScript:
     description: 'the script to run to build the Tauri app'
   args:

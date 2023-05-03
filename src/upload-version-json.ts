@@ -1,5 +1,4 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { platform } from 'os';
 import { resolve } from 'path';
 
 import { getOctokit, context } from '@actions/github';
@@ -30,6 +29,7 @@ export async function uploadVersionJSON({
   releaseId,
   artifacts,
   targetInfo,
+  updaterJsonKeepUniversal,
 }: {
   version: string;
   notes: string;
@@ -37,6 +37,7 @@ export async function uploadVersionJSON({
   releaseId: number;
   artifacts: Artifact[];
   targetInfo: TargetInfo;
+  updaterJsonKeepUniversal: boolean;
 }) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -115,11 +116,27 @@ export async function uploadVersionJSON({
         ? 'aarch64'
         : arch;
 
-    // https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
-    (versionContent.platforms[`${os}-${arch}`] as unknown) = {
-      signature: readFileSync(sigFile.path).toString(),
-      url: downloadUrl,
-    };
+    // Expected targets: https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
+    if (!updaterJsonKeepUniversal && os === 'darwin' && arch === 'universal') {
+      // Don't overwrite native builds
+      if (!versionContent.platforms['darwin-aarch64']) {
+        (versionContent.platforms['darwin-aarch64'] as unknown) = {
+          signature: readFileSync(sigFile.path).toString(),
+          url: downloadUrl,
+        };
+      }
+      if (!versionContent.platforms['darwin-x86_64']) {
+        (versionContent.platforms['darwin-x86_64'] as unknown) = {
+          signature: readFileSync(sigFile.path).toString(),
+          url: downloadUrl,
+        };
+      }
+    } else {
+      (versionContent.platforms[`${os}-${arch}`] as unknown) = {
+        signature: readFileSync(sigFile.path).toString(),
+        url: downloadUrl,
+      };
+    }
 
     writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
 
