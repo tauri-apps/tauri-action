@@ -38,6 +38,13 @@ async function run(): Promise<void> {
     const prerelease = core.getBooleanInput('prerelease');
     const commitish = core.getInput('releaseCommitish') || null;
 
+    // TODO: Change its default to true for v2 apps
+    // Not using getBooleanInput so we can differentiate between true,false,unset later.
+    const updaterJsonPreferNsis =
+      core.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true'
+        ? true
+        : false;
+
     if (!releaseId) {
       if (Boolean(tagName) !== Boolean(releaseName)) {
         throw new Error(
@@ -155,6 +162,7 @@ async function run(): Promise<void> {
           releaseId,
           artifacts,
           targetInfo,
+          updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
         });
       }

@@ -36,6 +36,8 @@ inputs:
   includeUpdaterJson:
     description: 'whether to upload a static JSON file for the updater using GitHub Releases as the CDN'
     default: true
+  updaterJsonPreferNsis:
+    description: 'whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist. Will default to false for Tauri v1 and true for Tauri v2+'
   updaterJsonKeepUniversal:
     description: 'whether the updater JSON file should add universal macOS as darwin-universal. By default it will add darwin-aarch64 and darwin-x86_64 fields pointing to the universal build if no native builds exist.'
     default: false

@@ -29,6 +29,7 @@ export async function uploadVersionJSON({
   releaseId,
   artifacts,
   targetInfo,
+  updaterJsonPreferNsis,
   updaterJsonKeepUniversal,
 }: {
   version: string;
@@ -37,6 +38,7 @@ export async function uploadVersionJSON({
   releaseId: number;
   artifacts: Artifact[];
   targetInfo: TargetInfo;
+  updaterJsonPreferNsis: boolean;
   updaterJsonKeepUniversal: boolean;
 }) {
   if (process.env.GITHUB_TOKEN === undefined) {
@@ -82,15 +84,31 @@ export async function uploadVersionJSON({
     ).platforms;
   }
 
-  const sigFile = artifacts.find((s) => s.path.endsWith('.sig'));
+  let sigFile = artifacts.find((s) =>
+    s.path.endsWith(updaterJsonPreferNsis ? '.nsis.zip.sig' : 'msi.zip.sig')
+  );
+
+  if (!sigFile) {
+    sigFile = artifacts.find((s) => s.path.endsWith('.sig'));
+  }
+
   const assetNames = new Set(
     artifacts.map((p) => getAssetName(p.path).trim().replace(/ /g, '.')) // GitHub replaces spaces in asset names with dots
   );
-  let downloadUrl = assets.data
-    .filter((e) => assetNames.has(e.name))
-    .find(
-      (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip')
-    )?.browser_download_url;
+  let downloadUrl;
+  {
+    const filteredAssets = assets.data.filter((e) => assetNames.has(e.name));
+    const filtAsset = filteredAssets.find((s) =>
+      s.name.endsWith(updaterJsonPreferNsis ? '.nsis.zip' : '.msi.zip')
+    );
+    if (filtAsset) {
+      downloadUrl = filtAsset.browser_download_url;
+    } else {
+      downloadUrl = filteredAssets.find(
+        (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip')
+      )?.browser_download_url;
+    }
+  }
 
   // Untagged release downloads won't work after the release was published
   downloadUrl = downloadUrl?.replace(

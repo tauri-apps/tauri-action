@@ -132,6 +132,25 @@ export async function buildProject(
       );
     });
 
+    winArtifacts.push(
+      join(
+        artifactsPath,
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe`
+      )
+    );
+    winArtifacts.push(
+      join(
+        artifactsPath,
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip`
+      )
+    );
+    winArtifacts.push(
+      join(
+        artifactsPath,
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip.sig`
+      )
+    );
+
     artifacts = winArtifacts.map((path) => ({ path, arch }));
   } else {
     const debianArch =
@@ -184,7 +203,7 @@ export async function buildProject(
   }
 
   console.log(
-    `Expected artifacts paths:\n${artifacts.map((a) => a.path).join('\n')}`
+    `Looking for artifacts in:\n${artifacts.map((a) => a.path).join('\n')}`
   );
   return artifacts.filter((p) => existsSync(p.path));
 }
