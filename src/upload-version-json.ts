@@ -135,7 +135,7 @@ export async function uploadVersionJSON({
         : arch;
 
     // Expected targets: https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
-    if (!updaterJsonKeepUniversal && os === 'darwin' && arch === 'universal') {
+    if (os === 'darwin' && arch === 'universal') {
       // Don't overwrite native builds
       if (!versionContent.platforms['darwin-aarch64']) {
         (versionContent.platforms['darwin-aarch64'] as unknown) = {
@@ -149,7 +149,8 @@ export async function uploadVersionJSON({
           url: downloadUrl,
         };
       }
-    } else {
+    }
+    if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
       (versionContent.platforms[`${os}-${arch}`] as unknown) = {
         signature: readFileSync(sigFile.path).toString(),
         url: downloadUrl,
