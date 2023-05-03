@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, copyFileSync, writeFileSync } from 'fs';
+import { existsSync } from 'fs';
 import { join } from 'path';
 
 import { initProject } from './init-project';

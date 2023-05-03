@@ -1,6 +1,5 @@
 import { existsSync } from 'fs';
-import { platform } from 'os';
-import { join, resolve, dirname, basename } from 'path';
+import { resolve, dirname, basename } from 'path';
 
 import * as core from '@actions/core';
 import stringArgv from 'string-argv';
@@ -24,6 +23,9 @@ async function run(): Promise<void> {
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
+    const updaterJsonKeepUniversal = core.getBooleanInput(
+      'updaterJsonKeepUniversal'
+    );
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
     const bundleIdentifier = core.getInput('bundleIdentifier');
@@ -161,6 +163,7 @@ async function run(): Promise<void> {
           artifacts,
           targetInfo,
           updaterJsonPreferNsis,
+          updaterJsonKeepUniversal,
         });
       }
     }
