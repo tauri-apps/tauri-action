@@ -1,5 +1,38 @@
 # Changelog
 
+## \[0.4.0]
+
+- Add the paths of generated artifacts as an action output.
+  - [40e660a](https://www.github.com/tauri-apps/tauri-action/commit/40e660a8ca7dc5e7f5f67710a0212887163c5450) add artifact paths to action output ([#343](https://www.github.com/tauri-apps/tauri-action/pull/343)) on 2022-12-15
+- **Breaking change**: Remove broken `configPath` argument in favor of `--config` flag.
+  - [240732d](https://www.github.com/tauri-apps/tauri-action/commit/240732d2e73e8144d86d386f61a1a27662710a07) fix!: remove broken `configPath` option ([#428](https://www.github.com/tauri-apps/tauri-action/pull/428)) on 2023-04-30
+- Correctly handle `--target` option in `args` input.
+  - [a99d0ba](https://www.github.com/tauri-apps/tauri-action/commit/a99d0bae58a558b23da95394a2a38122574b0f78) feat: Support `--target` input in `args` ([#301](https://www.github.com/tauri-apps/tauri-action/pull/301)) on 2022-10-31
+  - [c5c0e27](https://www.github.com/tauri-apps/tauri-action/commit/c5c0e27d68a6b6fe1781c02001eaf1596bebe07b) refactor: Merge workspace into single package. ([#362](https://www.github.com/tauri-apps/tauri-action/pull/362)) on 2023-02-06
+- Automatically generate `latest.json` file for Tauri's updater using the GitHub release as a CDN.
+  - [2846fa8](https://www.github.com/tauri-apps/tauri-action/commit/2846fa8fccaf00cb3d9b3433d18dd7bde8006a22) fix: Replace spaces in asset name with dots, fixes [#345](https://www.github.com/tauri-apps/tauri-action/pull/345) ([#374](https://www.github.com/tauri-apps/tauri-action/pull/374)) on 2023-02-06
+- Replace `_` and `.` with `-` in the product name on Linux.
+  - [87ceccd](https://www.github.com/tauri-apps/tauri-action/commit/87ceccdc2e3b936d18cefef2ef03c96361b353ce) fix: fileAppName on Linux. Extends [#293](https://www.github.com/tauri-apps/tauri-action/pull/293) ([#310](https://www.github.com/tauri-apps/tauri-action/pull/310)) on 2022-10-08
+  - [c5c0e27](https://www.github.com/tauri-apps/tauri-action/commit/c5c0e27d68a6b6fe1781c02001eaf1596bebe07b) refactor: Merge workspace into single package. ([#362](https://www.github.com/tauri-apps/tauri-action/pull/362)) on 2023-02-06
+- The action will now use `npm run tauri` instead of `npx tauri` to prevent issues in npm workspaces.
+  - [a778402](https://www.github.com/tauri-apps/tauri-action/commit/a778402ba7c66b8a6c7c3ce0a6b9978e867936b5) fix: switch from npx to npm run, closes [#367](https://www.github.com/tauri-apps/tauri-action/pull/367) ([#387](https://www.github.com/tauri-apps/tauri-action/pull/387)) on 2023-03-08
+- Fixes usage with `vue-cli-plugin-tauri`.
+  - [f7dcc97](https://www.github.com/tauri-apps/tauri-action/commit/f7dcc97c2dbce3e806c3e72c34ff08fd31dd191e) fix(core): vue-cli-plugin-tauri usage, closes [#288](https://www.github.com/tauri-apps/tauri-action/pull/288) ([#289](https://www.github.com/tauri-apps/tauri-action/pull/289)) on 2022-07-05
+  - [c5c0e27](https://www.github.com/tauri-apps/tauri-action/commit/c5c0e27d68a6b6fe1781c02001eaf1596bebe07b) refactor: Merge workspace into single package. ([#362](https://www.github.com/tauri-apps/tauri-action/pull/362)) on 2023-02-06
+- Correctly handle universal macOS builds in the updater JSON file. The action will now fill out the darwin-aarch64 and darwin-x86\_64 fields with the universal builds. It will always prefer native targets for the respective fields if they exist. Additionaly there's a config to tell the updater to also include a separate darwin-universal field on top of the native fields.
+  - [91a6560](https://www.github.com/tauri-apps/tauri-action/commit/91a6560a1665d2cdeaa2964a42b41b8b811f6b88) feat: Handle universal macos in updater json, closes [#444](https://www.github.com/tauri-apps/tauri-action/pull/444) ([#447](https://www.github.com/tauri-apps/tauri-action/pull/447)) on 2023-05-03
+  - [fa82b53](https://www.github.com/tauri-apps/tauri-action/commit/fa82b5395accba7944d99014e1a1486b6f084ae3) fix(json): always fill out native macos fields on 2023-05-03
+- Add support for the NSIS bundle type introduced in Tauri v1.3. Add setting to switch between nsis and msi in the updater json file.
+  - [0ba09ea](https://www.github.com/tauri-apps/tauri-action/commit/0ba09ea554502706c8860b6b2b433a3c42a4d559) feat: Handle nsis builds, closes [#436](https://www.github.com/tauri-apps/tauri-action/pull/436) ([#446](https://www.github.com/tauri-apps/tauri-action/pull/446)) on 2023-05-03
+- Automatically read platform specific tauri config files.
+  - [4c72e78](https://www.github.com/tauri-apps/tauri-action/commit/4c72e78a8e3c6cd564986c6cec3f2a437ee9c1d1) feat: read platform specific tauri configs ([#399](https://www.github.com/tauri-apps/tauri-action/pull/399)) on 2023-03-21
+- Automatically read configs provided via the `-c`/`--config` argument.
+  - [2a4a05a](https://www.github.com/tauri-apps/tauri-action/commit/2a4a05a57f182af4b91357d151349822961d45c2) feat: Read --config arg, closes [#346](https://www.github.com/tauri-apps/tauri-action/pull/346) ([#422](https://www.github.com/tauri-apps/tauri-action/pull/422)) on 2023-03-29
+- Add support for Tauri's toml-based config (`Tauri.toml`).
+  - [06b006d](https://www.github.com/tauri-apps/tauri-action/commit/06b006d1096e9dfb763fea30f206284f909e01a2) feat: Add support for `Tauri.toml` config ([#375](https://www.github.com/tauri-apps/tauri-action/pull/375)) on 2023-02-22
+- Add `includeRelease` option to allow disabling release builds.
+  - [5ae9606](https://www.github.com/tauri-apps/tauri-action/commit/5ae96069898c22a98adf95be6472516e102cd14d) feat: Add `includeRelease` option to allow for disabling release builds ([#365](https://www.github.com/tauri-apps/tauri-action/pull/365)) on 2023-02-06
+
 ## \[0.3.1]
 
 - Added the `bundleIdentifier` input to modify Tauri's default bundle identifier when initializing a new Tauri app.
