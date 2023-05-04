@@ -11,7 +11,8 @@
       "getPublishedVersion": "git tag -a -m \"v${ pkgFile.version }\" v${ pkgFile.version } 2>/dev/null || echo ${ pkgFile.version }",
       "postversion": ["pnpm install --no-optional", "pnpm build"],
       "assets": false,
-      "createRelease": true
+      "createRelease": true,
+      "version": true
     }
   }
 }
