@@ -4,11 +4,12 @@
     "action": {
       "path": ".",
       "publish": [
-        "git tag v${ pkgFile.versionMajor } -f",
-        "git tag v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
+        "git tag -a -m \"v${ pkgFile.version }\" v${ pkgFile.version }",
+        "git tag -a -m \"v${ pkgFile.versionMajor }.${ pkgFile.versionMinor }\" v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
+        "git tag -a -m \"v${ pkgFile.versionMajor }\" v${ pkgFile.versionMajor } -f",
         "git push --tags -f"
       ],
-      "getPublishedVersion": "git tag -a -m \"v${ pkgFile.version }\" v${ pkgFile.version } 2>/dev/null || echo ${ pkgFile.version }",
+      "getPublishedVersion": "git tag -l \"v${ pkgFile.version }\"",
       "postversion": ["pnpm install --no-optional", "pnpm build"],
       "assets": false,
       "createRelease": true,
