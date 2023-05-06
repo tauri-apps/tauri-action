@@ -9,7 +9,7 @@
         "git tag -a -m \"v${ pkgFile.versionMajor }\" v${ pkgFile.versionMajor } -f",
         "git push --tags -f"
       ],
-      "getPublishedVersion": "git tag -l \"v${ pkgFile.version }\"",
+      "getPublishedVersion": "git tag -l \"v${ pkgFile.version }\" | sed s/v//",
       "postversion": ["pnpm install --no-optional", "pnpm build"],
       "assets": false,
       "createRelease": true,
