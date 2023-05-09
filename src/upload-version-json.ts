@@ -23,6 +23,8 @@ type VersionContent = {
 };
 
 export async function uploadVersionJSON({
+  owner,
+  repo,
   version,
   notes,
   tagName,
@@ -31,8 +33,6 @@ export async function uploadVersionJSON({
   targetInfo,
   updaterJsonPreferNsis,
   updaterJsonKeepUniversal,
-  owner,
-  repo,
 }: {
   owner: string;
   repo: string;
