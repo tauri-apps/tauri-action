@@ -1,23 +1,21 @@
 import fs from 'fs';
 
-import { getOctokit, context } from '@actions/github';
+import { getOctokit } from '@actions/github';
 
 import { getAssetName } from './utils';
 import type { Artifact } from './types';
 
-export async function uploadAssets(releaseId: number, assets: Artifact[], owner: string|null = null, repo: string|null = null) {
+export async function uploadAssets(
+  owner: string,
+  repo: string,
+  releaseId: number,
+  assets: Artifact[]
+) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }
 
   const github = getOctokit(process.env.GITHUB_TOKEN);
-
-  if (!owner) {
-    owner = context.repo.owner
-  }
-  if (!repo) {
-    repo = context.repo.repo
-  }
 
   const existingAssets = (
     await github.rest.repos.listReleaseAssets({

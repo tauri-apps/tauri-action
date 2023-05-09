@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
-import { getOctokit, context } from '@actions/github';
+import { getOctokit } from '@actions/github';
 
 import { uploadAssets } from './upload-release-assets';
 import { getAssetName } from './utils';
@@ -34,6 +34,8 @@ export async function uploadVersionJSON({
   owner,
   repo,
 }: {
+  owner: string;
+  repo: string;
   version: string;
   notes: string;
   tagName: string;
@@ -42,8 +44,6 @@ export async function uploadVersionJSON({
   targetInfo: TargetInfo;
   updaterJsonPreferNsis: boolean;
   updaterJsonKeepUniversal: boolean;
-  owner: string|null;
-  repo: string|null;
 }) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -59,13 +59,6 @@ export async function uploadVersionJSON({
     pub_date: new Date().toISOString(),
     platforms: {},
   };
-
-  if (!owner) {
-    owner = context.repo.owner
-  }
-  if (!repo) {
-    repo = context.repo.repo
-  }
 
   const assets = await github.rest.repos.listReleaseAssets({
     owner: owner,
@@ -181,7 +174,9 @@ export async function uploadVersionJSON({
     }
 
     console.log(`Uploading ${versionFile}...`);
-    await uploadAssets(releaseId, [{ path: versionFile, arch: '' }], owner, repo);
+    await uploadAssets(owner, repo, releaseId, [
+      { path: versionFile, arch: '' },
+    ]);
   } else {
     const missing = downloadUrl
       ? 'Signature'

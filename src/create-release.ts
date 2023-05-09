@@ -27,14 +27,14 @@ function allReleases(
 }
 
 export async function createRelease(
+  owner: string,
+  repo: string,
   tagName: string,
   releaseName: string,
   body?: string,
   commitish?: string,
   draft = true,
-  prerelease = true,
-  owner: string|null = null,
-  repo: string|null = null,
+  prerelease = true
 ): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -42,15 +42,6 @@ export async function createRelease(
 
   // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
   const github = getOctokit(process.env.GITHUB_TOKEN);
-
-  // Get owner and repo from context of payload that triggered the action
-  if (!owner) {
-    owner = context.repo.owner
-  }
-  if (!repo) {
-    repo = context.repo.repo
-  }
-
 
   const bodyPath = core.getInput('body_path', { required: false });
   let bodyFileContent: string | null = null;

@@ -202,32 +202,32 @@ These inputs are _typically_ only used if your GitHub repo does not contain an e
 
 These inputs allow you to change how your Tauri project will be build.
 
-| Name                       | Required | Description                                                                                                                                                      | Type   | Default                                       |
-|----------------------------|:--------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|-----------------------------------------------|
-| `projectPath`              |  false   | The path to the root of the tauri project relative to the current working directory                                                                              | string | .                                             |
-| `includeDebug`             |  false   | whether to include a debug build or not                                                                                                                          | bool   | false                                         |
-| `includeRelease`           |  false   | whether to include a release build or not                                                                                                                        | bool   | true                                          |
-| `includeUpdaterJson`       |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                                                                | bool   | true                                          |
-| `updaterJsonPreferNsis`    |  false   | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist                                                  | bool   | `false` for Tauri v1 and `true` for Tauri v2+ |
-| `updaterJsonKeepUniversal` |  false   | whether the updater JSON file should include universal macOS builds as darwin-universal on top of using it in the aarch64 and x86_64 fields.                     | bool   | false                                         |
-| `tauriScript`              |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build`                                                                       | string | `npm run\|pnpm\|yarn tauri`                   |
-| `args`                     |  false   | Additional arguments to the current build command                                                                                                                | string |                                               |
-| `owner`                    |  false   | parameter to replace owner, needed to upload the release to another repository, required GITHUB_TOKEN in env and releaseCommitish(target repo, main for example) | string |                                               |
-| `repo`                     |  false   | parameter to replace repo, needed to upload the release to another repository, required GITHUB_TOKEN in env and releaseCommitish(target repo, main for example)  | string |                                               |
+| Name                       | Required | Description                                                                                                                                  | Type   | Default                                       |
+| -------------------------- | :------: | -------------------------------------------------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------- |
+| `projectPath`              |  false   | The path to the root of the tauri project relative to the current working directory                                                          | string | .                                             |
+| `includeDebug`             |  false   | whether to include a debug build or not                                                                                                      | bool   | false                                         |
+| `includeRelease`           |  false   | whether to include a release build or not                                                                                                    | bool   | true                                          |
+| `includeUpdaterJson`       |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                                            | bool   | true                                          |
+| `updaterJsonPreferNsis`    |  false   | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist                              | bool   | `false` for Tauri v1 and `true` for Tauri v2+ |
+| `updaterJsonKeepUniversal` |  false   | whether the updater JSON file should include universal macOS builds as darwin-universal on top of using it in the aarch64 and x86_64 fields. | bool   | false                                         |
+| `tauriScript`              |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build`                                                   | string | `npm run\|pnpm\|yarn tauri`                   |
+| `args`                     |  false   | Additional arguments to the current build command                                                                                            | string |                                               |
 
 ### Release Configuration
 
 These inputs allow you to modify the GitHub release.
 
-| Name               | Required | Description                                                                                | Type   | Default               |
-| ------------------ | :------: | ------------------------------------------------------------------------------------------ | ------ | --------------------- |
-| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                | string |                       |
-| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`   | string |                       |
-| `releaseName`      |  false   | The name of the release to create                                                          | string |                       |
-| `releaseBody`      |  false   | The body of the release to create                                                          | string |                       |
-| `releaseDraft`     |  false   | Whether the release to create is a draft or not                                            | bool   | false                 |
-| `prerelease`       |  false   | Whether the release to create is a prerelease or not                                       | bool   | false                 |
-| `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists | string | SHA of current commit |
+| Name               | Required | Description                                                                                                                                                      | Type   | Default               |
+| ------------------ | :------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | --------------------- |
+| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                                                                                      | string |                       |
+| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`                                                                         | string |                       |
+| `releaseName`      |  false   | The name of the release to create                                                                                                                                | string |                       |
+| `releaseBody`      |  false   | The body of the release to create                                                                                                                                | string |                       |
+| `releaseDraft`     |  false   | Whether the release to create is a draft or not                                                                                                                  | bool   | false                 |
+| `prerelease`       |  false   | Whether the release to create is a prerelease or not                                                                                                             | bool   | false                 |
+| `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists                                                                       | string | SHA of current commit |
+| `owner`            |  false   | parameter to replace owner, needed to upload the release to another repository, required GITHUB_TOKEN in env and releaseCommitish(target repo, main for example) | string |                       |
+| `repo`             |  false   | parameter to replace repo, needed to upload the release to another repository, required GITHUB_TOKEN in env and releaseCommitish(target repo, main for example)  | string |                       |
 
 ## Outputs
 
