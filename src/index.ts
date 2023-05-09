@@ -37,6 +37,8 @@ async function run(): Promise<void> {
     const draft = core.getBooleanInput('releaseDraft');
     const prerelease = core.getBooleanInput('prerelease');
     const commitish = core.getInput('releaseCommitish') || null;
+    const owner = core.getInput('owner') || null;
+    const repo = core.getInput('repo') || null;
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -118,7 +120,9 @@ async function run(): Promise<void> {
         body,
         commitish || undefined,
         draft,
-        prerelease
+        prerelease,
+        owner,
+        repo
       );
       releaseId = releaseData.id;
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
@@ -152,7 +156,7 @@ async function run(): Promise<void> {
         }
       }
 
-      await uploadReleaseAssets(releaseId, artifacts);
+      await uploadReleaseAssets(releaseId, artifacts, owner, repo);
 
       if (includeUpdaterJson) {
         await uploadVersionJSON({
@@ -164,6 +168,8 @@ async function run(): Promise<void> {
           targetInfo,
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
+          owner,
+          repo
         });
       }
     }

@@ -31,6 +31,8 @@ export async function uploadVersionJSON({
   targetInfo,
   updaterJsonPreferNsis,
   updaterJsonKeepUniversal,
+  owner,
+  repo,
 }: {
   version: string;
   notes: string;
@@ -40,6 +42,8 @@ export async function uploadVersionJSON({
   targetInfo: TargetInfo;
   updaterJsonPreferNsis: boolean;
   updaterJsonKeepUniversal: boolean;
+  owner: string|null;
+  repo: string|null;
 }) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -56,9 +60,17 @@ export async function uploadVersionJSON({
     platforms: {},
   };
 
+  const data = context.repo;
+  if (!owner) {
+    owner = data.owner
+  }
+  if (!repo) {
+    repo = data.repo
+  }
+
   const assets = await github.rest.repos.listReleaseAssets({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
+    owner: owner,
+    repo: repo,
     release_id: releaseId,
     per_page: 50,
   });
@@ -69,8 +81,8 @@ export async function uploadVersionJSON({
       await github.request(
         'GET /repos/{owner}/{repo}/releases/assets/{asset_id}',
         {
-          owner: context.repo.owner,
-          repo: context.repo.repo,
+          owner: owner,
+          repo: repo,
           asset_id: asset.id,
           headers: {
             accept: 'application/octet-stream',
@@ -162,8 +174,8 @@ export async function uploadVersionJSON({
     if (asset) {
       // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
       await github.rest.repos.deleteReleaseAsset({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
+        owner: owner,
+        repo: repo,
         release_id: releaseId,
         asset_id: asset.id,
       });
