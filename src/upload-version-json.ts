@@ -60,12 +60,11 @@ export async function uploadVersionJSON({
     platforms: {},
   };
 
-  const data = context.repo;
   if (!owner) {
-    owner = data.owner
+    owner = context.repo.owner
   }
   if (!repo) {
-    repo = data.repo
+    repo = context.repo.repo
   }
 
   const assets = await github.rest.repos.listReleaseAssets({

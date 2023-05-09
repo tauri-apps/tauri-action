@@ -44,12 +44,11 @@ export async function createRelease(
   const github = getOctokit(process.env.GITHUB_TOKEN);
 
   // Get owner and repo from context of payload that triggered the action
-  const data = context.repo;
   if (!owner) {
-    owner = data.owner
+    owner = context.repo.owner
   }
   if (!repo) {
-    repo = data.repo
+    repo = context.repo.repo
   }
 
 

@@ -12,12 +12,11 @@ export async function uploadAssets(releaseId: number, assets: Artifact[], owner:
 
   const github = getOctokit(process.env.GITHUB_TOKEN);
 
-  const data = context.repo;
   if (!owner) {
-    owner = data.owner
+    owner = context.repo.owner
   }
   if (!repo) {
-    repo = data.repo
+    repo = context.repo.repo
   }
 
   const existingAssets = (
