@@ -175,7 +175,7 @@ async function run(): Promise<void> {
     }
   } catch (error) {
     // @ts-ignore
-    core.setFailed(error);
+    core.setFailed(error.message);
   }
 }
 

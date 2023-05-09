@@ -181,7 +181,7 @@ export async function uploadVersionJSON({
     }
 
     console.log(`Uploading ${versionFile}...`);
-    await uploadAssets(releaseId, [{ path: versionFile, arch: '' }]);
+    await uploadAssets(releaseId, [{ path: versionFile, arch: '' }], owner, repo);
   } else {
     const missing = downloadUrl
       ? 'Signature'
