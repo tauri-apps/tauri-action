@@ -2,6 +2,7 @@ import { existsSync } from 'fs';
 import { resolve, dirname, basename } from 'path';
 
 import * as core from '@actions/core';
+import { context } from '@actions/github';
 import stringArgv from 'string-argv';
 
 import { createRelease } from './create-release';
@@ -34,6 +35,8 @@ async function run(): Promise<void> {
     let releaseId = Number(core.getInput('releaseId'));
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
     let body = core.getInput('releaseBody');
+    const owner = core.getInput('owner') || context.repo.owner;
+    const repo = core.getInput('repo') || context.repo.repo;
     const draft = core.getBooleanInput('releaseDraft');
     const prerelease = core.getBooleanInput('prerelease');
     const commitish = core.getInput('releaseCommitish') || null;
@@ -113,6 +116,8 @@ async function run(): Promise<void> {
       });
 
       const releaseData = await createRelease(
+        owner,
+        repo,
         tagName,
         releaseName,
         body,
@@ -152,10 +157,12 @@ async function run(): Promise<void> {
         }
       }
 
-      await uploadReleaseAssets(releaseId, artifacts);
+      await uploadReleaseAssets(owner, repo, releaseId, artifacts);
 
       if (includeUpdaterJson) {
         await uploadVersionJSON({
+          owner,
+          repo,
           version: info.version,
           notes: body,
           tagName,

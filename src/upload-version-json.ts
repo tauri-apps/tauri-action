@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
-import { getOctokit, context } from '@actions/github';
+import { getOctokit } from '@actions/github';
 
 import { uploadAssets } from './upload-release-assets';
 import { getAssetName } from './utils';
@@ -23,6 +23,8 @@ type VersionContent = {
 };
 
 export async function uploadVersionJSON({
+  owner,
+  repo,
   version,
   notes,
   tagName,
@@ -32,6 +34,8 @@ export async function uploadVersionJSON({
   updaterJsonPreferNsis,
   updaterJsonKeepUniversal,
 }: {
+  owner: string;
+  repo: string;
   version: string;
   notes: string;
   tagName: string;
@@ -57,8 +61,8 @@ export async function uploadVersionJSON({
   };
 
   const assets = await github.rest.repos.listReleaseAssets({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
+    owner: owner,
+    repo: repo,
     release_id: releaseId,
     per_page: 50,
   });
@@ -69,8 +73,8 @@ export async function uploadVersionJSON({
       await github.request(
         'GET /repos/{owner}/{repo}/releases/assets/{asset_id}',
         {
-          owner: context.repo.owner,
-          repo: context.repo.repo,
+          owner: owner,
+          repo: repo,
           asset_id: asset.id,
           headers: {
             accept: 'application/octet-stream',
@@ -162,15 +166,17 @@ export async function uploadVersionJSON({
     if (asset) {
       // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
       await github.rest.repos.deleteReleaseAsset({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
+        owner: owner,
+        repo: repo,
         release_id: releaseId,
         asset_id: asset.id,
       });
     }
 
     console.log(`Uploading ${versionFile}...`);
-    await uploadAssets(releaseId, [{ path: versionFile, arch: '' }]);
+    await uploadAssets(owner, repo, releaseId, [
+      { path: versionFile, arch: '' },
+    ]);
   } else {
     const missing = downloadUrl
       ? 'Signature'
