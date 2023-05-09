@@ -217,17 +217,17 @@ These inputs allow you to change how your Tauri project will be build.
 
 These inputs allow you to modify the GitHub release.
 
-| Name               | Required | Description                                                                                                                                                      | Type   | Default               |
-| ------------------ | :------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | --------------------- |
-| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                                                                                      | string |                       |
-| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`                                                                         | string |                       |
-| `releaseName`      |  false   | The name of the release to create                                                                                                                                | string |                       |
-| `releaseBody`      |  false   | The body of the release to create                                                                                                                                | string |                       |
-| `releaseDraft`     |  false   | Whether the release to create is a draft or not                                                                                                                  | bool   | false                 |
-| `prerelease`       |  false   | Whether the release to create is a prerelease or not                                                                                                             | bool   | false                 |
-| `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists                                                                       | string | SHA of current commit |
-| `owner`            |  false   | parameter to replace owner, needed to upload the release to another repository, required GITHUB_TOKEN in env and releaseCommitish(target repo, main for example) | string |                       |
-| `repo`             |  false   | parameter to replace repo, needed to upload the release to another repository, required GITHUB_TOKEN in env and releaseCommitish(target repo, main for example)  | string |                       |
+| Name               | Required | Description                                                                                                                                                               | Type   | Default                   |
+| ------------------ | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------- |
+| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                                                                                               | string |                           |
+| `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`                                                                                  | string |                           |
+| `releaseName`      |  false   | The name of the release to create                                                                                                                                         | string |                           |
+| `releaseBody`      |  false   | The body of the release to create                                                                                                                                         | string |                           |
+| `releaseDraft`     |  false   | Whether the release to create is a draft or not                                                                                                                           | bool   | false                     |
+| `prerelease`       |  false   | Whether the release to create is a prerelease or not                                                                                                                      | bool   | false                     |
+| `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists                                                                                | string | SHA of current commit     |
+| `owner`            |  false   | The account owner of the repository the release will be uploaded to. Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo. | string | owner of the current repo |
+| `repo`             |  false   | The name of the repository the release will be uploaded to. Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo.          | string | name of the current repo  |
 
 ## Outputs
 

@@ -2,4 +2,4 @@
 'action': patch
 ---
 
-Add support custom repo.
+Add support for modifying the target repo for the release.
