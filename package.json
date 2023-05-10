@@ -9,7 +9,8 @@
   "scripts": {
     "build": "ncc build src/index.ts -o dist -m",
     "lint": "eslint src/**",
-    "format": "prettier -w src/** action.yml README.md"
+    "format": "prettier --write src/** action.yml README.md",
+    "format:check": "prettier --check src/** action.yml README.md"
   },
   "repository": {
     "type": "git",
