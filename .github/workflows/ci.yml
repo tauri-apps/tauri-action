@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - 'renovate/**'
+      - '!renovate/lock-file-maintenance'
+
+jobs:
+  CI:
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7.x.x
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+
+      - name: install dependencies
+        run: pnpm install
+
+      - name: check formatting
+        run: pnpm format
+
+      - name: run linter
+        run: pnpm lint
+
+      #- name: run tests
+      #  run: pnpm test
