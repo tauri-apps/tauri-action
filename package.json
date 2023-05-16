@@ -2,7 +2,9 @@
   "name": "tauri-action",
   "version": "0.4.0",
   "description": "Tauri GitHub Action",
-  "author": "Lucas Nogueira <lucas@tauri.studio>",
+  "contributors": [
+    "Tauri Programme within The Commons Conservancy"
+  ],
   "license": "MIT",
   "main": "dist/index.js",
   "type": "module",
