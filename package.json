@@ -1,6 +1,6 @@
 {
   "name": "tauri-action",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Tauri GitHub Action",
   "contributors": [
     "Tauri Programme within The Commons Conservancy"
