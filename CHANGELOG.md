@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.4.1]
+
+- [`683dc86`](https://www.github.com/tauri-apps/tauri-action/commit/683dc8624e3ea009c0f35ddfb419a40d08718d01)([#457](https://www.github.com/tauri-apps/tauri-action/pull/457)) Add support for modifying the target repo for the release.
+
 ## \[0.4.0]
 
 - Add the paths of generated artifacts as an action output.
