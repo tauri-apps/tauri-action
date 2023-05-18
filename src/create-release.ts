@@ -18,9 +18,11 @@ interface GitHubRelease {
 }
 
 function allReleases(
-  github: InstanceType<typeof GitHub>
+  github: InstanceType<typeof GitHub>,
+  owner: string,
+  repo: string
 ): AsyncIterableIterator<{ data: GitHubRelease[] }> {
-  const params = { per_page: 100, ...context.repo };
+  const params = { per_page: 100, owner, repo };
   return github.paginate.iterator(
     github.rest.repos.listReleases.endpoint.merge(params)
   );
@@ -60,7 +62,7 @@ export async function createRelease(
     // so we must find one in the list of all releases
     if (draft) {
       console.log(`Looking for a draft release with tag ${tagName}...`);
-      for await (const response of allReleases(github)) {
+      for await (const response of allReleases(github, owner, repo)) {
         const releaseWithTag = response.data.find(
           (release) => release.tag_name === tagName
         );
