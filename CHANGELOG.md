@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.4.2]
+
+- [`2eff2b4`](https://www.github.com/tauri-apps/tauri-action/commit/2eff2b4cc16cf4137d15f997a010f7c781c6276b)([#469](https://www.github.com/tauri-apps/tauri-action/pull/469)) Fix incorrect querying of remote repos to prevent duplicate draft releases. This was only an issue if the `owner` and `repo` configs added in v0.4.1 were set to a different repository than the one the action runs in and if `draftRelease` was set to `true`.
+
 ## \[0.4.1]
 
 - [`683dc86`](https://www.github.com/tauri-apps/tauri-action/commit/683dc8624e3ea009c0f35ddfb419a40d08718d01)([#457](https://www.github.com/tauri-apps/tauri-action/pull/457)) Add support for modifying the target repo for the release.
