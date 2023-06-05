@@ -84,6 +84,8 @@ export async function buildProject(
   if (targetInfo.platform === 'macos') {
     if (arch === 'x86_64') {
       arch = 'x64';
+    } else if (arch === 'arm64') {
+      arch = 'aarch64';
     }
 
     artifacts = [
