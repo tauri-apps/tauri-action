@@ -83,11 +83,9 @@ async function run(): Promise<void> {
       releaseArtifacts.push(
         ...(await buildProject(projectPath, false, options))
       );
-      artifacts.push(...releaseArtifacts);
     }
     if (includeDebug) {
       debugArtifacts.push(...(await buildProject(projectPath, true, options)));
-      artifacts.push(...debugArtifacts);
     }
     const artifacts = releaseArtifacts.concat(debugArtifacts);
 
