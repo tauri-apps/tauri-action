@@ -44,9 +44,7 @@ async function run(): Promise<void> {
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
     const updaterJsonPreferNsis =
-      core.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true'
-        ? true
-        : false;
+      core.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
 
     if (!releaseId) {
       if (Boolean(tagName) !== Boolean(releaseName)) {
@@ -79,15 +77,19 @@ async function run(): Promise<void> {
     const targetInfo = getTargetInfo(targetPath);
     const info = getInfo(projectPath, targetInfo, configArg);
 
-    const artifacts: Artifact[] = [];
+    const releaseArtifacts: Artifact[] = [];
+    const debugArtifacts: Artifact[] = [];
     if (includeRelease) {
-      const releaseArtifacts = await buildProject(projectPath, false, options);
+      releaseArtifacts.push(
+        ...(await buildProject(projectPath, false, options))
+      );
       artifacts.push(...releaseArtifacts);
     }
     if (includeDebug) {
-      const debugArtifacts = await buildProject(projectPath, true, options);
+      debugArtifacts.push(...(await buildProject(projectPath, true, options)));
       artifacts.push(...debugArtifacts);
     }
+    const artifacts = releaseArtifacts.concat(debugArtifacts);
 
     if (artifacts.length === 0) {
       throw new Error('No artifacts were found.');
@@ -167,7 +169,8 @@ async function run(): Promise<void> {
           notes: body,
           tagName,
           releaseId,
-          artifacts,
+          artifacts:
+            releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts,
           targetInfo,
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
