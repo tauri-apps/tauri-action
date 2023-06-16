@@ -1,9 +1,8 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
 import path, { join, normalize, resolve, sep } from 'path';
 
 import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
-import { sync as globSync } from 'glob-gitignore';
 import ignore from 'ignore';
 
 import { getConfig, mergePlatformConfig, mergeUserConfig } from './config';
@@ -54,28 +53,17 @@ export function getPackageJson(root: string) {
   const packageJsonPath = join(root, 'package.json');
   if (existsSync(packageJsonPath)) {
     const packageJsonString = readFileSync(packageJsonPath).toString();
-    const packageJson = JSON.parse(packageJsonString);
-    return packageJson;
+    return JSON.parse(packageJsonString);
   }
   return null;
 }
 
 export function getTauriDir(root: string): string | null {
-  const ignoreRules = ignore();
-  const gitignorePath = join(root, '.gitignore');
-  if (existsSync(gitignorePath)) {
-    ignoreRules.add(readFileSync(gitignorePath).toString());
-  } else {
-    ignoreRules.add('**/node_modules').add('**/target');
-  }
-  const paths = globSync(
-    ['**/tauri.conf.json', '**/tauri.conf.json5', '**/Tauri.toml'],
-    {
-      cwd: root,
-      ignore: ignoreRules,
-    }
-  );
-  const tauriConfPath = paths[0];
+  const tauriConfPath = findFile(root, [
+    'tauri.conf.json',
+    'tauri.conf.json5',
+    'Tauri.toml',
+  ]);
   return tauriConfPath ? resolve(root, tauriConfPath, '..') : null;
 }
 
@@ -154,6 +142,55 @@ export function execCommand(
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' },
   }).then();
+}
+
+// Custom implementation to make sure files in the dir of the current iteration are checked before entering dirs.
+function findFile(startingDir: string, fileNames: string[]): string | null {
+  const ignoreRules = ignore();
+  const gitignorePath = join(startingDir, '.gitignore');
+  if (existsSync(gitignorePath)) {
+    ignoreRules.add(readFileSync(gitignorePath).toString());
+  } else {
+    ignoreRules.add('**/node_modules').add('**/target');
+  }
+
+  const dirs = [];
+
+  const entries = readdirSync(startingDir);
+  for (const entry of entries) {
+    const fullPath = join(startingDir, entry);
+    const stat = statSync(fullPath);
+    if (stat.isDirectory()) {
+      if (ignoreRules.ignores(entry + path.sep)) {
+        continue;
+      }
+      dirs.push(entry);
+    } else if (fileNames.includes(entry)) {
+      return fullPath;
+    }
+  }
+
+  while (dirs.length) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const dir = dirs.shift()!;
+    const entries = readdirSync(join(startingDir, dir));
+
+    for (const entry of entries) {
+      const relPath = join(dir, entry);
+      const fullPath = join(startingDir, relPath);
+      const stat = statSync(fullPath);
+      if (stat.isDirectory()) {
+        if (ignoreRules.ignores(entry + path.sep)) {
+          continue;
+        }
+        dirs.push(relPath);
+      } else if (fileNames.includes(entry)) {
+        return fullPath;
+      }
+    }
+  }
+
+  return null;
 }
 
 export function getInfo(

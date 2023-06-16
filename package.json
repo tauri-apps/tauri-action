@@ -27,7 +27,6 @@
     "@actions/github": "5.1.1",
     "@iarna/toml": "2.2.5",
     "execa": "7.1.1",
-    "glob-gitignore": "^1.0.14",
     "ignore": "5.2.4",
     "json5": "2.2.3",
     "lodash.merge": "^4.6.2",
