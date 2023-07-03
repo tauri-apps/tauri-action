@@ -98,8 +98,6 @@ export async function buildProject(
       join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`),
     ].map((path) => ({ path, arch }));
   } else if (targetInfo.platform === 'windows') {
-    // arch = arch.startsWith('i') ? 'x86' : 'x64';
-    // fix windows aarch64 bundle not found
     if (arch.startsWith('i')) {
       arch = 'x86';
     } else if (arch === 'aarch64') {

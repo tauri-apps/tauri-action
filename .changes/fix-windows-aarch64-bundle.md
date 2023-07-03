@@ -2,4 +2,4 @@
 action: patch:bug
 ---
 
-When building windows-aarch64, looking for x64 bundle.
+Fix detection of windows arm64 bundles.
