@@ -170,6 +170,8 @@ function findFile(startingDir: string, fileNames: string[]): string | null {
     }
   }
 
+  // TODO: add/remove gitignore files
+  // (probably needs to be handled in for-loop above too)
   while (dirs.length) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const dir = dirs.shift()!;
