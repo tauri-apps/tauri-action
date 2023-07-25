@@ -66,7 +66,11 @@ export function getTauriDir(root: string): string | null {
     'Tauri.toml',
   ]);
   console.log(
-    findFileGlob(root, ['tauri.conf.json', 'tauri.conf.json5', 'Tauri.toml'])
+    findFileGlob(root, [
+      '**/tauri.conf.json',
+      '**/Tauri.toml',
+      '**/tauri.conf.json5',
+    ])
   );
   return tauriConfPath ? resolve(root, tauriConfPath, '..') : null;
 }
@@ -157,7 +161,7 @@ function findFileGlob(startingDir: string, fileNames: string[]): string | null {
     return null;
   }
 
-  const re = new RegExp(sep, 'g');
+  const re = new RegExp(/\//, 'g');
 
   files.sort((a, b) => (a.match(re) ?? []).length - (b.match(re) ?? []).length);
 
