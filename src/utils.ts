@@ -1,9 +1,8 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import path, { join, normalize, resolve, sep } from 'path';
 
 import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
-import ignore from 'ignore';
 import { globbySync } from 'globby';
 
 import { getConfig, mergePlatformConfig, mergeUserConfig } from './config';
@@ -60,19 +59,29 @@ export function getPackageJson(root: string) {
 }
 
 export function getTauriDir(root: string): string | null {
-  const tauriConfPath = findFile(root, [
-    'tauri.conf.json',
-    'tauri.conf.json5',
-    'Tauri.toml',
-  ]);
-  console.log(
-    findFileGlob(root, [
-      '**/tauri.conf.json',
-      '**/Tauri.toml',
-      '**/tauri.conf.json5',
-    ])
+  const tauriConfPaths = globbySync(
+    ['**/tauri.conf.json', '**/tauri.conf.json5', '**/Tauri.toml'],
+    {
+      gitignore: true,
+      cwd: root,
+      // Forcefully ignore target and node_modules dirs
+      ignore: ['**/target', '**/node_modules'],
+    }
   );
-  return tauriConfPath ? resolve(root, tauriConfPath, '..') : null;
+
+  if (tauriConfPaths.length === 0) {
+    return null;
+  }
+
+  const re = new RegExp(/\//, 'g');
+
+  tauriConfPaths.sort(
+    (a, b) => (a.match(re) ?? []).length - (b.match(re) ?? []).length
+  );
+
+  console.log(`Using tauri config at "${tauriConfPaths[0]}"`);
+
+  return resolve(root, tauriConfPaths[0], '..');
 }
 
 export function getWorkspaceDir(dir: string): string | null {
@@ -150,75 +159,6 @@ export function execCommand(
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' },
   }).then();
-}
-
-function findFileGlob(startingDir: string, fileNames: string[]): string | null {
-  const files = globbySync(fileNames, { gitignore: true, cwd: startingDir });
-
-  console.log(JSON.stringify(files));
-
-  if (files.length === 0) {
-    return null;
-  }
-
-  const re = new RegExp(/\//, 'g');
-
-  files.sort((a, b) => (a.match(re) ?? []).length - (b.match(re) ?? []).length);
-
-  console.log(JSON.stringify(files));
-
-  return files[0];
-}
-
-// Custom implementation to make sure files in the dir of the current iteration are checked before entering dirs.
-function findFile(startingDir: string, fileNames: string[]): string | null {
-  const ignoreRules = ignore();
-  const gitignorePath = join(startingDir, '.gitignore');
-  if (existsSync(gitignorePath)) {
-    ignoreRules.add(readFileSync(gitignorePath).toString());
-  } else {
-    ignoreRules.add('**/node_modules').add('**/target');
-  }
-
-  const dirs = [];
-
-  const entries = readdirSync(startingDir);
-  for (const entry of entries) {
-    const fullPath = join(startingDir, entry);
-    const stat = statSync(fullPath);
-    if (stat.isDirectory()) {
-      if (ignoreRules.ignores(entry + path.sep)) {
-        continue;
-      }
-      dirs.push(entry);
-    } else if (fileNames.includes(entry)) {
-      return fullPath;
-    }
-  }
-
-  // TODO: add/remove gitignore files
-  // (probably needs to be handled in for-loop above too)
-  while (dirs.length) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const dir = dirs.shift()!;
-    const entries = readdirSync(join(startingDir, dir));
-
-    for (const entry of entries) {
-      const relPath = join(dir, entry);
-      const fullPath = join(startingDir, relPath);
-      const stat = statSync(fullPath);
-      if (stat.isDirectory()) {
-        if (ignoreRules.ignores(entry + path.sep)) {
-          continue;
-        }
-        dirs.push(relPath);
-      } else if (fileNames.includes(entry)) {
-        return fullPath;
-      }
-    }
-  }
-
-  return null;
 }
 
 export function getInfo(
