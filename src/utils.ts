@@ -4,6 +4,7 @@ import path, { join, normalize, resolve, sep } from 'path';
 import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
 import ignore from 'ignore';
+import { globbySync } from 'globby';
 
 import { getConfig, mergePlatformConfig, mergeUserConfig } from './config';
 
@@ -64,6 +65,9 @@ export function getTauriDir(root: string): string | null {
     'tauri.conf.json5',
     'Tauri.toml',
   ]);
+  console.log(
+    findFileGlob(root, ['tauri.conf.json', 'tauri.conf.json5', 'Tauri.toml'])
+  );
   return tauriConfPath ? resolve(root, tauriConfPath, '..') : null;
 }
 
@@ -142,6 +146,24 @@ export function execCommand(
     stdio: 'inherit',
     env: { FORCE_COLOR: '0' },
   }).then();
+}
+
+function findFileGlob(startingDir: string, fileNames: string[]): string | null {
+  const files = globbySync(fileNames, { gitignore: true, cwd: startingDir });
+
+  console.log(JSON.stringify(files));
+
+  if (files.length === 0) {
+    return null;
+  }
+
+  const re = new RegExp(sep, 'g');
+
+  files.sort((a, b) => (a.match(re) ?? []).length - (b.match(re) ?? []).length);
+
+  console.log(JSON.stringify(files));
+
+  return files[0];
 }
 
 // Custom implementation to make sure files in the dir of the current iteration are checked before entering dirs.
