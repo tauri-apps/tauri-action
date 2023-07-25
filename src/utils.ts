@@ -73,14 +73,6 @@ export function getTauriDir(root: string): string | null {
     return null;
   }
 
-  const re = new RegExp(/\//, 'g');
-
-  tauriConfPaths.sort(
-    (a, b) => (a.match(re) ?? []).length - (b.match(re) ?? []).length
-  );
-
-  console.log(`Using tauri config at "${tauriConfPaths[0]}"`);
-
   return resolve(root, tauriConfPaths[0], '..');
 }
 
