@@ -3,8 +3,7 @@ import path, { join, normalize, resolve, sep } from 'path';
 
 import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
-import { sync as globSync } from 'glob-gitignore';
-import ignore from 'ignore';
+import { globbySync } from 'globby';
 
 import { getConfig, mergePlatformConfig, mergeUserConfig } from './config';
 
@@ -54,29 +53,27 @@ export function getPackageJson(root: string) {
   const packageJsonPath = join(root, 'package.json');
   if (existsSync(packageJsonPath)) {
     const packageJsonString = readFileSync(packageJsonPath).toString();
-    const packageJson = JSON.parse(packageJsonString);
-    return packageJson;
+    return JSON.parse(packageJsonString);
   }
   return null;
 }
 
 export function getTauriDir(root: string): string | null {
-  const ignoreRules = ignore();
-  const gitignorePath = join(root, '.gitignore');
-  if (existsSync(gitignorePath)) {
-    ignoreRules.add(readFileSync(gitignorePath).toString());
-  } else {
-    ignoreRules.add('**/node_modules').add('**/target');
-  }
-  const paths = globSync(
+  const tauriConfPaths = globbySync(
     ['**/tauri.conf.json', '**/tauri.conf.json5', '**/Tauri.toml'],
     {
+      gitignore: true,
       cwd: root,
-      ignore: ignoreRules,
+      // Forcefully ignore target and node_modules dirs
+      ignore: ['**/target', '**/node_modules'],
     }
   );
-  const tauriConfPath = paths[0];
-  return tauriConfPath ? resolve(root, tauriConfPath, '..') : null;
+
+  if (tauriConfPaths.length === 0) {
+    return null;
+  }
+
+  return resolve(root, tauriConfPaths[0], '..');
 }
 
 export function getWorkspaceDir(dir: string): string | null {

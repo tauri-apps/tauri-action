@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "module": "esnext",
-    "target": "es2015",
+    "target": "es2021",
     "pretty": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
