@@ -15,8 +15,8 @@ dependencies:
     specifier: 2.2.5
     version: 2.2.5
   execa:
-    specifier: 7.1.1
-    version: 7.1.1
+    specifier: 7.2.0
+    version: 7.2.0
   globby:
     specifier: ^13.2.2
     version: 13.2.2
@@ -1300,8 +1300,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /execa@7.1.1:
-    resolution: {integrity: sha512-wH0eMf/UXckdUYnO21+HDztteVv05rq2GXksxT4fCGeHkBhw1DROXh40wcjMcRqDOWE7iPJ4n3M7e2+YFP+76Q==}
+  /execa@7.2.0:
+    resolution: {integrity: sha512-UduyVP7TLB5IcAQl+OzLyLcS/l32W/GLg+AhHJ+ow40FOk2U3SAllPwR44v4vmdFwIWqpdwxxpQbF1n5ta9seA==}
     engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
     dependencies:
       cross-spawn: 7.0.3
