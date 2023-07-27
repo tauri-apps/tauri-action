@@ -1,5 +1,5 @@
 ---
-action: patch:bug
+action: patch
 ---
 
 Fix detection of windows arm64 bundles.
