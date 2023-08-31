@@ -36,6 +36,10 @@ export async function buildProject(
   const configArg =
     configArgIdx >= 0 ? [...tauriArgs][configArgIdx + 1] : undefined;
 
+  const profileArgIdx = [...tauriArgs].findIndex((e) => e === '--profile');
+  const profile =
+    profileArgIdx >= 0 ? [...tauriArgs][profileArgIdx + 1] : undefined;
+
   const targetInfo = getTargetInfo(targetPath);
 
   const info = getInfo(root, targetInfo, configArg);
@@ -74,7 +78,7 @@ export async function buildProject(
   const artifactsPath = join(
     getTargetDir(cratePath),
     targetPath ?? '',
-    debug ? 'debug' : 'release'
+    profile ? profile : debug ? 'debug' : 'release'
   );
 
   let artifacts: Artifact[] = [];
