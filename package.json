@@ -31,7 +31,7 @@
     "json5": "2.2.3",
     "lodash.merge": "^4.6.2",
     "string-argv": "0.3.2",
-    "tslib": "2.6.1"
+    "tslib": "2.6.2"
   },
   "devDependencies": {
     "@types/node": "16.18.53",
