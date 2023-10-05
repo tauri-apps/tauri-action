@@ -49,6 +49,9 @@ export interface TauriConfig {
     productName?: string;
     version?: string;
   };
+  build?: {
+    distDir?: string;
+  };
   tauri?: {
     bundle?: {
       identifier: string;

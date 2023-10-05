@@ -11,7 +11,7 @@ export async function initProject(
   root: string,
   runner: Runner,
   info: Info,
-  { iconPath, bundleIdentifier }: BuildOptions
+  { iconPath, bundleIdentifier, distPath }: BuildOptions
 ): Promise<Application> {
   await runner.execTauriCommand(
     ['init'],
@@ -54,6 +54,15 @@ export async function initProject(
         ...config.tauri?.bundle,
         identifier: bundleIdentifier,
       },
+    };
+  }
+  if (distPath) {
+    console.log(
+      `Replacing tauri.conf.json config - build.distDir=${distPath}`
+    );
+    config.build = {
+      ...config.build,
+      distDir: distPath,
     };
   }
 
