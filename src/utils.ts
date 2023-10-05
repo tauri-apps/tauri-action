@@ -141,7 +141,7 @@ export function getCargoManifest(dir: string): CargoManifest {
     typeof cargoManifest.package.version == 'object' ||
     typeof cargoManifest.package.name == 'object'
   ) {
-    let workspaceDir = getWorkspaceDir(dir);
+    const workspaceDir = getWorkspaceDir(dir);
     if (!workspaceDir) {
       throw new Error(
         'Could not find workspace directory, but version and/or name specifies to use workspace package',
