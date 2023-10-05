@@ -66,7 +66,7 @@ export function getTauriDir(root: string): string | null {
       cwd: root,
       // Forcefully ignore target and node_modules dirs
       ignore: ['**/target', '**/node_modules'],
-    }
+    },
   );
 
   if (tauriConfPaths.length === 0) {
@@ -122,6 +122,60 @@ export function getTargetDir(crateDir: string): string {
   return def;
 }
 
+export function getCargoManifest(dir: string): CargoManifest {
+  const manifestPath = join(dir, 'Cargo.toml');
+  const cargoManifest = parseToml(
+    readFileSync(manifestPath).toString(),
+  ) as unknown as CargoManifest & {
+    package: {
+      version: { workspace: true } | string;
+      name: { workspace: true } | string;
+    };
+  };
+
+  let name = cargoManifest.package.name;
+  let version = cargoManifest.package.version;
+
+  // if the version or name is an object, it means it is a workspace package and we need to traverse up
+  if (
+    typeof cargoManifest.package.version == 'object' ||
+    typeof cargoManifest.package.name == 'object'
+  ) {
+    const workspaceDir = getWorkspaceDir(dir);
+    if (!workspaceDir) {
+      throw new Error(
+        'Could not find workspace directory, but version and/or name specifies to use workspace package',
+      );
+    }
+    const manifestPath = join(workspaceDir, 'Cargo.toml');
+    const workspaceManifest = parseToml(
+      readFileSync(manifestPath).toString(),
+    ) as unknown as CargoManifest;
+
+    if (
+      typeof name === 'object' &&
+      workspaceManifest?.workspace?.package?.name !== undefined
+    ) {
+      name = workspaceManifest.workspace.package.name;
+    }
+    if (
+      typeof version === 'object' &&
+      workspaceManifest?.workspace?.package?.version !== undefined
+    ) {
+      version = workspaceManifest.workspace.package.version;
+    }
+  }
+
+  return {
+    ...cargoManifest,
+    package: {
+      ...cargoManifest.package,
+      name,
+      version,
+    },
+  };
+}
+
 export function hasDependency(dependencyName: string, root: string): boolean {
   const packageJson = getPackageJson(root);
   return (
@@ -142,7 +196,7 @@ export function usesPnpm(root: string): boolean {
 export function execCommand(
   command: string,
   args: string[],
-  { cwd }: { cwd?: string } = {}
+  { cwd }: { cwd?: string } = {},
 ): Promise<void> {
   console.log(`running ${command}`, args);
 
@@ -156,7 +210,7 @@ export function execCommand(
 export function getInfo(
   root: string,
   targetInfo?: TargetInfo,
-  configFlag?: string
+  configFlag?: string,
 ): Info {
   const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
@@ -183,12 +237,9 @@ export function getInfo(
       }
     }
     if (!(name && version)) {
-      const manifestPath = join(tauriDir, 'Cargo.toml');
-      const cargoManifest = parseToml(
-        readFileSync(manifestPath).toString()
-      ) as unknown as CargoManifest;
-      name = name || cargoManifest.package.name;
-      version = version || cargoManifest.package.version;
+      const cargoManifest = getCargoManifest(tauriDir);
+      name = name ?? cargoManifest.package.name;
+      version = version ?? cargoManifest.package.version;
     }
     if (config.tauri?.bundle?.windows?.wix?.language) {
       wixLanguage = config.tauri.bundle.windows.wix.language;

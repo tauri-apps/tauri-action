@@ -26,6 +26,7 @@ export interface CargoManifestBin {
 }
 
 export interface CargoManifest {
+  workspace?: { package?: { version?: string; name?: string } };
   package: { version: string; name: string; 'default-run': string };
   bin: CargoManifestBin[];
 }
