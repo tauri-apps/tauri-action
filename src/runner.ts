@@ -17,7 +17,7 @@ class Runner {
   async execTauriCommand(
     command: string[],
     commandOptions: string[],
-    cwd?: string
+    cwd?: string,
   ): Promise<void> {
     const args: string[] = [];
 
@@ -43,7 +43,7 @@ class Runner {
 
 async function getRunner(
   root: string,
-  tauriScript: string | null
+  tauriScript: string | null,
 ): Promise<Runner> {
   if (tauriScript) {
     // FIXME: This will also split file paths with spaces.

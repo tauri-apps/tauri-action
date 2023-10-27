@@ -42,7 +42,7 @@ function _tryParseTomlConfig(contents: string): TauriConfig | null {
 
 function readPlatformConfig(
   tauriDir: string,
-  platform: string
+  platform: string,
 ): TauriConfig | null {
   let path = join(tauriDir, `tauri.${platform}.conf.json`);
   if (existsSync(path)) {
@@ -72,7 +72,7 @@ function readPlatformConfig(
 export function mergePlatformConfig(
   baseConfig: TauriConfig,
   tauriDir: string,
-  target: string
+  target: string,
 ) {
   const config = readPlatformConfig(tauriDir, target);
 
@@ -85,7 +85,7 @@ export function mergePlatformConfig(
 export function mergeUserConfig(
   root: string,
   baseConfig: TauriConfig,
-  mergeConfig: string
+  mergeConfig: string,
 ) {
   let config = _tryParseJsonConfig(mergeConfig);
 
@@ -105,7 +105,7 @@ export function mergeUserConfig(
 }
 
 export function getConfig(
-  tauriDir: string /* customPath?: string */
+  tauriDir: string /* customPath?: string */,
 ): TauriConfig {
   /* if (customPath) {
     return readCustomConfig(customPath);
@@ -120,12 +120,12 @@ export function getConfig(
 
   if (existsSync(join(tauriDir, 'tauri.conf.json5'))) {
     const contents = readFileSync(
-      join(tauriDir, 'tauri.conf.json5')
+      join(tauriDir, 'tauri.conf.json5'),
     ).toString();
     const config = _tryParseJson5Config(contents);
     if (config) return config;
     console.error(
-      "Found tauri.conf.json5 file but couldn't parse it as JSON5."
+      "Found tauri.conf.json5 file but couldn't parse it as JSON5.",
     );
   }
 

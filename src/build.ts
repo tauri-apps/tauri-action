@@ -16,7 +16,7 @@ import type { Artifact, BuildOptions } from './types';
 export async function buildProject(
   root: string,
   debug: boolean,
-  buildOpts: BuildOptions
+  buildOpts: BuildOptions,
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -25,13 +25,13 @@ export async function buildProject(
     : buildOpts.args ?? [];
 
   const targetArgIdx = [...tauriArgs].findIndex(
-    (e) => e === '-t' || e === '--target'
+    (e) => e === '-t' || e === '--target',
   );
   const targetPath =
     targetArgIdx >= 0 ? [...tauriArgs][targetArgIdx + 1] : undefined;
 
   const configArgIdx = [...tauriArgs].findIndex(
-    (e) => e === '-c' || e === '--config'
+    (e) => e === '-c' || e === '--config',
   );
   const configArg =
     configArgIdx >= 0 ? [...tauriArgs][configArgIdx + 1] : undefined;
@@ -78,7 +78,7 @@ export async function buildProject(
   const artifactsPath = join(
     getTargetDir(cratePath),
     targetPath ?? '',
-    profile ? profile : debug ? 'debug' : 'release'
+    profile ? profile : debug ? 'debug' : 'release',
   );
 
   let artifacts: Artifact[] = [];
@@ -95,7 +95,7 @@ export async function buildProject(
     artifacts = [
       join(
         artifactsPath,
-        `bundle/dmg/${fileAppName}_${app.version}_${arch}.dmg`
+        `bundle/dmg/${fileAppName}_${app.version}_${arch}.dmg`,
       ),
       join(artifactsPath, `bundle/macos/${fileAppName}.app`),
       join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
@@ -127,40 +127,40 @@ export async function buildProject(
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi`
-        )
+          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi`,
+        ),
       );
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip`
-        )
+          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip`,
+        ),
       );
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip.sig`
-        )
+          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip.sig`,
+        ),
       );
     });
 
     winArtifacts.push(
       join(
         artifactsPath,
-        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe`
-      )
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe`,
+      ),
     );
     winArtifacts.push(
       join(
         artifactsPath,
-        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip`
-      )
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip`,
+      ),
     );
     winArtifacts.push(
       join(
         artifactsPath,
-        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip.sig`
-      )
+        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip.sig`,
+      ),
     );
 
     artifacts = winArtifacts.map((path) => ({ path, arch }));
@@ -186,28 +186,28 @@ export async function buildProject(
       {
         path: join(
           artifactsPath,
-          `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`
+          `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`,
         ),
         arch: debianArch,
       },
       {
         path: join(
           artifactsPath,
-          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage`
+          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage`,
         ),
         arch: appImageArch,
       },
       {
         path: join(
           artifactsPath,
-          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`
+          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`,
         ),
         arch: appImageArch,
       },
       {
         path: join(
           artifactsPath,
-          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`
+          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
         ),
         arch: appImageArch,
       },
@@ -215,7 +215,7 @@ export async function buildProject(
   }
 
   console.log(
-    `Looking for artifacts in:\n${artifacts.map((a) => a.path).join('\n')}`
+    `Looking for artifacts in:\n${artifacts.map((a) => a.path).join('\n')}`,
   );
   return artifacts.filter((p) => existsSync(p.path));
 }

@@ -20,11 +20,11 @@ interface GitHubRelease {
 function allReleases(
   github: InstanceType<typeof GitHub>,
   owner: string,
-  repo: string
+  repo: string,
 ): AsyncIterableIterator<{ data: GitHubRelease[] }> {
   const params = { per_page: 100, owner, repo };
   return github.paginate.iterator(
-    github.rest.repos.listReleases.endpoint.merge(params)
+    github.rest.repos.listReleases.endpoint.merge(params),
   );
 }
 
@@ -36,7 +36,7 @@ export async function createRelease(
   body?: string,
   commitish?: string,
   draft = true,
-  prerelease = true
+  prerelease = true,
 ): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -64,12 +64,12 @@ export async function createRelease(
       console.log(`Looking for a draft release with tag ${tagName}...`);
       for await (const response of allReleases(github, owner, repo)) {
         const releaseWithTag = response.data.find(
-          (release) => release.tag_name === tagName
+          (release) => release.tag_name === tagName,
         );
         if (releaseWithTag) {
           release = releaseWithTag;
           console.log(
-            `Found draft release with tag ${tagName} on the release list.`
+            `Found draft release with tag ${tagName} on the release list.`,
           );
           break;
         }
@@ -104,7 +104,7 @@ export async function createRelease(
       release = createdRelease.data;
     } else {
       console.log(
-        `⚠️ Unexpected error fetching GitHub release for tag ${tagName}: ${error}`
+        `⚠️ Unexpected error fetching GitHub release for tag ${tagName}: ${error}`,
       );
       throw error;
     }

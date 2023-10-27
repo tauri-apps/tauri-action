@@ -1,4 +1,5 @@
 name: covector version or publish
+
 on:
   push:
     branches:
@@ -19,7 +20,7 @@ jobs:
       - name: install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 7.x.x
+          version: 8.x.x
       - name: git config
         run: |
           git config --global user.name "${{ github.event.pusher.name }}"

@@ -9,7 +9,7 @@ export async function uploadAssets(
   owner: string,
   repo: string,
   releaseId: number,
-  assets: Artifact[]
+  assets: Artifact[],
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -38,7 +38,7 @@ export async function uploadAssets(
     const assetName = getAssetName(asset.path);
 
     const existingAsset = existingAssets.find(
-      (a) => a.name === assetName.trim().replace(/ /g, '.')
+      (a) => a.name === assetName.trim().replace(/ /g, '.'),
     );
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);

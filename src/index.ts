@@ -17,7 +17,7 @@ async function run(): Promise<void> {
   try {
     const projectPath = resolve(
       process.cwd(),
-      core.getInput('projectPath') || process.argv[2]
+      core.getInput('projectPath') || process.argv[2],
     );
     const distPath = core.getInput('distPath');
     const iconPath = core.getInput('iconPath');
@@ -25,7 +25,7 @@ async function run(): Promise<void> {
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
     const updaterJsonKeepUniversal = core.getBooleanInput(
-      'updaterJsonKeepUniversal'
+      'updaterJsonKeepUniversal',
     );
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
@@ -49,7 +49,7 @@ async function run(): Promise<void> {
     if (!releaseId) {
       if (Boolean(tagName) !== Boolean(releaseName)) {
         throw new Error(
-          '`tagName` is required along with `releaseName` when creating a release.'
+          '`tagName` is required along with `releaseName` when creating a release.',
         );
       }
     }
@@ -63,13 +63,13 @@ async function run(): Promise<void> {
     };
 
     const targetArgIdx = [...args].findIndex(
-      (e) => e === '-t' || e === '--target'
+      (e) => e === '-t' || e === '--target',
     );
     const targetPath =
       targetArgIdx >= 0 ? [...args][targetArgIdx + 1] : undefined;
 
     const configArgIdx = [...args].findIndex(
-      (e) => e === '-c' || e === '--config'
+      (e) => e === '-c' || e === '--config',
     );
     const configArg =
       configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
@@ -81,7 +81,7 @@ async function run(): Promise<void> {
     const debugArtifacts: Artifact[] = [];
     if (includeRelease) {
       releaseArtifacts.push(
-        ...(await buildProject(projectPath, false, options))
+        ...(await buildProject(projectPath, false, options)),
       );
     }
     if (includeDebug) {
@@ -96,7 +96,7 @@ async function run(): Promise<void> {
     console.log(`Found artifacts:\n${artifacts.map((a) => a.path).join('\n')}`);
     core.setOutput(
       'artifactPaths',
-      JSON.stringify(artifacts.map((a) => a.path))
+      JSON.stringify(artifacts.map((a) => a.path)),
     );
 
     if (tagName && !releaseId) {
@@ -123,7 +123,7 @@ async function run(): Promise<void> {
         body,
         commitish || undefined,
         draft,
-        prerelease
+        prerelease,
       );
       releaseId = releaseData.id;
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
