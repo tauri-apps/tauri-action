@@ -272,7 +272,7 @@ export function getInfo(
 }
 
 export function getTargetInfo(targetPath?: string): TargetInfo {
-  let arch = process.arch;
+  let arch: string = process.arch;
   let platform: TargetPlatform =
     process.platform === 'win32'
       ? 'windows'
