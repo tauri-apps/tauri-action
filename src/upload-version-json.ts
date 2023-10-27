@@ -79,17 +79,17 @@ export async function uploadVersionJSON({
           headers: {
             accept: 'application/octet-stream',
           },
-        }
+        },
       )
     ).data as unknown as ArrayBuffer;
 
     versionContent.platforms = JSON.parse(
-      Buffer.from(assetData).toString()
+      Buffer.from(assetData).toString(),
     ).platforms;
   }
 
   let sigFile = artifacts.find((s) =>
-    s.path.endsWith(updaterJsonPreferNsis ? '.nsis.zip.sig' : 'msi.zip.sig')
+    s.path.endsWith(updaterJsonPreferNsis ? '.nsis.zip.sig' : 'msi.zip.sig'),
   );
 
   if (!sigFile) {
@@ -97,19 +97,19 @@ export async function uploadVersionJSON({
   }
 
   const assetNames = new Set(
-    artifacts.map((p) => getAssetName(p.path).trim().replace(/ /g, '.')) // GitHub replaces spaces in asset names with dots
+    artifacts.map((p) => getAssetName(p.path).trim().replace(/ /g, '.')), // GitHub replaces spaces in asset names with dots
   );
   let downloadUrl;
   {
     const filteredAssets = assets.data.filter((e) => assetNames.has(e.name));
     const filtAsset = filteredAssets.find((s) =>
-      s.name.endsWith(updaterJsonPreferNsis ? '.nsis.zip' : '.msi.zip')
+      s.name.endsWith(updaterJsonPreferNsis ? '.nsis.zip' : '.msi.zip'),
     );
     if (filtAsset) {
       downloadUrl = filtAsset.browser_download_url;
     } else {
       downloadUrl = filteredAssets.find(
-        (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip')
+        (s) => s.name.endsWith('.tar.gz') || s.name.endsWith('.zip'),
       )?.browser_download_url;
     }
   }
@@ -117,7 +117,7 @@ export async function uploadVersionJSON({
   // Untagged release downloads won't work after the release was published
   downloadUrl = downloadUrl?.replace(
     /\/download\/(untagged-[^/]+)\//,
-    tagName ? `/download/${tagName}/` : '/latest/download/'
+    tagName ? `/download/${tagName}/` : '/latest/download/',
   );
 
   let os = targetInfo.platform as string;
@@ -184,7 +184,7 @@ export async function uploadVersionJSON({
       ? 'Asset'
       : 'Asset and signature';
     console.warn(
-      `${missing} not found for the updater JSON. Skipping upload...`
+      `${missing} not found for the updater JSON. Skipping upload...`,
     );
   }
 }

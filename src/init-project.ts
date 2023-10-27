@@ -11,12 +11,12 @@ export async function initProject(
   root: string,
   runner: Runner,
   info: Info,
-  { iconPath, bundleIdentifier, distPath }: BuildOptions
+  { iconPath, bundleIdentifier, distPath }: BuildOptions,
 ): Promise<Application> {
   await runner.execTauriCommand(
     ['init'],
     ['--ci', '--app-name', info.name],
-    root
+    root,
   );
 
   const packageJson = getPackageJson(root);
@@ -30,7 +30,7 @@ export async function initProject(
   const config = getConfig(tauriPath);
 
   console.log(
-    `Replacing tauri.conf.json config - package.version=${info.version}`
+    `Replacing tauri.conf.json config - package.version=${info.version}`,
   );
   const pkgConfig = {
     ...config.package,
@@ -38,7 +38,7 @@ export async function initProject(
   };
   if (packageJson?.productName) {
     console.log(
-      `Replacing tauri.conf.json config - package.productName=${packageJson.productName}`
+      `Replacing tauri.conf.json config - package.productName=${packageJson.productName}`,
     );
     pkgConfig.productName = packageJson.productName;
   }
@@ -46,7 +46,7 @@ export async function initProject(
 
   if (bundleIdentifier) {
     console.log(
-      `Replacing tauri.conf.json config - tauri.bundle.identifier=${bundleIdentifier}`
+      `Replacing tauri.conf.json config - tauri.bundle.identifier=${bundleIdentifier}`,
     );
     config.tauri = {
       ...config.tauri,
@@ -57,9 +57,7 @@ export async function initProject(
     };
   }
   if (distPath) {
-    console.log(
-      `Replacing tauri.conf.json config - build.distDir=${distPath}`
-    );
+    console.log(`Replacing tauri.conf.json config - build.distDir=${distPath}`);
     config.build = {
       ...config.build,
       distDir: distPath,

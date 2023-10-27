@@ -21,7 +21,7 @@ jobs:
       - name: install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 7.x.x
+          version: 8.x.x
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -33,10 +33,13 @@ jobs:
         run: pnpm install
 
       - name: check formatting
-        run: pnpm format
+        run: pnpm format:check
 
       - name: run linter
         run: pnpm lint
+
+      - name: build
+        run: pnpm build
 
       #- name: run tests
       #  run: pnpm test
