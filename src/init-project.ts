@@ -64,6 +64,12 @@ export async function initProject(
     };
   }
 
+  // `tauri init` defaults to npm run dev/build but we can't assume that here.
+  config.build = {
+    ...config.build,
+    beforeBuildCommand: '',
+  };
+
   const configPath = join(tauriPath, 'tauri.conf.json');
   writeFileSync(configPath, JSON.stringify(config, null, 2));
 

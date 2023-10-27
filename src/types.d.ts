@@ -51,6 +51,7 @@ export interface TauriConfig {
   };
   build?: {
     distDir?: string;
+    beforeBuildCommand?: string;
   };
   tauri?: {
     bundle?: {
