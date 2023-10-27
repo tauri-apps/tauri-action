@@ -49,7 +49,8 @@ jobs:
         run: pnpm install
         working-directory: ./__fixtures__/example
 
-      - uses: ./
+      - name: Preconfigured Tauri Project
+        uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Updater signature is exposed here to make sure it works in PR's
@@ -62,7 +63,8 @@ jobs:
           releaseDraft: true
           args: ${{ matrix.settings.args }}
 
-      - uses: ./
+      - name: Frontend-only Project
+        uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Updater signature is exposed here to make sure it works in PR's
