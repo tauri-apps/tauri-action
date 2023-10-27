@@ -61,5 +61,5 @@ outputs:
   artifactPaths:
     description: 'The paths of the generated artifacts'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
