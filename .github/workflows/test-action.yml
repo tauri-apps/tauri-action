@@ -24,30 +24,42 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-apple-darwin
-
+      # node
       - name: install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8.x.x
 
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      # example-with-tauri tests the auto installation of the tauri cli
+      - name: install example dependencies
+        run: pnpm install
+        working-directory: ./__fixtures__/example
+
+      # rust
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+          workspaces: |
+            ./__fixtures__/example/src-tauri
+            ./__fixtures__/example-with-tauri/src-tauri
+
+      # system
       - name: install dependencies (ubuntu only)
         if: matrix.settings.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev
-
-      - name: install example dependencies
-        run: pnpm install
-        working-directory: ./__fixtures__/example
 
       - name: Preconfigured Tauri Project
         uses: ./
@@ -57,6 +69,8 @@ jobs:
           TAURI_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
         with:
           projectPath: ./__fixtures__/example-with-tauri
+          includeDebug: true
+          includeRelease: false
           tagName: example-with-tauri-v__VERSION__
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
@@ -74,6 +88,8 @@ jobs:
           distPath: ./__fixtures__/example/dist
           iconPath: ./__fixtures__/example/icon.png
           bundleIdentifier: com.tauri.actiontest
+          includeDebug: true
+          includeRelease: false
           tagName: example-v__VERSION__
           releaseName: 'Release example app v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
