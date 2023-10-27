@@ -34,7 +34,7 @@
     "tslib": "2.6.2"
   },
   "devDependencies": {
-    "@types/node": "16.18.59",
+    "@types/node": "20.8.9",
     "@typescript-eslint/eslint-plugin": "6.9.0",
     "@typescript-eslint/parser": "6.9.0",
     "@vercel/ncc": "0.38.1",
@@ -49,6 +49,7 @@
     "typescript": "5.2.2"
   },
   "engines": {
-    "pnpm": ">=7.33.0"
+    "pnpm": ">=7.33.0",
+    "node": ">=20"
   }
 }

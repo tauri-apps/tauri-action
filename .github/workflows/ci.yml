@@ -24,9 +24,9 @@ jobs:
           version: 7.x.x
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
           cache: pnpm
 
       - name: install dependencies
