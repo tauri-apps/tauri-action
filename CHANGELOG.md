@@ -1,5 +1,12 @@
 # Changelog
 
+## \[0.4.4]
+
+- [`9df5eca`](https://www.github.com/tauri-apps/tauri-action/commit/9df5eca322fa3298954fb973a68c65cf2b48aebd) Fixed an issue where the distPath config was not applied after initializing the tauri project.
+- [`d9623e3`](https://www.github.com/tauri-apps/tauri-action/commit/d9623e36cbe6b2668d8abc98677e9113a6ace705)([#556](https://www.github.com/tauri-apps/tauri-action/pull/556)) Fixes the artifacts search path when a custom `--profile` is used.
+- [`802a179`](https://www.github.com/tauri-apps/tauri-action/commit/802a179bc09148fdf618276fc9f2945ac3797ed2)([#594](https://www.github.com/tauri-apps/tauri-action/pull/594)) If the action initializes the tauri project it will now clear the `beforeBuildCommand` to fix a panic when there was no `build` npm command available.
+- [`d00117a`](https://www.github.com/tauri-apps/tauri-action/commit/d00117a2e07c81cc900146e07064ff4b2a8782db)([#558](https://www.github.com/tauri-apps/tauri-action/pull/558)) Fixed an issue reading the app version if it relied on cargo's workspace inheritance feature.
+
 ## \[0.4.3]
 
 - [`c87af54`](https://www.github.com/tauri-apps/tauri-action/commit/c87af545bb34bb0b5d981811497ede8d99f5ebd8)([#502](https://www.github.com/tauri-apps/tauri-action/pull/502)) While looking for the tauri directory the action will now respect all gitignore files and not just the one in the root dir.
