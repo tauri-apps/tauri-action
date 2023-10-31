@@ -113,7 +113,9 @@ export function getTargetDir(crateDir: string): string {
       // @ts-ignore
       if (cargoConfig.build?.['target-dir']) {
         // @ts-ignore
-        return cargoConfig.build['target-dir'];
+        const t = cargoConfig.build['target-dir'];
+        if (path.isAbsolute(t)) return t;
+        return normalize(join(dir, '.cargo', t));
       }
     }
 
