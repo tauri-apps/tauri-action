@@ -1,0 +1,4 @@
+[build]
+# Forcing examples to share a target dir without a cargo workspace.
+# This also fixes `tauri init` problems with the `rust-cache` action creating `src-tauri/target/`.
+target-dir = "./target"

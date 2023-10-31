@@ -51,8 +51,8 @@ jobs:
         with:
           cache-on-failure: true
           workspaces: |
-            ./__fixtures__/example/src-tauri
-            ./__fixtures__/example-with-tauri/src-tauri
+            ./__fixtures__/example/src-tauri -> ../../target
+            ./__fixtures__/example-with-tauri/src-tauri -> ../../target
 
       # system
       - name: install dependencies (ubuntu only)
