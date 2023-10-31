@@ -104,7 +104,6 @@ export function getTargetDir(crateDir: string): string {
   }
   let dir = crateDir;
   while (dir.length && dir[dir.length - 1] !== sep) {
-    console.log('dir', dir);
     let cargoConfigPath = join(dir, '.cargo/config');
     if (!existsSync(cargoConfigPath)) {
       cargoConfigPath = join(dir, '.cargo/config.toml');
