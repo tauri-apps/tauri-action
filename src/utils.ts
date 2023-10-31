@@ -104,6 +104,7 @@ export function getTargetDir(crateDir: string): string {
   }
   let dir = crateDir;
   while (dir.length && dir[dir.length - 1] !== sep) {
+    console.log('dir', dir);
     let cargoConfigPath = join(dir, '.cargo/config');
     if (!existsSync(cargoConfigPath)) {
       cargoConfigPath = join(dir, '.cargo/config.toml');
@@ -114,8 +115,11 @@ export function getTargetDir(crateDir: string): string {
       if (cargoConfig.build?.['target-dir']) {
         // @ts-ignore
         const t = cargoConfig.build['target-dir'];
+        const p = normalize(join(dir, '.cargo', t));
+        console.log('t', t);
+        console.log('p', p);
         if (path.isAbsolute(t)) return t;
-        return normalize(join(dir, '.cargo', t));
+        return p;
       }
     }
 
