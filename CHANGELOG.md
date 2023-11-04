@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.4.5]
+
+- [`2b7cd25`](https://www.github.com/tauri-apps/tauri-action/commit/2b7cd25a7d13b4d3bb90a8b0d4423686466120d4)([#598](https://www.github.com/tauri-apps/tauri-action/pull/598)) Fix path resolution for `build.target-dir` if the `.cargo` folder is not in the current working dir.
+
 ## \[0.4.4]
 
 - [`9df5eca`](https://www.github.com/tauri-apps/tauri-action/commit/9df5eca322fa3298954fb973a68c65cf2b48aebd) Fixed an issue where the distPath config was not applied after initializing the tauri project.
