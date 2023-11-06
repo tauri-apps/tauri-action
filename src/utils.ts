@@ -259,17 +259,7 @@ export function getInfo(
       wixLanguage,
     };
   } else {
-    const packageJson = getPackageJson(root);
-    const appName = packageJson
-      ? (packageJson.displayName || packageJson.name).replace(/ /g, '-')
-      : 'app';
-    const version = packageJson ? packageJson.version : '0.1.0';
-    return {
-      tauriPath: null,
-      name: appName,
-      version,
-      wixLanguage: 'en-US',
-    };
+    throw Error("Couldn't detect Tauri dir");
   }
 }
 

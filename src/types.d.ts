@@ -14,11 +14,16 @@ export interface Artifact {
 }
 
 export interface BuildOptions {
-  distPath: string | null;
-  iconPath: string | null;
   tauriScript: string | null;
   args: string[] | null;
+}
+
+export interface InitOptions {
+  distPath: string | null;
+  iconPath: string | null;
   bundleIdentifier: string | null;
+  appVersion: string | null;
+  appName: string | null;
 }
 
 export interface CargoManifestBin {

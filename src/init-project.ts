@@ -3,23 +3,17 @@ import { join } from 'path';
 
 import { getConfig } from './config';
 import { Runner } from './runner';
-import { getPackageJson, getTauriDir } from './utils';
+import { getTauriDir } from './utils';
 
-import type { Application, BuildOptions, Info } from './types';
+import type { InitOptions } from './types';
 
 export async function initProject(
   root: string,
   runner: Runner,
-  info: Info,
-  { iconPath, bundleIdentifier, distPath }: BuildOptions,
-): Promise<Application> {
-  await runner.execTauriCommand(
-    ['init'],
-    ['--ci', '--app-name', info.name],
-    root,
-  );
+  { iconPath, bundleIdentifier, distPath, appName, appVersion }: InitOptions,
+) {
+  await runner.execTauriCommand(['init'], ['--ci'], root);
 
-  const packageJson = getPackageJson(root);
   const tauriPath = getTauriDir(root);
 
   if (tauriPath === null) {
@@ -30,18 +24,16 @@ export async function initProject(
   const config = getConfig(tauriPath);
 
   console.log(
-    `Replacing tauri.conf.json config - package.version=${info.version}`,
+    `Replacing tauri.conf.json config - package.version=${appVersion}`,
   );
   const pkgConfig = {
     ...config.package,
-    version: info.version,
+    version: appVersion ?? undefined,
   };
-  if (packageJson?.productName) {
-    console.log(
-      `Replacing tauri.conf.json config - package.productName=${packageJson.productName}`,
-    );
-    pkgConfig.productName = packageJson.productName;
-  }
+  console.log(
+    `Replacing tauri.conf.json config - package.productName=${appName}`,
+  );
+  pkgConfig.productName = appName ?? undefined;
   config.package = pkgConfig;
 
   if (bundleIdentifier) {
@@ -73,17 +65,7 @@ export async function initProject(
   const configPath = join(tauriPath, 'tauri.conf.json');
   writeFileSync(configPath, JSON.stringify(config, null, 2));
 
-  const app = {
-    tauriPath,
-    runner,
-    name: info.name,
-    version: info.version,
-    wixLanguage: info.wixLanguage,
-  };
-
   if (iconPath) {
     await runner.execTauriCommand(['icon', join(root, iconPath)], [], root);
   }
-
-  return app;
 }

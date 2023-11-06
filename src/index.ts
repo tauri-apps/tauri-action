@@ -11,7 +11,7 @@ import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
 import { execCommand, getInfo, getPackageJson, getTargetInfo } from './utils';
 
-import type { Artifact, BuildOptions } from './types';
+import type { Artifact, BuildOptions, InitOptions } from './types';
 
 async function run(): Promise<void> {
   try {
@@ -21,6 +21,8 @@ async function run(): Promise<void> {
     );
     const distPath = core.getInput('distPath');
     const iconPath = core.getInput('iconPath');
+    const appName = core.getInput('appName');
+    const appVersion = core.getInput('appVersion');
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
@@ -54,12 +56,16 @@ async function run(): Promise<void> {
       }
     }
 
-    const options: BuildOptions = {
-      distPath,
-      iconPath,
+    const buildOptions: BuildOptions = {
       tauriScript,
       args,
+    };
+    const initOptions: InitOptions = {
+      distPath,
+      iconPath,
       bundleIdentifier,
+      appName,
+      appVersion,
     };
 
     const targetArgIdx = [...args].findIndex(
@@ -81,11 +87,13 @@ async function run(): Promise<void> {
     const debugArtifacts: Artifact[] = [];
     if (includeRelease) {
       releaseArtifacts.push(
-        ...(await buildProject(projectPath, false, options)),
+        ...(await buildProject(projectPath, false, buildOptions, initOptions)),
       );
     }
     if (includeDebug) {
-      debugArtifacts.push(...(await buildProject(projectPath, true, options)));
+      debugArtifacts.push(
+        ...(await buildProject(projectPath, true, buildOptions, initOptions)),
+      );
     }
     const artifacts = releaseArtifacts.concat(debugArtifacts);
 
