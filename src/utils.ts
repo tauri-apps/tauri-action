@@ -259,6 +259,7 @@ export function getInfo(
       wixLanguage,
     };
   } else {
+    // This should not actually happen.
     throw Error("Couldn't detect Tauri dir");
   }
 }

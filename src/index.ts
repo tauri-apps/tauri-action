@@ -9,7 +9,7 @@ import { createRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
-import { execCommand, getInfo, getPackageJson, getTargetInfo } from './utils';
+import { execCommand, getInfo, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions, InitOptions } from './types';
 
@@ -80,9 +80,6 @@ async function run(): Promise<void> {
     const configArg =
       configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
 
-    const targetInfo = getTargetInfo(targetPath);
-    const info = getInfo(projectPath, targetInfo, configArg);
-
     const releaseArtifacts: Artifact[] = [];
     const debugArtifacts: Artifact[] = [];
     if (includeRelease) {
@@ -107,12 +104,14 @@ async function run(): Promise<void> {
       JSON.stringify(artifacts.map((a) => a.path)),
     );
 
+    const targetInfo = getTargetInfo(targetPath);
+    const info = getInfo(projectPath, targetInfo, configArg);
+
     if (tagName && !releaseId) {
-      const packageJson = getPackageJson(projectPath);
       const templates = [
         {
           key: '__VERSION__',
-          value: info.version || packageJson.version,
+          value: info.version,
         },
       ];
 
