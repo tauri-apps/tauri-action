@@ -14,11 +14,11 @@ jobs:
       matrix:
         settings:
           - platform: 'macos-latest'
-            args: '--target universal-apple-darwin'
+            args: '--verbose --target universal-apple-darwin'
           - platform: 'ubuntu-latest'
-            args: ''
+            args: '--verbose'
           - platform: 'windows-latest'
-            args: ''
+            args: '--verbose'
 
     runs-on: ${{ matrix.settings.platform }}
     steps:
@@ -88,6 +88,8 @@ jobs:
           distPath: ../dist # relative to tauri.conf.json
           iconPath: ./icon.png # relative to projectPath
           bundleIdentifier: com.tauri.actiontest
+          appName: example
+          appVersion: ../package.json # relative to tauri.conf.json
           includeDebug: true
           includeRelease: false
           tagName: example-v__VERSION__
