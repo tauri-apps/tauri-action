@@ -131,12 +131,12 @@ export async function uploadVersionJSON({
       arch === 'amd64' || arch === 'x86_64' || arch === 'x64'
         ? 'x86_64'
         : arch === 'x86' || arch === 'i386'
-        ? 'i686'
-        : arch === 'arm'
-        ? 'armv7'
-        : arch === 'arm64'
-        ? 'aarch64'
-        : arch;
+          ? 'i686'
+          : arch === 'arm'
+            ? 'armv7'
+            : arch === 'arm64'
+              ? 'aarch64'
+              : arch;
 
     // Expected targets: https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
     if (os === 'darwin' && arch === 'universal') {
@@ -181,8 +181,8 @@ export async function uploadVersionJSON({
     const missing = downloadUrl
       ? 'Signature'
       : sigFile
-      ? 'Asset'
-      : 'Asset and signature';
+        ? 'Asset'
+        : 'Asset and signature';
     console.warn(
       `${missing} not found for the updater JSON. Skipping upload...`,
     );
