@@ -40,8 +40,8 @@ export function getAssetName(assetPath: string) {
     arch = assetPath.includes('universal-apple-darwin')
       ? '_universal'
       : assetPath.includes('aarch64-apple-darwin')
-      ? '_aarch64'
-      : os_arch;
+        ? '_aarch64'
+        : os_arch;
   }
 
   return assetPath.includes(`${path.sep}debug${path.sep}`)
@@ -279,8 +279,8 @@ export function getTargetInfo(targetPath?: string): TargetInfo {
     process.platform === 'win32'
       ? 'windows'
       : process.platform === 'darwin'
-      ? 'macos'
-      : 'linux';
+        ? 'macos'
+        : 'linux';
 
   if (targetPath) {
     if (targetPath.includes('windows')) {

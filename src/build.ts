@@ -169,18 +169,18 @@ export async function buildProject(
       arch === 'x64' || arch === 'x86_64'
         ? 'amd64'
         : arch === 'x32' || arch === 'i686'
-        ? 'i386'
-        : arch === 'arm'
-        ? 'armhf'
-        : arch === 'aarch64'
-        ? 'arm64'
-        : arch;
+          ? 'i386'
+          : arch === 'arm'
+            ? 'armhf'
+            : arch === 'aarch64'
+              ? 'arm64'
+              : arch;
     const appImageArch =
       arch === 'x64' || arch === 'x86_64'
         ? 'amd64'
         : arch === 'x32' || arch === 'i686'
-        ? 'i386'
-        : arch;
+          ? 'i386'
+          : arch;
 
     artifacts = [
       {
