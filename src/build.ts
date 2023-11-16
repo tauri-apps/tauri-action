@@ -62,14 +62,7 @@ export async function buildProject(
     wixLanguage: info.wixLanguage,
   };
 
-  let buildCommand;
-  if (hasDependency('vue-cli-plugin-tauri', root)) {
-    buildCommand = 'tauri:build';
-  } else {
-    buildCommand = 'build';
-  }
-
-  await runner.execTauriCommand([buildCommand], [...tauriArgs], root);
+  await runner.execTauriCommand(['build'], [...tauriArgs], root);
 
   let fileAppName = app.name;
   // on Linux, the app product name is converted to kebab-case

@@ -5,13 +5,10 @@ class Runner {
   bin: string;
   // could be ["tauri"], ["run", "tauri"], ["some package.json script"], ["run", "some package.json script"] or []
   tauriScript: string[];
-  // vue-cli-plugin-tauri uses `tauri:build` instead of `tauri build`
-  vueCli: boolean;
 
-  constructor(bin: string, tauriScript?: string[], vueCli?: boolean) {
+  constructor(bin: string, tauriScript?: string[]) {
     this.bin = bin;
     this.tauriScript = tauriScript || [];
-    this.vueCli = !!vueCli;
   }
 
   async execTauriCommand(
@@ -25,9 +22,7 @@ class Runner {
       args.push('run');
     }
 
-    if (!(this.vueCli && command[0] === 'tauri:build')) {
-      args.push(...this.tauriScript);
-    }
+    args.push(...this.tauriScript);
 
     args.push(...command);
 
@@ -51,11 +46,10 @@ async function getRunner(
     return new Runner(runnerCommand, runnerArgs);
   }
 
-  const vueCli = hasDependency('vue-cli-plugin-tauri', root);
-  if (hasDependency('@tauri-apps/cli', root) || vueCli) {
-    if (usesYarn(root)) return new Runner('yarn', ['tauri'], vueCli);
-    if (usesPnpm(root)) return new Runner('pnpm', ['tauri'], vueCli);
-    return new Runner('npm', ['run', 'tauri'], vueCli);
+  if (hasDependency('@tauri-apps/cli', root)) {
+    if (usesYarn(root)) return new Runner('yarn', ['tauri']);
+    if (usesPnpm(root)) return new Runner('pnpm', ['tauri']);
+    return new Runner('npm', ['run', 'tauri']);
   }
 
   await execCommand('npm', ['install', '-g', '@tauri-apps/cli'], {
