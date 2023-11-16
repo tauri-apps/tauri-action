@@ -9,7 +9,6 @@ import {
   getTargetInfo,
   getTauriDir,
   getWorkspaceDir,
-  hasDependency,
 } from './utils';
 
 import type { Artifact, BuildOptions, InitOptions } from './types';
