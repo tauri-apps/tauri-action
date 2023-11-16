@@ -27,6 +27,10 @@ inputs:
     description: 'path to the distributable folder with your index.html and JS/CSS'
   iconPath:
     description: 'path to the PNG icon to use as app icon, relative to the projectPath'
+  appName:
+    description: 'the app name to inject when initializing the Tauri app. Required if the name is not set via the `--config` flag.'
+  appVersion:
+    description: 'the app version to inject when initializing the Tauri app. Required if the version is not set via the `--config` flag.'
   includeDebug:
     description: 'whether to include a debug build or not'
     default: false

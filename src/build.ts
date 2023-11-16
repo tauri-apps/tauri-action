@@ -7,16 +7,18 @@ import {
   getInfo,
   getTargetDir,
   getTargetInfo,
+  getTauriDir,
   getWorkspaceDir,
   hasDependency,
 } from './utils';
 
-import type { Artifact, BuildOptions } from './types';
+import type { Artifact, BuildOptions, InitOptions } from './types';
 
 export async function buildProject(
   root: string,
   debug: boolean,
   buildOpts: BuildOptions,
+  initOpts: InitOptions,
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -42,17 +44,23 @@ export async function buildProject(
 
   const targetInfo = getTargetInfo(targetPath);
 
+  if (!getTauriDir(root)) {
+    await initProject(root, runner, initOpts);
+  }
+
   const info = getInfo(root, targetInfo, configArg);
 
-  const app = info.tauriPath
-    ? {
-        tauriPath: info.tauriPath,
-        runner,
-        name: info.name,
-        version: info.version,
-        wixLanguage: info.wixLanguage,
-      }
-    : await initProject(root, runner, info, buildOpts);
+  if (!info.tauriPath) {
+    throw Error("Couldn't detect path of tauri app");
+  }
+
+  const app = {
+    tauriPath: info.tauriPath,
+    runner,
+    name: info.name,
+    version: info.version,
+    wixLanguage: info.wixLanguage,
+  };
 
   let buildCommand;
   if (hasDependency('vue-cli-plugin-tauri', root)) {
