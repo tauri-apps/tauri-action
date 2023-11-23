@@ -8,7 +8,7 @@ If your project doesn't include a Tauri project, the action can initialize it fo
 
 This GitHub Action has three main usages: test the build pipeline of your Tauri app, uploading Tauri artifacts to an existing release, and creating a new release with the Tauri artifacts.
 
-_For more workflow examples, check out the [examples](examples) directory._
+**_For more workflow examples, check out the [examples](examples) directory._**
 
 This example shows the most common use case for `tauri-action`. The action will build the app, create a GitHub release itself, and upload the app bundles to the newly created release.
 
