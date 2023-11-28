@@ -90,6 +90,7 @@ export function getWorkspaceDir(dir: string): string | null {
 
         const memberPaths = globbySync(toml.workspace.members, {
           cwd: dir,
+          onlyDirectories: true,
           // Forcefully ignore target and node_modules dirs
           ignore: ['**/target', '**/node_modules'],
         });
