@@ -77,22 +77,24 @@ export function getTauriDir(root: string): string | null {
 }
 
 export function getWorkspaceDir(dir: string): string | null {
-  const rootPath = dir;
+  // This uses a function to prevent ncc from replacing the path and including the test Cargo.toml files in dist...
+  const rootPath = resolve(dir, (() => 'Cargo.toml')());
 
   while (dir.length && dir[dir.length - 1] !== sep) {
     const manifestPath = join(dir, 'Cargo.toml');
     if (existsSync(manifestPath)) {
       const toml = parseToml(readFileSync(manifestPath).toString()) as {
-        workspace?: { members?: string[] };
+        workspace?: { members?: string[]; exclude?: string[] };
       };
       if (toml.workspace?.members) {
         console.log(JSON.stringify(toml.workspace.members));
 
+        const ignore = ['**/target', '**/node_modules'];
+        if (toml.workspace.exclude) ignore.push(...toml.workspace.exclude);
+
         const memberPaths = globbySync(toml.workspace.members, {
           cwd: dir,
-          onlyDirectories: true,
-          // Forcefully ignore target and node_modules dirs
-          ignore: ['**/target', '**/node_modules'],
+          ignore,
         });
 
         console.log(JSON.stringify(memberPaths));
