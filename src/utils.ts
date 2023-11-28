@@ -78,15 +78,21 @@ export function getTauriDir(root: string): string | null {
 
 export function getWorkspaceDir(dir: string): string | null {
   const rootPath = dir;
+
   while (dir.length && dir[dir.length - 1] !== sep) {
     const manifestPath = join(dir, 'Cargo.toml');
     if (existsSync(manifestPath)) {
-      const toml = parseToml(readFileSync(manifestPath).toString());
-      // @ts-expect-error
+      const toml = parseToml(readFileSync(manifestPath).toString()) as {
+        workspace?: { members?: string[] };
+      };
       if (toml.workspace?.members) {
-        // @ts-expect-error
-        const members: string[] = toml.workspace.members;
-        if (members.some((m) => resolve(dir, m) === rootPath)) {
+        const memberPaths = globbySync(toml.workspace.members, {
+          cwd: dir,
+          // Forcefully ignore target and node_modules dirs
+          ignore: ['**/target', '**/node_modules'],
+        });
+
+        if (memberPaths.some((m) => resolve(dir, m) === rootPath)) {
           return dir;
         }
       }
