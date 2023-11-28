@@ -86,8 +86,6 @@ export function getWorkspaceDir(dir: string): string | null {
         workspace?: { members?: string[]; exclude?: string[] };
       };
       if (toml.workspace?.members) {
-        console.log(JSON.stringify(toml.workspace.members));
-
         const ignore = ['**/target', '**/node_modules'];
         if (toml.workspace.exclude) ignore.push(...toml.workspace.exclude);
 
@@ -97,8 +95,6 @@ export function getWorkspaceDir(dir: string): string | null {
           expandDirectories: false,
           onlyFiles: false,
         });
-
-        console.log(JSON.stringify(memberPaths));
 
         if (memberPaths.some((m) => resolve(dir, m) === rootPath)) {
           return dir;
