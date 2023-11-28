@@ -86,11 +86,15 @@ export function getWorkspaceDir(dir: string): string | null {
         workspace?: { members?: string[] };
       };
       if (toml.workspace?.members) {
+        console.log(JSON.stringify(toml.workspace.members));
+
         const memberPaths = globbySync(toml.workspace.members, {
           cwd: dir,
           // Forcefully ignore target and node_modules dirs
           ignore: ['**/target', '**/node_modules'],
         });
+
+        console.log(JSON.stringify(memberPaths));
 
         if (memberPaths.some((m) => resolve(dir, m) === rootPath)) {
           return dir;
