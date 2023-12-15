@@ -136,6 +136,7 @@ async function run(): Promise<void> {
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
       core.setOutput('releaseId', releaseData.id.toString());
       core.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
+      core.setOutput('appVersion', info.version);
     }
 
     if (releaseId) {

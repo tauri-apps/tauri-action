@@ -118,6 +118,7 @@ These inputs allow you to modify the GitHub release.
 | `releaseHtmlUrl`   | The URL users can navigate to in order to view the created release |
 | `releaseUploadUrl` | The URL for uploading assets to the created release                |
 | `artifactPaths`    | The paths of the generated artifacts                               |
+| `appVersion`       | The version of the app                                             |
 
 ## Caveats
 
