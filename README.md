@@ -83,16 +83,17 @@ These inputs are only used if your GitHub repository does not contain an existin
 
 These inputs allow you to change how your Tauri project will be build.
 
-| Name                       | Required | Description                                                                                                                                  | Type   | Default                                       |
-| -------------------------- | :------: | -------------------------------------------------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------- |
-| `projectPath`              |  false   | The path to the root of the tauri project relative to the current working directory                                                          | string | .                                             |
-| `includeDebug`             |  false   | whether to include a debug build or not                                                                                                      | bool   | false                                         |
-| `includeRelease`           |  false   | whether to include a release build or not                                                                                                    | bool   | true                                          |
-| `includeUpdaterJson`       |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                                            | bool   | true                                          |
-| `updaterJsonPreferNsis`    |  false   | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist                              | bool   | `false` for Tauri v1 and `true` for Tauri v2+ |
-| `updaterJsonKeepUniversal` |  false   | whether the updater JSON file should include universal macOS builds as darwin-universal on top of using it in the aarch64 and x86_64 fields. | bool   | false                                         |
-| `tauriScript`              |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build`                                                   | string | `npm run\|pnpm\|yarn tauri`                   |
-| `args`                     |  false   | Additional arguments to the current build command                                                                                            | string |                                               |
+| Name                       | Required | Description                                                                                                                                  | Type    | Default                                       |
+| -------------------------- | :------: | -------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------------------------------------- |
+| `projectPath`              |  false   | The path to the root of the tauri project relative to the current working directory                                                          | string  | .                                             |
+| `includeDebug`             |  false   | whether to include a debug build or not                                                                                                      | bool    | false                                         |
+| `includeRelease`           |  false   | whether to include a release build or not                                                                                                    | bool    | true                                          |
+| `includeUpdaterJson`       |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                                            | bool    | true                                          |
+| `updaterJsonPreferNsis`    |  false   | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist                              | bool    | `false` for Tauri v1 and `true` for Tauri v2+ |
+| `updaterJsonKeepUniversal` |  false   | whether the updater JSON file should include universal macOS builds as darwin-universal on top of using it in the aarch64 and x86_64 fields. | bool    | false                                         |
+| `tauriScript`              |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build`                                                   | string  | `npm run\|pnpm\|yarn tauri`                   |
+| `args`                     |  false   | Additional arguments to the current build command                                                                                            | string  |                                               |
+| `shaAsVersion`             |  false   | If the short commit sha should be used as the version in the updater json                                                                    | boolean |                                               |
 
 ### Release Configuration
 

@@ -26,6 +26,7 @@ async function run(): Promise<void> {
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
+    const shaAsVersion = core.getBooleanInput('shaAsVersion');
     const updaterJsonKeepUniversal = core.getBooleanInput(
       'updaterJsonKeepUniversal',
     );
@@ -113,6 +114,18 @@ async function run(): Promise<void> {
           key: '__VERSION__',
           value: info.version,
         },
+        {
+          key: '__SHORT_SHA__',
+          value: context.sha.substring(0, 7),
+        },
+        {
+          key: '__SHA__',
+          value: context.sha,
+        },
+        {
+          key: '__BRANCH__',
+          value: context.ref.replace('refs/heads/', ''),
+        }
       ];
 
       templates.forEach((template) => {
@@ -171,7 +184,7 @@ async function run(): Promise<void> {
         await uploadVersionJSON({
           owner,
           repo,
-          version: info.version,
+          version: shaAsVersion ? context.sha.substring(0, 7) : info.version,
           notes: body,
           tagName,
           releaseId,
