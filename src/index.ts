@@ -125,7 +125,7 @@ async function run(): Promise<void> {
         {
           key: '__BRANCH__',
           value: context.ref.replace('refs/heads/', ''),
-        }
+        },
       ];
 
       templates.forEach((template) => {
