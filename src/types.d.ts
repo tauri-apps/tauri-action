@@ -41,6 +41,7 @@ export interface Info {
   name: string;
   version: string;
   wixLanguage: string | string[] | { [language: string]: unknown };
+  rpmRelease: string;
 }
 
 export type TargetPlatform = 'android' | 'ios' | 'macos' | 'linux' | 'windows';
@@ -61,6 +62,9 @@ export interface TauriConfig {
   tauri?: {
     bundle?: {
       identifier: string;
+      rpm?: {
+        release?: string;
+      };
       windows?: {
         wix?: {
           language?: string | string[] | { [language: string]: unknown };
