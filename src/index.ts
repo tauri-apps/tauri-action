@@ -1,14 +1,14 @@
 import { existsSync } from 'fs';
-import { resolve, dirname, basename } from 'path';
+import { basename, dirname, resolve } from 'path';
 
 import * as core from '@actions/core';
 import { context } from '@actions/github';
 import stringArgv from 'string-argv';
 
+import { buildProject } from './build';
 import { createRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
-import { buildProject } from './build';
 import { execCommand, getInfo, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions, InitOptions } from './types';
@@ -27,6 +27,7 @@ async function run(): Promise<void> {
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
     const shaAsVersion = core.getBooleanInput('shaAsVersion');
+    const buildIdAsVersion = core.getBooleanInput('buildIdAsVersion');
     const updaterJsonKeepUniversal = core.getBooleanInput(
       'updaterJsonKeepUniversal',
     );
@@ -108,6 +109,10 @@ async function run(): Promise<void> {
     const targetInfo = getTargetInfo(targetPath);
     const info = getInfo(projectPath, targetInfo, configArg);
 
+    const githubRunId = context.runId;
+    const githubRunNumber = context.runNumber;
+    const buildId = `${githubRunId}${githubRunNumber}`;
+
     if (tagName && !releaseId) {
       const templates = [
         {
@@ -121,6 +126,10 @@ async function run(): Promise<void> {
         {
           key: '__SHA__',
           value: context.sha,
+        },
+        {
+          key: '__BUILD_ID__',
+          value: buildId,
         },
         {
           key: '__BRANCH__',
@@ -184,7 +193,11 @@ async function run(): Promise<void> {
         await uploadVersionJSON({
           owner,
           repo,
-          version: shaAsVersion ? context.sha.substring(0, 7) : info.version,
+          version: shaAsVersion
+            ? context.sha.substring(0, 7)
+            : buildIdAsVersion
+              ? buildId
+              : info.version,
           notes: body,
           tagName,
           releaseId,
