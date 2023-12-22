@@ -152,7 +152,7 @@ async function run(): Promise<void> {
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
       core.setOutput('releaseId', releaseData.id.toString());
       core.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
-      core.setOutput('appVersion', info.version.split('+')[0]);
+      core.setOutput('appVersion', info.version);
     }
 
     if (releaseId) {
@@ -208,7 +208,7 @@ async function run(): Promise<void> {
         await uploadVersionJSON({
           owner,
           repo,
-          version: info.version.split('+')[0],
+          version: info.version,
           notes: body,
           tagName,
           releaseId,
