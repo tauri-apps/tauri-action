@@ -116,6 +116,10 @@ async function run(): Promise<void> {
       const templates = [
         {
           key: '__VERSION__',
+          value: info.version.split('+')[0],
+        },
+        {
+          key: '__FULL_VERSION__',
           value: info.version,
         },
         {
