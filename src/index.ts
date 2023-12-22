@@ -26,7 +26,6 @@ async function run(): Promise<void> {
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
-    const shaAsVersion = core.getBooleanInput('shaAsVersion');
     const buildIdAsVersion = core.getBooleanInput('buildIdAsVersion');
     const updaterJsonKeepUniversal = core.getBooleanInput(
       'updaterJsonKeepUniversal',
@@ -193,11 +192,9 @@ async function run(): Promise<void> {
         await uploadVersionJSON({
           owner,
           repo,
-          version: shaAsVersion
-            ? context.sha.substring(0, 7)
-            : buildIdAsVersion
-              ? buildId
-              : info.version,
+          version: buildIdAsVersion
+            ? `${info.version}+${buildId}`
+            : info.version,
           notes: body,
           tagName,
           releaseId,

@@ -40,9 +40,6 @@ inputs:
   includeUpdaterJson:
     description: 'whether to upload a static JSON file for the updater using GitHub Releases as the CDN'
     default: true
-  shaAsVersion:
-    description: 'whether to use the commit SHA as the version for the updater JSON file or not.'
-    default: false
   buildIdAsVersion:
     description: 'whether to use a custom CI based build id as the version for the updater JSON file or not.'
     default: false
