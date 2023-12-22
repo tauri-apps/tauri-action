@@ -108,19 +108,21 @@ async function run(): Promise<void> {
     const targetInfo = getTargetInfo(targetPath);
     const info = getInfo(projectPath, targetInfo, configArg);
 
+    const originalAppVersion = info.version.split('+')[0];
     const githubRunId = context.runId;
     const githubRunNumber = context.runNumber;
     const buildId = `${githubRunId}${githubRunNumber}`;
+    const fullVersion = `${originalAppVersion}+${buildId}`;
 
     if (tagName && !releaseId) {
       const templates = [
         {
           key: '__VERSION__',
-          value: info.version.split('+')[0],
+          value: originalAppVersion,
         },
         {
           key: '__FULL_VERSION__',
-          value: info.version,
+          value: fullVersion,
         },
         {
           key: '__SHORT_SHA__',
@@ -161,7 +163,7 @@ async function run(): Promise<void> {
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
       core.setOutput('releaseId', releaseData.id.toString());
       core.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
-      core.setOutput('appVersion', info.version);
+      core.setOutput('appVersion', fullVersion);
     }
 
     if (releaseId) {
@@ -196,9 +198,7 @@ async function run(): Promise<void> {
         await uploadVersionJSON({
           owner,
           repo,
-          version: buildIdAsVersion
-            ? `${info.version}+${buildId}`
-            : info.version,
+          version: buildIdAsVersion ? fullVersion : originalAppVersion,
           notes: body,
           tagName,
           releaseId,
