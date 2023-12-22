@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { basename, dirname, resolve } from 'path';
 
 import * as core from '@actions/core';
-import { context } from '@actions/github';
+import { context, getOctokit } from '@actions/github';
 import stringArgv from 'string-argv';
 
 import { buildProject } from './build';
@@ -14,6 +14,10 @@ import { execCommand, getInfo, getTargetInfo } from './utils';
 import type { Artifact, BuildOptions, InitOptions } from './types';
 
 async function run(): Promise<void> {
+  if (process.env.GITHUB_TOKEN === undefined) {
+    throw new Error('GITHUB_TOKEN is required');
+  }
+
   try {
     const projectPath = resolve(
       process.cwd(),
@@ -175,6 +179,27 @@ async function run(): Promise<void> {
           }
           i++;
         }
+      }
+
+      // delete old release assets
+      const github = getOctokit(process.env.GITHUB_TOKEN);
+
+      const existingAssets = (
+        await github.rest.repos.listReleaseAssets({
+          owner: owner,
+          repo: repo,
+          release_id: releaseId,
+          per_page: 50,
+        })
+      ).data;
+
+      for (const asset of existingAssets) {
+        console.log(`Deleting existing ${asset.name}...`);
+        await github.rest.repos.deleteReleaseAsset({
+          owner: owner,
+          repo: repo,
+          asset_id: asset.id,
+        });
       }
 
       await uploadReleaseAssets(owner, repo, releaseId, artifacts);
