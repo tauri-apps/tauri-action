@@ -26,7 +26,6 @@ async function run(): Promise<void> {
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
-    const buildIdAsVersion = core.getBooleanInput('buildIdAsVersion');
     const updaterJsonKeepUniversal = core.getBooleanInput(
       'updaterJsonKeepUniversal',
     );
@@ -108,21 +107,11 @@ async function run(): Promise<void> {
     const targetInfo = getTargetInfo(targetPath);
     const info = getInfo(projectPath, targetInfo, configArg);
 
-    const originalAppVersion = info.version.split('+')[0];
-    const githubRunId = context.runId;
-    const githubRunNumber = context.runNumber;
-    const buildId = `${githubRunId}${githubRunNumber}`;
-    const fullVersion = `${originalAppVersion}+${buildId}`;
-
     if (tagName && !releaseId) {
       const templates = [
         {
           key: '__VERSION__',
-          value: originalAppVersion,
-        },
-        {
-          key: '__FULL_VERSION__',
-          value: fullVersion,
+          value: info.version.split('+')[0],
         },
         {
           key: '__SHORT_SHA__',
@@ -131,10 +120,6 @@ async function run(): Promise<void> {
         {
           key: '__SHA__',
           value: context.sha,
-        },
-        {
-          key: '__BUILD_ID__',
-          value: buildId,
         },
         {
           key: '__BRANCH__',
@@ -163,7 +148,7 @@ async function run(): Promise<void> {
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
       core.setOutput('releaseId', releaseData.id.toString());
       core.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
-      core.setOutput('appVersion', fullVersion);
+      core.setOutput('appVersion', info.version.split('+')[0]);
     }
 
     if (releaseId) {
@@ -198,7 +183,7 @@ async function run(): Promise<void> {
         await uploadVersionJSON({
           owner,
           repo,
-          version: buildIdAsVersion ? fullVersion : originalAppVersion,
+          version: info.version.split('+')[0],
           notes: body,
           tagName,
           releaseId,
