@@ -120,7 +120,7 @@ These inputs allow you to modify the GitHub release.
 | `artifactPaths`    | The paths of the generated artifacts                               |
 | `appVersion`       | The version of the app                                             |
 
-## Caveats
+## Tips and Caveats
 
 - You can use this Action on a repo that doesn't have Tauri configured. We automatically initialize Tauri before building, and configure it to use your Web artifacts.
   - You can configure the project initialization with the `distPath` and `iconPath` options.
@@ -134,6 +134,7 @@ These inputs allow you to modify the GitHub release.
   - Usually it will work without it, but the action will install and use a global `@tauri-apps/cli` installation instead of your project's CLI which can cause issues if you also configured `tauriScript` or if you have multiple `tauri.conf.json` files in your repo.
   - Additionally, relative paths provided via the `--config` flag will be resolved relative to the `projectPath` to match Tauri's behavior.
 - If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
+- If you only want to build the app without having the action upload any assets, for example if you want to only use [`actions/upload-artifact`](https://github.com/actions/upload-artifact), simply omit `tagName` and `releaseId`.
 
 ## Partners
 
