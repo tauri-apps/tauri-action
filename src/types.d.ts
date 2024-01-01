@@ -69,3 +69,10 @@ export interface TauriConfig {
     };
   };
 }
+
+export interface CargoConfig {
+  build?: {
+    target?: string;
+    'target-dir'?: string;
+  };
+}
