@@ -48,12 +48,14 @@ async function run(): Promise<void> {
     const updaterJsonPreferNsis =
       core.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
 
+    // If releaseId is set we'll use this to upload the assets to.
+    // If tagName is set we also require releaseName to create a new release.
+    // If neither releaseId nor tagName are set we won't try to upload anything at the end.
     if (!releaseId) {
-      if (Boolean(tagName) !== Boolean(releaseName)) {
+      if (Boolean(tagName) && !releaseName)
         throw new Error(
-          '`tagName` is required along with `releaseName` when creating a release.',
+          '`releaseName` is required if `tagName` is set when creating a release.',
         );
-      }
     }
 
     const buildOptions: BuildOptions = {
@@ -187,6 +189,8 @@ async function run(): Promise<void> {
           updaterJsonKeepUniversal,
         });
       }
+    } else {
+      console.log('No releaseId or tagName provided, skipping all uploads...');
     }
   } catch (error) {
     // @ts-ignore
