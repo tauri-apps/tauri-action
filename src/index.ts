@@ -106,6 +106,37 @@ async function run(): Promise<void> {
 
     const targetInfo = getTargetInfo(targetPath);
     const info = getInfo(projectPath, targetInfo, configArg);
+    core.setOutput('appVersion', info.version);
+
+    // Other steps may benfit from this so we do this whether or not we want to upload it.
+    if (targetInfo.platform === 'macos') {
+      let i = 0;
+      for (const artifact of artifacts) {
+        // updater provide a .tar.gz, this will prevent duplicate and overwriting of
+        // signed archive
+        if (
+          artifact.path.endsWith('.app') &&
+          !existsSync(`${artifact.path}.tar.gz`)
+        ) {
+          console.log(
+            `Packaging ${artifact.path} directory into ${artifact.path}.tar.gz`,
+          );
+
+          await execCommand('tar', [
+            'czf',
+            `${artifact.path}.tar.gz`,
+            '-C',
+            dirname(artifact.path),
+            basename(artifact.path),
+          ]);
+          artifact.path += '.tar.gz';
+        } else if (artifact.path.endsWith('.app')) {
+          // we can't upload a directory
+          artifacts.splice(i, 1);
+        }
+        i++;
+      }
+    }
 
     if (tagName && !releaseId) {
       const templates = [
@@ -136,35 +167,9 @@ async function run(): Promise<void> {
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
       core.setOutput('releaseId', releaseData.id.toString());
       core.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
-      core.setOutput('appVersion', info.version);
     }
 
     if (releaseId) {
-      if (targetInfo.platform === 'macos') {
-        let i = 0;
-        for (const artifact of artifacts) {
-          // updater provide a .tar.gz, this will prevent duplicate and overwriting of
-          // signed archive
-          if (
-            artifact.path.endsWith('.app') &&
-            !existsSync(`${artifact.path}.tar.gz`)
-          ) {
-            await execCommand('tar', [
-              'czf',
-              `${artifact.path}.tar.gz`,
-              '-C',
-              dirname(artifact.path),
-              basename(artifact.path),
-            ]);
-            artifact.path += '.tar.gz';
-          } else if (artifact.path.endsWith('.app')) {
-            // we can't upload a directory
-            artifacts.splice(i, 1);
-          }
-          i++;
-        }
-      }
-
       await uploadReleaseAssets(owner, repo, releaseId, artifacts);
 
       if (includeUpdaterJson) {

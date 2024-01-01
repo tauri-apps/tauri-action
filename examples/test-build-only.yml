@@ -32,6 +32,7 @@ jobs:
       - name: install frontend dependencies
         run: yarn install # change this to npm or pnpm depending on which one you use
 
+      # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any asstes.
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
