@@ -76,7 +76,7 @@ export async function buildProject(
   const cratePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
 
   const artifactsPath = join(
-    getTargetDir(cratePath),
+    getTargetDir(cratePath, !!targetPath),
     targetPath ?? '',
     profile ? profile : debug ? 'debug' : 'release',
   );
