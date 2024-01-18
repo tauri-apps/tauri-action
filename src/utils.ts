@@ -301,7 +301,7 @@ export function getInfo(
       process.exit(1);
     }
 
-    if (version){
+    if (version) {
       wixAppVersion = version.replace(/[-+]/g, '.');
     }
 
