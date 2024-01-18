@@ -24,6 +24,7 @@ export const extensions = [
   '.AppImage.tar.gz',
   '.AppImage',
   '.deb',
+  '.rpm',
   '.msi.zip.sig',
   '.msi.zip',
   '.msi',
@@ -266,6 +267,7 @@ export function getInfo(
     let version;
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
+    let rpmRelease = '1';
 
     const config = getConfig(tauriDir);
     if (targetInfo) {
@@ -298,11 +300,16 @@ export function getInfo(
       process.exit(1);
     }
 
+    if (config.tauri?.bundle?.rpm?.release) {
+      rpmRelease = config.tauri?.bundle?.rpm?.release;
+    }
+
     return {
       tauriPath: tauriDir,
       name,
       version,
       wixLanguage,
+      rpmRelease,
     };
   } else {
     // This should not actually happen.

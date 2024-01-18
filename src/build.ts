@@ -59,6 +59,7 @@ export async function buildProject(
     name: info.name,
     version: info.version,
     wixLanguage: info.wixLanguage,
+    rpmRelease: info.rpmRelease,
   };
 
   await runner.execTauriCommand(['build'], [...tauriArgs], root);
@@ -175,6 +176,14 @@ export async function buildProject(
             : arch === 'aarch64'
               ? 'arm64'
               : arch;
+    const rpmArch =
+      arch === 'x64' || arch === 'x86_64'
+        ? 'x86_64'
+        : arch === 'x32' || arch === 'x86' || arch === 'i686'
+          ? 'i386'
+          : arch === 'arm'
+            ? 'armhfp'
+            : arch;
     const appImageArch =
       arch === 'x64' || arch === 'x86_64'
         ? 'amd64'
@@ -189,6 +198,13 @@ export async function buildProject(
           `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`,
         ),
         arch: debianArch,
+      },
+      {
+        path: join(
+          artifactsPath,
+          `bundle/rpm/${fileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
+        ),
+        arch: rpmArch,
       },
       {
         path: join(
