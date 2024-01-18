@@ -71,7 +71,7 @@ jobs:
           projectPath: ./__fixtures__/example-with-tauri
           includeDebug: true
           includeRelease: false
-          tagName: ${{ github.repository == 'tauri-apps/tauri-action' && 'example-with-tauri-v__VERSION__' || '' }}
+          tagName: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'example-with-tauri-v__VERSION__' || '' }}
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
@@ -92,7 +92,7 @@ jobs:
           appVersion: ../package.json # relative to tauri.conf.json
           includeDebug: true
           includeRelease: false
-          tagName: ${{ github.repository == 'tauri-apps/tauri-action' && 'example-v__VERSION__' || '' }}
+          tagName: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'example-v__VERSION__' || '' }}
           releaseName: 'Release example app v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
