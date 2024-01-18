@@ -59,7 +59,7 @@ export async function buildProject(
     name: info.name,
     version: info.version,
     wixLanguage: info.wixLanguage,
-    wixAppVersion: info.version.replace(/[-+]/g, '.'),
+    wixAppVersion: info.wixAppVersion,
     rpmRelease: info.rpmRelease,
   };
 

@@ -41,6 +41,7 @@ export interface Info {
   name: string;
   version: string;
   wixLanguage: string | string[] | { [language: string]: unknown };
+  wixAppVersion: string;
   rpmRelease: string;
 }
 
