@@ -59,6 +59,7 @@ export async function buildProject(
     name: info.name,
     version: info.version,
     wixLanguage: info.wixLanguage,
+    wixAppVersion: info.wixAppVersion,
     rpmRelease: info.rpmRelease,
   };
 
@@ -128,19 +129,19 @@ export async function buildProject(
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi`,
+          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi`,
         ),
       );
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip`,
+          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
         ),
       );
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip.sig`,
+          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
         ),
       );
     });

@@ -267,6 +267,7 @@ export function getInfo(
     let version;
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
+    let wixAppVersion;
     let rpmRelease = '1';
 
     const config = getConfig(tauriDir);
@@ -300,6 +301,10 @@ export function getInfo(
       process.exit(1);
     }
 
+    if (version) {
+      wixAppVersion = version.replace(/[-+]/g, '.');
+    }
+
     if (config.tauri?.bundle?.rpm?.release) {
       rpmRelease = config.tauri?.bundle?.rpm?.release;
     }
@@ -309,6 +314,7 @@ export function getInfo(
       name,
       version,
       wixLanguage,
+      wixAppVersion,
       rpmRelease,
     };
   } else {
