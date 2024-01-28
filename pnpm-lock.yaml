@@ -35,8 +35,8 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: 20.11.7
-    version: 20.11.7
+    specifier: 20.11.8
+    version: 20.11.8
   '@typescript-eslint/eslint-plugin':
     specifier: 6.19.1
     version: 6.19.1(@typescript-eslint/parser@6.19.1)(eslint@8.56.0)(typescript@5.3.3)
@@ -421,8 +421,8 @@ packages:
       '@types/unist': 2.0.6
     dev: true
 
-  /@types/node@20.11.7:
-    resolution: {integrity: sha512-GPmeN1C3XAyV5uybAf4cMLWT9fDWcmQhZVtMFu7OR32WjrqGG+Wnk2V1d0bmtUyE/Zy1QJ9BxyiTih9z8Oks8A==}
+  /@types/node@20.11.8:
+    resolution: {integrity: sha512-i7omyekpPTNdv4Jb/Rgqg0RU8YqLcNsI12quKSDkRXNfx7Wxdm6HhK1awT3xTgEkgxPn3bvnSpiEAc7a7Lpyow==}
     dependencies:
       undici-types: 5.26.5
     dev: true
