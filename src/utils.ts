@@ -278,14 +278,18 @@ export function getInfo(
       mergeUserConfig(root, config, configFlag);
     }
 
+    name = config?.productName;
+    version = config?.version;
+
     if (config.package) {
       name = config.package.productName;
       version = config.package.version;
-      if (config.package.version?.endsWith('.json')) {
-        const packageJsonPath = join(tauriDir, config.package.version);
-        const contents = readFileSync(packageJsonPath).toString();
-        version = JSON.parse(contents).version;
-      }
+    }
+
+    if (version?.endsWith('.json')) {
+      const packageJsonPath = join(tauriDir, version);
+      const contents = readFileSync(packageJsonPath).toString();
+      version = JSON.parse(contents).version;
     }
     if (!(name && version)) {
       const cargoManifest = getCargoManifest(tauriDir);

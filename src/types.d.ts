@@ -52,6 +52,8 @@ export interface TargetInfo {
 }
 
 export interface TauriConfig {
+  productName?: string;
+  version?: string;
   package?: {
     productName?: string;
     version?: string;
