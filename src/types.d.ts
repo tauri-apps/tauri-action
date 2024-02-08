@@ -51,7 +51,7 @@ export interface TargetInfo {
   platform: TargetPlatform;
 }
 
-export interface TauriConfig {
+export interface TauriConfigV1 {
   package?: {
     productName?: string;
     version?: string;
@@ -70,6 +70,28 @@ export interface TauriConfig {
         wix?: {
           language?: string | string[] | { [language: string]: unknown };
         };
+      };
+    };
+  };
+}
+
+export interface TauriConfigV2 {
+  identifier: string;
+  productName?: string;
+  version?: string;
+  build?: {
+    frontendDist?: string;
+    beforeBuildCommand?: string;
+  };
+  bundle?: {
+    linux?: {
+      rpm?: {
+        release?: string;
+      };
+    };
+    windows?: {
+      wix?: {
+        language?: string | string[] | { [language: string]: unknown };
       };
     };
   };
