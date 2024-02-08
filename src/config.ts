@@ -5,11 +5,13 @@ import { parse as parseToml } from '@iarna/toml';
 import JSON5 from 'json5';
 import merge from 'lodash.merge';
 
-import { TauriConfig } from './types';
+import { TauriConfigV1, TauriConfigV2 } from './types';
 
-function _tryParseJsonConfig(contents: string): TauriConfig | null {
+function _tryParseJsonConfig(
+  contents: string,
+): TauriConfigV1 | TauriConfigV2 | null {
   try {
-    const config = JSON.parse(contents) as TauriConfig;
+    const config = JSON.parse(contents) as TauriConfigV1 | TauriConfigV2;
     return config;
   } catch (e) {
     // @ts-ignore
@@ -18,9 +20,11 @@ function _tryParseJsonConfig(contents: string): TauriConfig | null {
   }
 }
 
-function _tryParseJson5Config(contents: string): TauriConfig | null {
+function _tryParseJson5Config(
+  contents: string,
+): TauriConfigV1 | TauriConfigV2 | null {
   try {
-    const config = JSON5.parse(contents) as TauriConfig;
+    const config = JSON5.parse(contents) as TauriConfigV1 | TauriConfigV2;
     return config;
   } catch (e) {
     // @ts-ignore
@@ -29,9 +33,11 @@ function _tryParseJson5Config(contents: string): TauriConfig | null {
   }
 }
 
-function _tryParseTomlConfig(contents: string): TauriConfig | null {
+function _tryParseTomlConfig(
+  contents: string,
+): TauriConfigV1 | TauriConfigV2 | null {
   try {
-    const config = parseToml(contents) as TauriConfig;
+    const config = parseToml(contents) as TauriConfigV1 | TauriConfigV2;
     return config;
   } catch (e) {
     // @ts-ignore
@@ -43,7 +49,7 @@ function _tryParseTomlConfig(contents: string): TauriConfig | null {
 function readPlatformConfig(
   tauriDir: string,
   platform: string,
-): TauriConfig | null {
+): TauriConfigV1 | TauriConfigV2 | null {
   let path = join(tauriDir, `tauri.${platform}.conf.json`);
   if (existsSync(path)) {
     const contents = readFileSync(path).toString();
@@ -70,7 +76,7 @@ function readPlatformConfig(
 
 /// This modifies baseConfig in-place!
 export function mergePlatformConfig(
-  baseConfig: TauriConfig,
+  baseConfig: TauriConfigV1 | TauriConfigV2,
   tauriDir: string,
   target: string,
 ) {
@@ -84,7 +90,7 @@ export function mergePlatformConfig(
 /// This modifies baseConfig in-place!
 export function mergeUserConfig(
   root: string,
-  baseConfig: TauriConfig,
+  baseConfig: TauriConfigV1 | TauriConfigV2,
   mergeConfig: string,
 ) {
   let config = _tryParseJsonConfig(mergeConfig);
@@ -106,7 +112,7 @@ export function mergeUserConfig(
 
 export function getConfig(
   tauriDir: string /* customPath?: string */,
-): TauriConfig {
+): TauriConfigV1 | TauriConfigV2 {
   /* if (customPath) {
     return readCustomConfig(customPath);
   } */
@@ -139,7 +145,7 @@ export function getConfig(
   throw "Couldn't locate or parse tauri config.";
 }
 
-function readCustomConfig(customPath: string) {
+function readCustomConfig(customPath: string): TauriConfigV1 | TauriConfigV2 {
   if (!existsSync(customPath)) {
     throw `Provided config path \`${customPath}\` does not exist.`;
   }
@@ -163,4 +169,38 @@ function readCustomConfig(customPath: string) {
   }
 
   throw `Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`;
+}
+
+export function isV2Config(
+  config: TauriConfigV1 | TauriConfigV2,
+): config is TauriConfigV2 {
+  return 'identifier' in config;
+}
+
+export function convertToV2Config(config: TauriConfigV1): TauriConfigV2 {
+  if (!config.tauri?.bundle?.identifier) {
+    throw Error('v1 config has no bundle identifier.');
+  }
+
+  return {
+    identifier: config.tauri?.bundle?.identifier,
+    productName: config.package?.productName,
+    version: config.package?.version,
+    build: {
+      frontendDist: config.build?.distDir,
+      beforeBuildCommand: config.build?.beforeBuildCommand,
+    },
+    bundle: {
+      linux: {
+        rpm: {
+          release: config.tauri?.bundle?.rpm?.release,
+        },
+      },
+      windows: {
+        wix: {
+          language: config.tauri?.bundle?.windows?.wix,
+        },
+      },
+    },
+  };
 }
