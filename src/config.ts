@@ -198,7 +198,7 @@ export function convertToV2Config(config: TauriConfigV1): TauriConfigV2 {
       },
       windows: {
         wix: {
-          language: config.tauri?.bundle?.windows?.wix,
+          language: config.tauri?.bundle?.windows?.wix?.language,
         },
       },
     },
