@@ -80,9 +80,13 @@ export function mergePlatformConfig(
   tauriDir: string,
   target: string,
 ) {
-  const config = readPlatformConfig(tauriDir, target);
+  let config = readPlatformConfig(tauriDir, target);
 
   if (config) {
+    if (isV2Config(baseConfig)) {
+      config = convertToV2Config(config);
+    }
+
     merge(baseConfig, config);
   }
 }
@@ -104,6 +108,10 @@ export function mergeUserConfig(
   }
 
   if (config) {
+    if (isV2Config(baseConfig)) {
+      config = convertToV2Config(config);
+    }
+
     merge(baseConfig, config);
   } else {
     console.error(`Couldn't read --config: ${mergeConfig}`);
