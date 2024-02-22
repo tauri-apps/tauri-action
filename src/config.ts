@@ -266,7 +266,8 @@ export class TauriConfig {
     }
   }
 
-  /// Update tauri.conf.json file on disk with current values. Used solely in `initProject()` and therefore only handles plain JSON.
+  /// Update tauri.conf.json file on disk with current values. Used solely in `initProject()`
+  /// and therefore only handles plain JSON while assuming it's a valid file straight from `tauri init`.
   public updateConfigFile(tauriDir: string) {
     const configPath = join(tauriDir, 'tauri.conf.json');
     const contents = readFileSync(configPath).toString();
@@ -279,29 +280,22 @@ export class TauriConfig {
 
     if (this._isV2) {
       const c = config as TauriConfigV2;
+
       c.identifier = this.identifier;
       c.productName = this.productName;
       c.version = this.version;
-
-      c.build = c.build ?? {};
-      c.build.beforeBuildCommand = this.beforeBuildCommand;
-      c.build.frontendDist = this.frontendDist;
+      c.build!.beforeBuildCommand = this.beforeBuildCommand;
+      c.build!.frontendDist = this.frontendDist;
 
       writeFileSync(configPath, JSON.stringify(c, null, 2));
     } else {
       const c = config as TauriConfigV1;
 
-      c.build = c.build ?? {};
-      c.build.beforeBuildCommand = this.beforeBuildCommand;
-      c.build.distDir = this.frontendDist;
-
-      c.package = c.package ?? {};
-      c.package.productName = this.productName;
-      c.package.version = this.version;
-
-      c.tauri = c.tauri ?? {};
-      c.tauri.bundle = c.tauri.bundle ?? { identifier: '' };
-      c.tauri.bundle.identifier = this.identifier;
+      c.build!.beforeBuildCommand = this.beforeBuildCommand;
+      c.build!.distDir = this.frontendDist;
+      c.package!.productName = this.productName;
+      c.package!.version = this.version;
+      c.tauri!.bundle!.identifier = this.identifier;
 
       writeFileSync(configPath, JSON.stringify(c, null, 2));
     }
