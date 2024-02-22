@@ -5,13 +5,7 @@ import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
 import { globbySync } from 'globby';
 
-import {
-  convertToV2Config,
-  getConfig,
-  isV2Config,
-  mergePlatformConfig,
-  mergeUserConfig,
-} from './config';
+import { TauriConfig } from './config';
 
 import type {
   CargoConfig,
@@ -275,16 +269,14 @@ export function getInfo(
       'en-US';
     let rpmRelease = '1';
 
-    const config = (() => {
-      const varconfig = getConfig(tauriDir);
-      if (targetInfo) {
-        mergePlatformConfig(varconfig, tauriDir, targetInfo.platform);
-      }
-      if (configFlag) {
-        mergeUserConfig(root, varconfig, configFlag);
-      }
-      return isV2Config(varconfig) ? varconfig : convertToV2Config(varconfig);
-    })();
+    const config = TauriConfig.fromBaseConfig(tauriDir);
+
+    if (targetInfo) {
+      config.mergePlatformConfig(tauriDir, targetInfo.platform);
+    }
+    if (configFlag) {
+      config.mergeUserConfig(root, configFlag);
+    }
 
     name = config?.productName;
 
@@ -309,12 +301,12 @@ export function getInfo(
 
     const wixAppVersion = version.replace(/[-+]/g, '.');
 
-    if (config.bundle?.windows?.wix?.language) {
-      wixLanguage = config.bundle.windows.wix.language;
+    if (config.wixLanguage) {
+      wixLanguage = config.wixLanguage;
     }
 
-    if (config.bundle?.linux?.rpm?.release) {
-      rpmRelease = config.bundle?.linux?.rpm?.release;
+    if (config.rpmRelease) {
+      rpmRelease = config.rpmRelease;
     }
 
     return {
