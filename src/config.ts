@@ -133,6 +133,7 @@ export class TauriConfig {
       const contents = readFileSync(
         join(tauriDir, 'tauri.conf.json'),
       ).toString();
+      console.log(contents);
       const config = _tryParseJsonConfig(contents);
       if (config) {
         if ('identifier' in config) {
@@ -150,6 +151,7 @@ export class TauriConfig {
       const contents = readFileSync(
         join(tauriDir, 'tauri.conf.json5'),
       ).toString();
+      console.log(contents);
       const config = _tryParseJson5Config(contents);
       if (config) {
         if ('identifier' in config) {
@@ -165,11 +167,14 @@ export class TauriConfig {
 
     if (existsSync(join(tauriDir, 'Tauri.toml'))) {
       const contents = readFileSync(join(tauriDir, 'Tauri.toml')).toString();
+      console.log(contents);
       const config = _tryParseTomlConfig(contents);
       if (config) {
         if ('identifier' in config) {
+          console.log(true);
           return this.fromV2Base(config);
         } else {
+          console.log(false);
           return this.fromV1Base(config);
         }
       }
