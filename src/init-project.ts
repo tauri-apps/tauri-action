@@ -37,7 +37,7 @@ export async function initProject(
   config.beforeBuildCommand = '';
 
   console.log(
-    `Updating tauri.conf.json file according to these configurations: ${config}`,
+    `Updating tauri.conf.json file according to these configurations: ${JSON.stringify(config)}`,
   );
   config.updateConfigFile(tauriPath);
 

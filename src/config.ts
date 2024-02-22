@@ -300,7 +300,8 @@ export class TauriConfig {
       c.package.version = this.version;
 
       c.tauri = c.tauri ?? {};
-      c.tauri.bundle = c.tauri.bundle ?? { identifier: this.identifier };
+      c.tauri.bundle = c.tauri.bundle ?? { identifier: '' };
+      c.tauri.bundle.identifier = this.identifier;
 
       writeFileSync(configPath, JSON.stringify(c, null, 2));
     }
