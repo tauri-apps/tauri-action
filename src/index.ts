@@ -97,7 +97,14 @@ async function run(): Promise<void> {
     const artifacts = releaseArtifacts.concat(debugArtifacts);
 
     if (artifacts.length === 0) {
-      throw new Error('No artifacts were found.');
+      if (releaseId || tagName || releaseName) {
+        throw new Error('No artifacts were found.');
+      } else {
+        console.log(
+          'No artifacts were found. The action was not configured to upload artifacts, therefore this is not handled as an error.',
+        );
+        return;
+      }
     }
 
     console.log(`Found artifacts:\n${artifacts.map((a) => a.path).join('\n')}`);
