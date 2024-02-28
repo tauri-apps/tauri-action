@@ -41,6 +41,8 @@ export interface Info {
   name: string;
   version: string;
   wixLanguage: string | string[] | { [language: string]: unknown };
+  wixAppVersion: string;
+  rpmRelease: string;
 }
 
 export type TargetPlatform = 'android' | 'ios' | 'macos' | 'linux' | 'windows';
@@ -49,7 +51,7 @@ export interface TargetInfo {
   platform: TargetPlatform;
 }
 
-export interface TauriConfig {
+export interface TauriConfigV1 {
   package?: {
     productName?: string;
     version?: string;
@@ -61,10 +63,35 @@ export interface TauriConfig {
   tauri?: {
     bundle?: {
       identifier: string;
+      rpm?: {
+        release?: string;
+      };
       windows?: {
         wix?: {
           language?: string | string[] | { [language: string]: unknown };
         };
+      };
+    };
+  };
+}
+
+export interface TauriConfigV2 {
+  identifier: string;
+  productName?: string;
+  version?: string;
+  build?: {
+    frontendDist?: string;
+    beforeBuildCommand?: string;
+  };
+  bundle?: {
+    linux?: {
+      rpm?: {
+        release?: string;
+      };
+    };
+    windows?: {
+      wix?: {
+        language?: string | string[] | { [language: string]: unknown };
       };
     };
   };

@@ -59,6 +59,8 @@ export async function buildProject(
     name: info.name,
     version: info.version,
     wixLanguage: info.wixLanguage,
+    wixAppVersion: info.wixAppVersion,
+    rpmRelease: info.rpmRelease,
   };
 
   await runner.execTauriCommand(['build'], [...tauriArgs], root);
@@ -127,19 +129,19 @@ export async function buildProject(
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi`,
+          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi`,
         ),
       );
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip`,
+          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
         ),
       );
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.version}_${arch}_${lang}.msi.zip.sig`,
+          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
         ),
       );
     });
@@ -175,6 +177,14 @@ export async function buildProject(
             : arch === 'aarch64'
               ? 'arm64'
               : arch;
+    const rpmArch =
+      arch === 'x64' || arch === 'x86_64'
+        ? 'x86_64'
+        : arch === 'x32' || arch === 'x86' || arch === 'i686'
+          ? 'i386'
+          : arch === 'arm'
+            ? 'armhfp'
+            : arch;
     const appImageArch =
       arch === 'x64' || arch === 'x86_64'
         ? 'amd64'
@@ -189,6 +199,13 @@ export async function buildProject(
           `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`,
         ),
         arch: debianArch,
+      },
+      {
+        path: join(
+          artifactsPath,
+          `bundle/rpm/${fileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
+        ),
+        arch: rpmArch,
       },
       {
         path: join(

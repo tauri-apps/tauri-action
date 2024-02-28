@@ -5,7 +5,13 @@ import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
 import { globbySync } from 'globby';
 
-import { getConfig, mergePlatformConfig, mergeUserConfig } from './config';
+import {
+  convertToV2Config,
+  getConfig,
+  isV2Config,
+  mergePlatformConfig,
+  mergeUserConfig,
+} from './config';
 
 import type {
   CargoConfig,
@@ -24,6 +30,7 @@ export const extensions = [
   '.AppImage.tar.gz',
   '.AppImage',
   '.deb',
+  '.rpm',
   '.msi.zip.sig',
   '.msi.zip',
   '.msi',
@@ -271,31 +278,33 @@ export function getInfo(
     let version;
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
+    let rpmRelease = '1';
 
-    const config = getConfig(tauriDir);
-    if (targetInfo) {
-      mergePlatformConfig(config, tauriDir, targetInfo.platform);
-    }
-    if (configFlag) {
-      mergeUserConfig(root, config, configFlag);
-    }
-
-    if (config.package) {
-      name = config.package.productName;
-      version = config.package.version;
-      if (config.package.version?.endsWith('.json')) {
-        const packageJsonPath = join(tauriDir, config.package.version);
-        const contents = readFileSync(packageJsonPath).toString();
-        version = JSON.parse(contents).version;
+    const config = (() => {
+      const varconfig = getConfig(tauriDir);
+      if (targetInfo) {
+        mergePlatformConfig(varconfig, tauriDir, targetInfo.platform);
       }
+      if (configFlag) {
+        mergeUserConfig(root, varconfig, configFlag);
+      }
+      return isV2Config(varconfig) ? varconfig : convertToV2Config(varconfig);
+    })();
+
+    name = config?.productName;
+
+    if (config.version?.endsWith('.json')) {
+      const packageJsonPath = join(tauriDir, config?.version);
+      const contents = readFileSync(packageJsonPath).toString();
+      version = JSON.parse(contents).version;
+    } else {
+      version = config?.version;
     }
+
     if (!(name && version)) {
       const cargoManifest = getCargoManifest(tauriDir);
       name = name ?? cargoManifest.package.name;
       version = version ?? cargoManifest.package.version;
-    }
-    if (config.tauri?.bundle?.windows?.wix?.language) {
-      wixLanguage = config.tauri.bundle.windows.wix.language;
     }
 
     if (!(name && version)) {
@@ -303,11 +312,23 @@ export function getInfo(
       process.exit(1);
     }
 
+    const wixAppVersion = version.replace(/[-+]/g, '.');
+
+    if (config.bundle?.windows?.wix?.language) {
+      wixLanguage = config.bundle.windows.wix.language;
+    }
+
+    if (config.bundle?.linux?.rpm?.release) {
+      rpmRelease = config.bundle?.linux?.rpm?.release;
+    }
+
     return {
       tauriPath: tauriDir,
       name,
       version,
       wixLanguage,
+      wixAppVersion,
+      rpmRelease,
     };
   } else {
     // This should not actually happen.

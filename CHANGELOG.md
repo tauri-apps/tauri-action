@@ -1,5 +1,17 @@
 # Changelog
 
+## \[0.5.0]
+
+- [`d618a42`](https://www.github.com/tauri-apps/tauri-action/commit/d618a422b9e0fbca4fd2436be4f6368453c45a7e)([#645](https://www.github.com/tauri-apps/tauri-action/pull/645)) The action added `appVersion` parameter to facilitate easy access to the current application version in action output.
+- [`cb393bf`](https://www.github.com/tauri-apps/tauri-action/commit/cb393bfe3b4fb834693989499769ff8fc24ada26)([#611](https://www.github.com/tauri-apps/tauri-action/pull/611)) **Breaking:** The action no longer supports `vue-cli-plugin-tauri` since it was deprecated like `vue-cli` itself. Please migrate to `@tauri-apps/cli`.
+- [`b87a544`](https://www.github.com/tauri-apps/tauri-action/commit/b87a544c7a8ad25f6ff41f0a4a20b8f711056008)([#626](https://www.github.com/tauri-apps/tauri-action/pull/626)) The action now correctly handles glob patterns in the workspace.members config (example: `members = ["bin/*"]`).
+- [`0ae6017`](https://www.github.com/tauri-apps/tauri-action/commit/0ae60177b83b43bbaa0da921afe7262787a0441a)([#684](https://www.github.com/tauri-apps/tauri-action/pull/684)) The action now correctly handles the wix version after the build of the app in case the version includes a `+` or `-` character.
+- [`b862ca0`](https://www.github.com/tauri-apps/tauri-action/commit/b862ca088ab308dee6bf035f4003f1f446e11438)([#602](https://www.github.com/tauri-apps/tauri-action/pull/602)) **Breaking:** The action no longer tries to read a package.json file for the app name and version when initializing a tauri app. Use the `appName` and `appVersion` input arguments or the `--config` flag.
+- [`1fb5053`](https://www.github.com/tauri-apps/tauri-action/commit/1fb5053d19d6a3c1c5a2b1d39e3d5ce2bf448ca5)([#657](https://www.github.com/tauri-apps/tauri-action/pull/657)) The action now always packages the macOS `.app` bundle into a `.tar.gz` archive even if the action is not configured to upload anything.
+- [`27089ad`](https://www.github.com/tauri-apps/tauri-action/commit/27089ade7a1c5a985c91b23424bd5017b8148595)([#659](https://www.github.com/tauri-apps/tauri-action/pull/659)) The action now reads `build.target` from `.cargo/config` toml to get the correct `target` directory.
+- [`37e9ece`](https://www.github.com/tauri-apps/tauri-action/commit/37e9ece68aebd830aaa7c14c7602d700d8513f6a)([#651](https://www.github.com/tauri-apps/tauri-action/pull/651)) Add support for RPM bundle artifacts, introduced in tauri-bundler@2.0.0-alpha.14
+- [`81921ba`](https://www.github.com/tauri-apps/tauri-action/commit/81921ba9d3c8163235d21b262dd0c3ad3fb19029)([#702](https://www.github.com/tauri-apps/tauri-action/pull/702)) Add support for Tauri's new config structure introduced in `2.0.0-beta.0`.
+
 ## \[0.4.5]
 
 - [`2b7cd25`](https://www.github.com/tauri-apps/tauri-action/commit/2b7cd25a7d13b4d3bb90a8b0d4423686466120d4)([#598](https://www.github.com/tauri-apps/tauri-action/pull/598)) Fix path resolution for `build.target-dir` if the `.cargo` folder is not in the current working dir.
