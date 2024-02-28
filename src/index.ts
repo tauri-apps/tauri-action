@@ -101,7 +101,7 @@ async function run(): Promise<void> {
         throw new Error('No artifacts were found.');
       } else {
         console.log(
-          'Found no artifacts. Uploading the artifacts was not requested, so we are done.',
+          'No artifacts were found. The action was not configured to upload artifacts, therefore this is not handled as an error.',
         );
         return;
       }
