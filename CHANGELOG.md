@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.5.1]
+
+- [`f2abe36`](https://www.github.com/tauri-apps/tauri-action/commit/f2abe36fa8a59765d670b75f823b2ed3e93b40ab)([#711](https://www.github.com/tauri-apps/tauri-action/pull/711)) tauri-action can now successfully build binaries even if they don't have any artifacts (`bundle.active: false`)
+- [`f1b5af3`](https://www.github.com/tauri-apps/tauri-action/commit/f1b5af3268dd7853edbef9a055dd9e9d051de9e1)([#724](https://www.github.com/tauri-apps/tauri-action/pull/724)) The action now correctly ignores the `[build.target]` value in `.cargo/config.toml` if the `--target` arg is set.
+- [`901a25d`](https://www.github.com/tauri-apps/tauri-action/commit/901a25d04f844266e79c65414f31b34d52089219)([#713](https://www.github.com/tauri-apps/tauri-action/pull/713)) Fixed an issue that caused the action to not merge user and platform configs into the base tauri config correctly.
+
 ## \[0.5.0]
 
 - [`d618a42`](https://www.github.com/tauri-apps/tauri-action/commit/d618a422b9e0fbca4fd2436be4f6368453c45a7e)([#645](https://www.github.com/tauri-apps/tauri-action/pull/645)) The action added `appVersion` parameter to facilitate easy access to the current application version in action output.
