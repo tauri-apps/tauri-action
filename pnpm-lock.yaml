@@ -32,8 +32,8 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: 20.11.30
-    version: 20.11.30
+    specifier: 20.12.2
+    version: 20.12.2
   '@typescript-eslint/eslint-plugin':
     specifier: 7.4.0
     version: 7.4.0(@typescript-eslint/parser@7.4.0)(eslint@8.57.0)(typescript@5.4.3)
@@ -418,8 +418,8 @@ packages:
       '@types/unist': 2.0.6
     dev: true
 
-  /@types/node@20.11.30:
-    resolution: {integrity: sha512-dHM6ZxwlmuZaRmUPfv1p+KrdD1Dci04FbdEm/9wEMouFqxYoFl5aMkt0VMAUtYRQDyYvD41WJLukhq/ha3YuTw==}
+  /@types/node@20.12.2:
+    resolution: {integrity: sha512-zQ0NYO87hyN6Xrclcqp7f8ZbXNbRfoGWNcMvHTPQp9UUrwI0mI7XBz+cu7/W6/VClYo2g63B0cjull/srU7LgQ==}
     dependencies:
       undici-types: 5.26.5
     dev: true
