@@ -17,11 +17,12 @@ This is generally the simplest way to release your Tauri app.
 ```yml
 name: 'publish'
 
-# This will trigger the action on each push to the `release` branch.
 on:
   push:
     branches:
       - release
+
+# This workflow will trigger on each push to the `release` branch to create or update a GitHub release, build your app, and upload the artifacts to the release.
 
 jobs:
   publish-tauri:
@@ -30,38 +31,51 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
+        - platform: 'macos-latest' # for Arm based macs (M1 and above).
+          args: '--target aarch64-apple-darwin'
+        - platform: 'macos-latest' # for Intel based macs.
+          args: '--target x86_64-apple-darwin'
+        - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
+          args: ''
+        - platform: 'windows-latest'
+          args: ''
 
-    runs-on: ${{ matrix.platform }}
+    runs-on: ${{ matrix.settings.platform }}
     steps:
       - uses: actions/checkout@v4
 
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: lts/*
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
+        with:
+          # Those targets are only used on macos runners so it's in an `if` to speed up windows&linux a tiny bit.
+          targets: ${{ matrix.settings.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
+        if: matrix.settings.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
+        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
 
       - name: install frontend dependencies
-        run: yarn install # change this to npm or pnpm depending on which one you use
+        run: yarn install # change this to npm, pnpm or bun depending on which one you use.
 
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: 'App v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
+          args: ${{ matrix.settings.args }}
 ```
 
 ## Inputs
@@ -83,16 +97,16 @@ These inputs are only used if your GitHub repository does not contain an existin
 
 These inputs allow you to change how your Tauri project will be build.
 
-| Name                       | Required | Description                                                                                                                                  | Type   | Default                                       |
-| -------------------------- | :------: | -------------------------------------------------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------- |
-| `projectPath`              |  false   | The path to the root of the tauri project relative to the current working directory                                                          | string | .                                             |
-| `includeDebug`             |  false   | whether to include a debug build or not                                                                                                      | bool   | false                                         |
-| `includeRelease`           |  false   | whether to include a release build or not                                                                                                    | bool   | true                                          |
-| `includeUpdaterJson`       |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                                            | bool   | true                                          |
-| `updaterJsonPreferNsis`    |  false   | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist                              | bool   | `false` for Tauri v1 and `true` for Tauri v2+ |
-| `updaterJsonKeepUniversal` |  false   | whether the updater JSON file should include universal macOS builds as darwin-universal on top of using it in the aarch64 and x86_64 fields. | bool   | false                                         |
-| `tauriScript`              |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build`                                                   | string | `npm run\|pnpm\|yarn tauri`                   |
-| `args`                     |  false   | Additional arguments to the current build command                                                                                            | string |                                               |
+| Name                       | Required | Description                                                                                                                                  | Type   | Default                                                          |
+| -------------------------- | :------: | -------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------- |
+| `projectPath`              |  false   | The path to the root of the tauri project relative to the current working directory                                                          | string | .                                                                |
+| `includeDebug`             |  false   | whether to include a debug build or not                                                                                                      | bool   | false                                                            |
+| `includeRelease`           |  false   | whether to include a release build or not                                                                                                    | bool   | true                                                             |
+| `includeUpdaterJson`       |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                                            | bool   | true                                                             |
+| `updaterJsonPreferNsis`    |  false   | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist                              | bool   | `false`. May be changed to true for Tauri v2 apps in the future. |
+| `updaterJsonKeepUniversal` |  false   | whether the updater JSON file should include universal macOS builds as darwin-universal on top of using it in the aarch64 and x86_64 fields. | bool   | false                                                            |
+| `tauriScript`              |  false   | the script to execute the Tauri CLI. It must not include any args or commands like `build`                                                   | string | `npm run\|pnpm\|yarn tauri`                                      |
+| `args`                     |  false   | Additional arguments to the current build command                                                                                            | string |                                                                  |
 
 ### Release Configuration
 
