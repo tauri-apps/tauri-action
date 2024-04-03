@@ -31,14 +31,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        - platform: 'macos-latest' # for Arm based macs (M1 and above).
-          args: '--target aarch64-apple-darwin'
-        - platform: 'macos-latest' # for Intel based macs.
-          args: '--target x86_64-apple-darwin'
-        - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
-          args: ''
-        - platform: 'windows-latest'
-          args: ''
+        settings:
+          - platform: 'macos-latest' # for Arm based macs (M1 and above).
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest' # for Intel based macs.
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
 
     runs-on: ${{ matrix.settings.platform }}
     steps:
