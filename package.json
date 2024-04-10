@@ -45,7 +45,7 @@
     "eslint-plugin-n": "17.2.0",
     "eslint-plugin-promise": "6.1.1",
     "prettier": "3.2.5",
-    "typescript": "5.4.4"
+    "typescript": "5.4.5"
   },
   "engines": {
     "pnpm": ">=7.33.0",
