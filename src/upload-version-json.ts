@@ -138,17 +138,16 @@ export async function uploadVersionJSON({
   const filteredAssets = assets.data.filter((data) =>
     assetNames.has(data.name),
   );
-  const targetUrl = basename(signatureFile.path);
-  if (
-    !filteredAssets.find((asset) =>
-      asset.browser_download_url.endsWith(targetUrl),
-    )
-  ) {
+  const baseName = basename(signatureFile.path);
+  let downloadUrl = filteredAssets.find((asset) =>
+    asset.browser_download_url.endsWith(baseName),
+  )?.browser_download_url;
+  if (!downloadUrl) {
     console.warn('Asset not found for the updater JSON. Skipping upload...');
     return;
   }
   // Untagged release downloads won't work after the release was published
-  const downloadUrl = targetUrl?.replace(
+  downloadUrl = downloadUrl.replace(
     /\/download\/(untagged-[^/]+)\//,
     tagName ? `/download/${tagName}/` : '/latest/download/',
   );
