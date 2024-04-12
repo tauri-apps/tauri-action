@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { basename, resolve } from 'node:path';
+import { basename, extname, resolve } from 'node:path';
 
 import { getOctokit } from '@actions/github';
 
@@ -138,7 +138,7 @@ export async function uploadVersionJSON({
   const filteredAssets = assets.data.filter((data) =>
     assetNames.has(data.name),
   );
-  const baseName = basename(signatureFile.path);
+  const baseName = basename(signatureFile.path, extname(signatureFile.path));
   let downloadUrl = filteredAssets.find((asset) =>
     asset.browser_download_url.endsWith(baseName),
   )?.browser_download_url;
