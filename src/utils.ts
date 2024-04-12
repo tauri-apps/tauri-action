@@ -1,5 +1,5 @@
-import { existsSync, readFileSync } from 'fs';
-import path, { join, normalize, resolve, sep } from 'path';
+import { existsSync, readFileSync } from 'node:fs';
+import path, { join, normalize, resolve, sep } from 'node:path';
 
 import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
@@ -22,14 +22,17 @@ export const extensions = [
   '.dmg',
   '.AppImage.tar.gz.sig',
   '.AppImage.tar.gz',
+  '.AppImage.sig',
   '.AppImage',
   '.deb',
   '.rpm',
   '.msi.zip.sig',
   '.msi.zip',
+  '.msi.sig',
   '.msi',
   '.nsis.zip.sig',
   '.nsis.zip',
+  '.exe.sig',
   '.exe',
 ];
 

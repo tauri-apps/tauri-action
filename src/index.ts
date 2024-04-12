@@ -1,5 +1,5 @@
-import { existsSync } from 'fs';
-import { resolve, dirname, basename } from 'path';
+import { existsSync } from 'node:fs';
+import { resolve, dirname, basename } from 'node:path';
 
 import * as core from '@actions/core';
 import { context } from '@actions/github';
@@ -47,6 +47,10 @@ async function run(): Promise<void> {
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
     const updaterJsonPreferNsis =
       core.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
+
+    const updaterJsonUseNonZipped = core.getBooleanInput(
+      'updaterJsonUseNonZipped',
+    );
 
     // If releaseId is set we'll use this to upload the assets to.
     // If tagName is set we also require releaseName to create a new release.
@@ -194,6 +198,7 @@ async function run(): Promise<void> {
           targetInfo,
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
+          updaterJsonUseNonZipped,
         });
       }
     } else {

@@ -45,6 +45,9 @@ inputs:
   updaterJsonKeepUniversal:
     description: 'whether the updater JSON file should add universal macOS as darwin-universal on top of using it in the darwin-aarch64 and darwin-x86_64 fields if no native builds exist.'
     default: false
+  updaterJsonUseNonZipped:
+    description: 'whether the action will use the non zipped version of the installer bundle for the updater JSON.'
+    default: false
   tauriScript:
     description: 'the script to run to build the Tauri app'
   args:

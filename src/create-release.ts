@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
 import * as core from '@actions/core';
 import { getOctokit, context } from '@actions/github';
