@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        settings:
+        include:
           - platform: 'macos-latest'
             args: '--verbose --target universal-apple-darwin'
           - platform: 'ubuntu-latest'
@@ -20,7 +20,7 @@ jobs:
           - platform: 'windows-latest'
             args: '--verbose'
 
-    runs-on: ${{ matrix.settings.platform }}
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
 
@@ -56,7 +56,7 @@ jobs:
 
       # system
       - name: install dependencies (ubuntu only)
-        if: matrix.settings.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev
@@ -75,7 +75,7 @@ jobs:
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
-          args: ${{ matrix.settings.args }}
+          args: ${{ matrix.args }}
 
       - name: Frontend-only Project
         uses: ./
@@ -96,4 +96,4 @@ jobs:
           releaseName: 'Release example app v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
-          args: ${{ matrix.settings.args }}
+          args: ${{ matrix.args }}
