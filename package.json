@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "build": "ncc build src/index.ts -o dist -m",
-    "lint": "eslint src/**",
+    "lint": "eslint .",
     "format": "prettier --write src/** action.yml README.md",
     "format:check": "prettier --check src/** action.yml README.md"
   },
@@ -27,7 +27,7 @@
     "@actions/github": "6.0.0",
     "@iarna/toml": "2.2.5",
     "execa": "8.0.1",
-    "globby": "^14.0.0",
+    "globby": "14.0.1",
     "json5": "2.2.3",
     "string-argv": "0.3.2",
     "tslib": "2.6.2"
@@ -40,15 +40,11 @@
     "covector": "0.10.2",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
-    "eslint-config-love": "43.1.0",
-    "eslint-plugin-import": "2.29.1",
-    "eslint-plugin-n": "17.3.0",
-    "eslint-plugin-promise": "6.1.1",
     "prettier": "3.2.5",
     "typescript": "5.4.5"
   },
   "engines": {
-    "pnpm": ">=7.33.0",
+    "pnpm": "^8.0.0",
     "node": ">=20"
   }
 }
