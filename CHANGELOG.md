@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.2]
+
+- [`14e3c6c`](https://www.github.com/tauri-apps/tauri-action/commit/14e3c6c0d54349a0fe1eb576b560883744c07303)([#776](https://www.github.com/tauri-apps/tauri-action/pull/776)) Fixed an issue causing x86\_64 artifacts to be handled as aarch64 on GitHub's new M1 runners.
+
 ## \[0.5.1]
 
 - [`f2abe36`](https://www.github.com/tauri-apps/tauri-action/commit/f2abe36fa8a59765d670b75f823b2ed3e93b40ab)([#711](https://www.github.com/tauri-apps/tauri-action/pull/711)) tauri-action can now successfully build binaries even if they don't have any artifacts (`bundle.active: false`)
