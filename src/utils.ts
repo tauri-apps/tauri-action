@@ -153,6 +153,7 @@ export function getTargetDir(crateDir: string, targetArgSet: boolean): string {
       // Even if build.target is the same as the default target it will change the output dir.
       // Just like tauri we only support a single string, not an array (bug?).
       // targetArgSet: --target overwrites the .cargo/config.toml target value so we check for that too.
+      console.log(targetArgSet, targetDirExt, typeof cargoConfig.build?.target);
       if (
         !targetArgSet &&
         !targetDirExt &&
