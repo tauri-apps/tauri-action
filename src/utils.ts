@@ -131,17 +131,22 @@ export function getTargetDir(crateDir: string, targetArgSet: boolean): string {
     targetDir = process.env.CARGO_TARGET_DIR ?? def;
   }
 
+  console.log('start', dir);
+
   while (dir.length && dir[dir.length - 1] !== sep) {
+    console.log('iter', dir);
     let cargoConfigPath = join(dir, '.cargo/config');
     if (!existsSync(cargoConfigPath)) {
       cargoConfigPath = join(dir, '.cargo/config.toml');
     }
     if (existsSync(cargoConfigPath)) {
+      console.log('exists', cargoConfigPath);
       const cargoConfig = parseToml(
         readFileSync(cargoConfigPath).toString(),
       ) as CargoConfig;
 
       if (!targetDir && cargoConfig.build?.['target-dir']) {
+        console.log('!targetDir &&', cargoConfig);
         const t = cargoConfig.build['target-dir'];
         if (path.isAbsolute(t)) {
           targetDir = t;
