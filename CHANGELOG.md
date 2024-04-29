@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.3]
+
+- [`6c3f5cf`](https://www.github.com/tauri-apps/tauri-action/commit/6c3f5cf8dbe7410537547f57aef00238e53e931f)([#779](https://www.github.com/tauri-apps/tauri-action/pull/779)) Fixed an issue that caused `tauri-action` to not detect `build.target` in `.cargo/config.toml` if the app was part of a cargo workspace.
+
 ## \[0.5.2]
 
 - [`14e3c6c`](https://www.github.com/tauri-apps/tauri-action/commit/14e3c6c0d54349a0fe1eb576b560883744c07303)([#776](https://www.github.com/tauri-apps/tauri-action/pull/776)) Fixed an issue causing x86\_64 artifacts to be handled as aarch64 on GitHub's new M1 runners.
