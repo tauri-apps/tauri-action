@@ -114,12 +114,16 @@ export function getWorkspaceDir(dir: string): string | null {
   return null;
 }
 
-export function getTargetDir(crateDir: string, targetArgSet: boolean): string {
+export function getTargetDir(
+  workspacePath: string,
+  tauriPath: string,
+  targetArgSet: boolean,
+): string {
   // The default path if no configs are set.
-  const def = join(crateDir, 'target');
+  const def = join(workspacePath, 'target');
 
   // This will hold the path of current iteration
-  let dir = crateDir;
+  let dir = tauriPath;
 
   // hold on to target-dir cargo config while we search for build.target
   let targetDir;
