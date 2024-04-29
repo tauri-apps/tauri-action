@@ -42,13 +42,15 @@ export function getAssetName(assetPath: string) {
 
   let arch = '';
   if (ext === '.app.tar.gz.sig' || ext === '.app.tar.gz') {
-    const os_arch = process.arch === 'arm64' ? '_aarch64' : '_x64';
-
-    arch = assetPath.includes('universal-apple-darwin')
-      ? '_universal'
-      : assetPath.includes('aarch64-apple-darwin')
-        ? '_aarch64'
-        : os_arch;
+    if (assetPath.includes('universal-apple-darwin')) {
+      arch = '_universal';
+    } else if (assetPath.includes('aarch64-apple-darwin')) {
+      arch = '_aarch64';
+    } else if (assetPath.includes('x86_64-apple-darwin')) {
+      arch = '_x64';
+    } else {
+      arch = process.arch === 'arm64' ? '_aarch64' : '_x64';
+    }
   }
 
   return assetPath.includes(`${path.sep}debug${path.sep}`)
