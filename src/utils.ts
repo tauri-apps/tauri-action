@@ -45,13 +45,15 @@ export function getAssetName(assetPath: string) {
 
   let arch = '';
   if (ext === '.app.tar.gz.sig' || ext === '.app.tar.gz') {
-    const os_arch = process.arch === 'arm64' ? '_aarch64' : '_x64';
-
-    arch = assetPath.includes('universal-apple-darwin')
-      ? '_universal'
-      : assetPath.includes('aarch64-apple-darwin')
-        ? '_aarch64'
-        : os_arch;
+    if (assetPath.includes('universal-apple-darwin')) {
+      arch = '_universal';
+    } else if (assetPath.includes('aarch64-apple-darwin')) {
+      arch = '_aarch64';
+    } else if (assetPath.includes('x86_64-apple-darwin')) {
+      arch = '_x64';
+    } else {
+      arch = process.arch === 'arm64' ? '_aarch64' : '_x64';
+    }
   }
 
   return assetPath.includes(`${path.sep}debug${path.sep}`)
@@ -117,12 +119,16 @@ export function getWorkspaceDir(dir: string): string | null {
   return null;
 }
 
-export function getTargetDir(crateDir: string, targetArgSet: boolean): string {
+export function getTargetDir(
+  workspacePath: string,
+  tauriPath: string,
+  targetArgSet: boolean,
+): string {
   // The default path if no configs are set.
-  const def = join(crateDir, 'target');
+  const def = join(workspacePath, 'target');
 
   // This will hold the path of current iteration
-  let dir = crateDir;
+  let dir = tauriPath;
 
   // hold on to target-dir cargo config while we search for build.target
   let targetDir;
