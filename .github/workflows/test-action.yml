@@ -28,12 +28,12 @@ jobs:
       - name: install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8.x.x
+          version: 9.x.x
 
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: lts/*
           cache: pnpm
 
       # example-with-tauri tests the auto installation of the tauri cli
