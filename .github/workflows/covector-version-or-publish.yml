@@ -15,12 +15,12 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: lts/*
           registry-url: 'https://registry.npmjs.org'
       - name: install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8.x.x
+          version: 9.x.x
       - name: git config
         run: |
           git config --global user.name "${{ github.event.pusher.name }}"
