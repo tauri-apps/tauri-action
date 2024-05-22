@@ -131,7 +131,7 @@ jobs:
         run: |
           cd ./__fixtures__/example-v2
           pnpm install
-          cd ./__fixtures__/example-with-tauri-v2
+          cd ../example-with-tauri-v2
           pnpm install
 
       # rust
