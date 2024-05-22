@@ -33,15 +33,15 @@
     "tslib": "2.6.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.3.0",
     "@types/node": "20.12.12",
-    "@typescript-eslint/eslint-plugin": "7.10.0",
-    "@typescript-eslint/parser": "7.10.0",
     "@vercel/ncc": "0.38.1",
     "covector": "0.10.2",
-    "eslint": "8.57.0",
+    "eslint": "9.3.0",
     "eslint-config-prettier": "9.1.0",
     "prettier": "3.2.5",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "typescript-eslint": "rc-v8"
   },
   "engines": {
     "pnpm": "^9.0.0",

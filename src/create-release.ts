@@ -51,7 +51,8 @@ export async function createRelease(
     try {
       bodyFileContent = fs.readFileSync(bodyPath, { encoding: 'utf8' });
     } catch (error) {
-      //@ts-ignore
+      // @ts-expect-error Catching errors in typescript is a headache
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       core.setFailed(error.message);
     }
   }
@@ -87,7 +88,7 @@ export async function createRelease(
       console.log(`Found release with tag ${tagName}.`);
     }
   } catch (error) {
-    // @ts-ignore
+    // @ts-expect-error Catching errors in typescript is a headache
     if (error.status === 404 || error.message === 'release not found') {
       console.log(`Couldn't find release with tag ${tagName}. Creating one.`);
       const createdRelease = await github.rest.repos.createRelease({
@@ -104,6 +105,7 @@ export async function createRelease(
       release = createdRelease.data;
     } else {
       console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `⚠️ Unexpected error fetching GitHub release for tag ${tagName}: ${error}`,
       );
       throw error;
