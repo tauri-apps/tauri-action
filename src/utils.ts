@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import path, { join, normalize, resolve, sep } from 'path';
 
 import { execa } from 'execa';
@@ -238,7 +238,6 @@ export function getCargoManifest(dir: string): CargoManifest {
 
 export function hasDependency(dependencyName: string, root: string): boolean {
   const packageJson = getPackageJson(root);
-  console.log(packageJson);
   return (
     packageJson &&
     (packageJson.dependencies?.[dependencyName] ||
@@ -247,14 +246,10 @@ export function hasDependency(dependencyName: string, root: string): boolean {
 }
 
 export function usesYarn(root: string): boolean {
-  console.log('uses yarn', existsSync(join(root, 'yarn.lock')));
   return existsSync(join(root, 'yarn.lock'));
 }
 
 export function usesPnpm(root: string): boolean {
-  console.log('uses pnpm looking for', join(root, 'pnpm-lock.yaml'));
-  console.log(readdirSync(root));
-  console.log('uses pnpm', existsSync(join(root, 'pnpm-lock.yaml')));
   return existsSync(join(root, 'pnpm-lock.yaml'));
 }
 

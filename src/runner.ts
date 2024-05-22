@@ -46,10 +46,7 @@ async function getRunner(
     return new Runner(runnerCommand, runnerArgs);
   }
 
-  console.log('No tauriScript provided');
-
   if (hasDependency('@tauri-apps/cli', root)) {
-    console.log('hasDependency true');
     if (usesYarn(root)) return new Runner('yarn', ['tauri']);
     if (usesPnpm(root)) return new Runner('pnpm', ['tauri']);
     return new Runner('npm', ['run', 'tauri']);
