@@ -62,6 +62,7 @@ export function getPackageJson(root: string) {
   const packageJsonPath = join(root, 'package.json');
   if (existsSync(packageJsonPath)) {
     const packageJsonString = readFileSync(packageJsonPath).toString();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(packageJsonString);
   }
   return null;
@@ -237,10 +238,14 @@ export function getCargoManifest(dir: string): CargoManifest {
 }
 
 export function hasDependency(dependencyName: string, root: string): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const packageJson = getPackageJson(root);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return (
     packageJson &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     (packageJson.dependencies?.[dependencyName] ||
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       packageJson.devDependencies?.[dependencyName])
   );
 }
@@ -294,7 +299,8 @@ export function getInfo(
     if (config.version?.endsWith('.json')) {
       const packageJsonPath = join(tauriDir, config?.version);
       const contents = readFileSync(packageJsonPath).toString();
-      version = JSON.parse(contents).version;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      version = JSON.parse(contents).version as string;
     } else {
       version = config?.version;
     }
@@ -363,3 +369,5 @@ export function getTargetInfo(targetPath?: string): TargetInfo {
 
   return { arch, platform };
 }
+
+// TODO: Properly resolve the eslint issues in this file.

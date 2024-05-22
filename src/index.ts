@@ -200,9 +200,10 @@ async function run(): Promise<void> {
       console.log('No releaseId or tagName provided, skipping all uploads...');
     }
   } catch (error) {
-    // @ts-ignore
+    // @ts-expect-error Catching errors in typescript is a headache
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     core.setFailed(error.message);
   }
 }
 
-run();
+await run();

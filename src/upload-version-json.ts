@@ -83,8 +83,10 @@ export async function uploadVersionJSON({
       )
     ).data as unknown as ArrayBuffer;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     versionContent.platforms = JSON.parse(
       Buffer.from(assetData).toString(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ).platforms;
   }
 
