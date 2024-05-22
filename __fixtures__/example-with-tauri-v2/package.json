@@ -1,5 +1,5 @@
 {
-  "name": "example",
+  "name": "example-with-tauri",
   "version": "0.1.1",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@tauri-apps/cli": "^1.5.6"
+    "@tauri-apps/cli": "next"
   }
 }
