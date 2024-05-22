@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import path, { join, normalize, resolve, sep } from 'path';
 
 import { execa } from 'execa';
@@ -252,6 +252,8 @@ export function usesYarn(root: string): boolean {
 }
 
 export function usesPnpm(root: string): boolean {
+  console.log('uses pnpm looking for', join(root, 'pnpm-lock.yaml'));
+  console.log(readdirSync(root));
   console.log('uses pnpm', existsSync(join(root, 'pnpm-lock.yaml')));
   return existsSync(join(root, 'pnpm-lock.yaml'));
 }
