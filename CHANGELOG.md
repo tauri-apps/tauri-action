@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.4]
+
+- [`ec3a63a`](https://www.github.com/tauri-apps/tauri-action/commit/ec3a63a669b74a6069703e9dc1c3e0bd72abad62)([#799](https://www.github.com/tauri-apps/tauri-action/pull/799)) Fixed an issue that caused the action to not detect ARM AppImages.
+
 ## \[0.5.3]
 
 - [`6c3f5cf`](https://www.github.com/tauri-apps/tauri-action/commit/6c3f5cf8dbe7410537547f57aef00238e53e931f)([#779](https://www.github.com/tauri-apps/tauri-action/pull/779)) Fixed an issue that caused `tauri-action` to not detect `build.target` in `.cargo/config.toml` if the app was part of a cargo workspace.
