@@ -190,7 +190,11 @@ export async function buildProject(
         ? 'amd64'
         : arch === 'x32' || arch === 'i686'
           ? 'i386'
-          : arch;
+          : arch === 'arm' // TODO: Confirm this
+            ? 'arm'
+            : arch === 'arm64' // TODO: This is probably a Tauri bug
+              ? 'aarch64'
+              : arch;
 
     artifacts = [
       {
