@@ -87,7 +87,7 @@ function readPlatformConfig(
 
 function readCustomConfig(customPath: string): TauriConfigV1 | TauriConfigV2 {
   if (!existsSync(customPath)) {
-    throw `Provided config path \`${customPath}\` does not exist.`;
+    throw new Error(`Provided config path \`${customPath}\` does not exist.`);
   }
 
   const contents = readFileSync(customPath).toString();
@@ -108,7 +108,7 @@ function readCustomConfig(customPath: string): TauriConfigV1 | TauriConfigV2 {
     if (config) return config;
   }
 
-  throw `Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`;
+  throw new Error(`Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`);
 }
 
 export class TauriConfig {
@@ -179,7 +179,7 @@ export class TauriConfig {
       console.error("Found Tauri.toml file but couldn't parse it as TOML.");
     }
 
-    throw "Couldn't locate or parse tauri config.";
+    throw new Error("Couldn't locate or parse tauri config.");
   }
 
   private static fromV1Base(config: TauriConfigV1): TauriConfig {
