@@ -65,15 +65,13 @@ export async function buildProject(
 
   await runner.execTauriCommand(['build'], [...tauriArgs], root);
 
-  let fileAppName = app.name;
   // on Linux, the app product name is converted to kebab-case
-  if (targetInfo.platform === 'linux') {
-    fileAppName = fileAppName
-      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-      .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
-      .replace(/[ _.]/g, '-')
-      .toLowerCase();
-  }
+  // with tauri-cli 2.0.0-beta.19 deb and appimage will now use the product name as on the other platforms.
+  const linuxFileAppName = app.name
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
+    .replace(/[ _.]/g, '-')
+    .toLowerCase();
 
   const workspacePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
 
@@ -95,13 +93,10 @@ export async function buildProject(
     }
 
     artifacts = [
-      join(
-        artifactsPath,
-        `bundle/dmg/${fileAppName}_${app.version}_${arch}.dmg`,
-      ),
-      join(artifactsPath, `bundle/macos/${fileAppName}.app`),
-      join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz`),
-      join(artifactsPath, `bundle/macos/${fileAppName}.app.tar.gz.sig`),
+      join(artifactsPath, `bundle/dmg/${app.name}_${app.version}_${arch}.dmg`),
+      join(artifactsPath, `bundle/macos/${app.name}.app`),
+      join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz`),
+      join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz.sig`),
     ].map((path) => ({ path, arch }));
   } else if (targetInfo.platform === 'windows') {
     if (arch.startsWith('i')) {
@@ -129,19 +124,19 @@ export async function buildProject(
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi`,
+          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
         ),
       );
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
+          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
         ),
       );
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${fileAppName}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
+          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
         ),
       );
     });
@@ -149,19 +144,19 @@ export async function buildProject(
     winArtifacts.push(
       join(
         artifactsPath,
-        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.exe`,
+        `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe`,
       ),
     );
     winArtifacts.push(
       join(
         artifactsPath,
-        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip`,
+        `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip`,
       ),
     );
     winArtifacts.push(
       join(
         artifactsPath,
-        `bundle/nsis/${fileAppName}_${app.version}_${arch}-setup.nsis.zip.sig`,
+        `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`,
       ),
     );
 
@@ -200,39 +195,80 @@ export async function buildProject(
       {
         path: join(
           artifactsPath,
-          `bundle/deb/${fileAppName}_${app.version}_${debianArch}.deb`,
+          `bundle/deb/${app.name}_${app.version}_${debianArch}.deb`,
         ),
         arch: debianArch,
       },
       {
         path: join(
           artifactsPath,
-          `bundle/rpm/${fileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
+          // TODO: Upstream bug?
+          `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
         ),
         arch: rpmArch,
       },
       {
         path: join(
           artifactsPath,
-          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage`,
+          `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage`,
         ),
         arch: appImageArch,
       },
       {
         path: join(
           artifactsPath,
-          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`,
+          `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz`,
         ),
         arch: appImageArch,
       },
       {
         path: join(
           artifactsPath,
-          `bundle/appimage/${fileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
+          `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
         ),
         arch: appImageArch,
       },
     ];
+
+    if (app.name != linuxFileAppName) {
+      artifacts.push(
+        {
+          path: join(
+            artifactsPath,
+            `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb`,
+          ),
+          arch: debianArch,
+        },
+        /* {
+          path: join(
+            artifactsPath,
+            `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
+          ),
+          arch: rpmArch,
+        }, */
+        {
+          path: join(
+            artifactsPath,
+            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage`,
+          ),
+          arch: appImageArch,
+        },
+        {
+          path: join(
+            artifactsPath,
+            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`,
+          ),
+          arch: appImageArch,
+        },
+        {
+          path: join(
+            artifactsPath,
+            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
+          ),
+          arch: appImageArch,
+        },
+      );
+    }
   }
 
   console.log(
