@@ -202,7 +202,8 @@ export async function buildProject(
       {
         path: join(
           artifactsPath,
-          `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
+          // TODO: Upstream bug?
+          `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
         ),
         arch: rpmArch,
       },
@@ -227,42 +228,47 @@ export async function buildProject(
         ),
         arch: appImageArch,
       },
-      {
-        path: join(
-          artifactsPath,
-          `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb`,
-        ),
-        arch: debianArch,
-      },
-      {
-        path: join(
-          artifactsPath,
-          `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
-        ),
-        arch: rpmArch,
-      },
-      {
-        path: join(
-          artifactsPath,
-          `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage`,
-        ),
-        arch: appImageArch,
-      },
-      {
-        path: join(
-          artifactsPath,
-          `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`,
-        ),
-        arch: appImageArch,
-      },
-      {
-        path: join(
-          artifactsPath,
-          `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
-        ),
-        arch: appImageArch,
-      },
     ];
+
+    if (app.name != linuxFileAppName) {
+      artifacts.push(
+        {
+          path: join(
+            artifactsPath,
+            `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb`,
+          ),
+          arch: debianArch,
+        },
+        /* {
+          path: join(
+            artifactsPath,
+            `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
+          ),
+          arch: rpmArch,
+        }, */
+        {
+          path: join(
+            artifactsPath,
+            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage`,
+          ),
+          arch: appImageArch,
+        },
+        {
+          path: join(
+            artifactsPath,
+            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`,
+          ),
+          arch: appImageArch,
+        },
+        {
+          path: join(
+            artifactsPath,
+            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
+          ),
+          arch: appImageArch,
+        },
+      );
+    }
   }
 
   console.log(
