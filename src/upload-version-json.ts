@@ -47,7 +47,6 @@ export async function uploadVersionJSON({
   targetInfo,
   updaterJsonPreferNsis,
   updaterJsonKeepUniversal,
-  updaterJsonUseNonZipped,
 }: {
   owner: string;
   repo: string;
@@ -59,7 +58,6 @@ export async function uploadVersionJSON({
   targetInfo: TargetInfo;
   updaterJsonPreferNsis: boolean;
   updaterJsonKeepUniversal: boolean;
-  updaterJsonUseNonZipped: boolean;
 }) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -106,26 +104,24 @@ export async function uploadVersionJSON({
     ).platforms;
   }
 
-  const preferedSigExtension = updaterJsonPreferNsis
-    ? updaterJsonUseNonZipped
-      ? '.exe.sig'
-      : '.nsis.zip.sig'
-    : updaterJsonUseNonZipped
-      ? '.msi.sig'
-      : '.msi.zip.sig';
-  const signatureFile =
-    artifacts.find((s) => {
-      s.path.endsWith(preferedSigExtension);
-    }) ||
-    artifacts.find((artifact) => {
-      for (const extension of updaterJsonUseNonZipped
-        ? POSSIBLE_UPDATER_SIG_EXTENSIONS_NON_ZIPPED
-        : POSSIBLE_UPDATER_SIG_EXTENSIONS) {
-        if (artifact.path.endsWith(extension)) {
-          return true;
-        }
+  const signatureFiles = artifacts.filter((artifact) => {
+    return artifact.path.endsWith('.sig');
+  });
+  function signaturePriority(signaturePath: string) {
+    const priorities = updaterJsonPreferNsis
+      ? ['.nsis.zip.sig', '.exe.sig', '.msi.zip.sig', '.msi.sig']
+      : ['.msi.sig', '.nsis.zip.sig', '.msi.zip.sig', '.exe.sig'];
+    for (const [index, extension] of priorities.entries()) {
+      if (signaturePath.endsWith(extension)) {
+        return index + 1;
       }
-    });
+    }
+    return 0;
+  }
+  signatureFiles.sort((a, b) => {
+    return signaturePriority(b.path) - signaturePriority(a.path);
+  });
+  const signatureFile = signatureFiles[0];
   if (!signatureFile) {
     console.warn(
       'Signature not found for the updater JSON. Skipping upload...',

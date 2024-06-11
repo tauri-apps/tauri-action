@@ -48,10 +48,6 @@ async function run(): Promise<void> {
     const updaterJsonPreferNsis =
       core.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
 
-    const updaterJsonUseNonZipped = core.getBooleanInput(
-      'updaterJsonUseNonZipped',
-    );
-
     // If releaseId is set we'll use this to upload the assets to.
     // If tagName is set we also require releaseName to create a new release.
     // If neither releaseId nor tagName are set we won't try to upload anything at the end.
@@ -198,7 +194,6 @@ async function run(): Promise<void> {
           targetInfo,
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
-          updaterJsonUseNonZipped,
         });
       }
     } else {
