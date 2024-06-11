@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.6]
+
+- [`d80ec2c`](https://www.github.com/tauri-apps/tauri-action/commit/d80ec2ce013f37a16774e5dfe5ca51d3fb12ef1a) ([#821](https://www.github.com/tauri-apps/tauri-action/pull/821) by [@pewsheen](https://www.github.com/tauri-apps/tauri-action/../../pewsheen)) Fixed an issue that the action can't find aarch64 rpm package.
+
 ## \[0.5.5]
 
 - [`10eca12`](https://www.github.com/tauri-apps/tauri-action/commit/10eca12d4b7138e3c7dca7bccaa170a8784ea3f5) ([#810](https://www.github.com/tauri-apps/tauri-action/pull/810)) The action can now detects Linux bundles with the new naming convention added in tauri cli 2.0.0-beta.19
