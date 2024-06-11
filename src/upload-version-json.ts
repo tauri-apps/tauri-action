@@ -22,20 +22,6 @@ type VersionContent = {
   };
 };
 
-const POSSIBLE_UPDATER_SIG_EXTENSIONS = [
-  '.app.tar.gz.sig',
-  '.AppImage.sig',
-  '.msi.sig',
-  '.exe.sig',
-];
-
-const POSSIBLE_UPDATER_SIG_EXTENSIONS_NON_ZIPPED = [
-  '.app.tar.gz.sig',
-  '.AppImage.tar.gz.sig',
-  '.msi.zip.sig',
-  '.nsis.zip.sig',
-];
-
 export async function uploadVersionJSON({
   owner,
   repo,
