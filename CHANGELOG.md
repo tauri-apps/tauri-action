@@ -1,5 +1,13 @@
 # Changelog
 
+## \[0.5.5]
+
+- [`10eca12`](https://www.github.com/tauri-apps/tauri-action/commit/10eca12d4b7138e3c7dca7bccaa170a8784ea3f5) ([#810](https://www.github.com/tauri-apps/tauri-action/pull/810)) The action can now detects Linux bundles with the new naming convention added in tauri cli 2.0.0-beta.19
+
+## \[0.5.4]
+
+- [`ec3a63a`](https://www.github.com/tauri-apps/tauri-action/commit/ec3a63a669b74a6069703e9dc1c3e0bd72abad62)([#799](https://www.github.com/tauri-apps/tauri-action/pull/799)) Fixed an issue that caused the action to not detect ARM AppImages.
+
 ## \[0.5.3]
 
 - [`6c3f5cf`](https://www.github.com/tauri-apps/tauri-action/commit/6c3f5cf8dbe7410537547f57aef00238e53e931f)([#779](https://www.github.com/tauri-apps/tauri-action/pull/779)) Fixed an issue that caused `tauri-action` to not detect `build.target` in `.cargo/config.toml` if the app was part of a cargo workspace.

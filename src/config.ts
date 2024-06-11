@@ -13,7 +13,8 @@ function _tryParseJsonConfig(
     const config = JSON.parse(contents) as TauriConfigV1 | TauriConfigV2;
     return config;
   } catch (e) {
-    // @ts-ignore
+    // @ts-expect-error Catching errors in typescript is a headache
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const msg = e.message;
     console.error(
       `Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`,
@@ -26,10 +27,11 @@ function _tryParseJson5Config(
   contents: string,
 ): TauriConfigV1 | TauriConfigV2 | null {
   try {
-    const config = JSON5.parse(contents) as TauriConfigV1 | TauriConfigV2;
+    const config = JSON5.parse<TauriConfigV1 | TauriConfigV2>(contents);
     return config;
   } catch (e) {
-    // @ts-ignore
+    // @ts-expect-error Catching errors in typescript is a headache
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const msg = e.message;
     console.error(
       `Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`,
@@ -45,7 +47,8 @@ function _tryParseTomlConfig(
     const config = parseToml(contents) as TauriConfigV1 | TauriConfigV2;
     return config;
   } catch (e) {
-    // @ts-ignore
+    // @ts-expect-error Catching errors in typescript is a headache
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const msg = e.message;
     console.error(
       `Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`,
@@ -84,7 +87,7 @@ function readPlatformConfig(
 
 function readCustomConfig(customPath: string): TauriConfigV1 | TauriConfigV2 {
   if (!existsSync(customPath)) {
-    throw `Provided config path \`${customPath}\` does not exist.`;
+    throw new Error(`Provided config path \`${customPath}\` does not exist.`);
   }
 
   const contents = readFileSync(customPath).toString();
@@ -105,7 +108,7 @@ function readCustomConfig(customPath: string): TauriConfigV1 | TauriConfigV2 {
     if (config) return config;
   }
 
-  throw `Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`;
+  throw new Error(`Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`);
 }
 
 export class TauriConfig {
@@ -176,7 +179,7 @@ export class TauriConfig {
       console.error("Found Tauri.toml file but couldn't parse it as TOML.");
     }
 
-    throw "Couldn't locate or parse tauri config.";
+    throw new Error("Couldn't locate or parse tauri config.");
   }
 
   private static fromV1Base(config: TauriConfigV1): TauriConfig {
