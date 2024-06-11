@@ -99,7 +99,7 @@ export async function uploadVersionJSON({
       : ['.msi.sig', '.nsis.zip.sig', '.msi.zip.sig', '.exe.sig'];
     for (const [index, extension] of priorities.entries()) {
       if (signaturePath.endsWith(extension)) {
-        return index + 1;
+        return 100 - index;
       }
     }
     return 0;
