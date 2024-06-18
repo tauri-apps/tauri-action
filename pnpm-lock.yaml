@@ -37,8 +37,8 @@ importers:
         specifier: ^9.3.0
         version: 9.5.0
       '@types/node':
-        specifier: 20.14.3
-        version: 20.14.3
+        specifier: 20.14.4
+        version: 20.14.4
       '@vercel/ncc':
         specifier: 0.38.1
         version: 0.38.1
@@ -242,8 +242,8 @@ packages:
   '@types/mdast@3.0.15':
     resolution: {integrity: sha512-LnwD+mUEfxWMa1QpDraczIn6k0Ee3SMicuYSSzS6ZYl2gKS09EClnJYGd8Du6rfc5r/GZEk5o1mRb8TaTj03sQ==}
 
-  '@types/node@20.14.3':
-    resolution: {integrity: sha512-Nuzqa6WAxeGnve6SXqiPAM9rA++VQs+iLZ1DDd56y0gdvygSZlQvZuvdFPR3yLqkVxPu4WrO02iDEyH1g+wazw==}
+  '@types/node@20.14.4':
+    resolution: {integrity: sha512-1ChboN+57suCT2t/f8lwtPY/k3qTpuD/qnqQuYoBg6OQOcPyaw7PiZVdGpaZYAvhDDtqrt0oAaM8+oSu1xsUGw==}
 
   '@types/unist@2.0.10':
     resolution: {integrity: sha512-IfYcSBWE3hLpBg8+X2SEa8LVkJdJEkT2Ese2aaLs3ptGdVtABxndrMaxuFlQ1qdFf9Q5rDvDpxI3WwgvKFAsQA==}
@@ -1295,16 +1295,15 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
-  '@covector/apply@0.9.3(mocha@10.4.0)':
+  '@covector/apply@0.9.3':
     dependencies:
       '@covector/files': 0.7.2
       effection: 2.0.8(mocha@10.4.0)
       semver: 7.6.0
     transitivePeerDependencies:
       - encoding
-      - mocha
 
-  '@covector/assemble@0.11.0':
+  '@covector/assemble@0.11.0(mocha@10.4.0)':
     dependencies:
       '@covector/command': 0.7.1
       '@covector/files': 0.7.2
@@ -1317,6 +1316,7 @@ snapshots:
       unified: 9.2.2
     transitivePeerDependencies:
       - encoding
+      - mocha
       - supports-color
 
   '@covector/changelog@0.11.0':
@@ -1525,7 +1525,7 @@ snapshots:
     dependencies:
       '@types/unist': 2.0.10
 
-  '@types/node@20.14.3':
+  '@types/node@20.14.4':
     dependencies:
       undici-types: 5.26.5
 
@@ -1745,8 +1745,8 @@ snapshots:
 
   covector@0.11.0(mocha@10.4.0):
     dependencies:
-      '@covector/apply': 0.9.3(mocha@10.4.0)
-      '@covector/assemble': 0.11.0
+      '@covector/apply': 0.9.3
+      '@covector/assemble': 0.11.0(mocha@10.4.0)
       '@covector/changelog': 0.11.0
       '@covector/command': 0.7.1
       '@covector/files': 0.7.2
