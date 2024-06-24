@@ -36,10 +36,13 @@ jobs:
           node-version: lts/*
           cache: pnpm
 
-      # example-with-tauri tests the auto installation of the tauri cli
+      # TODO: test the auto installation of the tauri cli
       - name: install example dependencies
-        run: pnpm install
-        working-directory: ./.github/fixtures/example-v1
+        run: |
+          cd ./.github/fixtures/example-v1
+          pnpm install
+          cd ../example-with-tauri-v1
+          pnpm install
 
       # rust
       - name: install Rust stable
@@ -126,7 +129,7 @@ jobs:
           node-version: lts/*
           cache: pnpm
 
-      # TODO: example-with-tauri tests the auto installation of the tauri cli
+      # TODO: test the auto installation of the tauri cli
       - name: install example dependencies
         run: |
           cd ./.github/fixtures/example-v2
