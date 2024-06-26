@@ -99,7 +99,11 @@ export async function uploadVersionJSON({
   }
 
   const assetNames = new Set(
-    artifacts.map((p) => getAssetName(p.path).trim().replace(/ /g, '.')), // GitHub replaces spaces in asset names with dots
+    artifacts.map((p) =>
+      getAssetName(p.path)
+        .trim()
+        .replace(/[ ()[\]{}]/g, '.'),
+    ), // GitHub replaces spaces and special chars in asset names with dots
   );
   let downloadUrl;
   {
