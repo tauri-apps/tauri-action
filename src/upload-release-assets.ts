@@ -37,9 +37,11 @@ export async function uploadAssets(
 
     const assetName = getAssetName(asset.path);
 
-    const existingAsset = existingAssets.find(
-      (a) => a.name === assetName.trim().replace(/[ ()[\]{}]/g, '.'),
-    );
+    const existingAsset = existingAssets.find((a) => {
+      console.log('theirs', a.name);
+      console.log('ours', assetName.trim().replace(/[ ()[\]{}]/g, '.'));
+      return a.name === assetName.trim().replace(/[ ()[\]{}]/g, '.');
+    });
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
       await github.rest.repos.deleteReleaseAsset({
