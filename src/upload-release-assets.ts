@@ -39,8 +39,20 @@ export async function uploadAssets(
 
     const existingAsset = existingAssets.find((a) => {
       console.log('theirs', a.name);
-      console.log('ours', assetName.trim().replace(/[ ()[\]{}]/g, '.'));
-      return a.name === assetName.trim().replace(/[ ()[\]{}]/g, '.');
+      console.log(
+        'ours',
+        assetName
+          .trim()
+          .replace(/[ ()[\]{}]/g, '.')
+          .replace(/\.\./g, '.'),
+      );
+      return (
+        a.name ===
+        assetName
+          .trim()
+          .replace(/[ ()[\]{}]/g, '.')
+          .replace(/\.\./g, '.')
+      );
     });
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
