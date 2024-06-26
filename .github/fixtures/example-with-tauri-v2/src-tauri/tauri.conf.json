@@ -1,5 +1,5 @@
 {
-  "productName": "TauriExample App",
+  "productName": "TauriExample App (v2)",
   "version": "0.1.2",
   "identifier": "com.tauri.actiontest",
   "build": {

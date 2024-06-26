@@ -6,7 +6,7 @@
     "beforeBuildCommand": ""
   },
   "package": {
-    "productName": "TauriExample App",
+    "productName": "TauriExample App (v1)",
     "version": "0.1.1"
   },
   "tauri": {
