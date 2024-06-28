@@ -1,5 +1,5 @@
-import { existsSync } from 'fs';
-import { resolve, dirname, basename } from 'path';
+import { existsSync } from 'node:fs';
+import { resolve, dirname, basename } from 'node:path';
 
 import * as core from '@actions/core';
 import { context } from '@actions/github';

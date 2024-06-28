@@ -1,5 +1,5 @@
-import { existsSync } from 'fs';
-import { join } from 'path';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { initProject } from './init-project';
 import { getRunner } from './runner';
