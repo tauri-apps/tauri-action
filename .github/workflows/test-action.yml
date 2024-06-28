@@ -36,10 +36,13 @@ jobs:
           node-version: lts/*
           cache: pnpm
 
-      # example-with-tauri tests the auto installation of the tauri cli
+      # TODO: test the auto installation of the tauri cli
       - name: install example dependencies
-        run: pnpm install
-        working-directory: ./__fixtures__/example-v1
+        run: |
+          cd ./.github/fixtures/example-v1
+          pnpm install
+          cd ../example-with-tauri-v1
+          pnpm install
 
       # rust
       - name: install Rust stable
@@ -51,8 +54,8 @@ jobs:
         with:
           cache-on-failure: true
           workspaces: |
-            ./__fixtures__/example-v1/src-tauri -> ../../target
-            ./__fixtures__/example-with-tauri-v1/src-tauri -> ../../target
+            ./.github/fixtures/example-v1/src-tauri -> ../../target
+            ./.github/fixtures/example-with-tauri-v1/src-tauri -> ../../target
 
       # system
       - name: install dependencies (ubuntu only)
@@ -68,7 +71,7 @@ jobs:
           # Updater signature is exposed here to make sure it works in PR's
           TAURI_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
         with:
-          projectPath: ./__fixtures__/example-with-tauri-v1
+          projectPath: ./.github/fixtures/example-with-tauri-v1
           includeDebug: true
           includeRelease: false
           tagName: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'example-with-tauri-v__VERSION__' || '' }}
@@ -84,7 +87,7 @@ jobs:
           # Updater signature is exposed here to make sure it works in PR's
           TAURI_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
         with:
-          projectPath: ./__fixtures__/example-v1
+          projectPath: ./.github/fixtures/example-v1
           distPath: ../dist # relative to tauri.conf.json
           iconPath: ./icon.png # relative to projectPath
           bundleIdentifier: com.tauri.actiontest
@@ -126,10 +129,10 @@ jobs:
           node-version: lts/*
           cache: pnpm
 
-      # TODO: example-with-tauri tests the auto installation of the tauri cli
+      # TODO: test the auto installation of the tauri cli
       - name: install example dependencies
         run: |
-          cd ./__fixtures__/example-v2
+          cd ./.github/fixtures/example-v2
           pnpm install
           cd ../example-with-tauri-v2
           pnpm install
@@ -144,8 +147,8 @@ jobs:
         with:
           cache-on-failure: true
           workspaces: |
-            ./__fixtures__/example-v2/src-tauri -> ../../target
-            ./__fixtures__/example-with-tauri-v2/src-tauri -> ../../target
+            ./.github/fixtures/example-v2/src-tauri -> ../../target
+            ./.github/fixtures/example-with-tauri-v2/src-tauri -> ../../target
 
       # system
       - name: install dependencies (ubuntu only)
@@ -161,7 +164,7 @@ jobs:
           # Updater signature is exposed here to make sure it works in PR's
           TAURI_SIGNING_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
         with:
-          projectPath: ./__fixtures__/example-with-tauri-v2
+          projectPath: ./.github/fixtures/example-with-tauri-v2
           includeDebug: true
           includeRelease: false
           tagName: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'example-with-tauri-v__VERSION__' || '' }}
@@ -177,7 +180,7 @@ jobs:
           # Updater signature is exposed here to make sure it works in PR's
           TAURI_SIGNING_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
         with:
-          projectPath: ./__fixtures__/example-v2
+          projectPath: ./.github/fixtures/example-v2
           distPath: ../dist # relative to tauri.conf.json
           iconPath: ./icon.png # relative to projectPath
           bundleIdentifier: com.tauri.actiontest

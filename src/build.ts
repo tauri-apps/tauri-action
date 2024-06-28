@@ -65,12 +65,13 @@ export async function buildProject(
 
   await runner.execTauriCommand(['build'], [...tauriArgs], root);
 
-  // on Linux, the app product name is converted to kebab-case
+  // on Linux, the app product name is converted to kebab-case and `()[]{}` will be removed
   // with tauri-cli 2.0.0-beta.19 deb and appimage will now use the product name as on the other platforms.
   const linuxFileAppName = app.name
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
     .replace(/[ _.]/g, '-')
+    .replace(/[()[\]{}]/g, '')
     .toLowerCase();
 
   const workspacePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
