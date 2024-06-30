@@ -27,7 +27,7 @@
     "@actions/github": "6.0.0",
     "@iarna/toml": "2.2.5",
     "execa": "9.3.0",
-    "globby": "14.0.1",
+    "globby": "14.0.2",
     "json5": "2.2.3",
     "string-argv": "0.3.2",
     "tslib": "2.6.3"
