@@ -2,7 +2,7 @@ import fs from 'node:fs';
 
 import * as core from '@actions/core';
 import { getOctokit, context } from '@actions/github';
-import { GitHub } from '@actions/github/lib/utils';
+import type { GitHub } from '@actions/github/lib/utils';
 
 interface Release {
   id: number;
