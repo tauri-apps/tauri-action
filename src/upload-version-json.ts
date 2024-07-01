@@ -96,7 +96,7 @@ export async function uploadVersionJSON({
   function signaturePriority(signaturePath: string) {
     const priorities = updaterJsonPreferNsis
       ? ['.nsis.zip.sig', '.exe.sig', '.msi.zip.sig', '.msi.sig']
-      : ['.msi.sig', '.msi.zip.sig', '.nsis.zip.sig', '.exe.sig'];
+      : ['.msi.zip.sig', '.msi.sig', '.nsis.zip.sig', '.exe.sig'];
     for (const [index, extension] of priorities.entries()) {
       if (signaturePath.endsWith(extension)) {
         return 100 - index;
