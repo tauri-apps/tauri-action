@@ -1,5 +1,10 @@
 # Changelog
 
+## \[0.5.7]
+
+- [`f8044a1`](https://www.github.com/tauri-apps/tauri-action/commit/f8044a1d9fa468d71dd285d9f17b467dc8c9b334) ([#837](https://www.github.com/tauri-apps/tauri-action/pull/837) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Fixed an issue that caused the action to be unable to pick up the app bundles if the `productName` contained any of these characters: `()[]{}`.
+- [`edd3869`](https://www.github.com/tauri-apps/tauri-action/commit/edd386979eff0987d210b7043491b7b3fef906b4) ([#766](https://www.github.com/tauri-apps/tauri-action/pull/766) by [@Legend-Master](https://www.github.com/tauri-apps/tauri-action/../../Legend-Master)) Support non zipped updater for Windows and Linux
+
 ## \[0.5.6]
 
 - [`d80ec2c`](https://www.github.com/tauri-apps/tauri-action/commit/d80ec2ce013f37a16774e5dfe5ca51d3fb12ef1a) ([#821](https://www.github.com/tauri-apps/tauri-action/pull/821) by [@pewsheen](https://www.github.com/tauri-apps/tauri-action/../../pewsheen)) Fixed an issue that the action can't find aarch64 rpm package.
