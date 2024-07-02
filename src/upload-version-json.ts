@@ -138,9 +138,12 @@ export async function uploadVersionJSON({
     return;
   }
 
-  const baseName = basename(signatureFile.path, extname(signatureFile.path));
-  let downloadUrl = filteredAssets.find((asset) =>
-    asset.assetName.endsWith(baseName),
+  const updaterName = basename(
+    signatureFile.assetName,
+    extname(signatureFile.assetName),
+  );
+  let downloadUrl = filteredAssets.find(
+    (asset) => asset.assetName == updaterName,
   )?.downloadUrl;
   if (!downloadUrl) {
     console.warn('Asset not found for the updater JSON. Skipping upload...');
