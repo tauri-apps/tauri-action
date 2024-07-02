@@ -100,7 +100,8 @@ export async function uploadVersionJSON({
   for (const artifact of artifacts) {
     const assetName = getAssetName(artifact.path)
       .trim()
-      .replace(/[ ()[\]{}]/g, '.');
+      .replace(/[ ()[\]{}]/g, '.')
+      .replace(/\.\./g, '.');
     const downloadUrl = downloadUrls.get(assetName);
     if (downloadUrl) {
       filteredAssets.push({
