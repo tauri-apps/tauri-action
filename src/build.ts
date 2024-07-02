@@ -220,6 +220,13 @@ export async function buildProject(
       {
         path: join(
           artifactsPath,
+          `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.sig`,
+        ),
+        arch: appImageArch,
+      },
+      {
+        path: join(
+          artifactsPath,
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz`,
         ),
         arch: appImageArch,
