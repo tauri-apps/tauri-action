@@ -127,14 +127,14 @@ export async function buildProject(
           artifactsPath,
           `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
         ),
-      );
-      winArtifacts.push(
+        join(
+          artifactsPath,
+          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`,
+        ),
         join(
           artifactsPath,
           `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
         ),
-      );
-      winArtifacts.push(
         join(
           artifactsPath,
           `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
@@ -147,14 +147,14 @@ export async function buildProject(
         artifactsPath,
         `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe`,
       ),
-    );
-    winArtifacts.push(
+      join(
+        artifactsPath,
+        `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe.sig`,
+      ),
       join(
         artifactsPath,
         `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip`,
       ),
-    );
-    winArtifacts.push(
       join(
         artifactsPath,
         `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`,
@@ -253,6 +253,13 @@ export async function buildProject(
           path: join(
             artifactsPath,
             `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage`,
+          ),
+          arch: appImageArch,
+        },
+        {
+          path: join(
+            artifactsPath,
+            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.sig`,
           ),
           arch: appImageArch,
         },
