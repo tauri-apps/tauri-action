@@ -74,7 +74,7 @@ jobs:
           projectPath: ./.github/fixtures/example-with-tauri-v1
           includeDebug: true
           includeRelease: false
-          tagName: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'example-with-tauri-v__VERSION__' || '' }}
+          tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v1'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
@@ -95,7 +95,7 @@ jobs:
           appVersion: ../package.json # relative to tauri.conf.json
           includeDebug: true
           includeRelease: false
-          tagName: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'example-v__VERSION__' || '' }}
+          tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-v__VERSION__' || '' }}
           releaseName: 'Release example app v__VERSION__ for tauri-v1'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
@@ -167,7 +167,7 @@ jobs:
           projectPath: ./.github/fixtures/example-with-tauri-v2
           includeDebug: true
           includeRelease: false
-          tagName: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'example-with-tauri-v__VERSION__' || '' }}
+          tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v2'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
@@ -188,7 +188,7 @@ jobs:
           appVersion: ../package.json # relative to tauri.conf.json
           includeDebug: true
           includeRelease: false
-          tagName: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'example-v__VERSION__' || '' }}
+          tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-v__VERSION__' || '' }}
           releaseName: 'Release example app v__VERSION__ for tauri-v2'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
