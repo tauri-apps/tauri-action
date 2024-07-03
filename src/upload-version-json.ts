@@ -207,6 +207,5 @@ export async function uploadVersionJSON({
     });
   }
 
-  console.log(`Uploading ${versionFile}...`);
   await uploadAssets(owner, repo, releaseId, [{ path: versionFile, arch: '' }]);
 }

@@ -22,7 +22,7 @@ export async function uploadAssets(
       owner: owner,
       repo: repo,
       release_id: releaseId,
-      per_page: 50,
+      per_page: 100,
     })
   ).data;
 
