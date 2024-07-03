@@ -127,7 +127,7 @@ jobs:
           - platform: 'windows-latest'
             args: '--verbose --target i686-pc-windows-msvc'
           - platform: 'windows-latest'
-            args: '--verbose --target aarch64-pc-windows-msvc'
+            args: '--verbose --target aarch64-pc-windows-msvc -b nsis'
 
     runs-on: ${{ matrix.platform }}
     steps:
