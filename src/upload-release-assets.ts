@@ -17,19 +17,16 @@ export async function uploadAssets(
 
   const github = getOctokit(process.env.GITHUB_TOKEN);
 
+  const debug = assets.find((a) => a.path.includes('debug')) !== undefined;
+
   const existingAssets = (
     await github.rest.repos.listReleaseAssets({
       owner: owner,
       repo: repo,
       release_id: releaseId,
-      per_page: 50,
+      per_page: debug ? 100 : 50,
     })
   ).data;
-
-  /* for (const a of existingAssets) {
-    console.log(JSON.stringify(a));
-  }
-  console.log(JSON.stringify(assets)); */
 
   // Determine content-length for header to upload asset
   const contentLength = (filePath: string) => fs.statSync(filePath).size;
