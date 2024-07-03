@@ -120,7 +120,7 @@ jobs:
             args: '--verbose --target x86_64-apple-darwin'
           - platform: 'macos-latest'
             args: '--verbose --target aarch64-apple-darwin'
-          - platform: 'ubuntu-20.04'
+          - platform: 'ubuntu-22.04'
             args: '--verbose'
           - platform: 'windows-latest'
             args: '--verbose --target x86_64-pc-windows-msvc'
