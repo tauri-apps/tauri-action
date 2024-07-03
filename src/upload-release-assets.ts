@@ -26,10 +26,10 @@ export async function uploadAssets(
     })
   ).data;
 
-  for (const a of existingAssets) {
+  /* for (const a of existingAssets) {
     console.log(JSON.stringify(a));
   }
-  console.log(JSON.stringify(assets));
+  console.log(JSON.stringify(assets)); */
 
   // Determine content-length for header to upload asset
   const contentLength = (filePath: string) => fs.statSync(filePath).size;
@@ -42,14 +42,22 @@ export async function uploadAssets(
 
     const assetName = getAssetName(asset.path);
 
-    const existingAsset = existingAssets.find(
-      (a) =>
-        a.name ===
+    const existingAsset = existingAssets.find((a) => {
+      console.log(
+        a.name,
         assetName
           .trim()
           .replace(/[ ()[\]{}]/g, '.')
           .replace(/\.\./g, '.'),
-    );
+      );
+      return (
+        a.name ===
+        assetName
+          .trim()
+          .replace(/[ ()[\]{}]/g, '.')
+          .replace(/\.\./g, '.')
+      );
+    });
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
       await github.rest.repos.deleteReleaseAsset({
