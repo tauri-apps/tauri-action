@@ -15,10 +15,18 @@ jobs:
         include:
           - platform: 'macos-latest'
             args: '--verbose --target universal-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--verbose --target x86_64-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--verbose --target aarch64-apple-darwin'
           - platform: 'ubuntu-20.04'
             args: '--verbose'
           - platform: 'windows-latest'
-            args: '--verbose'
+            args: '--verbose --target x86_64-pc-windows-msvc'
+          - platform: 'windows-latest'
+            args: '--verbose --target i686-pc-windows-msvc'
+          - platform: 'windows-latest'
+            args: '--verbose --target aarch64-pc-windows-msvc'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -48,7 +56,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin,x86_64-apple-darwin
+          targets: aarch64-apple-darwin,x86_64-apple-darwin,aarch64-pc-windows-msvc,i686-pc-windows-msvc
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -108,10 +116,18 @@ jobs:
         include:
           - platform: 'macos-latest'
             args: '--verbose --target universal-apple-darwin'
-          - platform: 'ubuntu-22.04'
+          - platform: 'macos-latest'
+            args: '--verbose --target x86_64-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--verbose --target aarch64-apple-darwin'
+          - platform: 'ubuntu-20.04'
             args: '--verbose'
           - platform: 'windows-latest'
-            args: '--verbose'
+            args: '--verbose --target x86_64-pc-windows-msvc'
+          - platform: 'windows-latest'
+            args: '--verbose --target i686-pc-windows-msvc'
+          - platform: 'windows-latest'
+            args: '--verbose --target aarch64-pc-windows-msvc'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -141,7 +157,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin,x86_64-apple-darwin
+          targets: aarch64-apple-darwin,x86_64-apple-darwin,aarch64-pc-windows-msvc,i686-pc-windows-msvc
 
       - uses: Swatinem/rust-cache@v2
         with:
