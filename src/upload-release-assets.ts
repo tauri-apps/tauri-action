@@ -4,6 +4,7 @@ import { getOctokit } from '@actions/github';
 
 import { getAssetName } from './utils';
 import type { Artifact } from './types';
+import { stringify } from 'node:querystring';
 
 export async function uploadAssets(
   owner: string,
@@ -25,6 +26,9 @@ export async function uploadAssets(
       per_page: 50,
     })
   ).data;
+
+  console.log(JSON.stringify(existingAssets));
+  console.log(JSON.stringify(assets));
 
   // Determine content-length for header to upload asset
   const contentLength = (filePath: string) => fs.statSync(filePath).size;
