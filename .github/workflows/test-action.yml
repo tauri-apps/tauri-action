@@ -15,18 +15,10 @@ jobs:
         include:
           - platform: 'macos-latest'
             args: '--verbose --target universal-apple-darwin'
-          - platform: 'macos-latest'
-            args: '--verbose --target x86_64-apple-darwin'
-          - platform: 'macos-latest'
-            args: '--verbose --target aarch64-apple-darwin'
           - platform: 'ubuntu-20.04'
             args: '--verbose'
           - platform: 'windows-latest'
-            args: '--verbose --target x86_64-pc-windows-msvc'
-          - platform: 'windows-latest'
-            args: '--verbose --target i686-pc-windows-msvc'
-          - platform: 'windows-latest'
-            args: '--verbose --target aarch64-pc-windows-msvc'
+            args: '--verbose'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -56,7 +48,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin,x86_64-apple-darwin,aarch64-pc-windows-msvc,i686-pc-windows-msvc
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -81,7 +73,7 @@ jobs:
         with:
           projectPath: ./.github/fixtures/example-with-tauri-v1
           includeDebug: true
-          #includeRelease: false
+          includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v1'
           releaseBody: 'See the assets to download this version and install.'
@@ -102,7 +94,7 @@ jobs:
           appName: example
           appVersion: ../package.json # relative to tauri.conf.json
           includeDebug: true
-          #includeRelease: false
+          includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-v__VERSION__' || '' }}
           releaseName: 'Release example app v__VERSION__ for tauri-v1'
           releaseBody: 'See the assets to download this version and install.'
@@ -116,18 +108,10 @@ jobs:
         include:
           - platform: 'macos-latest'
             args: '--verbose --target universal-apple-darwin'
-          - platform: 'macos-latest'
-            args: '--verbose --target x86_64-apple-darwin'
-          - platform: 'macos-latest'
-            args: '--verbose --target aarch64-apple-darwin'
           - platform: 'ubuntu-22.04'
             args: '--verbose'
           - platform: 'windows-latest'
-            args: '--verbose --target x86_64-pc-windows-msvc'
-          - platform: 'windows-latest'
-            args: '--verbose --target i686-pc-windows-msvc'
-          - platform: 'windows-latest'
-            args: '--verbose --target aarch64-pc-windows-msvc -b nsis'
+            args: '--verbose'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -157,7 +141,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin,x86_64-apple-darwin,aarch64-pc-windows-msvc,i686-pc-windows-msvc
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -182,7 +166,7 @@ jobs:
         with:
           projectPath: ./.github/fixtures/example-with-tauri-v2
           includeDebug: true
-          #includeRelease: false
+          includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v2'
           releaseBody: 'See the assets to download this version and install.'
@@ -203,7 +187,7 @@ jobs:
           appName: example
           appVersion: ../package.json # relative to tauri.conf.json
           includeDebug: true
-          #includeRelease: false
+          includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-v__VERSION__' || '' }}
           releaseName: 'Release example app v__VERSION__ for tauri-v2'
           releaseBody: 'See the assets to download this version and install.'

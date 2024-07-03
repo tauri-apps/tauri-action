@@ -17,14 +17,12 @@ export async function uploadAssets(
 
   const github = getOctokit(process.env.GITHUB_TOKEN);
 
-  const debug = assets.find((a) => a.path.includes('debug')) !== undefined;
-
   const existingAssets = (
     await github.rest.repos.listReleaseAssets({
       owner: owner,
       repo: repo,
       release_id: releaseId,
-      per_page: debug ? 100 : 50,
+      per_page: 100,
     })
   ).data;
 
@@ -39,22 +37,14 @@ export async function uploadAssets(
 
     const assetName = getAssetName(asset.path);
 
-    const existingAsset = existingAssets.find((a) => {
-      console.log(
-        a.name,
-        assetName
-          .trim()
-          .replace(/[ ()[\]{}]/g, '.')
-          .replace(/\.\./g, '.'),
-      );
-      return (
+    const existingAsset = existingAssets.find(
+      (a) =>
         a.name ===
         assetName
           .trim()
           .replace(/[ ()[\]{}]/g, '.')
-          .replace(/\.\./g, '.')
-      );
-    });
+          .replace(/\.\./g, '.'),
+    );
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
       await github.rest.repos.deleteReleaseAsset({
