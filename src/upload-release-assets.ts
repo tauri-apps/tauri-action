@@ -43,7 +43,9 @@ export async function uploadAssets(
         assetName
           .trim()
           .replace(/[ ()[\]{}]/g, '.')
-          .replace(/\.\./g, '.'),
+          .replace(/\.\./g, '.')
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, ''),
     );
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);

@@ -101,7 +101,9 @@ export async function uploadVersionJSON({
     const assetName = getAssetName(artifact.path)
       .trim()
       .replace(/[ ()[\]{}]/g, '.')
-      .replace(/\.\./g, '.');
+      .replace(/\.\./g, '.')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
     const downloadUrl = downloadUrls.get(assetName);
     if (downloadUrl) {
       filteredAssets.push({
