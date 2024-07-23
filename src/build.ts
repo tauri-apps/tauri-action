@@ -23,7 +23,7 @@ export async function buildProject(
 
   const tauriArgs = debug
     ? ['--debug', ...(buildOpts.args ?? [])]
-    : buildOpts.args ?? [];
+    : (buildOpts.args ?? []);
 
   const targetArgIdx = [...tauriArgs].findIndex(
     (e) => e === '-t' || e === '--target',
