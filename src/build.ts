@@ -67,6 +67,7 @@ export async function buildProject(
 
   // on Linux, the app product name is converted to kebab-case and `()[]{}` will be removed
   // with tauri-cli 2.0.0-beta.19 deb and appimage will now use the product name as on the other platforms.
+  // with tauri-cli 2.0.0-beta.21 rpm will do too.
   const linuxFileAppName = app.name
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
@@ -205,8 +206,7 @@ export async function buildProject(
       {
         path: join(
           artifactsPath,
-          // TODO: Upstream bug?
-          `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
+          `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
         ),
         arch: rpmArch,
       },
@@ -249,13 +249,13 @@ export async function buildProject(
           ),
           arch: debianArch,
         },
-        /* {
+        {
           path: join(
             artifactsPath,
             `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
           ),
           arch: rpmArch,
-        }, */
+        },
         {
           path: join(
             artifactsPath,
