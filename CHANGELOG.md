@@ -1,5 +1,13 @@
 # Changelog
 
+## \[0.5.11]
+
+- [`70f5023`](https://www.github.com/tauri-apps/tauri-action/commit/70f50235fd767d6357440bc26d78fe6a0fe02545) ([#873](https://www.github.com/tauri-apps/tauri-action/pull/873) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Support new RPM file name that was fixed in tauri-cli@2.0.0-beta.21.
+
+## \[0.5.10]
+
+- [`f876b0d`](https://www.github.com/tauri-apps/tauri-action/commit/f876b0d6a0b9306a8030e98b0b9dda2fb231059e) ([#861](https://www.github.com/tauri-apps/tauri-action/pull/861) by [@vdemcak](https://www.github.com/tauri-apps/tauri-action/../../vdemcak)) Fixed an issue that caused the action to not generate `latest.json` due to a desync between GitHub artifacts and local variables. This was caused by incorrect normalization of artifact file names, specifically not accounting for removing special characters.
+
 ## \[0.5.9]
 
 - [`ff07d2a`](https://www.github.com/tauri-apps/tauri-action/commit/ff07d2a6ce69514dddf7cde3ba0b866dad1e07e0) ([#849](https://www.github.com/tauri-apps/tauri-action/pull/849) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Fixed an issue that caused the action to fail to upload some assets to existing releases if the workflow built the app for many architectures and debug + release mode.
