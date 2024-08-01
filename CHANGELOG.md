@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.12]
+
+- [`93d570b`](https://www.github.com/tauri-apps/tauri-action/commit/93d570b03af965a5751e2079c1b3d264b451f300) ([#863](https://www.github.com/tauri-apps/tauri-action/pull/863) by [@tobyspark](https://www.github.com/tauri-apps/tauri-action/../../tobyspark)) Reduces memory consumption when uploading successfully built releases, by passing a file stream object rather than reading the entire file into a buffer and then passing that. Empirically, this has stopped the action from failing on GitHub's Windows runners, with apps approaching 2GB in size.
+
 ## \[0.5.11]
 
 - [`70f5023`](https://www.github.com/tauri-apps/tauri-action/commit/70f50235fd767d6357440bc26d78fe6a0fe02545) ([#873](https://www.github.com/tauri-apps/tauri-action/pull/873) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Support new RPM file name that was fixed in tauri-cli@2.0.0-beta.21.
