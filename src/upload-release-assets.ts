@@ -54,7 +54,7 @@ export async function uploadAssets(
       });
     }
 
-    console.log(`Uploading ${assetName}, ${headers['content-length']}b`);
+    console.log(`Uploading ${assetName}...`);
 
     await github.rest.repos.uploadReleaseAsset({
       headers,
