@@ -1,4 +1,10 @@
-import { execCommand, hasDependency, usesBun, usesPnpm, usesYarn } from './utils';
+import {
+  execCommand,
+  hasDependency,
+  usesBun,
+  usesPnpm,
+  usesYarn,
+} from './utils';
 
 class Runner {
   // Could be "npm", "yarn", "pnpm", "bun", "cargo", "path/to/tauri-cli/binary" or "tauri"
