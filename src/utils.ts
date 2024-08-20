@@ -261,6 +261,10 @@ export function usesPnpm(root: string): boolean {
   return existsSync(join(root, 'pnpm-lock.yaml'));
 }
 
+export function usesBun(root: string): boolean {
+  return existsSync(join(root, 'bun.lockb'));
+}
+
 export function execCommand(
   command: string,
   args: string[],

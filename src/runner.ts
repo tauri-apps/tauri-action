@@ -1,7 +1,7 @@
-import { execCommand, hasDependency, usesPnpm, usesYarn } from './utils';
+import { execCommand, hasDependency, usesBun, usesPnpm, usesYarn } from './utils';
 
 class Runner {
-  // Could be "npm", "yarn", "pnpm", "cargo", "path/to/tauri-cli/binary" or "tauri"
+  // Could be "npm", "yarn", "pnpm", "bun", "cargo", "path/to/tauri-cli/binary" or "tauri"
   bin: string;
   // could be ["tauri"], ["run", "tauri"], ["some package.json script"], ["run", "some package.json script"] or []
   tauriScript: string[];
@@ -49,6 +49,7 @@ async function getRunner(
   if (hasDependency('@tauri-apps/cli', root)) {
     if (usesYarn(root)) return new Runner('yarn', ['tauri']);
     if (usesPnpm(root)) return new Runner('pnpm', ['tauri']);
+    if (usesBun(root)) return new Runner('bun', ['tauri']);
     return new Runner('npm', ['run', 'tauri']);
   }
 
