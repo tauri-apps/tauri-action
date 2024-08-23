@@ -158,6 +158,21 @@ async function run(): Promise<void> {
         const uploadRes = await uploadReleaseAssets(owner, repo, release.id, artifacts);
         if (uploadRes?.status === 201) {
           console.log(`Successfully upload assets to release with tag ${tagName}.`);
+          if (includeUpdaterJson) {
+            await uploadVersionJSON({
+              owner,
+              repo,
+              version: info.version,
+              notes: body,
+              tagName,
+              releaseId: release.id,
+              artifacts:
+                releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts,
+              targetInfo,
+              updaterJsonPreferNsis,
+              updaterJsonKeepUniversal,
+            });
+          }
           return;
         }
 
