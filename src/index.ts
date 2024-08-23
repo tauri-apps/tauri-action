@@ -167,7 +167,7 @@ async function run(): Promise<void> {
           );
         }
 
-        // If releaseName is specified and there no exsisting release for tagName, create a release then
+        // If releaseName is specified and there no existing release for tagName, create a release then
         const templates = [
           {
             key: '__VERSION__',
