@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.13]
+
+- [`3b72cab`](https://www.github.com/tauri-apps/tauri-action/commit/3b72cab93fb2fbac61fc5b91cbede2fee647dd82) ([#893](https://www.github.com/tauri-apps/tauri-action/pull/893) by [@Muska-Ami](https://www.github.com/tauri-apps/tauri-action/../../Muska-Ami)) Use Bun for the build when the `bun.locb` file is found.
+
 ## \[0.5.12]
 
 - [`93d570b`](https://www.github.com/tauri-apps/tauri-action/commit/93d570b03af965a5751e2079c1b3d264b451f300) ([#863](https://www.github.com/tauri-apps/tauri-action/pull/863) by [@tobyspark](https://www.github.com/tauri-apps/tauri-action/../../tobyspark)) Reduces memory consumption when uploading successfully built releases, by passing a file stream object rather than reading the entire file into a buffer and then passing that. Empirically, this has stopped the action from failing on GitHub's Windows runners, with apps approaching 2GB in size.
