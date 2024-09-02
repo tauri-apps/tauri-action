@@ -155,9 +155,16 @@ async function run(): Promise<void> {
         });
         const release = foundRelease.data;
         console.log(`Found release with tag ${tagName}.`);
-        const uploadRes = await uploadReleaseAssets(owner, repo, release.id, artifacts);
+        const uploadRes = await uploadReleaseAssets(
+          owner,
+          repo,
+          release.id,
+          artifacts,
+        );
         if (uploadRes?.status === 201) {
-          console.log(`Successfully upload assets to release with tag ${tagName}.`);
+          console.log(
+            `Successfully upload assets to release with tag ${tagName}.`,
+          );
           if (includeUpdaterJson) {
             await uploadVersionJSON({
               owner,
@@ -167,7 +174,9 @@ async function run(): Promise<void> {
               tagName,
               releaseId: release.id,
               artifacts:
-                releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts,
+                releaseArtifacts.length !== 0
+                  ? releaseArtifacts
+                  : debugArtifacts,
               targetInfo,
               updaterJsonPreferNsis,
               updaterJsonKeepUniversal,
@@ -212,9 +221,12 @@ async function run(): Promise<void> {
         core.setOutput('releaseId', releaseData.id.toString());
         core.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
       } else {
-        console.log('No releaseId or tagName provided, skipping all uploads...');
+        console.log(
+          'No releaseId or tagName provided, skipping all uploads...',
+        );
       }
-    } else { // If releaseId is set, upload assets to target release
+    } else {
+      // If releaseId is set, upload assets to target release
       await uploadReleaseAssets(owner, repo, releaseId, artifacts);
       if (includeUpdaterJson) {
         await uploadVersionJSON({
