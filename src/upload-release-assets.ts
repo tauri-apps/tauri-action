@@ -58,7 +58,7 @@ export async function uploadAssets(
 
     console.log(`Uploading ${assetName}...`);
 
-    await github.rest.repos.uploadReleaseAsset({
+    return await github.rest.repos.uploadReleaseAsset({
       headers,
       name: assetName,
       // https://github.com/tauri-apps/tauri-action/pull/45
