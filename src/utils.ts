@@ -336,6 +336,7 @@ export function getInfo(
       wixLanguage,
       wixAppVersion,
       rpmRelease,
+      unzippedSigs: config.unzippedSigs === true,
     };
   } else {
     // This should not actually happen.

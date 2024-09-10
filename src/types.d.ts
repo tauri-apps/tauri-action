@@ -43,6 +43,7 @@ export interface Info {
   wixLanguage: string | string[] | { [language: string]: unknown };
   wixAppVersion: string;
   rpmRelease: string;
+  unzippedSigs: boolean;
 }
 
 export type TargetPlatform = 'android' | 'ios' | 'macos' | 'linux' | 'windows';
@@ -84,6 +85,7 @@ export interface TauriConfigV2 {
     beforeBuildCommand?: string;
   };
   bundle?: {
+    createUpdaterArtifacts?: boolean | 'v1Compatible';
     linux?: {
       rpm?: {
         release?: string;

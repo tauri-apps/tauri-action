@@ -31,6 +31,7 @@ export async function uploadVersionJSON({
   releaseId,
   artifacts,
   targetInfo,
+  unzippedSig,
   updaterJsonPreferNsis,
   updaterJsonKeepUniversal,
 }: {
@@ -42,6 +43,7 @@ export async function uploadVersionJSON({
   releaseId: number;
   artifacts: Artifact[];
   targetInfo: TargetInfo;
+  unzippedSig: boolean;
   updaterJsonPreferNsis: boolean;
   updaterJsonKeepUniversal: boolean;
 }) {
@@ -120,8 +122,12 @@ export async function uploadVersionJSON({
   });
   function signaturePriority(signaturePath: string) {
     const priorities = updaterJsonPreferNsis
-      ? ['.nsis.zip.sig', '.exe.sig', '.msi.zip.sig', '.msi.sig']
-      : ['.msi.zip.sig', '.msi.sig', '.nsis.zip.sig', '.exe.sig'];
+      ? unzippedSig
+        ? ['.exe.sig', '.msi.sig']
+        : ['.nsis.zip.sig', '.msi.zip.sig']
+      : unzippedSig
+        ? ['.msi.sig', '.exe.sig']
+        : ['.msi.zip.sig', '.nsis.zip.sig'];
     for (const [index, extension] of priorities.entries()) {
       if (signaturePath.endsWith(extension)) {
         return 100 - index;

@@ -125,6 +125,7 @@ export class TauriConfig {
   beforeBuildCommand?: string;
   rpmRelease?: string;
   wixLanguage?: string | string[] | { [language: string]: unknown };
+  unzippedSigs?: boolean;
 
   constructor(identifier: string, isV2 = false) {
     this.identifier = identifier;
@@ -212,6 +213,7 @@ export class TauriConfig {
     c.beforeBuildCommand = config.build?.beforeBuildCommand;
     c.rpmRelease = config.bundle?.linux?.rpm?.release;
     c.wixLanguage = config.bundle?.windows?.wix?.language;
+    c.unzippedSigs = config.bundle?.createUpdaterArtifacts === true;
 
     return c;
   }
@@ -228,6 +230,10 @@ export class TauriConfig {
         c.build?.beforeBuildCommand ?? this.beforeBuildCommand;
       this.rpmRelease = c.bundle?.linux?.rpm?.release ?? this.rpmRelease;
       this.wixLanguage = c.bundle?.windows?.wix?.language ?? this.wixLanguage;
+      this.unzippedSigs =
+        c.bundle?.createUpdaterArtifacts != null
+          ? c.bundle?.createUpdaterArtifacts === true
+          : this.unzippedSigs;
     } else {
       const c = config as TauriConfigV1;
 
