@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.14]
+
+- [`9387d95`](https://www.github.com/tauri-apps/tauri-action/commit/9387d95d400af0a0c6c4199962a962e93d13cb4d) ([#908](https://www.github.com/tauri-apps/tauri-action/pull/908) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The action will now only use the signature file for unzipped bundles if `createUpdaterArtifacts` in tauri.conf.json is set to `true`.
+
 ## \[0.5.13]
 
 - [`3b72cab`](https://www.github.com/tauri-apps/tauri-action/commit/3b72cab93fb2fbac61fc5b91cbede2fee647dd82) ([#893](https://www.github.com/tauri-apps/tauri-action/pull/893) by [@Muska-Ami](https://www.github.com/tauri-apps/tauri-action/../../Muska-Ami)) Use Bun for the build when the `bun.locb` file is found.
