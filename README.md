@@ -115,7 +115,7 @@ These inputs allow you to modify the GitHub release.
 
 | Name               | Required | Description                                                                                                                                                               | Type   | Default                   |
 | ------------------ | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------- |
-| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                                                                                               | string |                           |
+| `releaseId`        |  false   | The id of the release to upload artifacts as release assets                                                                                                               | number |                           |
 | `tagName`          |  false   | The tag name of the release to create or the tag of the release belonging to `releaseId`                                                                                  | string |                           |
 | `releaseName`      |  false   | The name of the release to create                                                                                                                                         | string |                           |
 | `releaseBody`      |  false   | The body of the release to create                                                                                                                                         | string |                           |
