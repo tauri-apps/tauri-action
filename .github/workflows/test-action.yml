@@ -144,7 +144,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin,x86_64-apple-darwin
+          targets: aarch64-apple-darwin,x86_64-apple-darwin,aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android,aarch64-apple-ios
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -160,8 +160,25 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev
 
+      - name: Setup Java
+        if: matrix.mobile
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        if: matrix.mobile
+        uses: android-actions/setup-android@v3
+
+      - name: Install NDK
+        if: matrix.mobile
+        run: sdkmanager "ndk;27.0.11902837"
+
       - name: init mobile
         if: matrix.mobile
+        env:
+          NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.0.11902837
         run: |
           cd ./.github/fixtures/example-with-tauri-v2
           pnpm tauri android init
@@ -170,12 +187,13 @@ jobs:
       - name: Preconfigured Tauri Project
         uses: ./
         env:
+          NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.0.11902837
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Updater signature is exposed here to make sure it works in PR's
           TAURI_SIGNING_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
         with:
           projectPath: ./.github/fixtures/example-with-tauri-v2
-          includeDebug: true
+          includeDebug: ${{ !matrix.mobile }}
           includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v2'
