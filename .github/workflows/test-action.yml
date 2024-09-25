@@ -113,7 +113,7 @@ jobs:
           - platform: 'windows-latest'
             args: '--verbose'
           - platform: 'macos-latest'
-            args: '--verbose'
+            args: '--verbose --debug'
             mobile: true
 
     runs-on: ${{ matrix.platform }}
