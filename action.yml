@@ -37,6 +37,12 @@ inputs:
   includeRelease:
     description: 'whether to include a release build or not'
     default: true
+  includeIOS:
+    description: 'whether to include an iOS build. Ignored on Linux/Windows runners.'
+    default: false
+  includeAndroid:
+    description: 'whether to include an Android build.'
+    default: false
   includeUpdaterJson:
     description: 'whether to upload a static JSON file for the updater using GitHub Releases as the CDN'
     default: true

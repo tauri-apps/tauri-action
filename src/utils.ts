@@ -312,8 +312,9 @@ export function getInfo(
       version = config?.version;
     }
 
+    const cargoManifest = getCargoManifest(tauriDir);
+
     if (!(name && version)) {
-      const cargoManifest = getCargoManifest(tauriDir);
       name = name ?? cargoManifest.package.name;
       version = version ?? cargoManifest.package.version;
     }
@@ -335,6 +336,7 @@ export function getInfo(
 
     return {
       tauriPath: tauriDir,
+      cargoName: cargoManifest.package.name,
       name,
       version,
       wixLanguage,
