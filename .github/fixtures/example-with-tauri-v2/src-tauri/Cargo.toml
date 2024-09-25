@@ -8,7 +8,7 @@ repository = ""
 edition = "2021"
 
 [lib]
-name = "rc_lib"
+name = "test_app_lib"
 crate-type = ["lib", "cdylib", "staticlib"]
 
 [dependencies]
