@@ -160,6 +160,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev
 
+      - name: init mobile
+        if: matrix.mobile
+        run: |
+          cd ./.github/fixtures/example-with-tauri-v2
+          pnpm tauri android init
+          pnpm tauri ios init
+
       - name: Preconfigured Tauri Project
         uses: ./
         env:
@@ -174,6 +181,8 @@ jobs:
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v2'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
+          includeAndroid: ${{ matrix.mobile || false }}
+          includeIOS: ${{ matrix.mobile || false }}
           args: ${{ matrix.args }}
 
       - name: Frontend-only Project
