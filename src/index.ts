@@ -8,7 +8,8 @@ import stringArgv from 'string-argv';
 import { createRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
-import { buildProject } from './build';
+import { buildProject as buildDesktop } from './build-desktop';
+import { buildProject as buildMobile } from './build-mobile';
 import { execCommand, getInfo, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions, InitOptions } from './types';
@@ -25,6 +26,8 @@ async function run(): Promise<void> {
     const appVersion = core.getInput('appVersion');
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
+    const includeAndroid = core.getBooleanInput('includeAndroid');
+    const includeIOS = core.getBooleanInput('includeIOS');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
     const updaterJsonKeepUniversal = core.getBooleanInput(
       'updaterJsonKeepUniversal',
@@ -84,17 +87,30 @@ async function run(): Promise<void> {
 
     const releaseArtifacts: Artifact[] = [];
     const debugArtifacts: Artifact[] = [];
+    const mobileArtifacts: Artifact[] = [];
     if (includeRelease) {
       releaseArtifacts.push(
-        ...(await buildProject(projectPath, false, buildOptions, initOptions)),
+        ...(await buildDesktop(projectPath, false, buildOptions, initOptions)),
       );
     }
     if (includeDebug) {
       debugArtifacts.push(
-        ...(await buildProject(projectPath, true, buildOptions, initOptions)),
+        ...(await buildDesktop(projectPath, true, buildOptions, initOptions)),
       );
     }
-    const artifacts = releaseArtifacts.concat(debugArtifacts);
+    if (includeAndroid) {
+      mobileArtifacts.push(
+        ...(await buildMobile(projectPath, true, buildOptions)),
+      );
+    }
+    if (includeIOS) {
+      mobileArtifacts.push(
+        ...(await buildMobile(projectPath, false, buildOptions)),
+      );
+    }
+    const artifacts = releaseArtifacts
+      .concat(debugArtifacts)
+      .concat(mobileArtifacts);
 
     if (artifacts.length === 0) {
       if (releaseId || tagName || releaseName) {

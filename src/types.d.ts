@@ -38,6 +38,7 @@ export interface CargoManifest {
 
 export interface Info {
   tauriPath: string | null;
+  cargoName: string;
   name: string;
   version: string;
   wixLanguage: string | string[] | { [language: string]: unknown };

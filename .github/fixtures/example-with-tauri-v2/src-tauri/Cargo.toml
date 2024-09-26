@@ -7,13 +7,17 @@ license = ""
 repository = ""
 edition = "2021"
 
+[lib]
+name = "test_app_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
 [dependencies]
 serde_json = "1"
 serde = { version = "1", features = ["derive"] }
-tauri = { version = "2.0.0-beta", features = [] }
+tauri = { version = "2.0.0-rc", features = [] }
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-beta", features = [] }
+tauri-build = { version = "2.0.0-rc", features = [] }
 
 [features]
 prod = ["tauri/custom-protocol"]
