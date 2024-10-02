@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
-    "@types/node": "20.16.9",
+    "@types/node": "20.16.10",
     "@vercel/ncc": "0.38.2",
     "covector": "0.12.3",
     "eslint": "9.11.1",
