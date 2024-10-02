@@ -1,5 +1,7 @@
+import { TauriConfig } from './config';
 import {
   execCommand,
+  getTauriDir,
   hasDependency,
   usesBun,
   usesPnpm,
@@ -59,7 +61,25 @@ async function getRunner(
     return new Runner('npm', ['run', 'tauri']);
   }
 
-  await execCommand('npm', ['install', '-g', '@tauri-apps/cli'], {
+  // TODO: Change to v2 after a while.
+  let tag = 'v1';
+
+  try {
+    const tauriDir = getTauriDir(root);
+    if (tauriDir) {
+      let baseConf;
+
+      baseConf = TauriConfig.fromBaseConfig(tauriDir);
+
+      if (baseConf && baseConf.isV2()) {
+        tag = '2.0.0-rc.18'; //'v2';
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  await execCommand('npm', ['install', '-g', `@tauri-apps/cli@${tag}`], {
     cwd: undefined,
   });
 
