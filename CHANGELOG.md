@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.15]
+
+- [`f575715`](https://www.github.com/tauri-apps/tauri-action/commit/f575715ef970f081f9942c4867a8657d6d6dbfc1) ([#929](https://www.github.com/tauri-apps/tauri-action/pull/929) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The action will now try to check for the tauri version before installing the tauri cli fallback (if no tauri cli was found) instead of always installing the latest stable version.
+
 ## \[0.5.14]
 
 - [`9387d95`](https://www.github.com/tauri-apps/tauri-action/commit/9387d95d400af0a0c6c4199962a962e93d13cb4d) ([#908](https://www.github.com/tauri-apps/tauri-action/pull/908) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The action will now only use the signature file for unzipped bundles if `createUpdaterArtifacts` in tauri.conf.json is set to `true`.
