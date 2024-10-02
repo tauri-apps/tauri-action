@@ -70,7 +70,7 @@ async function getRunner(
       const baseConf = TauriConfig.fromBaseConfig(tauriDir);
 
       if (baseConf && baseConf.isV2()) {
-        tag = '2.0.0-rc.18'; //'v2';
+        tag = 'v2';
       }
     }
   } catch {
