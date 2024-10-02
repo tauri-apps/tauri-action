@@ -132,6 +132,10 @@ export class TauriConfig {
     this._isV2 = isV2;
   }
 
+  public isV2(): boolean {
+    return this._isV2;
+  }
+
   public static fromBaseConfig(tauriDir: string): TauriConfig {
     if (existsSync(join(tauriDir, 'tauri.conf.json'))) {
       const contents = readFileSync(
