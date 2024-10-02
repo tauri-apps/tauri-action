@@ -67,9 +67,7 @@ async function getRunner(
   try {
     const tauriDir = getTauriDir(root);
     if (tauriDir) {
-      let baseConf;
-
-      baseConf = TauriConfig.fromBaseConfig(tauriDir);
+      const baseConf = TauriConfig.fromBaseConfig(tauriDir);
 
       if (baseConf && baseConf.isV2()) {
         tag = '2.0.0-rc.18'; //'v2';
