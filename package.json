@@ -26,21 +26,21 @@
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.0",
     "@iarna/toml": "2.2.5",
-    "execa": "9.4.0",
+    "execa": "9.4.1",
     "globby": "14.0.2",
     "json5": "2.2.3",
     "string-argv": "0.3.2",
-    "tslib": "2.7.0"
+    "tslib": "2.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
-    "@types/node": "20.16.10",
+    "@types/node": "20.16.13",
     "@vercel/ncc": "0.38.2",
     "covector": "0.12.3",
-    "eslint": "9.11.1",
+    "eslint": "9.13.0",
     "eslint-config-prettier": "9.1.0",
     "prettier": "3.3.3",
-    "typescript": "5.6.2",
+    "typescript": "5.6.3",
     "typescript-eslint": "rc-v8"
   },
   "engines": {
