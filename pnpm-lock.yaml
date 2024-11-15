@@ -40,8 +40,8 @@ importers:
         specifier: 20.17.6
         version: 20.17.6
       '@vercel/ncc':
-        specifier: 0.38.2
-        version: 0.38.2
+        specifier: 0.38.3
+        version: 0.38.3
       covector:
         specifier: 0.12.3
         version: 0.12.3(mocha@10.4.0)
@@ -346,8 +346,8 @@ packages:
     resolution: {integrity: sha512-W1A4hx+PDBfIYKGkv7sGAz8I0iqzvwP4LhPuQZyIrnJ93WSa8LxYsnadnjJlmyGgjd4t+dIapPwa9eAWrsScQw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@vercel/ncc@0.38.2':
-    resolution: {integrity: sha512-3yel3jaxUg9pHBv4+KeC9qlbdZPug+UMtUOlhvpDYCMSgcNSrS2Hv1LoqMsOV7hf2lYscx+BESfJOIla1WsmMQ==}
+  '@vercel/ncc@0.38.3':
+    resolution: {integrity: sha512-rnK6hJBS6mwc+Bkab+PGPs9OiS0i/3kdTO+CkI8V0/VrW3vmz7O2Pxjw/owOlmo6PKEIxRSeZKv/kuL9itnpYA==}
     hasBin: true
 
   abort-controller@3.0.0:
@@ -1645,7 +1645,7 @@ snapshots:
       '@typescript-eslint/types': 8.0.0-alpha.62
       eslint-visitor-keys: 3.4.3
 
-  '@vercel/ncc@0.38.2': {}
+  '@vercel/ncc@0.38.3': {}
 
   abort-controller@3.0.0:
     dependencies:
