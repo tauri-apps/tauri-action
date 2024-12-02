@@ -67,7 +67,12 @@ export async function buildProject(
     ['build'],
     [...tauriArgs],
     root,
-    targetInfo.platform === 'macos' ? { CIx: 'false' } : undefined,
+    targetInfo.platform === 'macos'
+      ? {
+          TAURI_BUNDLER_DMG_IGNORE_CI:
+            process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
+        }
+      : undefined,
   );
 
   // on Linux, the app product name is converted to kebab-case and `()[]{}` will be removed
