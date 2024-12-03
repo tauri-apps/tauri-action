@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.16]
+
+- [`acdef25`](https://www.github.com/tauri-apps/tauri-action/commit/acdef251b8450d568e025c512753e61ef582fa8f) ([#949](https://www.github.com/tauri-apps/tauri-action/pull/949) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The action will now set `TAURI_BUNDLER_DMG_IGNORE_CI: true` by default on tauri cli versions 2.2.0 and above. See https://github.com/tauri-apps/tauri-action/issues/740 for context. This can be disabled by explicitly setting `TAURI_BUNDLER_DMG_IGNORE_CI: false` yourself.
+
 ## \[0.5.15]
 
 - [`f575715`](https://www.github.com/tauri-apps/tauri-action/commit/f575715ef970f081f9942c4867a8657d6d6dbfc1) ([#929](https://www.github.com/tauri-apps/tauri-action/pull/929) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The action will now try to check for the tauri version before installing the tauri cli fallback (if no tauri cli was found) instead of always installing the latest stable version.
