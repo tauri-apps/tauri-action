@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path, { join, normalize, resolve, sep } from 'node:path';
 
-import { execa } from 'execa';
 import { parse as parseToml } from '@iarna/toml';
+import { execa } from 'execa';
 import { globbySync } from 'globby';
 
 import { TauriConfig } from './config';
@@ -265,7 +265,7 @@ export function usesBun(root: string): boolean {
   return existsSync(join(root, 'bun.lockb'));
 }
 
-export function execCommand(
+export async function execCommand(
   command: string,
   args: string[],
   { cwd }: { cwd?: string } = {},
@@ -273,11 +273,37 @@ export function execCommand(
 ): Promise<void> {
   console.log(`running ${command}`, args);
 
-  return execa(command, args, {
+  const child = execa(command, args, {
     cwd,
-    stdio: 'inherit',
     env: { FORCE_COLOR: '0', ...env },
-  }).then();
+    lines: true,
+    stdio: 'pipe',
+    reject: false,
+  });
+
+  child.stdout?.on('data', (data) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    process.stdout.write(data);
+  });
+
+  child.stderr?.on('data', (data) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    process.stderr.write(data);
+  });
+
+  return new Promise((resolve, reject) => {
+    child.on('exit', (code) => {
+      if (code && code > 0) {
+        reject(
+          new Error(
+            `Command "${command} ${JSON.stringify(args)}" failed with exit code ${code}`,
+          ),
+        );
+      } else {
+        resolve();
+      }
+    });
+  });
 }
 
 export function getInfo(
@@ -377,6 +403,20 @@ export function getTargetInfo(targetPath?: string): TargetInfo {
   }
 
   return { arch, platform };
+}
+
+export async function retry(
+  fn: () => Promise<unknown>,
+  attempts: number,
+): Promise<unknown> {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (attempt === attempts) throw error;
+      console.log(`Attempt ${attempt} failed, retrying...`);
+    }
+  }
 }
 
 // TODO: Properly resolve the eslint issues in this file.

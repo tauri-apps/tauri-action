@@ -14,43 +14,45 @@ inputs:
     description: 'The body of the release to create'
   releaseDraft:
     description: 'Whether the release to create is a draft or not'
-    default: false
+    default: 'false'
   prerelease:
     description: 'Whether the release to create is a prerelease or not'
-    default: false
+    default: 'false'
   releaseCommitish:
     description: 'Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit'
   projectPath:
-    description: 'path to the root of the project that will be built'
+    description: 'Path to the root of the project that will be built'
     default: '.'
   distPath:
-    description: 'path to the distributable folder with your index.html and JS/CSS'
+    description: 'Path to the distributable folder with your index.html and JS/CSS'
   iconPath:
-    description: 'path to the PNG icon to use as app icon, relative to the projectPath'
+    description: 'Path to the PNG icon to use as app icon, relative to the projectPath'
   appName:
-    description: 'the app name to inject when initializing the Tauri app. Required if the name is not set via the `--config` flag.'
+    description: 'The app name to inject when initializing the Tauri app. Required if the name is not set via the `--config` flag.'
   appVersion:
-    description: 'the app version to inject when initializing the Tauri app. Required if the version is not set via the `--config` flag.'
+    description: 'The app version to inject when initializing the Tauri app. Required if the version is not set via the `--config` flag.'
   includeDebug:
-    description: 'whether to include a debug build or not'
-    default: false
+    description: 'Whether to include a debug build or not'
+    default: 'false'
   includeRelease:
-    description: 'whether to include a release build or not'
-    default: true
+    description: 'Whether to include a release build or not'
+    default: 'true'
   includeUpdaterJson:
-    description: 'whether to upload a static JSON file for the updater using GitHub Releases as the CDN'
-    default: true
+    description: 'Whether to upload a static JSON file for the updater using GitHub Releases as the CDN'
+    default: 'true'
   updaterJsonPreferNsis:
-    description: 'whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist. Will default to false. May default to true for apps using tauri@v2 in the future.'
+    description: 'Whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist. Will default to false. May default to true for apps using tauri@v2 in the future.'
   updaterJsonKeepUniversal:
-    description: 'whether the updater JSON file should add universal macOS as darwin-universal on top of using it in the darwin-aarch64 and darwin-x86_64 fields if no native builds exist.'
-    default: false
+    description: 'Whether the updater JSON file should add universal macOS as darwin-universal on top of using it in the darwin-aarch64 and darwin-x86_64 fields if no native builds exist.'
+    default: 'false'
   tauriScript:
-    description: 'the script to run to build the Tauri app'
+    description: 'The script to run to build the Tauri app'
   args:
-    description: 'arguments for the tauri command'
+    description: 'Arguments for the `tauri build` command'
+  retryAttempts:
+    description: 'The number of times to re-try building the app if the initial build fails. For now this only affects `tauri build` but may include the upload steps in the future.'
   bundleIdentifier:
-    description: 'the bundle identifier to inject when initializing the Tauri app'
+    description: 'The bundle identifier to inject when initializing the Tauri app'
   owner:
     description: 'The account owner of the repository'
   repo:

@@ -18,6 +18,7 @@ export async function buildProject(
   debug: boolean,
   buildOpts: BuildOptions,
   initOpts: InitOptions,
+  retryAttempts: number,
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -73,6 +74,7 @@ export async function buildProject(
             process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
         }
       : undefined,
+    retryAttempts,
   );
 
   // on Linux, the app product name is converted to kebab-case and `()[]{}` will be removed
