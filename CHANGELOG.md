@@ -1,5 +1,10 @@
 # Changelog
 
+## \[0.5.17]
+
+- [`fb76925`](https://www.github.com/tauri-apps/tauri-action/commit/fb769255b02569d9f2e5f2e021ad3c29f241f401) ([#895](https://www.github.com/tauri-apps/tauri-action/pull/895) by [@Chiichen](https://www.github.com/tauri-apps/tauri-action/../../Chiichen)) Upload assets to the release associated with given `tagName`
+- [`29dbe80`](https://www.github.com/tauri-apps/tauri-action/commit/29dbe80fdda4ab77cd60f313c6e9ad692d4335e3) ([#964](https://www.github.com/tauri-apps/tauri-action/pull/964) by [@louis030195](https://www.github.com/tauri-apps/tauri-action/../../louis030195)) Add retry mechanism for failed builds to improve CI reliability
+
 ## \[0.5.16]
 
 - [`acdef25`](https://www.github.com/tauri-apps/tauri-action/commit/acdef251b8450d568e025c512753e61ef582fa8f) ([#949](https://www.github.com/tauri-apps/tauri-action/pull/949) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The action will now set `TAURI_BUNDLER_DMG_IGNORE_CI: true` by default on tauri cli versions 2.2.0 and above. See https://github.com/tauri-apps/tauri-action/issues/740 for context. This can be disabled by explicitly setting `TAURI_BUNDLER_DMG_IGNORE_CI: false` yourself.
