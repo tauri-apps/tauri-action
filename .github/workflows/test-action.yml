@@ -131,6 +131,7 @@ jobs:
 
       - name: install example dependencies
         run: |
+          cargo install tauri-cli --debug --git https://github.com/tauri-apps/tauri --branch test/disable-dmg-signer
           cd ./.github/fixtures/example-v2
           pnpm install
       # Testing cli fallback install
@@ -174,6 +175,7 @@ jobs:
           args: ${{ matrix.args }}
           updaterJsonKeepUniversal: true
           retryAttempts: 1
+          tauriScript: cargo tauri
 
       - name: Frontend-only Project
         uses: ./
