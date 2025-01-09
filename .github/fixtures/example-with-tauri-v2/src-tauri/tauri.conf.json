@@ -19,6 +19,9 @@
   },
   "bundle": {
     "active": true,
+	  "macOS": {
+		  "signingIdentity": "-"
+	  },
     "createUpdaterArtifacts": true,
     "targets": "all",
     "icon": [
