@@ -20,6 +20,7 @@
   "bundle": {
     "active": true,
 	  "macOS": {
+		  "hardenedRuntime": false,
 		  "signingIdentity": "-"
 	  },
     "createUpdaterArtifacts": true,
