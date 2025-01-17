@@ -43,8 +43,8 @@ importers:
         specifier: 0.38.3
         version: 0.38.3
       covector:
-        specifier: 0.12.3
-        version: 0.12.3(mocha@10.4.0)
+        specifier: 0.12.4
+        version: 0.12.4(mocha@10.4.0)
       eslint:
         specifier: 9.18.0
         version: 9.18.0
@@ -454,8 +454,8 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  covector@0.12.3:
-    resolution: {integrity: sha512-9LNME5eb4/KMdWD2jyJ4XX6CvD45xsF9hmxTQWAoDSuDGKdyh98wzUupz4BrJ9iviR8R9pI3D6Mozv13UX0g+A==}
+  covector@0.12.4:
+    resolution: {integrity: sha512-qRK0Qg1FaRkB7dFDzzKiTn9H3EAMb83N5Hl6KVol2zpenmkKz8A7aa+7C49Z7LHtSgKkIWkqxIut8qcN6pRnag==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -1747,7 +1747,7 @@ snapshots:
 
   concat-map@0.0.1: {}
 
-  covector@0.12.3(mocha@10.4.0):
+  covector@0.12.4(mocha@10.4.0):
     dependencies:
       '@clack/prompts': 0.7.0
       '@covector/apply': 0.10.0(mocha@10.4.0)
