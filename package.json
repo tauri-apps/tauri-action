@@ -33,11 +33,11 @@
     "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@eslint/js": "9.18.0",
+    "@eslint/js": "9.19.0",
     "@types/node": "22.10.10",
     "@vercel/ncc": "0.38.3",
     "covector": "0.12.4",
-    "eslint": "9.18.0",
+    "eslint": "9.19.0",
     "eslint-config-prettier": "10.0.1",
     "prettier": "3.4.2",
     "typescript": "5.7.3",
