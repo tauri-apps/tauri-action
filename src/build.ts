@@ -135,26 +135,28 @@ export async function buildProject(
     const winArtifacts: string[] = [];
 
     // wix v1
-    langs.forEach((lang) => {
-      winArtifacts.push(
-        join(
-          artifactsPath,
-          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
-        ),
-        join(
-          artifactsPath,
-          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`,
-        ),
-        join(
-          artifactsPath,
-          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
-        ),
-        join(
-          artifactsPath,
-          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
-        ),
-      );
-    });
+    if (app.version != app.wixAppVersion) {
+      langs.forEach((lang) => {
+        winArtifacts.push(
+          join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
+          ),
+          join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`,
+          ),
+          join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
+          ),
+          join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
+          ),
+        );
+      });
+    }
 
     // wix v2
     langs.forEach((lang) => {
