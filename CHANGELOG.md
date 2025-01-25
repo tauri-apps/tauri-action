@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.19]
+
+- [`fd1ea0d`](https://www.github.com/tauri-apps/tauri-action/commit/fd1ea0d8e31d0f8670cf14c79c076d85caf9fb53) ([#1009](https://www.github.com/tauri-apps/tauri-action/pull/1009) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Fixed an issue that made the action fail to find .msi packages for tauri v2 apps with numeric build numbers (`1.0.0-0`).
+
 ## \[0.5.18]
 
 - [`91c7ee8`](https://www.github.com/tauri-apps/tauri-action/commit/91c7ee83a6b312f9d9879e049242d623ae38f1f0) ([#978](https://www.github.com/tauri-apps/tauri-action/pull/978) by [@Chiichen](https://www.github.com/tauri-apps/tauri-action/../../Chiichen)) Fix [This is not building for Latest JSON and Not uploading all assets](https://github.com/tauri-apps/tauri-action/issues/975)
