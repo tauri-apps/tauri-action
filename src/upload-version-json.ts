@@ -4,7 +4,7 @@ import { basename, extname, resolve } from 'node:path';
 import { getOctokit } from '@actions/github';
 
 import { uploadAssets } from './upload-release-assets';
-import { getAssetName, retry } from './utils';
+import { getAssetName } from './utils';
 
 import type { Artifact, TargetInfo } from './types';
 
