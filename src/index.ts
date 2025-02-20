@@ -186,7 +186,7 @@ async function run(): Promise<void> {
     }
 
     if (releaseId) {
-      await uploadReleaseAssets(owner, repo, releaseId, artifacts);
+      await uploadReleaseAssets(owner, repo, releaseId, artifacts, retryAttempts);
 
       if (includeUpdaterJson) {
         await uploadVersionJSON({
@@ -202,7 +202,7 @@ async function run(): Promise<void> {
           unzippedSig: info.unzippedSigs,
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
-        });
+        }, retryAttempts);
       }
     } else {
       console.log('No releaseId or tagName provided, skipping all uploads...');

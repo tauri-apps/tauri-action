@@ -2,7 +2,7 @@ import fs from 'node:fs';
 
 import { getOctokit } from '@actions/github';
 
-import { getAssetName } from './utils';
+import { getAssetName, retry } from './utils';
 import type { Artifact } from './types';
 
 export async function uploadAssets(
@@ -10,6 +10,7 @@ export async function uploadAssets(
   repo: string,
   releaseId: number,
   assets: Artifact[],
+  retryAttempts: number,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -58,15 +59,18 @@ export async function uploadAssets(
 
     console.log(`Uploading ${assetName}...`);
 
-    await github.rest.repos.uploadReleaseAsset({
-      headers,
-      name: assetName,
-      // https://github.com/tauri-apps/tauri-action/pull/45
-      // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
-      data: fs.createReadStream(asset.path),
-      owner: owner,
-      repo: repo,
-      release_id: releaseId,
-    });
+    return retry(
+      async () => await github.rest.repos.uploadReleaseAsset({
+        headers,
+        name: assetName,
+        // https://github.com/tauri-apps/tauri-action/pull/45
+        // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
+        data: fs.createReadStream(asset.path),
+        owner: owner,
+        repo: repo,
+        release_id: releaseId,
+      }),
+      retryAttempts + 1
+    );
   }
 }

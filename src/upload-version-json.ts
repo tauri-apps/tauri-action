@@ -4,7 +4,7 @@ import { basename, extname, resolve } from 'node:path';
 import { getOctokit } from '@actions/github';
 
 import { uploadAssets } from './upload-release-assets';
-import { getAssetName } from './utils';
+import { getAssetName, retry } from './utils';
 
 import type { Artifact, TargetInfo } from './types';
 
@@ -46,7 +46,8 @@ export async function uploadVersionJSON({
   unzippedSig: boolean;
   updaterJsonPreferNsis: boolean;
   updaterJsonKeepUniversal: boolean;
-}) {
+},
+retryAttempts: number) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }
@@ -215,5 +216,5 @@ export async function uploadVersionJSON({
     });
   }
 
-  await uploadAssets(owner, repo, releaseId, [{ path: versionFile, arch: '' }]);
+  await uploadAssets(owner, repo, releaseId, [{ path: versionFile, arch: '' }], retryAttempts);
 }
