@@ -18,6 +18,17 @@ class Runner {
   constructor(bin: string, tauriScript?: string[]) {
     this.bin = bin;
     this.tauriScript = tauriScript || [];
+    this.checkPackageManagerExists(bin).catch(() => {
+      console.error(`Package manager "${bin}" does not exist. Did you forget to install it in the action YAML file?`);
+    });
+  }
+
+  async checkPackageManagerExists(bin: string): Promise<void> {
+    try {
+      await execCommand(bin, ['--version']);
+    } catch {
+      throw new Error(`Package manager ${bin} not found`);
+    }
   }
 
   async execTauriCommand(
