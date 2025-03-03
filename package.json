@@ -41,7 +41,7 @@
     "eslint-config-prettier": "10.0.2",
     "prettier": "3.5.3",
     "typescript": "5.8.2",
-    "typescript-eslint": "8.25.0"
+    "typescript-eslint": "8.26.0"
   },
   "engines": {
     "pnpm": "^10.0.0",
