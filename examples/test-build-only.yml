@@ -19,7 +19,7 @@ jobs:
           - platform: "windows-latest"
             args: ""
 
-    runs-on: ${{ matrix.platform }}
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
