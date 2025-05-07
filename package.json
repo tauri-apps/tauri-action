@@ -24,7 +24,7 @@
   ],
   "dependencies": {
     "@actions/core": "1.11.1",
-    "@actions/github": "6.0.0",
+    "@actions/github": "6.0.1",
     "@iarna/toml": "2.2.5",
     "execa": "9.5.2",
     "globby": "14.1.0",
