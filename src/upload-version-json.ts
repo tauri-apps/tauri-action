@@ -23,31 +23,17 @@ type VersionContent = {
 };
 
 export async function uploadVersionJSON(
-  {
-    owner,
-    repo,
-    version,
-    notes,
-    tagName,
-    releaseId,
-    artifacts,
-    targetInfo,
-    unzippedSig,
-    updaterJsonPreferNsis,
-    updaterJsonKeepUniversal,
-  }: {
-    owner: string;
-    repo: string;
-    version: string;
-    notes: string;
-    tagName: string;
-    releaseId: number;
-    artifacts: Artifact[];
-    targetInfo: TargetInfo;
-    unzippedSig: boolean;
-    updaterJsonPreferNsis: boolean;
-    updaterJsonKeepUniversal: boolean;
-  },
+  owner: string,
+  repo: string,
+  version: string,
+  notes: string,
+  tagName: string,
+  releaseId: number,
+  artifacts: Artifact[],
+  targetInfo: TargetInfo,
+  unzippedSig: boolean,
+  updaterJsonPreferNsis: boolean,
+  updaterJsonKeepUniversal: boolean,
   retryAttempts: number,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {

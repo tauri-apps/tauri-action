@@ -196,20 +196,17 @@ async function run(): Promise<void> {
 
       if (includeUpdaterJson) {
         await uploadVersionJSON(
-          {
-            owner,
-            repo,
-            version: info.version,
-            notes: body,
-            tagName,
-            releaseId,
-            artifacts:
-              releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts,
-            targetInfo,
-            unzippedSig: info.unzippedSigs,
-            updaterJsonPreferNsis,
-            updaterJsonKeepUniversal,
-          },
+          owner,
+          repo,
+          info.version,
+          body,
+          tagName,
+          releaseId,
+          releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts,
+          targetInfo,
+          info.unzippedSigs,
+          updaterJsonPreferNsis,
+          updaterJsonKeepUniversal,
           retryAttempts,
         );
       }
