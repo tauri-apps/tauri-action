@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.21]
+
+- [`5666b68`](https://www.github.com/tauri-apps/tauri-action/commit/5666b68581044b3981c75a489540c3d570131ee7) ([#1030](https://www.github.com/tauri-apps/tauri-action/pull/1030) by [@997R8V10](https://www.github.com/tauri-apps/tauri-action/../../997R8V10)) `retryAttempts` is now also applied to uploads.
+
 ## \[0.5.20]
 
 - [`563aed7`](https://www.github.com/tauri-apps/tauri-action/commit/563aed7bd10e6ccaf328e73a66bb53341e88fef2) ([#1031](https://www.github.com/tauri-apps/tauri-action/pull/1031) by [@Muska-Ami](https://www.github.com/tauri-apps/tauri-action/../../Muska-Ami)) Add support for Bun's text-based lockfile.
