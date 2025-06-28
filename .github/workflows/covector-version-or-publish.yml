@@ -20,7 +20,7 @@ jobs:
       - name: install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.x.x
+          version: 10.x.x
       - name: git config
         run: |
           git config --global user.name "${{ github.event.pusher.name }}"

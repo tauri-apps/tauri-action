@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.20]
+
+- [`563aed7`](https://www.github.com/tauri-apps/tauri-action/commit/563aed7bd10e6ccaf328e73a66bb53341e88fef2) ([#1031](https://www.github.com/tauri-apps/tauri-action/pull/1031) by [@Muska-Ami](https://www.github.com/tauri-apps/tauri-action/../../Muska-Ami)) Add support for Bun's text-based lockfile.
+
 ## \[0.5.19]
 
 - [`fd1ea0d`](https://www.github.com/tauri-apps/tauri-action/commit/fd1ea0d8e31d0f8670cf14c79c076d85caf9fb53) ([#1009](https://www.github.com/tauri-apps/tauri-action/pull/1009) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Fixed an issue that made the action fail to find .msi packages for tauri v2 apps with numeric build numbers (`1.0.0-0`).

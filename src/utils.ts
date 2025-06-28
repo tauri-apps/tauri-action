@@ -262,7 +262,9 @@ export function usesPnpm(root: string): boolean {
 }
 
 export function usesBun(root: string): boolean {
-  return existsSync(join(root, 'bun.lockb'));
+  return (
+    existsSync(join(root, 'bun.lockb')) || existsSync(join(root, 'bun.lock'))
+  );
 }
 
 export async function execCommand(

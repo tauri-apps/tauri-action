@@ -1,6 +1,6 @@
 {
   "name": "tauri-action",
-  "version": "0.5.19",
+  "version": "0.5.20",
   "description": "Tauri GitHub Action",
   "contributors": [
     "Tauri Programme within The Commons Conservancy"
@@ -24,27 +24,27 @@
   ],
   "dependencies": {
     "@actions/core": "1.11.1",
-    "@actions/github": "6.0.0",
+    "@actions/github": "6.0.1",
     "@iarna/toml": "2.2.5",
-    "execa": "9.5.2",
-    "globby": "14.0.2",
+    "execa": "9.6.0",
+    "globby": "14.1.0",
     "json5": "2.2.3",
     "string-argv": "0.3.2",
     "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@eslint/js": "9.20.0",
-    "@types/node": "22.13.1",
+    "@eslint/js": "9.30.0",
+    "@types/node": "22.15.34",
     "@vercel/ncc": "0.38.3",
     "covector": "0.12.4",
-    "eslint": "9.20.0",
-    "eslint-config-prettier": "10.0.1",
-    "prettier": "3.4.2",
-    "typescript": "5.7.3",
-    "typescript-eslint": "8.24.0"
+    "eslint": "9.30.0",
+    "eslint-config-prettier": "10.1.5",
+    "prettier": "3.6.2",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.35.0"
   },
   "engines": {
-    "pnpm": "^9.0.0",
+    "pnpm": "^10.0.0",
     "node": ">=20"
   }
 }

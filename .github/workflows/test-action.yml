@@ -15,7 +15,7 @@ jobs:
         include:
           - platform: 'macos-latest'
             args: '--verbose --target universal-apple-darwin'
-          - platform: 'ubuntu-20.04'
+          - platform: 'ubuntu-22.04'
             args: '--verbose'
           - platform: 'windows-latest'
             args: '--verbose'
@@ -28,7 +28,7 @@ jobs:
       - name: install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.x.x
+          version: 10.x.x
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -59,7 +59,7 @@ jobs:
 
       # system
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
+        if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev
@@ -121,7 +121,7 @@ jobs:
       - name: install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.x.x
+          version: 10.x.x
 
       - name: setup node
         uses: actions/setup-node@v4
