@@ -33,6 +33,7 @@ async function run(): Promise<void> {
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
     const bundleIdentifier = core.getInput('bundleIdentifier');
+    const releasePattern = core.getInput('releasePattern');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseId = Number(core.getInput('releaseId'));
@@ -186,7 +187,13 @@ async function run(): Promise<void> {
     }
 
     if (releaseId) {
-      await uploadReleaseAssets(owner, repo, releaseId, artifacts);
+      await uploadReleaseAssets(
+        owner,
+        repo,
+        releaseId,
+        artifacts,
+        releasePattern,
+      );
 
       if (includeUpdaterJson) {
         await uploadVersionJSON({
@@ -202,6 +209,7 @@ async function run(): Promise<void> {
           unzippedSig: info.unzippedSigs,
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
+          releasePattern,
         });
       }
     } else {

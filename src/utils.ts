@@ -8,6 +8,7 @@ import { globbySync } from 'globby';
 import { TauriConfig } from './config';
 
 import type {
+  Artifact,
   CargoConfig,
   CargoManifest,
   Info,
@@ -37,7 +38,7 @@ export const extensions = [
 ];
 
 /*** helper functions ***/
-export function getAssetName(assetPath: string) {
+export function parseAsset(assetPath: string) {
   const basename = path.basename(assetPath);
   const exts = extensions.filter((s) => basename.includes(s));
   const ext = exts[0] || path.extname(assetPath);
@@ -46,19 +47,44 @@ export function getAssetName(assetPath: string) {
   let arch = '';
   if (ext === '.app.tar.gz.sig' || ext === '.app.tar.gz') {
     if (assetPath.includes('universal-apple-darwin')) {
-      arch = '_universal';
+      arch = 'universal';
     } else if (assetPath.includes('aarch64-apple-darwin')) {
-      arch = '_aarch64';
+      arch = 'aarch64';
     } else if (assetPath.includes('x86_64-apple-darwin')) {
-      arch = '_x64';
+      arch = 'x64';
     } else {
-      arch = process.arch === 'arm64' ? '_aarch64' : '_x64';
+      arch = process.arch === 'arm64' ? 'aarch64' : 'x64';
     }
   }
 
-  return assetPath.includes(`${path.sep}debug${path.sep}`)
-    ? `${filename}-debug${arch}${ext}`
-    : `${filename}${arch}${ext}`;
+  return { basename, ext, filename, arch };
+}
+
+export function renderNamePattern(
+  pattern: string,
+  replacements: Record<string, string>,
+) {
+  return pattern.replace(/\[(\w+)]/g, (_match, type: string) => {
+    if (!Object.prototype.hasOwnProperty.call(replacements, type)) {
+      return '';
+    }
+    const replacement = replacements[type];
+    return replacement;
+  });
+}
+
+export function getAssetName(asset: Artifact, pattern?: string) {
+  const debugPattern = asset.mode === 'debug' ? '_[mode]' : '';
+
+  const DEFAULT_PATTERN = `[name]_v[version]${debugPattern}_[platform]_[arch][ext]`;
+  pattern = pattern || DEFAULT_PATTERN;
+
+  const filename = renderNamePattern(
+    pattern,
+    asset as unknown as Record<string, string>,
+  );
+
+  return filename;
 }
 
 export function getPackageJson(root: string) {
