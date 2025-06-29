@@ -59,7 +59,7 @@ export async function uploadAssets(
 
     console.log(`Uploading ${assetName}...`);
 
-    return retry(
+    await retry(
       () =>
         github.rest.repos.uploadReleaseAsset({
           headers,
