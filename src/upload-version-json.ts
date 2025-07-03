@@ -64,26 +64,49 @@ export async function uploadVersionJSON(
   const asset = assets.data.find((e) => e.name === versionFilename);
 
   if (asset) {
-    const path = isGitea
-      ? '/repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}'
-      : '/repos/{owner}/{repo}/releases/assets/{asset_id}';
-    const assetData = (
-      await github.request(`GET ${path}`, {
-        owner: owner,
-        repo: repo,
-        release_id: releaseId,
-        asset_id: asset.id,
-        headers: {
-          accept: 'application/octet-stream',
-        },
-      })
-    ).data as unknown as ArrayBuffer;
+    if (isGitea) {
+      const info = (
+        await github.request(
+          'GET /repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}',
+          {
+            owner,
+            repo,
+            release_id: releaseId,
+            asset_id: asset.id,
+          },
+        )
+      ).data as { browser_download_url: string };
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    versionContent.platforms = JSON.parse(
-      Buffer.from(assetData).toString(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    ).platforms;
+      const data = (await github.request(`GET ${info.browser_download_url}`))
+        .data as string;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      versionContent.platforms = JSON.parse(
+        data,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      ).platforms;
+    } else {
+      const assetData = (
+        await github.request(
+          `GET /repos/{owner}/{repo}/releases/assets/{asset_id}`,
+          {
+            owner: owner,
+            repo: repo,
+            release_id: releaseId,
+            asset_id: asset.id,
+            headers: {
+              accept: 'application/octet-stream',
+            },
+          },
+        )
+      ).data as unknown as ArrayBuffer;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      versionContent.platforms = JSON.parse(
+        Buffer.from(assetData).toString(),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      ).platforms;
+    }
   }
 
   const downloadUrls = new Map<string, string>();
