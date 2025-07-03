@@ -33,7 +33,7 @@ async function run(): Promise<void> {
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
     const bundleIdentifier = core.getInput('bundleIdentifier');
-    const releasePattern = core.getInput('releasePattern');
+    const assetNamePattern = core.getInput('assetNamePattern');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseId = Number(core.getInput('releaseId'));
@@ -192,7 +192,7 @@ async function run(): Promise<void> {
         repo,
         releaseId,
         artifacts,
-        releasePattern,
+        assetNamePattern,
       );
 
       if (includeUpdaterJson) {
@@ -209,7 +209,7 @@ async function run(): Promise<void> {
           unzippedSig: info.unzippedSigs,
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
-          releasePattern,
+          assetNamePattern,
         });
       }
     } else {

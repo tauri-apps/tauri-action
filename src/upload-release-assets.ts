@@ -10,7 +10,7 @@ export async function uploadAssets(
   repo: string,
   releaseId: number,
   assets: Artifact[],
-  releasePattern?: string,
+  assetNamePattern?: string,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -36,7 +36,7 @@ export async function uploadAssets(
       'content-length': contentLength(asset.path),
     };
 
-    const assetName = getAssetName(asset, releasePattern);
+    const assetName = getAssetName(asset, assetNamePattern);
 
     const existingAsset = existingAssets.find(
       (a) =>
