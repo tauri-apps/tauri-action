@@ -126,6 +126,7 @@ These inputs allow you to modify the GitHub release.
 | `owner`            |  false   | The account owner of the repository the release will be uploaded to. Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo. | string | owner of the current repo |
 | `repo`             |  false   | The name of the repository the release will be uploaded to. Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo.          | string | name of the current repo  |
 | `githubBaseUrl`    |  false   | The base URL of the GitHub API to use. This is useful if you want to use a self-hosted GitHub instance or a GitHub Enterprise server.                                     | string | https://api.github.com    |
+| `isGitea`          |  false   | Whether to run in Gitea compatible mode. Only set this if using in Gitea runner, since some API endpoints differ from GitHub                                              | bool   | false                     |
 
 ## Outputs
 

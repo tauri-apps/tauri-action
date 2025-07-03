@@ -14,6 +14,7 @@ import type {
   TargetInfo,
   TargetPlatform,
 } from './types';
+import { GitHub } from '@actions/github/lib/utils';
 
 /*** constants ***/
 export const extensions = [
@@ -419,6 +420,26 @@ export async function retry(
       console.log(`Attempt ${attempt} failed, retrying...`);
     }
   }
+}
+
+// Helper function to delete a Gitea release asset
+// This is a workaround since Gitea's API is incompatible with the GitHub API
+export function deleteGiteaReleaseAsset(
+  github: InstanceType<typeof GitHub>,
+  owner: string,
+  repo: string,
+  releaseId: number,
+  assetId: number,
+) {
+  return github.request(
+    'DELETE /repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}',
+    {
+      owner,
+      repo,
+      release_id: releaseId,
+      asset_id: assetId,
+    },
+  );
 }
 
 // TODO: Properly resolve the eslint issues in this file.

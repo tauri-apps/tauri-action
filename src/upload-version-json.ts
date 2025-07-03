@@ -4,7 +4,7 @@ import { basename, extname, resolve } from 'node:path';
 import { getOctokit } from '@actions/github';
 
 import { uploadAssets } from './upload-release-assets';
-import { getAssetName } from './utils';
+import { deleteGiteaReleaseAsset, getAssetName } from './utils';
 
 import type { Artifact, TargetInfo } from './types';
 
@@ -36,6 +36,7 @@ export async function uploadVersionJSON(
   updaterJsonKeepUniversal: boolean,
   retryAttempts: number,
   githubBaseUrl: string,
+  isGitea: boolean,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -63,19 +64,19 @@ export async function uploadVersionJSON(
   const asset = assets.data.find((e) => e.name === versionFilename);
 
   if (asset) {
+    const path = isGitea
+      ? '/repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}'
+      : '/repos/{owner}/{repo}/releases/assets/{asset_id}';
     const assetData = (
-      await github.request(
-        'GET /repos/{owner}/{repo}/releases/assets/{asset_id}',
-        {
-          owner: owner,
-          repo: repo,
-          asset_id: asset.id,
-          headers: {
-            accept: 'application/octet-stream',
-          },
-          baseUrl: githubBaseUrl,
+      await github.request(`GET ${path}`, {
+        owner: owner,
+        repo: repo,
+        release_id: releaseId,
+        asset_id: asset.id,
+        headers: {
+          accept: 'application/octet-stream',
         },
-      )
+      })
     ).data as unknown as ArrayBuffer;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -199,14 +200,17 @@ export async function uploadVersionJSON(
   writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
 
   if (asset) {
-    // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
-    await github.rest.repos.deleteReleaseAsset({
-      owner: owner,
-      repo: repo,
-      release_id: releaseId,
-      asset_id: asset.id,
-      baseUrl: githubBaseUrl,
-    });
+    if (isGitea) {
+      await deleteGiteaReleaseAsset(github, owner, repo, releaseId, asset.id);
+    } else {
+      // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
+      await github.rest.repos.deleteReleaseAsset({
+        owner: owner,
+        repo: repo,
+        release_id: releaseId,
+        asset_id: asset.id,
+      });
+    }
   }
 
   await uploadAssets(
@@ -216,5 +220,6 @@ export async function uploadVersionJSON(
     [{ path: versionFile, arch: '' }],
     retryAttempts,
     githubBaseUrl,
+    isGitea,
   );
 }

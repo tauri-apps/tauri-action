@@ -45,6 +45,7 @@ async function run(): Promise<void> {
     const commitish = core.getInput('releaseCommitish') || null;
     const githubBaseUrl =
       core.getInput('githubBaseUrl') || 'https://api.github.com';
+    const isGitea = core.getBooleanInput('isGitea');
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -196,6 +197,7 @@ async function run(): Promise<void> {
         artifacts,
         retryAttempts,
         githubBaseUrl,
+        isGitea,
       );
 
       if (includeUpdaterJson) {
@@ -213,6 +215,7 @@ async function run(): Promise<void> {
           updaterJsonKeepUniversal,
           retryAttempts,
           githubBaseUrl,
+          isGitea,
         );
       }
     } else {
