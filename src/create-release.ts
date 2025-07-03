@@ -33,12 +33,12 @@ export async function getOrCreateRelease(
   owner: string,
   repo: string,
   tagName: string,
+  githubBaseUrl: string,
   releaseName?: string,
   body?: string,
   commitish?: string,
   draft = true,
   prerelease = true,
-  githubBaseUrl = 'https://api.github.com',
 ): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');

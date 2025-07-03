@@ -35,7 +35,7 @@ export async function uploadVersionJSON(
   updaterJsonPreferNsis: boolean,
   updaterJsonKeepUniversal: boolean,
   retryAttempts: number,
-  githubBaseUrl = 'https://api.github.com',
+  githubBaseUrl: string,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');

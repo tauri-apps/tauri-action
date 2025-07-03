@@ -11,7 +11,7 @@ export async function uploadAssets(
   releaseId: number,
   assets: Artifact[],
   retryAttempts: number,
-  githubBaseUrl = 'https://api.github.com',
+  githubBaseUrl: string,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');

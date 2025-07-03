@@ -43,7 +43,8 @@ async function run(): Promise<void> {
     const draft = core.getBooleanInput('releaseDraft');
     const prerelease = core.getBooleanInput('prerelease');
     const commitish = core.getInput('releaseCommitish') || null;
-    const githubBaseUrl = core.getInput('githubBaseUrl') || undefined;
+    const githubBaseUrl =
+      core.getInput('githubBaseUrl') || 'https://api.github.com';
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -174,12 +175,12 @@ async function run(): Promise<void> {
         owner,
         repo,
         tagName,
+        githubBaseUrl,
         releaseName || undefined,
         body,
         commitish || undefined,
         draft,
         prerelease,
-        githubBaseUrl,
       );
       releaseId = releaseData.id;
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
