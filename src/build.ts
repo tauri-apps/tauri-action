@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs';
-import { join, extname, basename } from 'node:path';
+import { join } from 'node:path';
 
 import { initProject } from './init-project';
 import { getRunner } from './runner';
 import {
-  extensions,
+  createArtifact,
   getInfo,
   getTargetDir,
   getTargetInfo,
@@ -13,37 +13,6 @@ import {
 } from './utils';
 
 import type { Artifact, BuildOptions, InitOptions } from './types';
-
-export function createArtifact({
-  path,
-  name,
-  debug,
-  platform,
-  arch,
-  version,
-}: {
-  path: string;
-  name: string;
-  debug: boolean;
-  platform: string;
-  arch: string;
-  version: string;
-}): Artifact {
-  const baseName = basename(path);
-  const exts = extensions.filter((s) => baseName.includes(s));
-  const ext = exts[0] || extname(path);
-  return {
-    path,
-    name,
-    mode: debug ? 'debug' : 'release',
-    platform: (platform === 'macos'
-      ? 'darwin'
-      : platform) as Artifact['platform'],
-    arch,
-    ext,
-    version,
-  };
-}
 
 export async function buildProject(
   root: string,

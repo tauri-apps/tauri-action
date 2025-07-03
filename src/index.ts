@@ -192,25 +192,26 @@ async function run(): Promise<void> {
         repo,
         releaseId,
         artifacts,
+        retryAttempts,
         assetNamePattern,
       );
 
       if (includeUpdaterJson) {
-        await uploadVersionJSON({
+        await uploadVersionJSON(
           owner,
           repo,
-          version: info.version,
-          notes: body,
+          info.version,
+          body,
           tagName,
           releaseId,
-          artifacts:
-            releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts,
+          releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts,
           targetInfo,
-          unzippedSig: info.unzippedSigs,
+          info.unzippedSigs,
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
+          retryAttempts,
           assetNamePattern,
-        });
+        );
       }
     } else {
       console.log('No releaseId or tagName provided, skipping all uploads...');

@@ -7,7 +7,7 @@ import { uploadAssets } from './upload-release-assets';
 import { getAssetName } from './utils';
 
 import type { Artifact, TargetInfo } from './types';
-import { createArtifact } from './build';
+import { createArtifact } from './utils';
 
 type Platform = {
   signature: string;
@@ -23,33 +23,21 @@ type VersionContent = {
   };
 };
 
-export async function uploadVersionJSON({
-  owner,
-  repo,
-  version,
-  notes,
-  tagName,
-  releaseId,
-  artifacts,
-  targetInfo,
-  unzippedSig,
-  updaterJsonPreferNsis,
-  updaterJsonKeepUniversal,
-  assetNamePattern,
-}: {
-  owner: string;
-  repo: string;
-  version: string;
-  notes: string;
-  tagName: string;
-  releaseId: number;
-  artifacts: Artifact[];
-  targetInfo: TargetInfo;
-  unzippedSig: boolean;
-  updaterJsonPreferNsis: boolean;
-  updaterJsonKeepUniversal: boolean;
-  assetNamePattern?: string;
-}) {
+export async function uploadVersionJSON(
+  owner: string,
+  repo: string,
+  version: string,
+  notes: string,
+  tagName: string,
+  releaseId: number,
+  artifacts: Artifact[],
+  targetInfo: TargetInfo,
+  unzippedSig: boolean,
+  updaterJsonPreferNsis: boolean,
+  updaterJsonKeepUniversal: boolean,
+  retryAttempts: number,
+  assetNamePattern?: string,
+) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }
@@ -218,15 +206,14 @@ export async function uploadVersionJSON({
     });
   }
 
-  await uploadAssets(owner, repo, releaseId, [
-    createArtifact({
-      path: versionFile,
-      name: versionFilename,
-      debug: false,
-      platform:
-        targetInfo.platform === 'macos' ? 'darwin' : targetInfo.platform,
-      arch: '',
-      version,
-    }),
-  ]);
+  const artifact = createArtifact({
+    path: versionFile,
+    name: versionFilename,
+    debug: false,
+    platform: targetInfo.platform,
+    arch: '',
+    version,
+  });
+
+  await uploadAssets(owner, repo, releaseId, [artifact], retryAttempts);
 }

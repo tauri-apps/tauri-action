@@ -51,7 +51,7 @@ inputs:
   args:
     description: 'Arguments for the `tauri build` command'
   retryAttempts:
-    description: 'The number of times to re-try building the app if the initial build fails. For now this only affects `tauri build` but may include the upload steps in the future.'
+    description: 'The number of times to re-try building the app if the initial build fails or uploading assets if the upload fails.'
   bundleIdentifier:
     description: 'The bundle identifier to inject when initializing the Tauri app'
   owner:

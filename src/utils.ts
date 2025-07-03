@@ -1,5 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs';
-import path, { join, normalize, resolve, sep } from 'node:path';
+import path, {
+  basename,
+  extname,
+  join,
+  normalize,
+  resolve,
+  sep,
+} from 'node:path';
 
 import { parse as parseToml } from '@iarna/toml';
 import { execa } from 'execa';
@@ -85,6 +92,35 @@ export function getAssetName(asset: Artifact, pattern?: string) {
   );
 
   return filename;
+}
+
+export function createArtifact({
+  path,
+  name,
+  debug,
+  platform,
+  arch,
+  version,
+}: {
+  path: string;
+  name: string;
+  debug: boolean;
+  platform: TargetPlatform;
+  arch: string;
+  version: string;
+}): Artifact {
+  const baseName = basename(path);
+  const exts = extensions.filter((s) => baseName.includes(s));
+  const ext = exts[0] || extname(path);
+  return {
+    path,
+    name,
+    mode: debug ? 'debug' : 'release',
+    platform: platform === 'macos' ? 'darwin' : platform,
+    arch,
+    ext,
+    version,
+  };
 }
 
 export function getPackageJson(root: string) {
