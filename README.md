@@ -119,13 +119,13 @@ These inputs allow you to modify the GitHub release.
 | `releaseId`        |  false   | The id of the release to upload artifacts as release assets. If set, `tagName` and `releaseName` will not be considered to find a release.                                | number |                                            |
 | `tagName`          |  false   | The tag name of the release to upload/create or the tag of the release belonging to `releaseId`                                                                           | string |                                            |
 | `releaseName`      |  false   | The name of the release to create. Required if there's no existing release for `tagName`                                                                                  | string |                                            |
-| `assetNamePattern` |  false   | The pattern to use for naming the asset artifacts                                                                                                                         | string | `[name]_v[version]_[platform]_[arch][ext]` |
 | `releaseBody`      |  false   | The body of the release to create                                                                                                                                         | string |                                            |
 | `releaseDraft`     |  false   | Whether the release to find or create is a draft or not                                                                                                                   | bool   | false                                      |
 | `prerelease`       |  false   | Whether the release to create is a prerelease or not                                                                                                                      | bool   | false                                      |
 | `releaseCommitish` |  false   | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists.                                                                               | string | SHA of current commit                      |
 | `owner`            |  false   | The account owner of the repository the release will be uploaded to. Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo. | string | owner of the current repo                  |
 | `repo`             |  false   | The name of the repository the release will be uploaded to. Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo.          | string | name of the current repo                   |
+| `assetNamePattern` |  false   | The naming pattern to use for the uploaded assets                                                                                                                         | string | `[name]_v[version]_[platform]_[arch][ext]` |
 
 ## Outputs
 
