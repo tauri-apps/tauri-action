@@ -64,9 +64,9 @@ export function renderNamePattern(
   pattern: string,
   replacements: Record<string, string>,
 ) {
-  return pattern.replace(/\[(\w+)]/g, (_match, type: string) => {
+  return pattern.replace(/\[(\w+)]/g, (match, type: string) => {
     if (!Object.prototype.hasOwnProperty.call(replacements, type)) {
-      return '';
+      return match;
     }
     const replacement = replacements[type];
     return replacement;
