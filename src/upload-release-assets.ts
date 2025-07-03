@@ -57,6 +57,7 @@ export async function uploadAssets(
         owner: owner,
         repo: repo,
         asset_id: existingAsset.id,
+        baseUrl: githubBaseUrl,
       });
     }
 
