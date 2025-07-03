@@ -73,6 +73,7 @@ export async function uploadVersionJSON(
           headers: {
             accept: 'application/octet-stream',
           },
+          baseUrl: githubBaseUrl,
         },
       )
     ).data as unknown as ArrayBuffer;
@@ -204,6 +205,7 @@ export async function uploadVersionJSON(
       repo: repo,
       release_id: releaseId,
       asset_id: asset.id,
+      baseUrl: githubBaseUrl,
     });
   }
 
