@@ -35,12 +35,15 @@ export async function uploadVersionJSON(
   updaterJsonPreferNsis: boolean,
   updaterJsonKeepUniversal: boolean,
   retryAttempts: number,
+  githubBaseUrl = 'https://api.github.com',
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }
 
-  const github = getOctokit(process.env.GITHUB_TOKEN);
+  const github = getOctokit(process.env.GITHUB_TOKEN, {
+    baseUrl: githubBaseUrl,
+  });
 
   const versionFilename = 'latest.json';
   const versionFile = resolve(process.cwd(), versionFilename);
@@ -210,5 +213,6 @@ export async function uploadVersionJSON(
     releaseId,
     [{ path: versionFile, arch: '' }],
     retryAttempts,
+    githubBaseUrl,
   );
 }

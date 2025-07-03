@@ -43,6 +43,7 @@ async function run(): Promise<void> {
     const draft = core.getBooleanInput('releaseDraft');
     const prerelease = core.getBooleanInput('prerelease');
     const commitish = core.getInput('releaseCommitish') || null;
+    const githubBaseUrl = core.getInput('githubBaseUrl') || undefined;
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -178,6 +179,7 @@ async function run(): Promise<void> {
         commitish || undefined,
         draft,
         prerelease,
+        githubBaseUrl,
       );
       releaseId = releaseData.id;
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
@@ -192,6 +194,7 @@ async function run(): Promise<void> {
         releaseId,
         artifacts,
         retryAttempts,
+        githubBaseUrl,
       );
 
       if (includeUpdaterJson) {
@@ -208,6 +211,7 @@ async function run(): Promise<void> {
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
           retryAttempts,
+          githubBaseUrl,
         );
       }
     } else {

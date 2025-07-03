@@ -11,12 +11,15 @@ export async function uploadAssets(
   releaseId: number,
   assets: Artifact[],
   retryAttempts: number,
+  githubBaseUrl = 'https://api.github.com',
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }
 
-  const github = getOctokit(process.env.GITHUB_TOKEN);
+  const github = getOctokit(process.env.GITHUB_TOKEN, {
+    baseUrl: githubBaseUrl,
+  });
 
   const existingAssets = (
     await github.rest.repos.listReleaseAssets({

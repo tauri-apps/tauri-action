@@ -38,13 +38,16 @@ export async function getOrCreateRelease(
   commitish?: string,
   draft = true,
   prerelease = true,
+  githubBaseUrl = 'https://api.github.com',
 ): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }
 
   // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-  const github = getOctokit(process.env.GITHUB_TOKEN);
+  const github = getOctokit(process.env.GITHUB_TOKEN, {
+    baseUrl: githubBaseUrl,
+  });
 
   const bodyPath = core.getInput('body_path', { required: false });
   let bodyFileContent: string | null = null;
