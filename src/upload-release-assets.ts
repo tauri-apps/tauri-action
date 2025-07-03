@@ -73,6 +73,7 @@ export async function uploadAssets(
           owner: owner,
           repo: repo,
           release_id: releaseId,
+          baseUrl: githubBaseUrl,
         }),
       retryAttempts + 1,
     );
