@@ -1,4 +1,4 @@
-name: 'real world tests'
+name: "real world tests"
 
 on:
   workflow_dispatch:
@@ -13,12 +13,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest'
-            args: '--verbose --target universal-apple-darwin'
-          - platform: 'ubuntu-22.04'
-            args: '--verbose'
-          - platform: 'windows-latest'
-            args: '--verbose'
+          - platform: "macos-latest"
+            args: "--verbose --target universal-apple-darwin"
+          - platform: "ubuntu-22.04"
+            args: "--verbose"
+          - platform: "windows-latest"
+            args: "--verbose"
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -75,8 +75,8 @@ jobs:
           includeDebug: true
           includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
-          releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v1'
-          releaseBody: 'See the assets to download this version and install.'
+          releaseName: "Release example with preconfigured Tauri app v__VERSION__ for tauri-v1"
+          releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           args: ${{ matrix.args }}
 
@@ -96,8 +96,8 @@ jobs:
           includeDebug: true
           includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-v__VERSION__' || '' }}
-          releaseName: 'Release example app v__VERSION__ for tauri-v1'
-          releaseBody: 'See the assets to download this version and install.'
+          releaseName: "Release example app v__VERSION__ for tauri-v1"
+          releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           args: ${{ matrix.args }}
 
@@ -106,12 +106,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest'
-            args: '--verbose --target universal-apple-darwin'
-          - platform: 'ubuntu-22.04'
-            args: '--verbose'
-          - platform: 'windows-latest'
-            args: '--verbose'
+          - platform: "macos-latest"
+            args: "--verbose --target universal-apple-darwin"
+          - platform: "ubuntu-22.04"
+            args: "--verbose"
+          - platform: "windows-latest"
+            args: "--verbose"
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -168,12 +168,13 @@ jobs:
           includeDebug: true
           includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
-          releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v2'
-          releaseBody: 'See the assets to download this version and install.'
+          releaseName: "Release example with preconfigured Tauri app v__VERSION__ for tauri-v2"
+          releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           args: ${{ matrix.args }}
           updaterJsonKeepUniversal: true
           retryAttempts: 1
+          assetNamePattern: "[name]x[version]x[platform]x[arch]x[ext]"
 
       - name: Frontend-only Project
         uses: ./
@@ -191,7 +192,7 @@ jobs:
           includeDebug: true
           includeRelease: false
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-v__VERSION__' || '' }}
-          releaseName: 'Release example app v__VERSION__ for tauri-v2'
-          releaseBody: 'See the assets to download this version and install.'
+          releaseName: "Release example app v__VERSION__ for tauri-v2"
+          releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           args: ${{ matrix.args }}
