@@ -13,6 +13,7 @@ export async function uploadAssets(
   retryAttempts: number,
   githubBaseUrl: string,
   isGitea: boolean,
+  assetNamePattern?: string,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -40,7 +41,10 @@ export async function uploadAssets(
       'content-length': contentLength(asset.path),
     };
 
-    const assetName = getAssetName(asset.path);
+    const assetName =
+      asset.name === 'latest.json'
+        ? 'latest.json'
+        : getAssetName(asset, assetNamePattern);
 
     const existingAsset = existingAssets.find(
       (a) =>

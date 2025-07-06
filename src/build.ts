@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { initProject } from './init-project';
 import { getRunner } from './runner';
 import {
+  createArtifact,
   getInfo,
   getTargetDir,
   getTargetInfo,
@@ -107,11 +108,42 @@ export async function buildProject(
     }
 
     artifacts = [
-      join(artifactsPath, `bundle/dmg/${app.name}_${app.version}_${arch}.dmg`),
-      join(artifactsPath, `bundle/macos/${app.name}.app`),
-      join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz`),
-      join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz.sig`),
-    ].map((path) => ({ path, arch }));
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `bundle/dmg/${app.name}_${app.version}_${arch}.dmg`,
+        ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `bundle/macos/${app.name}.app`),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz`),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz.sig`),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+    ];
   } else if (targetInfo.platform === 'windows') {
     if (arch.startsWith('i')) {
       arch = 'x86';
@@ -132,28 +164,56 @@ export async function buildProject(
       langs = Object.keys(app.wixLanguage);
     }
 
-    const winArtifacts: string[] = [];
+    const winArtifacts: Artifact[] = [];
 
     // wix v1
     if (app.version != app.wixAppVersion) {
       langs.forEach((lang) => {
         winArtifacts.push(
-          join(
-            artifactsPath,
-            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
-          ),
-          join(
-            artifactsPath,
-            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`,
-          ),
-          join(
-            artifactsPath,
-            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
-          ),
-          join(
-            artifactsPath,
-            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
-          ),
+          createArtifact({
+            path: join(
+              artifactsPath,
+              `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
+            ),
+            name: app.name,
+            debug,
+            platform: targetInfo.platform,
+            arch,
+            version: app.version,
+          }),
+          createArtifact({
+            path: join(
+              artifactsPath,
+              `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`,
+            ),
+            name: app.name,
+            debug,
+            platform: targetInfo.platform,
+            arch,
+            version: app.version,
+          }),
+          createArtifact({
+            path: join(
+              artifactsPath,
+              `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
+            ),
+            name: app.name,
+            debug,
+            platform: targetInfo.platform,
+            arch,
+            version: app.version,
+          }),
+          createArtifact({
+            path: join(
+              artifactsPath,
+              `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
+            ),
+            name: app.name,
+            debug,
+            platform: targetInfo.platform,
+            arch,
+            version: app.version,
+          }),
         );
       });
     }
@@ -161,45 +221,101 @@ export async function buildProject(
     // wix v2
     langs.forEach((lang) => {
       winArtifacts.push(
-        join(
-          artifactsPath,
-          `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi`,
-        ),
-        join(
-          artifactsPath,
-          `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.sig`,
-        ),
-        join(
-          artifactsPath,
-          `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip`,
-        ),
-        join(
-          artifactsPath,
-          `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip.sig`,
-        ),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi`,
+          ),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.sig`,
+          ),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip`,
+          ),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip.sig`,
+          ),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
       );
     });
 
     winArtifacts.push(
-      join(
-        artifactsPath,
-        `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe`,
-      ),
-      join(
-        artifactsPath,
-        `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe.sig`,
-      ),
-      join(
-        artifactsPath,
-        `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip`,
-      ),
-      join(
-        artifactsPath,
-        `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`,
-      ),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe`,
+        ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe.sig`,
+        ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip`,
+        ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`,
+        ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
     );
 
-    artifacts = winArtifacts.map((path) => ({ path, arch }));
+    artifacts = winArtifacts;
   } else {
     const debianArch =
       arch === 'x64' || arch === 'x86_64'
@@ -233,94 +349,142 @@ export async function buildProject(
               : arch;
 
     artifacts = [
-      {
+      createArtifact({
         path: join(
           artifactsPath,
           `bundle/deb/${app.name}_${app.version}_${debianArch}.deb`,
         ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
         arch: debianArch,
-      },
-      {
+        version: app.version,
+      }),
+      createArtifact({
         path: join(
           artifactsPath,
           `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
         ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
         arch: rpmArch,
-      },
-      {
+        version: app.version,
+      }),
+      createArtifact({
         path: join(
           artifactsPath,
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage`,
         ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
         arch: appImageArch,
-      },
-      {
+        version: app.version,
+      }),
+      createArtifact({
         path: join(
           artifactsPath,
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.sig`,
         ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
         arch: appImageArch,
-      },
-      {
+        version: app.version,
+      }),
+      createArtifact({
         path: join(
           artifactsPath,
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz`,
         ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
         arch: appImageArch,
-      },
-      {
+        version: app.version,
+      }),
+      createArtifact({
         path: join(
           artifactsPath,
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
         ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
         arch: appImageArch,
-      },
+        version: app.version,
+      }),
     ];
 
     if (app.name != linuxFileAppName) {
       artifacts.push(
-        {
+        createArtifact({
           path: join(
             artifactsPath,
             `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb`,
           ),
+          name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
           arch: debianArch,
-        },
-        {
+          version: app.version,
+        }),
+        createArtifact({
           path: join(
             artifactsPath,
             `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
           ),
+          name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
           arch: rpmArch,
-        },
-        {
+          version: app.version,
+        }),
+        createArtifact({
           path: join(
             artifactsPath,
             `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage`,
           ),
+          name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
           arch: appImageArch,
-        },
-        {
+          version: app.version,
+        }),
+        createArtifact({
           path: join(
             artifactsPath,
             `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.sig`,
           ),
+          name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
           arch: appImageArch,
-        },
-        {
+          version: app.version,
+        }),
+        createArtifact({
           path: join(
             artifactsPath,
             `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`,
           ),
+          name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
           arch: appImageArch,
-        },
-        {
+          version: app.version,
+        }),
+        createArtifact({
           path: join(
             artifactsPath,
             `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
           ),
+          name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
           arch: appImageArch,
-        },
+          version: app.version,
+        }),
       );
     }
   }

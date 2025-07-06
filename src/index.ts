@@ -33,6 +33,7 @@ async function run(): Promise<void> {
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
     const bundleIdentifier = core.getInput('bundleIdentifier');
+    const assetNamePattern = core.getInput('assetNamePattern');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseId = Number(core.getInput('releaseId'));
@@ -146,6 +147,7 @@ async function run(): Promise<void> {
             basename(artifact.path),
           ]);
           artifact.path += '.tar.gz';
+          artifact.ext += '.tar.gz';
         } else if (artifact.path.endsWith('.app')) {
           // we can't upload a directory
           artifacts.splice(i, 1);
@@ -198,6 +200,7 @@ async function run(): Promise<void> {
         retryAttempts,
         githubBaseUrl,
         isGitea,
+        assetNamePattern,
       );
 
       if (includeUpdaterJson) {
@@ -216,6 +219,7 @@ async function run(): Promise<void> {
           retryAttempts,
           githubBaseUrl,
           isGitea,
+          assetNamePattern,
         );
       }
     } else {
