@@ -93,7 +93,6 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     );
   } else {
     const name = basename(asset.path, asset.ext);
-    console.log(asset.path, asset.ext, name);
     let arch = '';
     let dbg = '';
 
