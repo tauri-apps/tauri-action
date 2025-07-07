@@ -174,7 +174,7 @@ jobs:
           args: ${{ matrix.args }}
           updaterJsonKeepUniversal: true
           retryAttempts: 1
-          assetNamePattern: "[name]x[version]x[platform]x[arch]x[ext]"
+          assetNamePattern: "[name]x[version]x[platform]x[arch]x[mode]x[ext]"
 
       - name: Frontend-only Project
         uses: ./
