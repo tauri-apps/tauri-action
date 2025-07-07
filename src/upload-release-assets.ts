@@ -37,7 +37,7 @@ export async function uploadAssets(
 
   for (const asset of assets) {
     const headers = {
-      'content-type': 'application/octet-stream',
+      'content-type': 'application/zip',
       'content-length': contentLength(asset.path),
     };
 
@@ -85,7 +85,7 @@ export async function uploadAssets(
           name: assetName,
           // https://github.com/tauri-apps/tauri-action/pull/45
           // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
-          data: fs.readFileSync(asset.path),
+          data: fs.createReadStream(asset.path),
           owner: owner,
           repo: repo,
           release_id: releaseId,

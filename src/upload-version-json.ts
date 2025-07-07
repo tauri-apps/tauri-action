@@ -38,7 +38,7 @@ export async function uploadVersionJSON(
   retryAttempts: number,
   githubBaseUrl: string,
   isGitea: boolean,
-  assetNamePattern?: string
+  assetNamePattern?: string,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -254,6 +254,6 @@ export async function uploadVersionJSON(
     [artifact],
     retryAttempts,
     githubBaseUrl,
-    isGitea
+    isGitea,
   );
 }
