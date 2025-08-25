@@ -147,7 +147,7 @@ export async function buildProject(
   } else if (targetInfo.platform === 'windows') {
     if (arch.startsWith('i')) {
       arch = 'x86';
-    } else if (arch === 'aarch64') {
+    } else if (arch === 'aarch64' || arch === 'arm64') {
       arch = 'arm64';
     } else {
       arch = 'x64';
