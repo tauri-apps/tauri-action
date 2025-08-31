@@ -32,7 +32,9 @@ export const extensions = [
   '.AppImage.tar.gz',
   '.AppImage.sig',
   '.AppImage',
+  '.deb.sig',
   '.deb',
+  '.rpm.sig',
   '.rpm',
   '.msi.zip.sig',
   '.msi.zip',
@@ -114,6 +116,7 @@ export function createArtifact({
   debug,
   platform,
   arch,
+  bundle,
   version,
 }: {
   path: string;
@@ -121,6 +124,7 @@ export function createArtifact({
   debug: boolean;
   platform: TargetPlatform;
   arch: string;
+  bundle: string;
   version: string;
 }): Artifact {
   const baseName = basename(path);
@@ -132,6 +136,7 @@ export function createArtifact({
     mode: debug ? 'debug' : 'release',
     platform: platform === 'macos' ? 'darwin' : platform,
     arch,
+    bundle,
     ext,
     version,
   };
