@@ -9,11 +9,11 @@ export interface Application {
 }
 
 export interface Asset {
-    downloadUrl: string;
-    assetName: string;
-    path: string;
-    arch: string;
-    bundle: string;
+  downloadUrl: string;
+  assetName: string;
+  path: string;
+  arch: string;
+  bundle: string;
 }
 
 export interface Artifact {
