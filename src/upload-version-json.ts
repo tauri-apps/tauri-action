@@ -195,6 +195,22 @@ export async function uploadVersionJSON(
     }
     if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
       let index = `${os}-${arch}`;
+      if (bundleType == 'appimage') {
+        (versionContent.platforms[index] as unknown) = {
+          signature: readFileSync(signatureFile.path).toString(),
+          url: downloadUrl,
+        };
+      } else if (bundleType == 'nsis' && updaterJsonPreferNsis) {
+        (versionContent.platforms[index] as unknown) = {
+          signature: readFileSync(signatureFile.path).toString(),
+          url: downloadUrl,
+        };
+      } else if (bundleType == 'msi' && !updaterJsonPreferNsis) {
+        (versionContent.platforms[index] as unknown) = {
+          signature: readFileSync(signatureFile.path).toString(),
+          url: downloadUrl,
+        };
+      }
       if (bundleType.length > 0) {
         index += `-${bundleType}`;
       }
