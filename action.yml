@@ -72,5 +72,5 @@ outputs:
   appVersion:
     description: 'The version of the app'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
