@@ -96,7 +96,13 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     let arch = '';
     let dbg = '';
 
-    if ((asset.ext === '.app.tar.gz' || asset.ext === '.app.tar.gz.sig' || asset.ext === '' || asset.ext === '.exe') && !name.includes(asset.arch)) {
+    if (
+      (asset.ext === '.app.tar.gz' ||
+        asset.ext === '.app.tar.gz.sig' ||
+        asset.ext === '' ||
+        asset.ext === '.exe') &&
+      !name.includes(asset.arch)
+    ) {
       arch = '_' + asset.arch;
     }
 

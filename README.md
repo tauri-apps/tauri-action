@@ -115,7 +115,7 @@ These inputs allow you to change how your Tauri project will be build.
 These inputs allow you to modify the GitHub release.
 
 | Name                | Required | Description                                                                                                                                                               | Type   | Default                   |
-| ------------------  | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------- |
+| ------------------- | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------- |
 | `releaseId`         |  false   | The id of the release to upload artifacts as release assets. If set, `tagName` and `releaseName` will not be considered to find a release.                                | number |                           |
 | `tagName`           |  false   | The tag name of the release to upload/create or the tag of the release belonging to `releaseId`                                                                           | string |                           |
 | `releaseName`       |  false   | The name of the release to create. Required if there's no existing release for `tagName`                                                                                  | string |                           |

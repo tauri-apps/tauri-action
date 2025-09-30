@@ -72,9 +72,9 @@ export async function buildProject(
     root,
     targetInfo.platform === 'macos'
       ? {
-        TAURI_BUNDLER_DMG_IGNORE_CI:
-          process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
-      }
+          TAURI_BUNDLER_DMG_IGNORE_CI:
+            process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
+        }
       : undefined,
     retryAttempts,
   );
@@ -146,14 +146,16 @@ export async function buildProject(
       }),
     ];
     if (uploadPlainBinary) {
-      artifacts.push(createArtifact({
-        path: join(artifactsPath, `${app.name}`),
-        name: app.name,
-        debug,
-        platform: targetInfo.platform,
-        arch,
-        version: app.version,
-      }));
+      artifacts.push(
+        createArtifact({
+          path: join(artifactsPath, `${app.name}`),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
+      );
     }
   } else if (targetInfo.platform === 'windows') {
     if (arch.startsWith('i')) {
@@ -326,14 +328,16 @@ export async function buildProject(
       }),
     );
     if (uploadPlainBinary) {
-      artifacts.push(createArtifact({
-        path: join(artifactsPath, `${app.name}.exe`),
-        name: app.name,
-        debug,
-        platform: targetInfo.platform,
-        arch,
-        version: app.version,
-      }));
+      artifacts.push(
+        createArtifact({
+          path: join(artifactsPath, `${app.name}.exe`),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
+      );
     }
 
     artifacts = winArtifacts;
@@ -509,14 +513,16 @@ export async function buildProject(
       );
     }
     if (uploadPlainBinary) {
-      artifacts.push(createArtifact({
-        path: join(artifactsPath, `${app.name}`),
-        name: app.name,
-        debug,
-        platform: targetInfo.platform,
-        arch: appImageArch,
-        version: app.version,
-      }));
+      artifacts.push(
+        createArtifact({
+          path: join(artifactsPath, `${app.name}`),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch: appImageArch,
+          version: app.version,
+        }),
+      );
     }
   }
 
