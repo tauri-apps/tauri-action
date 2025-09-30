@@ -96,15 +96,14 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     let arch = '';
     let dbg = '';
 
-    if (asset.ext === '.app.tar.gz' || asset.ext === '.app.tar.gz.sig') {
+    if ((asset.ext === '.app.tar.gz' || asset.ext === '.app.tar.gz.sig' || asset.ext === '' || asset.ext === '.exe') && !name.includes(asset.arch)) {
       arch = '_' + asset.arch;
     }
 
     if (asset.mode === 'debug') {
       dbg = '-debug';
     }
-
-    return name + arch + dbg + asset.ext;
+    return name + '_' + asset.platform + arch + dbg + asset.ext;
   }
 }
 

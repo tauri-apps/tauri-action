@@ -71,9 +71,9 @@ export async function buildProject(
     root,
     targetInfo.platform === 'macos'
       ? {
-          TAURI_BUNDLER_DMG_IGNORE_CI:
-            process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
-        }
+        TAURI_BUNDLER_DMG_IGNORE_CI:
+          process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
+      }
       : undefined,
     retryAttempts,
   );
@@ -137,6 +137,14 @@ export async function buildProject(
       }),
       createArtifact({
         path: join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz.sig`),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `${app.name}`),
         name: app.name,
         debug,
         platform: targetInfo.platform,
@@ -214,6 +222,14 @@ export async function buildProject(
             arch,
             version: app.version,
           }),
+          createArtifact({
+            path: join(artifactsPath, `${app.name}.exe`),
+            name: app.name,
+            debug,
+            platform: targetInfo.platform,
+            arch,
+            version: app.version,
+          }),
         );
       });
     }
@@ -259,6 +275,14 @@ export async function buildProject(
             artifactsPath,
             `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip.sig`,
           ),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(artifactsPath, `${app.name}.exe`),
           name: app.name,
           debug,
           platform: targetInfo.platform,
@@ -409,6 +433,14 @@ export async function buildProject(
           artifactsPath,
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
         ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch: appImageArch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `${app.name}`),
         name: app.name,
         debug,
         platform: targetInfo.platform,
