@@ -222,14 +222,6 @@ export async function buildProject(
             arch,
             version: app.version,
           }),
-          createArtifact({
-            path: join(artifactsPath, `${app.name}.exe`),
-            name: app.name,
-            debug,
-            platform: targetInfo.platform,
-            arch,
-            version: app.version,
-          }),
         );
       });
     }
@@ -281,14 +273,6 @@ export async function buildProject(
           arch,
           version: app.version,
         }),
-        createArtifact({
-          path: join(artifactsPath, `${app.name}.exe`),
-          name: app.name,
-          debug,
-          platform: targetInfo.platform,
-          arch,
-          version: app.version,
-        }),
       );
     });
 
@@ -331,6 +315,14 @@ export async function buildProject(
           artifactsPath,
           `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`,
         ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `${app.name}.exe`),
         name: app.name,
         debug,
         platform: targetInfo.platform,
