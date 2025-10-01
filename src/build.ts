@@ -60,6 +60,7 @@ export async function buildProject(
     tauriPath: info.tauriPath,
     runner,
     name: info.name,
+    mainBinaryName: info.mainBinaryName,
     version: info.version,
     wixLanguage: info.wixLanguage,
     wixAppVersion: info.wixAppVersion,
@@ -145,18 +146,6 @@ export async function buildProject(
         version: app.version,
       }),
     ];
-    if (uploadPlainBinary) {
-      artifacts.push(
-        createArtifact({
-          path: join(artifactsPath, `${app.name}`),
-          name: app.name,
-          debug,
-          platform: targetInfo.platform,
-          arch,
-          version: app.version,
-        }),
-      );
-    }
   } else if (targetInfo.platform === 'windows') {
     if (arch.startsWith('i')) {
       arch = 'x86';
@@ -327,18 +316,6 @@ export async function buildProject(
         version: app.version,
       }),
     );
-    if (uploadPlainBinary) {
-      artifacts.push(
-        createArtifact({
-          path: join(artifactsPath, `${app.name}.exe`),
-          name: app.name,
-          debug,
-          platform: targetInfo.platform,
-          arch,
-          version: app.version,
-        }),
-      );
-    }
 
     artifacts = winArtifacts;
   } else {
@@ -512,18 +489,20 @@ export async function buildProject(
         }),
       );
     }
-    if (uploadPlainBinary) {
-      artifacts.push(
-        createArtifact({
-          path: join(artifactsPath, `${app.name}`),
-          name: app.name,
-          debug,
-          platform: targetInfo.platform,
-          arch: appImageArch,
-          version: app.version,
-        }),
-      );
-    }
+  }
+
+  if (uploadPlainBinary) {
+    const ext = targetInfo.platform === 'windows' ? '.exe' : '';
+    artifacts.push(
+      createArtifact({
+        path: join(artifactsPath, `${app.mainBinaryName}${ext}`),
+        name: 'binary', // app.mainBinaryName,
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+    );
   }
 
   console.log(
