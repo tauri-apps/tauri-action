@@ -267,6 +267,7 @@ jobs:
           updaterJsonKeepUniversal: true
           retryAttempts: 1
           assetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[ext]'
+          uploadPlainBinary: true
 
       - name: Frontend-only Project
         uses: ./
