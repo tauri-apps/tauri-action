@@ -37,10 +37,7 @@ export async function uploadAssets(
       'content-length': contentLength(asset.path),
     };
 
-    const assetName =
-      asset.name === 'latest.json'
-        ? 'latest.json'
-        : getAssetName(asset, assetNamePattern);
+    const assetName = getAssetName(asset, assetNamePattern);
 
     const existingAsset = existingAssets.find(
       (a) =>

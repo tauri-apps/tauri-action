@@ -78,6 +78,7 @@ jobs:
           releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v1'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
+          uploadPlainBinary: true
           args: ${{ matrix.args }}
 
       - name: Frontend-only Project
@@ -99,6 +100,7 @@ jobs:
           releaseName: 'Release example app v__VERSION__ for tauri-v1'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
+          uploadPlainBinary: true
           args: ${{ matrix.args }}
 
   v2:
@@ -175,6 +177,7 @@ jobs:
           updaterJsonKeepUniversal: true
           retryAttempts: 1
           assetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[ext]'
+          uploadPlainBinary: true
 
       - name: Frontend-only Project
         uses: ./
@@ -195,6 +198,7 @@ jobs:
           releaseName: 'Release example app v__VERSION__ for tauri-v2'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
+          uploadPlainBinary: true
           args: ${{ matrix.args }}
 
   arm:
@@ -267,6 +271,7 @@ jobs:
           updaterJsonKeepUniversal: true
           retryAttempts: 1
           assetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[ext]'
+          uploadPlainBinary: true
 
       - name: Frontend-only Project
         uses: ./
@@ -287,4 +292,5 @@ jobs:
           releaseName: 'Release example app v__VERSION__ for tauri-v2 on ARM'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
+          uploadPlainBinary: true
           args: ${{ matrix.args }}

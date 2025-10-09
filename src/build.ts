@@ -20,6 +20,7 @@ export async function buildProject(
   buildOpts: BuildOptions,
   initOpts: InitOptions,
   retryAttempts: number,
+  uploadPlainBinary: boolean,
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -59,6 +60,7 @@ export async function buildProject(
     tauriPath: info.tauriPath,
     runner,
     name: info.name,
+    mainBinaryName: info.mainBinaryName,
     version: info.version,
     wixLanguage: info.wixLanguage,
     wixAppVersion: info.wixAppVersion,
@@ -563,6 +565,21 @@ export async function buildProject(
         }),
       );
     }
+  }
+
+  if (uploadPlainBinary) {
+    const ext = targetInfo.platform === 'windows' ? '.exe' : '';
+    artifacts.push(
+      createArtifact({
+        path: join(artifactsPath, `${app.mainBinaryName}${ext}`),
+        name: 'binary', // app.mainBinaryName,
+        bundle: '',
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+    );
   }
 
   console.log(
