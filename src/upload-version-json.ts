@@ -107,20 +107,25 @@ export async function uploadVersionJSON(
       });
     }
   }
+  console.log('artifacts', JSON.stringify(artifacts));
+  console.log('filteredAssets', JSON.stringify(filteredAssets));
 
   const assetsByBundle = new Map<string, Asset[]>();
   for (const filteredAsset of filteredAssets) {
     if (!assetsByBundle.has(filteredAsset.bundle)) {
+      console.log('!assetsByBundle.has(filteredAsset.bundle)');
       assetsByBundle.set(filteredAsset.bundle, [filteredAsset]);
     } else {
       assetsByBundle.get(filteredAsset.bundle)?.push(filteredAsset);
     }
   }
+  console.log('assetsByBundle', JSON.stringify(assetsByBundle));
 
   for (const [bundleType, bundleAssets] of assetsByBundle) {
     const signatureFiles = bundleAssets.filter((asset) => {
       return asset.assetName.endsWith('.sig');
     });
+    console.log('signatureFiles', JSON.stringify(signatureFiles));
     function signaturePriority(signaturePath: string) {
       const priorities = unzippedSig
         ? ['.exe.sig', '.msi.sig']
