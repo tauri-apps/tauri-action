@@ -43332,12 +43332,12 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
             assetsByBundle.get(filteredAsset.bundle)?.push(filteredAsset);
         }
     }
-    console.log('assetsByBundle', JSON.stringify(assetsByBundle));
+    console.log('assetsByBundle', JSON.stringify([...assetsByBundle.entries()]));
     for (const [bundleType, bundleAssets] of assetsByBundle) {
         const signatureFiles = bundleAssets.filter((asset) => {
             return asset.assetName.endsWith('.sig');
         });
-        console.log('signatureFiles', JSON.stringify(signatureFiles));
+        console.log('signatureFiles1', JSON.stringify(signatureFiles));
         function signaturePriority(signaturePath) {
             const priorities = unzippedSig
                 ? ['.exe.sig', '.msi.sig']
@@ -43352,6 +43352,7 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
         signatureFiles.sort((a, b) => {
             return signaturePriority(b.path) - signaturePriority(a.path);
         });
+        console.log('signatureFiles2', JSON.stringify(signatureFiles));
         const signatureFile = signatureFiles[0];
         if (!signatureFile) {
             console.warn('Signature not found for the updater JSON. Skipping upload...');
