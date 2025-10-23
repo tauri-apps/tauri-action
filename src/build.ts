@@ -119,7 +119,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
-        bundle: '',
+        bundle: 'dmg', // could be 'dmg' or 'app' depending on the usecase
         version: app.version,
       }),
       createArtifact({
@@ -128,7 +128,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
-        bundle: '',
+        bundle: 'app',
         version: app.version,
       }),
       createArtifact({
@@ -137,7 +137,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
-        bundle: '',
+        bundle: 'app',
         version: app.version,
       }),
       createArtifact({
@@ -146,7 +146,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
-        bundle: '',
+        bundle: 'app',
         version: app.version,
       }),
     ];

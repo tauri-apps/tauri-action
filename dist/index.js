@@ -42287,7 +42287,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
-                bundle: '',
+                bundle: 'dmg', // could be 'dmg' or 'app' depending on the usecase
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42296,7 +42296,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
-                bundle: '',
+                bundle: 'app',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42305,7 +42305,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
-                bundle: '',
+                bundle: 'app',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42314,7 +42314,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
-                bundle: '',
+                bundle: 'app',
                 version: app.version,
             }),
         ];
@@ -43324,6 +43324,7 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
         return asset.assetName.endsWith('.sig');
     });
     function signaturePriority(signaturePath) {
+        // TODO: AppImage
         const priorities = updaterJsonPreferNsis
             ? unzippedSig
                 ? ['.exe.sig', '.msi.sig']
