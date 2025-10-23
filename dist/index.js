@@ -43324,7 +43324,10 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
         return asset.assetName.endsWith('.sig');
     });
     function signaturePriority(signaturePath) {
-        // TODO: AppImage
+        if ((unzippedSig && signaturePath.endsWith('.AppImage.sig')) ||
+            (!unzippedSig && signaturePath.endsWith('.AppImage.tar.gz.sig'))) {
+            return 100;
+        }
         const priorities = updaterJsonPreferNsis
             ? unzippedSig
                 ? ['.exe.sig', '.msi.sig']
