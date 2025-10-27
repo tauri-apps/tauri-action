@@ -43357,7 +43357,9 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
             continue;
         }
         // Untagged release downloads won't work after the release was published
-        updaterFileDownloadUrl = updaterFileDownloadUrl.replace(/\/download\/(untagged-[^/]+)\//, tagName ? `/download/${tagName}/` : '/latest/download/');
+        updaterFileDownloadUrl = updaterFileDownloadUrl.replace(/\/download\/(untagged-[^/]+)\//, tagName
+            ? `/download/${encodeURIComponent(tagName)}/`
+            : '/latest/download/');
         let os = targetInfo.platform;
         if (os === 'macos') {
             os = 'darwin';
