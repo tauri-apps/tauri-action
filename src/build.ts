@@ -20,6 +20,7 @@ export async function buildProject(
   buildOpts: BuildOptions,
   initOpts: InitOptions,
   retryAttempts: number,
+  uploadPlainBinary: boolean,
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -59,6 +60,7 @@ export async function buildProject(
     tauriPath: info.tauriPath,
     runner,
     name: info.name,
+    mainBinaryName: info.mainBinaryName,
     version: info.version,
     wixLanguage: info.wixLanguage,
     wixAppVersion: info.wixAppVersion,
@@ -117,6 +119,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
+        bundle: 'dmg', // could be 'dmg' or 'app' depending on the usecase
         version: app.version,
       }),
       createArtifact({
@@ -125,6 +128,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
+        bundle: 'app',
         version: app.version,
       }),
       createArtifact({
@@ -133,6 +137,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
+        bundle: 'app',
         version: app.version,
       }),
       createArtifact({
@@ -141,13 +146,14 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
+        bundle: 'app',
         version: app.version,
       }),
     ];
   } else if (targetInfo.platform === 'windows') {
     if (arch.startsWith('i')) {
       arch = 'x86';
-    } else if (arch === 'aarch64') {
+    } else if (arch === 'aarch64' || arch === 'arm64') {
       arch = 'arm64';
     } else {
       arch = 'x64';
@@ -179,6 +185,7 @@ export async function buildProject(
             debug,
             platform: targetInfo.platform,
             arch,
+            bundle: 'msi',
             version: app.version,
           }),
           createArtifact({
@@ -190,6 +197,7 @@ export async function buildProject(
             debug,
             platform: targetInfo.platform,
             arch,
+            bundle: 'msi',
             version: app.version,
           }),
           createArtifact({
@@ -201,6 +209,7 @@ export async function buildProject(
             debug,
             platform: targetInfo.platform,
             arch,
+            bundle: 'msi',
             version: app.version,
           }),
           createArtifact({
@@ -212,6 +221,7 @@ export async function buildProject(
             debug,
             platform: targetInfo.platform,
             arch,
+            bundle: 'msi',
             version: app.version,
           }),
         );
@@ -230,6 +240,7 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch,
+          bundle: 'msi',
           version: app.version,
         }),
         createArtifact({
@@ -241,6 +252,7 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch,
+          bundle: 'msi',
           version: app.version,
         }),
         createArtifact({
@@ -252,6 +264,7 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch,
+          bundle: 'msi',
           version: app.version,
         }),
         createArtifact({
@@ -263,6 +276,7 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch,
+          bundle: 'msi',
           version: app.version,
         }),
       );
@@ -278,6 +292,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
+        bundle: 'nsis',
         version: app.version,
       }),
       createArtifact({
@@ -289,6 +304,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
+        bundle: 'nsis',
         version: app.version,
       }),
       createArtifact({
@@ -300,6 +316,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
+        bundle: 'nsis',
         version: app.version,
       }),
       createArtifact({
@@ -311,6 +328,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch,
+        bundle: 'nsis',
         version: app.version,
       }),
     );
@@ -358,6 +376,19 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch: debianArch,
+        bundle: 'deb',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `bundle/deb/${app.name}_${app.version}_${debianArch}.deb.sig`,
+        ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch: debianArch,
+        bundle: 'deb',
         version: app.version,
       }),
       createArtifact({
@@ -369,6 +400,19 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch: rpmArch,
+        bundle: 'rpm',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`,
+        ),
+        name: app.name,
+        debug,
+        platform: targetInfo.platform,
+        arch: rpmArch,
+        bundle: 'rpm',
         version: app.version,
       }),
       createArtifact({
@@ -380,6 +424,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch: appImageArch,
+        bundle: 'appimage',
         version: app.version,
       }),
       createArtifact({
@@ -391,6 +436,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch: appImageArch,
+        bundle: 'appimage',
         version: app.version,
       }),
       createArtifact({
@@ -402,6 +448,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch: appImageArch,
+        bundle: 'appimage',
         version: app.version,
       }),
       createArtifact({
@@ -413,6 +460,7 @@ export async function buildProject(
         debug,
         platform: targetInfo.platform,
         arch: appImageArch,
+        bundle: 'appimage',
         version: app.version,
       }),
     ];
@@ -428,6 +476,19 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch: debianArch,
+          bundle: 'deb',
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb.sig`,
+          ),
+          name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
+          arch: debianArch,
+          bundle: 'deb',
           version: app.version,
         }),
         createArtifact({
@@ -439,6 +500,19 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch: rpmArch,
+          bundle: 'rpm',
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`,
+          ),
+          name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
+          arch: rpmArch,
+          bundle: 'rpm',
           version: app.version,
         }),
         createArtifact({
@@ -450,6 +524,7 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch: appImageArch,
+          bundle: 'appimage',
           version: app.version,
         }),
         createArtifact({
@@ -461,6 +536,7 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch: appImageArch,
+          bundle: 'appimage',
           version: app.version,
         }),
         createArtifact({
@@ -472,6 +548,7 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch: appImageArch,
+          bundle: 'appimage',
           version: app.version,
         }),
         createArtifact({
@@ -483,10 +560,26 @@ export async function buildProject(
           debug,
           platform: targetInfo.platform,
           arch: appImageArch,
+          bundle: 'appimage',
           version: app.version,
         }),
       );
     }
+  }
+
+  if (uploadPlainBinary) {
+    const ext = targetInfo.platform === 'windows' ? '.exe' : '';
+    artifacts.push(
+      createArtifact({
+        path: join(artifactsPath, `${app.mainBinaryName}${ext}`),
+        name: 'binary', // app.mainBinaryName,
+        bundle: '',
+        debug,
+        platform: targetInfo.platform,
+        arch,
+        version: app.version,
+      }),
+    );
   }
 
   console.log(

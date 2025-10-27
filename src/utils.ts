@@ -33,7 +33,9 @@ export const extensions = [
   '.AppImage.tar.gz',
   '.AppImage.sig',
   '.AppImage',
+  '.deb.sig',
   '.deb',
+  '.rpm.sig',
   '.rpm',
   '.msi.zip.sig',
   '.msi.zip',
@@ -87,6 +89,10 @@ export function getAssetName(asset: Artifact, pattern?: string) {
   // const DEFAULT_PATTERN = `[name]_v[version]${debugPattern}_[platform]_[arch][ext]`;
   // pattern = pattern || DEFAULT_PATTERN;
 
+  if (asset.name === 'latest.json') {
+    return 'latest.json';
+  }
+
   if (pattern) {
     return renderNamePattern(
       pattern,
@@ -97,15 +103,18 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     let arch = '';
     let dbg = '';
 
-    if (asset.ext === '.app.tar.gz' || asset.ext === '.app.tar.gz.sig') {
+    if (
+      asset.ext === '.app.tar.gz' ||
+      asset.ext === '.app.tar.gz.sig' ||
+      asset.name === 'binary'
+    ) {
       arch = '_' + asset.arch;
     }
 
     if (asset.mode === 'debug') {
       dbg = '-debug';
     }
-
-    return name + arch + dbg + asset.ext;
+    return name + '_' + asset.platform + arch + dbg + asset.ext;
   }
 }
 
@@ -115,6 +124,7 @@ export function createArtifact({
   debug,
   platform,
   arch,
+  bundle,
   version,
 }: {
   path: string;
@@ -122,6 +132,7 @@ export function createArtifact({
   debug: boolean;
   platform: TargetPlatform;
   arch: string;
+  bundle: string;
   version: string;
 }): Artifact {
   const baseName = basename(path);
@@ -133,8 +144,11 @@ export function createArtifact({
     mode: debug ? 'debug' : 'release',
     platform: platform === 'macos' ? 'darwin' : platform,
     arch,
+    bundle,
     ext,
     version,
+    setup: bundle == 'nsis' ? '-setup' : '',
+    _setup: bundle == 'nsis' ? '_setup' : '',
   };
 }
 
@@ -418,8 +432,8 @@ export function getInfo(
       version = config?.version;
     }
 
+    const cargoManifest = getCargoManifest(tauriDir);
     if (!(name && version)) {
-      const cargoManifest = getCargoManifest(tauriDir);
       name = name ?? cargoManifest.package.name;
       version = version ?? cargoManifest.package.version;
     }
@@ -442,6 +456,7 @@ export function getInfo(
     return {
       tauriPath: tauriDir,
       name,
+      mainBinaryName: config.mainBinaryName || cargoManifest.package.name,
       version,
       wixLanguage,
       wixAppVersion,

@@ -1,5 +1,16 @@
 # Changelog
 
+## \[0.5.24]
+
+- [`c5d6ac7`](https://www.github.com/tauri-apps/tauri-action/commit/c5d6ac7494763a167f5acf6e6c73664fc7360468) ([#1152](https://www.github.com/tauri-apps/tauri-action/pull/1152) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The `latest.json` file now contains `{os}-{arch}-{installer}` keys as well to support multiple installer formats per platform. This requires `tauri-plugin-updater` version `2.10.0` or above.
+- [`0085932`](https://www.github.com/tauri-apps/tauri-action/commit/0085932c0f8ac87d9757582e84c0fc6fbc0f7699) ([#1141](https://www.github.com/tauri-apps/tauri-action/pull/1141) by [@jarjk](https://www.github.com/tauri-apps/tauri-action/../../jarjk)) Added option to upload the app's binary alongside installers.
+
+## \[0.5.23]
+
+- [`5b1138d`](https://www.github.com/tauri-apps/tauri-action/commit/5b1138d93ce221ac6bfd4f0decb41b6d87963ff4) ([#1099](https://www.github.com/tauri-apps/tauri-action/pull/1099) by [@lete114](https://www.github.com/tauri-apps/tauri-action/../../lete114)) Added the `assetNamePattern` config that allows setting a template specifying how uploaded assets will be named in the release.
+  **BREAKING CHANGE:** The default naming scheme will now have the `-debug` suffix at the end (before the extension) on all assets.
+- [`fcedb49`](https://www.github.com/tauri-apps/tauri-action/commit/fcedb49796d1ab97cc5f07e8ddabcdf937b38344) ([#1125](https://www.github.com/tauri-apps/tauri-action/pull/1125) by [@ChanTsune](https://www.github.com/tauri-apps/tauri-action/../../ChanTsune)) Fixed an issue that caused the action to look for `x64` artifacts on native ARM runners.
+
 ## \[0.5.22]
 
 - [`be57b0c`](https://www.github.com/tauri-apps/tauri-action/commit/be57b0cca9e9ee2c15112c583ddb34e32157cc6a) ([#1100](https://www.github.com/tauri-apps/tauri-action/pull/1100) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Fixed an issue that caused the action to upload only the first artifact it found.

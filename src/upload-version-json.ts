@@ -132,6 +132,7 @@ export async function uploadVersionJSON(
         assetName,
         path: artifact.path,
         arch: artifact.arch,
+        bundle: artifact.bundle,
       });
     }
   }
@@ -140,6 +141,12 @@ export async function uploadVersionJSON(
     return asset.assetName.endsWith('.sig');
   });
   function signaturePriority(signaturePath: string) {
+    if (
+      (unzippedSig && signaturePath.endsWith('.AppImage.sig')) ||
+      (!unzippedSig && signaturePath.endsWith('.AppImage.tar.gz.sig'))
+    ) {
+      return 100;
+    }
     const priorities = updaterJsonPreferNsis
       ? unzippedSig
         ? ['.exe.sig', '.msi.sig']
@@ -157,69 +164,104 @@ export async function uploadVersionJSON(
   signatureFiles.sort((a, b) => {
     return signaturePriority(b.path) - signaturePriority(a.path);
   });
-  const signatureFile = signatureFiles[0];
-  if (!signatureFile) {
+
+  if (!signatureFiles[0]) {
     console.warn(
       'Signature not found for the updater JSON. Skipping upload...',
     );
     return;
   }
 
-  const updaterName = basename(
-    signatureFile.assetName,
-    extname(signatureFile.assetName),
-  );
-  let downloadUrl = filteredAssets.find(
-    (asset) => asset.assetName == updaterName,
-  )?.downloadUrl;
-  if (!downloadUrl) {
-    console.warn('Asset not found for the updater JSON. Skipping upload...');
-    return;
-  }
-  // Untagged release downloads won't work after the release was published
-  downloadUrl = downloadUrl.replace(
-    /\/download\/(untagged-[^/]+)\//,
-    tagName ? `/download/${tagName}/` : '/latest/download/',
-  );
+  for (const [idx, signatureFile] of signatureFiles.entries()) {
+    const updaterFileName = basename(
+      signatureFile.assetName,
+      extname(signatureFile.assetName),
+    );
+    let updaterFileDownloadUrl = filteredAssets.find(
+      (asset) => asset.assetName === updaterFileName,
+    )?.downloadUrl;
 
-  let os = targetInfo.platform as string;
-  if (os === 'macos') {
-    os = 'darwin';
-  }
+    if (!updaterFileDownloadUrl) {
+      console.warn(
+        `Updater asset belonging to signature file "${signatureFile.assetName}" not found.`,
+      );
+      continue;
+    }
 
-  let arch = signatureFile.arch;
-  arch =
-    arch === 'amd64' || arch === 'x86_64' || arch === 'x64'
-      ? 'x86_64'
-      : arch === 'x86' || arch === 'i386'
-        ? 'i686'
-        : arch === 'arm'
-          ? 'armv7'
-          : arch === 'arm64'
-            ? 'aarch64'
-            : arch;
+    // Untagged release downloads won't work after the release was published
+    updaterFileDownloadUrl = updaterFileDownloadUrl.replace(
+      /\/download\/(untagged-[^/]+)\//,
+      tagName
+        ? `/download/${encodeURIComponent(tagName)}/`
+        : '/latest/download/',
+    );
 
-  // Expected targets: https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
-  if (os === 'darwin' && arch === 'universal') {
-    // Don't overwrite native builds
-    if (!versionContent.platforms['darwin-aarch64']) {
-      (versionContent.platforms['darwin-aarch64'] as unknown) = {
+    let os = targetInfo.platform as string;
+    if (os === 'macos') {
+      os = 'darwin';
+    }
+
+    let arch = signatureFile.arch;
+    arch =
+      arch === 'amd64' || arch === 'x86_64' || arch === 'x64'
+        ? 'x86_64'
+        : arch === 'x86' || arch === 'i386'
+          ? 'i686'
+          : arch === 'arm'
+            ? 'armv7'
+            : arch === 'arm64'
+              ? 'aarch64'
+              : arch;
+
+    // This is our primary updater type we use for `{os}-{arch}`
+    if (idx === 0) {
+      if (os === 'darwin' && arch === 'universal') {
+        // Don't overwrite native builds
+        if (!versionContent.platforms['darwin-aarch64']) {
+          (versionContent.platforms['darwin-aarch64'] as unknown) = {
+            signature: readFileSync(signatureFile.path).toString(),
+            url: updaterFileDownloadUrl,
+          };
+        }
+        if (!versionContent.platforms['darwin-x86_64']) {
+          (versionContent.platforms['darwin-x86_64'] as unknown) = {
+            signature: readFileSync(signatureFile.path).toString(),
+            url: updaterFileDownloadUrl,
+          };
+        }
+      }
+      if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
+        (versionContent.platforms[`${os}-${arch}`] as unknown) = {
+          signature: readFileSync(signatureFile.path).toString(),
+          url: updaterFileDownloadUrl,
+        };
+      }
+    }
+
+    // This is for the new `{os}-{arch}-{installer}` format
+    if (os === 'darwin' && arch === 'universal') {
+      // Don't overwrite native builds
+      if (!versionContent.platforms['darwin-aarch64-app']) {
+        (versionContent.platforms['darwin-aarch64-app'] as unknown) = {
+          signature: readFileSync(signatureFile.path).toString(),
+          url: updaterFileDownloadUrl,
+        };
+      }
+      if (!versionContent.platforms['darwin-x86_64-app']) {
+        (versionContent.platforms['darwin-x86_64-app'] as unknown) = {
+          signature: readFileSync(signatureFile.path).toString(),
+          url: updaterFileDownloadUrl,
+        };
+      }
+    }
+    if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
+      (versionContent.platforms[
+        `${os}-${arch}-${signatureFile.bundle}`
+      ] as unknown) = {
         signature: readFileSync(signatureFile.path).toString(),
-        url: downloadUrl,
+        url: updaterFileDownloadUrl,
       };
     }
-    if (!versionContent.platforms['darwin-x86_64']) {
-      (versionContent.platforms['darwin-x86_64'] as unknown) = {
-        signature: readFileSync(signatureFile.path).toString(),
-        url: downloadUrl,
-      };
-    }
-  }
-  if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
-    (versionContent.platforms[`${os}-${arch}`] as unknown) = {
-      signature: readFileSync(signatureFile.path).toString(),
-      url: downloadUrl,
-    };
   }
 
   writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
@@ -244,6 +286,7 @@ export async function uploadVersionJSON(
     debug: false,
     platform: targetInfo.platform,
     arch: '',
+    bundle: '',
     version,
   });
 

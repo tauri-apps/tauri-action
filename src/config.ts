@@ -120,6 +120,7 @@ export class TauriConfig {
 
   // Optional values
   productName?: string;
+  mainBinaryName?: string;
   version?: string;
   frontendDist?: string;
   beforeBuildCommand?: string;
@@ -212,6 +213,7 @@ export class TauriConfig {
     const c = new TauriConfig(config.identifier, true);
 
     c.productName = config.productName;
+    c.mainBinaryName = config.mainBinaryName;
     c.version = config.version;
     c.frontendDist = config.build?.frontendDist;
     c.beforeBuildCommand = config.build?.beforeBuildCommand;
@@ -228,6 +230,7 @@ export class TauriConfig {
 
       this.identifier = c.identifier ?? this.identifier;
       this.productName = c.productName ?? this.productName;
+      this.mainBinaryName = c.mainBinaryName ?? this.mainBinaryName;
       this.version = c.version ?? this.version;
       this.frontendDist = c.build?.frontendDist ?? this.frontendDist;
       this.beforeBuildCommand =

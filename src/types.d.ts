@@ -8,14 +8,25 @@ export interface Application {
   wixLanguage: string | string[] | { [language: string]: unknown };
 }
 
+export interface Asset {
+  downloadUrl: string;
+  assetName: string;
+  path: string;
+  arch: string;
+  bundle: string;
+}
+
 export interface Artifact {
   path: string;
   name: string;
   mode: 'debug' | 'release';
   platform: Exclude<TargetPlatform, 'macos'> | 'darwin';
   arch: string;
+  bundle: string;
   ext: string;
   version: string;
+  setup: '-setup' | '';
+  _setup: '_setup' | '';
 }
 
 export interface BuildOptions {
@@ -44,6 +55,8 @@ export interface CargoManifest {
 export interface Info {
   tauriPath: string | null;
   name: string;
+  // already falls back to cargo's package name in getInfo
+  mainBinaryName: string;
   version: string;
   wixLanguage: string | string[] | { [language: string]: unknown };
   wixAppVersion: string;
@@ -85,6 +98,7 @@ export interface TauriConfigV2 {
   identifier: string;
   productName?: string;
   version?: string;
+  mainBinaryName?: string;
   build?: {
     frontendDist?: string;
     beforeBuildCommand?: string;
