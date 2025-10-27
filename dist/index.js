@@ -43069,8 +43069,11 @@ async function run() {
         const draft = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('releaseDraft');
         const prerelease = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('prerelease');
         const commitish = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('releaseCommitish') || null;
-        const githubBaseUrl = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('githubBaseUrl') || 'https://api.github.com';
+        const githubBaseUrl = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('githubBaseUrl') ||
+            process.env.GITHUB_API_URL ||
+            'https://api.github.com';
         const isGitea = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('isGitea');
+        console.log(process.env.GITHUB_API_URL);
         // TODO: Change its default to true for v2 apps
         // Not using getBooleanInput so we can differentiate between true,false,unset later.
         const updaterJsonPreferNsis = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';

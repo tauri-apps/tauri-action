@@ -46,8 +46,12 @@ async function run(): Promise<void> {
     const prerelease = core.getBooleanInput('prerelease');
     const commitish = core.getInput('releaseCommitish') || null;
     const githubBaseUrl =
-      core.getInput('githubBaseUrl') || 'https://api.github.com';
+      core.getInput('githubBaseUrl') ||
+      process.env.GITHUB_API_URL ||
+      'https://api.github.com';
     const isGitea = core.getBooleanInput('isGitea');
+
+    console.log(process.env.GITHUB_API_URL);
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
