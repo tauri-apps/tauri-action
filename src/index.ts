@@ -34,6 +34,7 @@ async function run(): Promise<void> {
     const args = stringArgv(core.getInput('args'));
     const bundleIdentifier = core.getInput('bundleIdentifier');
     const assetNamePattern = core.getInput('assetNamePattern');
+    const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseId = Number(core.getInput('releaseId'));
@@ -85,6 +86,7 @@ async function run(): Promise<void> {
           buildOptions,
           initOptions,
           retryAttempts,
+          uploadPlainBinary,
         )),
       );
     }
@@ -96,6 +98,7 @@ async function run(): Promise<void> {
           buildOptions,
           initOptions,
           retryAttempts,
+          uploadPlainBinary,
         )),
       );
     }

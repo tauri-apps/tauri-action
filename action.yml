@@ -60,6 +60,9 @@ inputs:
     description: 'The name of the repository'
   assetNamePattern:
     description: 'The naming pattern to use for the uploaded assets'
+  uploadPlainBinary:
+    description: 'Whether to upload the plain executable file to the GitHub Releases'
+    default: 'false'
 outputs:
   releaseId:
     description: 'The ID of the created release'
