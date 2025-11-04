@@ -162,6 +162,7 @@ These inputs allow you to modify the GitHub release.
   - `[mode]` will be replaced with `debug` or `release`, depending on `includeDebug` and `includeRelease`.
   - `[setup]` will be replaced with `-setup` which can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
   - `[_setup]` behaves like `[setup]` but with `_setup` instead of `-setup`.
+- Gitea support is experimental. It was implemented and tested solely by the community.
 
 ## Partners
 
