@@ -43073,8 +43073,6 @@ async function run() {
             process.env.GITHUB_API_URL ||
             'https://api.github.com';
         const isGitea = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('isGitea');
-        console.log(githubBaseUrl, _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('githubBaseUrl'), process.env.GITHUB_API_URL, 'https://api.github.com');
-        console.log(isGitea);
         // TODO: Change its default to true for v2 apps
         // Not using getBooleanInput so we can differentiate between true,false,unset later.
         const updaterJsonPreferNsis = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
