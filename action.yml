@@ -61,7 +61,7 @@ inputs:
   githubBaseUrl:
     description: 'The base URL of the GitHub API to use. This is useful if you want to use a self-hosted GitHub instance or a GitHub Enterprise server.'
   isGitea:
-    description: 'Whether to run in Gitea compatibility mode. Only set this if using in Gitea runner, since some API endpoints differ from GitHub'
+    description: 'Whether to run in Gitea compatibility mode. Set this if `githubBaseUrl` targets a Gitea instance, since some API endpoints differ from GitHub'
     default: 'false'
   assetNamePattern:
     description: 'The naming pattern to use for the uploaded assets'
