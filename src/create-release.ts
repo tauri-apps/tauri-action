@@ -39,6 +39,7 @@ export async function getOrCreateRelease(
   commitish?: string,
   draft = true,
   prerelease = true,
+  generateReleaseNotes = false,
 ): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -108,6 +109,7 @@ export async function getOrCreateRelease(
           draft,
           prerelease,
           target_commitish: commitish || context.sha,
+          generate_release_notes: generateReleaseNotes,
         });
 
         release = createdRelease.data;

@@ -2058,7 +2058,7 @@ const Context = __importStar(__nccwpck_require__(3077));
 const Utils = __importStar(__nccwpck_require__(8399));
 // octokit + plugins
 const core_1 = __nccwpck_require__(1772);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6363);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6316);
 const plugin_paginate_rest_1 = __nccwpck_require__(8633);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
@@ -7678,7 +7678,7 @@ paginateRest.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 6363:
+/***/ 6316:
 /***/ ((module) => {
 
 
@@ -42926,7 +42926,7 @@ function allReleases(github, owner, repo) {
     return github.paginate.iterator(github.rest.repos.listReleases.endpoint.merge(params));
 }
 /// Try to get release by tag. If there's none, releaseName is required to create one.
-async function getOrCreateRelease(owner, repo, tagName, githubBaseUrl, releaseName, body, commitish, draft = true, prerelease = true) {
+async function getOrCreateRelease(owner, repo, tagName, githubBaseUrl, releaseName, body, commitish, draft = true, prerelease = true, generateReleaseNotes = false) {
     if (process.env.GITHUB_TOKEN === undefined) {
         throw new Error('GITHUB_TOKEN is required');
     }
@@ -42991,6 +42991,7 @@ async function getOrCreateRelease(owner, repo, tagName, githubBaseUrl, releaseNa
                     draft,
                     prerelease,
                     target_commitish: commitish || _actions_github__WEBPACK_IMPORTED_MODULE_2__.context.sha,
+                    generate_release_notes: generateReleaseNotes,
                 });
                 release = createdRelease.data;
             }
@@ -43073,6 +43074,7 @@ async function run() {
             process.env.GITHUB_API_URL ||
             'https://api.github.com';
         const isGitea = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('isGitea');
+        const generateReleaseNotes = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('generateReleaseNotes');
         // TODO: Change its default to true for v2 apps
         // Not using getBooleanInput so we can differentiate between true,false,unset later.
         const updaterJsonPreferNsis = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
@@ -43156,7 +43158,7 @@ async function run() {
                 releaseName = releaseName.replace(regex, template.value);
                 body = body.replace(regex, template.value);
             });
-            const releaseData = await (0,_create_release__WEBPACK_IMPORTED_MODULE_4__/* .getOrCreateRelease */ .l)(owner, repo, tagName, githubBaseUrl, releaseName || undefined, body, commitish || undefined, draft, prerelease);
+            const releaseData = await (0,_create_release__WEBPACK_IMPORTED_MODULE_4__/* .getOrCreateRelease */ .l)(owner, repo, tagName, githubBaseUrl, releaseName || undefined, body, commitish || undefined, draft, prerelease, generateReleaseNotes);
             releaseId = releaseData.id;
             _actions_core__WEBPACK_IMPORTED_MODULE_2__.setOutput('releaseUploadUrl', releaseData.uploadUrl);
             _actions_core__WEBPACK_IMPORTED_MODULE_2__.setOutput('releaseId', releaseData.id.toString());

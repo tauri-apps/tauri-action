@@ -272,6 +272,7 @@ jobs:
           retryAttempts: 1
           assetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[setup]x[ext]'
           uploadPlainBinary: true
+          generateReleaseNotes: true
 
       - name: Frontend-only Project
         uses: ./
@@ -293,4 +294,5 @@ jobs:
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           uploadPlainBinary: true
+          generateReleaseNotes: true
           args: ${{ matrix.args }}

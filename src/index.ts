@@ -50,6 +50,7 @@ async function run(): Promise<void> {
       process.env.GITHUB_API_URL ||
       'https://api.github.com';
     const isGitea = core.getBooleanInput('isGitea');
+    const generateReleaseNotes = core.getBooleanInput('generateReleaseNotes');
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -189,6 +190,7 @@ async function run(): Promise<void> {
         commitish || undefined,
         draft,
         prerelease,
+        generateReleaseNotes,
       );
       releaseId = releaseData.id;
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
