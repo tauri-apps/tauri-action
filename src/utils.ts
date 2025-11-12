@@ -127,11 +127,11 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     }
 
     if (asset.name === 'binary') {
-      platform = asset.platform;
+      platform = '_' + asset.platform;
     }
 
     console.log('getAssetName', name, asset.platform, arch, dbg, asset.ext);
-    return name + '_' + platform + arch + dbg + asset.ext;
+    return name + platform + arch + dbg + asset.ext;
   }
 }
 
