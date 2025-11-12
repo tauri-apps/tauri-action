@@ -23,6 +23,7 @@ async function run(): Promise<void> {
     const iconPath = core.getInput('iconPath');
     const appName = core.getInput('appName');
     const appVersion = core.getInput('appVersion');
+    // TODO for v1 (since we recommended v0 instead of v0.x so far): Remove includeRelease && includeDebug and automatically resolve the target dir. If users want both types, they should run the action twice.
     const includeRelease = core.getBooleanInput('includeRelease');
     const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');

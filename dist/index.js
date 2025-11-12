@@ -43051,6 +43051,7 @@ async function run() {
         const iconPath = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('iconPath');
         const appName = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('appName');
         const appVersion = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('appVersion');
+        // TODO for v1 (since we recommended v0 instead of v0.x so far): Remove includeRelease && includeDebug and automatically resolve the target dir. If users want both types, they should run the action twice.
         const includeRelease = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeRelease');
         const includeDebug = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeDebug');
         const includeUpdaterJson = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeUpdaterJson');
@@ -53241,9 +53242,17 @@ function getAssetName(asset, pattern) {
         return renderNamePattern(pattern, asset);
     }
     else {
+        if (asset.mode !== 'debug' &&
+            asset.ext !== '.app.tar.gz' &&
+            asset.ext !== '.app.tar.gz.sig' &&
+            asset.name !== 'binary') {
+            // See TODO above, in most cases we keep the file name set by tauri's cli.
+            return (0,external_node_path_.basename)(asset.path);
+        }
         const name = (0,external_node_path_.basename)(asset.path, asset.ext);
         let arch = '';
         let dbg = '';
+        let platform = '';
         if (asset.ext === '.app.tar.gz' ||
             asset.ext === '.app.tar.gz.sig' ||
             asset.name === 'binary') {
@@ -53252,8 +53261,11 @@ function getAssetName(asset, pattern) {
         if (asset.mode === 'debug') {
             dbg = '-debug';
         }
+        if (asset.name === 'binary') {
+            platform = asset.platform;
+        }
         console.log('getAssetName', name, asset.platform, arch, dbg, asset.ext);
-        return name + '_' + asset.platform + arch + dbg + asset.ext;
+        return name + '_' + platform + arch + dbg + asset.ext;
     }
 }
 function createArtifact({ path, name, debug, platform, arch, bundle, version, }) {
