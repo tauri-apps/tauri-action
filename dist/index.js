@@ -53252,6 +53252,7 @@ function getAssetName(asset, pattern) {
         if (asset.mode === 'debug') {
             dbg = '-debug';
         }
+        console.log('getAssetName', name, asset.platform, arch, dbg, asset.ext);
         return name + '_' + asset.platform + arch + dbg + asset.ext;
     }
 }
