@@ -41,12 +41,7 @@ export async function uploadAssets(
       'content-length': contentLength(asset.path),
     };
 
-    console.log(JSON.stringify(asset));
-    console.log(assetNamePattern);
-
     const assetName = getAssetName(asset, assetNamePattern);
-
-    console.log(assetName);
 
     const existingAsset = existingAssets.find(
       (a) =>

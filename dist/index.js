@@ -43222,10 +43222,7 @@ async function uploadAssets(owner, repo, releaseId, assets, retryAttempts, githu
             'content-type': 'application/zip',
             'content-length': contentLength(asset.path),
         };
-        console.log(JSON.stringify(asset));
-        console.log(assetNamePattern);
         const assetName = (0,_utils__WEBPACK_IMPORTED_MODULE_2__/* .getAssetName */ .wm)(asset, assetNamePattern);
-        console.log(assetName);
         const existingAsset = existingAssets.find((a) => a.name ===
             assetName
                 .trim()
@@ -53264,7 +53261,6 @@ function getAssetName(asset, pattern) {
         if (asset.name === 'binary') {
             platform = '_' + asset.platform;
         }
-        console.log('getAssetName', name, asset.platform, arch, dbg, asset.ext);
         return name + platform + arch + dbg + asset.ext;
     }
 }

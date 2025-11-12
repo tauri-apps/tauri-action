@@ -130,7 +130,6 @@ export function getAssetName(asset: Artifact, pattern?: string) {
       platform = '_' + asset.platform;
     }
 
-    console.log('getAssetName', name, asset.platform, arch, dbg, asset.ext);
     return name + platform + arch + dbg + asset.ext;
   }
 }
