@@ -1,5 +1,14 @@
 # Changelog
 
+## \[0.6.0]
+
+- [`e918a06`](https://www.github.com/tauri-apps/tauri-action/commit/e918a068fe65bde93e97fe0d4024e45dc568c536) ([#1133](https://www.github.com/tauri-apps/tauri-action/pull/1133)) Encode `tagName` option value in `latest.json` URL.
+- [`45acc19`](https://www.github.com/tauri-apps/tauri-action/commit/45acc1922a6fe824bcffed136e9b5d80660ed050) ([#1164](https://www.github.com/tauri-apps/tauri-action/pull/1164)) Add `generateReleaseNotes` config to use GitHub's release notes API to auto generate the release name and/or body.
+- [`59a1a70`](https://www.github.com/tauri-apps/tauri-action/commit/59a1a70223956f123844e5f309cf5cf82d279685) ([#1166](https://www.github.com/tauri-apps/tauri-action/pull/1166)) Fix default file name pattern to match tauri's file names again.
+- [`08112f7`](https://www.github.com/tauri-apps/tauri-action/commit/08112f729df63ddc8f64de706284e8518f1b1e73) ([#1106](https://www.github.com/tauri-apps/tauri-action/pull/1106)) Added experimental support for Gitea hosted instances.
+- [`08112f7`](https://www.github.com/tauri-apps/tauri-action/commit/08112f729df63ddc8f64de706284e8518f1b1e73) ([#1106](https://www.github.com/tauri-apps/tauri-action/pull/1106)) Added a config to set the GitHub API URL which should help users with self-hosted instances and those using GitHub Enterprise.
+- [`b067139`](https://www.github.com/tauri-apps/tauri-action/commit/b0671399f144ae28a851ef8c3e0540b5d5c6cd37) ([#1130](https://www.github.com/tauri-apps/tauri-action/pull/1130)) The action now uses node v24 which raises the minimum GitHub runner version to `v2.327.1`.
+
 ## \[0.5.24]
 
 - [`c5d6ac7`](https://www.github.com/tauri-apps/tauri-action/commit/c5d6ac7494763a167f5acf6e6c73664fc7360468) ([#1152](https://www.github.com/tauri-apps/tauri-action/pull/1152) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The `latest.json` file now contains `{os}-{arch}-{installer}` keys as well to support multiple installer formats per platform. This requires `tauri-plugin-updater` version `2.10.0` or above.
