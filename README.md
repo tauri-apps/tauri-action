@@ -60,14 +60,12 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
-        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: install frontend dependencies
         run: yarn install # change this to npm, pnpm or bun depending on which one you use.
 
-      - uses: tauri-apps/tauri-action@v0
+      - uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -101,8 +99,6 @@ These inputs allow you to change how your Tauri project will be build.
 | Name                       | Required | Description                                                                                                                                                        | Type   | Default                                                                        |
 | -------------------------- | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------ |
 | `projectPath`              |  false   | The path to the root of the tauri project relative to the current working directory                                                                                | string | .                                                                              |
-| `includeDebug`             |  false   | whether to include a debug build or not                                                                                                                            | bool   | false                                                                          |
-| `includeRelease`           |  false   | whether to include a release build or not                                                                                                                          | bool   | true                                                                           |
 | `includeUpdaterJson`       |  false   | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                                                                  | bool   | true                                                                           |
 | `updaterJsonPreferNsis`    |  false   | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist                                                    | bool   | `false`. May be changed to `true` for projects using `tauri@v2` in the future. |
 | `updaterJsonKeepUniversal` |  false   | whether the updater JSON file should include universal macOS builds as darwin-universal on top of using it in the aarch64 and x86_64 fields.                       | bool   | false                                                                          |
@@ -160,7 +156,7 @@ These inputs allow you to modify the GitHub release.
 - If you only want to build the app without having the action upload any assets, for example if you want to only use [`actions/upload-artifact`](https://github.com/actions/upload-artifact), simply omit `tagName`, `releaseName` and `releaseId`.
 - Only enable `uploadPlainBinary` if you are sure what you're doing since Tauri doesn't officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
 - `assetNamePattern` offers a few variables that will be replaced automatically if encapsulated in `[]`. Currently available variables are: `[name]`, `[version]`, `[platform]`, `[arch]`, `[mode]`, `[setup]`, `[_setup]`, `[ext]`.
-  - `[mode]` will be replaced with `debug` or `release`, depending on `includeDebug` and `includeRelease`.
+  - `[mode]` will be replaced with `debug` or `release`, depending on the use of the `--debug` flag in `args`.
   - `[setup]` will be replaced with `-setup` which can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
   - `[_setup]` behaves like `[setup]` but with `_setup` instead of `-setup`.
 - Gitea support is experimental. It was implemented and tested solely by the community.

@@ -16,7 +16,6 @@ import type { Artifact, BuildOptions, InitOptions } from './types';
 
 export async function buildProject(
   root: string,
-  debug: boolean,
   buildOpts: BuildOptions,
   initOpts: InitOptions,
   retryAttempts: number,
@@ -24,9 +23,10 @@ export async function buildProject(
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
-  const tauriArgs = debug
-    ? ['--debug', ...(buildOpts.args ?? [])]
-    : (buildOpts.args ?? []);
+  const tauriArgs = buildOpts.args ?? [];
+
+  const debug =
+    [...tauriArgs].findIndex((e) => e === '-d' || e === '--debug') >= 0;
 
   const targetArgIdx = [...tauriArgs].findIndex(
     (e) => e === '-t' || e === '--target',

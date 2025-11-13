@@ -23,9 +23,6 @@ async function run(): Promise<void> {
     const iconPath = core.getInput('iconPath');
     const appName = core.getInput('appName');
     const appVersion = core.getInput('appVersion');
-    // TODO for v1 (since we recommended v0 instead of v0.x so far): Remove includeRelease && includeDebug and automatically resolve the target dir. If users want both types, they should run the action twice.
-    const includeRelease = core.getBooleanInput('includeRelease');
-    const includeDebug = core.getBooleanInput('includeDebug');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
     const updaterJsonKeepUniversal = core.getBooleanInput(
       'updaterJsonKeepUniversal',
@@ -82,34 +79,17 @@ async function run(): Promise<void> {
     const configArg =
       configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
 
-    const releaseArtifacts: Artifact[] = [];
-    const debugArtifacts: Artifact[] = [];
+    const artifacts: Artifact[] = [];
 
-    if (includeRelease) {
-      releaseArtifacts.push(
-        ...(await buildProject(
-          projectPath,
-          false,
-          buildOptions,
-          initOptions,
-          retryAttempts,
-          uploadPlainBinary,
-        )),
-      );
-    }
-    if (includeDebug) {
-      debugArtifacts.push(
-        ...(await buildProject(
-          projectPath,
-          true,
-          buildOptions,
-          initOptions,
-          retryAttempts,
-          uploadPlainBinary,
-        )),
-      );
-    }
-    const artifacts = releaseArtifacts.concat(debugArtifacts);
+    artifacts.push(
+      ...(await buildProject(
+        projectPath,
+        buildOptions,
+        initOptions,
+        retryAttempts,
+        uploadPlainBinary,
+      )),
+    );
 
     if (artifacts.length === 0) {
       if (releaseId || tagName) {
@@ -219,7 +199,7 @@ async function run(): Promise<void> {
           body,
           tagName,
           releaseId,
-          releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts,
+          artifacts,
           targetInfo,
           info.unzippedSigs,
           updaterJsonPreferNsis,

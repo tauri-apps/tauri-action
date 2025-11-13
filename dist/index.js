@@ -40057,11 +40057,10 @@ async function getRunner(root, tauriScript) {
 
 
 
-async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, uploadPlainBinary) {
+async function buildProject(root, buildOpts, initOpts, retryAttempts, uploadPlainBinary) {
     const runner = await getRunner(root, buildOpts.tauriScript);
-    const tauriArgs = debug
-        ? ['--debug', ...(buildOpts.args ?? [])]
-        : (buildOpts.args ?? []);
+    const tauriArgs = buildOpts.args ?? [];
+    const debug = [...tauriArgs].findIndex((e) => e === '-d' || e === '--debug') >= 0;
     const targetArgIdx = [...tauriArgs].findIndex((e) => e === '-t' || e === '--target');
     const targetPath = targetArgIdx >= 0 ? [...tauriArgs][targetArgIdx + 1] : undefined;
     const configArgIdx = [...tauriArgs].findIndex((e) => e === '-c' || e === '--config');
@@ -40709,9 +40708,6 @@ async function run() {
         const iconPath = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('iconPath');
         const appName = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('appName');
         const appVersion = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('appVersion');
-        // TODO for v1 (since we recommended v0 instead of v0.x so far): Remove includeRelease && includeDebug and automatically resolve the target dir. If users want both types, they should run the action twice.
-        const includeRelease = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeRelease');
-        const includeDebug = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeDebug');
         const includeUpdaterJson = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeUpdaterJson');
         const updaterJsonKeepUniversal = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('updaterJsonKeepUniversal');
         const retryAttempts = parseInt(_actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('retryAttempts') || '0', 10);
@@ -40752,15 +40748,8 @@ async function run() {
         const targetPath = targetArgIdx >= 0 ? [...args][targetArgIdx + 1] : undefined;
         const configArgIdx = [...args].findIndex((e) => e === '-c' || e === '--config');
         const configArg = configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
-        const releaseArtifacts = [];
-        const debugArtifacts = [];
-        if (includeRelease) {
-            releaseArtifacts.push(...(await (0,_build__WEBPACK_IMPORTED_MODULE_7__/* .buildProject */ .a)(projectPath, false, buildOptions, initOptions, retryAttempts, uploadPlainBinary)));
-        }
-        if (includeDebug) {
-            debugArtifacts.push(...(await (0,_build__WEBPACK_IMPORTED_MODULE_7__/* .buildProject */ .a)(projectPath, true, buildOptions, initOptions, retryAttempts, uploadPlainBinary)));
-        }
-        const artifacts = releaseArtifacts.concat(debugArtifacts);
+        const artifacts = [];
+        artifacts.push(...(await (0,_build__WEBPACK_IMPORTED_MODULE_7__/* .buildProject */ .a)(projectPath, buildOptions, initOptions, retryAttempts, uploadPlainBinary)));
         if (artifacts.length === 0) {
             if (releaseId || tagName) {
                 throw new Error('No artifacts were found.');
@@ -40826,7 +40815,7 @@ async function run() {
         if (releaseId) {
             await (0,_upload_release_assets__WEBPACK_IMPORTED_MODULE_5__/* .uploadAssets */ .r)(owner, repo, releaseId, artifacts, retryAttempts, githubBaseUrl, isGitea, assetNamePattern);
             if (includeUpdaterJson) {
-                await (0,_upload_version_json__WEBPACK_IMPORTED_MODULE_6__/* .uploadVersionJSON */ .Y)(owner, repo, info.version, body, tagName, releaseId, releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts, targetInfo, info.unzippedSigs, updaterJsonPreferNsis, updaterJsonKeepUniversal, retryAttempts, githubBaseUrl, isGitea, assetNamePattern);
+                await (0,_upload_version_json__WEBPACK_IMPORTED_MODULE_6__/* .uploadVersionJSON */ .Y)(owner, repo, info.version, body, tagName, releaseId, artifacts, targetInfo, info.unzippedSigs, updaterJsonPreferNsis, updaterJsonKeepUniversal, retryAttempts, githubBaseUrl, isGitea, assetNamePattern);
             }
         }
         else {
@@ -50887,8 +50876,7 @@ function renderNamePattern(pattern, replacements) {
 }
 function getAssetName(asset, pattern) {
     // TODO(v1): In a future version we may want to unify the naming schemes. For now we keep using the cli output.
-    // const debugPattern = asset.mode === 'debug' ? '_[mode]' : '';
-    // const DEFAULT_PATTERN = `[name]_v[version]${debugPattern}_[platform]_[arch][ext]`;
+    // const DEFAULT_PATTERN = `[name]_v[version]_[platform]_[arch][ext]`;
     // pattern = pattern || DEFAULT_PATTERN;
     if (asset.name === 'latest.json') {
         return 'latest.json';
@@ -50897,29 +50885,19 @@ function getAssetName(asset, pattern) {
         return renderNamePattern(pattern, asset);
     }
     else {
-        if (asset.mode !== 'debug' &&
-            asset.ext !== '.app.tar.gz' &&
+        if (asset.ext !== '.app.tar.gz' &&
             asset.ext !== '.app.tar.gz.sig' &&
             asset.name !== 'binary') {
             // See TODO above, in most cases we keep the file name set by tauri's cli.
             return (0,external_node_path_.basename)(asset.path);
         }
         const name = (0,external_node_path_.basename)(asset.path, asset.ext);
-        let arch = '';
-        let dbg = '';
+        const arch = '_' + asset.arch;
         let platform = '';
-        if (asset.ext === '.app.tar.gz' ||
-            asset.ext === '.app.tar.gz.sig' ||
-            asset.name === 'binary') {
-            arch = '_' + asset.arch;
-        }
-        if (asset.mode === 'debug') {
-            dbg = '-debug';
-        }
         if (asset.name === 'binary') {
             platform = '_' + asset.platform;
         }
-        return name + platform + arch + dbg + asset.ext;
+        return name + platform + arch + asset.ext;
     }
 }
 function createArtifact({ path, name, debug, platform, arch, bundle, version, }) {

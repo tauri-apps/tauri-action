@@ -85,8 +85,7 @@ export function renderNamePattern(
 
 export function getAssetName(asset: Artifact, pattern?: string) {
   // TODO(v1): In a future version we may want to unify the naming schemes. For now we keep using the cli output.
-  // const debugPattern = asset.mode === 'debug' ? '_[mode]' : '';
-  // const DEFAULT_PATTERN = `[name]_v[version]${debugPattern}_[platform]_[arch][ext]`;
+  // const DEFAULT_PATTERN = `[name]_v[version]_[platform]_[arch][ext]`;
   // pattern = pattern || DEFAULT_PATTERN;
 
   if (asset.name === 'latest.json') {
@@ -100,7 +99,6 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     );
   } else {
     if (
-      asset.mode !== 'debug' &&
       asset.ext !== '.app.tar.gz' &&
       asset.ext !== '.app.tar.gz.sig' &&
       asset.name !== 'binary'
@@ -110,27 +108,14 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     }
 
     const name = basename(asset.path, asset.ext);
-    let arch = '';
-    let dbg = '';
+    const arch = '_' + asset.arch;
     let platform = '';
-
-    if (
-      asset.ext === '.app.tar.gz' ||
-      asset.ext === '.app.tar.gz.sig' ||
-      asset.name === 'binary'
-    ) {
-      arch = '_' + asset.arch;
-    }
-
-    if (asset.mode === 'debug') {
-      dbg = '-debug';
-    }
 
     if (asset.name === 'binary') {
       platform = '_' + asset.platform;
     }
 
-    return name + platform + arch + dbg + asset.ext;
+    return name + platform + arch + asset.ext;
   }
 }
 
