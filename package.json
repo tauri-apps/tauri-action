@@ -24,6 +24,7 @@
   ],
   "minimumReleaseAge": 4320,
   "dependencies": {
+    "@actions/artifact": "4.0.0",
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
     "execa": "9.6.0",

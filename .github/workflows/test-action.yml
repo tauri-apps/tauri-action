@@ -81,4 +81,5 @@ jobs:
           updaterJsonKeepUniversal: true
           retryAttempts: 1
           uploadPlainBinary: true
+          uploadWorkflowArtifacts: true
       # assetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[setup]x[ext]'

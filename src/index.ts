@@ -3,6 +3,7 @@ import { resolve, dirname, basename } from 'node:path';
 
 import * as core from '@actions/core';
 import { context } from '@actions/github';
+import { DefaultArtifactClient } from '@actions/artifact';
 import stringArgv from 'string-argv';
 
 import { getOrCreateRelease } from './create-release';
@@ -44,6 +45,9 @@ async function run(): Promise<void> {
       'https://api.github.com';
     const isGitea = core.getBooleanInput('isGitea');
     const generateReleaseNotes = core.getBooleanInput('generateReleaseNotes');
+    const uploadWorkflowArtifacts = core.getBooleanInput(
+      'uploadWorkflowArtifacts',
+    );
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -79,7 +83,7 @@ async function run(): Promise<void> {
     );
 
     if (artifacts.length === 0) {
-      if (releaseId || tagName) {
+      if (releaseId || tagName || uploadWorkflowArtifacts) {
         throw new Error('No artifacts were found.');
       } else {
         console.log(
@@ -127,6 +131,20 @@ async function run(): Promise<void> {
           artifacts.splice(i, 1);
         }
         i++;
+      }
+    }
+
+    if (uploadWorkflowArtifacts) {
+      const ghartifact = new DefaultArtifactClient();
+      for (const artifact of artifacts) {
+        if (artifact.workflowArtifactName) {
+          await ghartifact.uploadArtifact(
+            artifact.workflowArtifactName,
+            [artifact.path],
+            dirname(artifact.path),
+            { compressionLevel: artifact.ext === '.app' ? 6 : 0 },
+          );
+        }
       }
     }
 

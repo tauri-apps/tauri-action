@@ -27,6 +27,8 @@ export interface Artifact {
   version: string;
   setup: '-setup' | '';
   _setup: '_setup' | '';
+  // Undocumented because it's intended for internal use
+  workflowArtifactName?: string;
 }
 
 export interface BuildOptions {
