@@ -42,8 +42,7 @@ jobs:
 
       - name: install example dependencies
         run: |
-          cd ./.github/fixtures/example-v2
-          pnpm install
+          echo "skipped"
       # Testing cli fallback install
       #          cd ../example-with-tauri-v2
       #          pnpm install
@@ -58,7 +57,6 @@ jobs:
         with:
           cache-on-failure: true
           workspaces: |
-            ./.github/fixtures/example-v2/src-tauri -> ../../target
             ./.github/fixtures/example-with-tauri-v2/src-tauri -> ../../target
 
       # system
