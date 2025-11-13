@@ -47,6 +47,7 @@ async function getRunner(
   tauriScript: string | null,
 ): Promise<Runner> {
   if (tauriScript) {
+    console.log('`tauriScript` set. Skipping cli verification.');
     // FIXME: This will also split file paths with spaces.
     const [runnerCommand, ...runnerArgs] = tauriScript.split(' ');
     return new Runner(runnerCommand, runnerArgs);
