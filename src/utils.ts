@@ -345,6 +345,16 @@ export function hasDependency(dependencyName: string, root: string): boolean {
   );
 }
 
+export function hasTauriScript(root: string): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const packageJson = getPackageJson(root);
+  return (
+    !!packageJson &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    !!packageJson.scripts?.['tauri']
+  );
+}
+
 export function usesYarn(root: string): boolean {
   return existsSync(join(root, 'yarn.lock'));
 }

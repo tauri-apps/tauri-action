@@ -1,6 +1,7 @@
 import {
   execCommand,
   hasDependency,
+  hasTauriScript,
   retry,
   usesBun,
   usesPnpm,
@@ -54,7 +55,7 @@ async function getRunner(
     if (usesYarn(root)) return new Runner('yarn', ['tauri']);
     if (usesPnpm(root)) return new Runner('pnpm', ['tauri']);
     if (usesBun(root)) return new Runner('bun', ['tauri']);
-    return new Runner('npm', ['exec', 'tauri']);
+    return new Runner('npm', [hasTauriScript(root) ? 'run' : 'exec', 'tauri']);
   }
 
   console.warn(
