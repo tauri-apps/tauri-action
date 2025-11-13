@@ -25,15 +25,7 @@ class Runner {
     env?: Record<string, string>,
     retryAttempts: number = 0,
   ): Promise<void> {
-    const args: string[] = [];
-
-    if (this.bin === 'npm' && this.tauriScript[0] !== 'run') {
-      args.push('run');
-    }
-
-    args.push(...this.tauriScript);
-
-    args.push(...command);
+    const args = [...this.tauriScript, ...command];
 
     if (this.bin === 'npm' && commandOptions.length) {
       args.push('--');
@@ -62,8 +54,12 @@ async function getRunner(
     if (usesYarn(root)) return new Runner('yarn', ['tauri']);
     if (usesPnpm(root)) return new Runner('pnpm', ['tauri']);
     if (usesBun(root)) return new Runner('bun', ['tauri']);
-    return new Runner('npm', ['run', 'tauri']);
+    return new Runner('npm', ['exec', 'tauri']);
   }
+
+  console.warn(
+    'Could not detect `@tauri-apps/cli` installation. Proceeding to install global npm package...',
+  );
 
   await execCommand('npm', ['install', '-g', `@tauri-apps/cli@v2`], {
     cwd: undefined,
