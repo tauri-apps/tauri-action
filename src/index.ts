@@ -138,9 +138,9 @@ async function run(): Promise<void> {
     if (uploadWorkflowArtifacts) {
       const ghartifact = new DefaultArtifactClient();
       for (const artifact of artifacts) {
-        console.log(artifact.name);
+        console.log(JSON.stringify(artifact));
         if (artifact.workflowArtifactName) {
-          console.log(artifact.name, artifact.workflowArtifactName);
+          console.log('has workflowArtifactName');
           await ghartifact
             .uploadArtifact(
               artifact.workflowArtifactName,
