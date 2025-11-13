@@ -42,10 +42,9 @@ jobs:
       - name: install example dependencies
         run: |
           echo "skipped"
+          cd ../example-with-tauri-v2
+          pnpm install
       # Testing cli fallback install
-      #          cd ../example-with-tauri-v2
-      #          pnpm install
-
       # rust
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
