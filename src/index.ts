@@ -11,7 +11,7 @@ import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
 import { execCommand, getInfo, getTargetInfo } from './utils';
 
-import type { Artifact, BuildOptions, InitOptions } from './types';
+import type { Artifact, BuildOptions } from './types';
 
 async function run(): Promise<void> {
   try {
@@ -19,10 +19,6 @@ async function run(): Promise<void> {
       process.cwd(),
       core.getInput('projectPath') || process.argv[2],
     );
-    const distPath = core.getInput('distPath');
-    const iconPath = core.getInput('iconPath');
-    const appName = core.getInput('appName');
-    const appVersion = core.getInput('appVersion');
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
     const updaterJsonKeepUniversal = core.getBooleanInput(
       'updaterJsonKeepUniversal',
@@ -30,7 +26,6 @@ async function run(): Promise<void> {
     const retryAttempts = parseInt(core.getInput('retryAttempts') || '0', 10);
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
-    const bundleIdentifier = core.getInput('bundleIdentifier');
     const assetNamePattern = core.getInput('assetNamePattern');
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
@@ -59,13 +54,6 @@ async function run(): Promise<void> {
       tauriScript,
       args,
     };
-    const initOptions: InitOptions = {
-      distPath,
-      iconPath,
-      bundleIdentifier,
-      appName,
-      appVersion,
-    };
 
     const targetArgIdx = [...args].findIndex(
       (e) => e === '-t' || e === '--target',
@@ -85,7 +73,6 @@ async function run(): Promise<void> {
       ...(await buildProject(
         projectPath,
         buildOptions,
-        initOptions,
         retryAttempts,
         uploadPlainBinary,
       )),

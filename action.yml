@@ -24,14 +24,6 @@ inputs:
   projectPath:
     description: 'Path to the root of the project that will be built'
     default: '.'
-  distPath:
-    description: 'Path to the distributable folder with your index.html and JS/CSS'
-  iconPath:
-    description: 'Path to the PNG icon to use as app icon, relative to the projectPath'
-  appName:
-    description: 'The app name to inject when initializing the Tauri app. Required if the name is not set via the `--config` flag.'
-  appVersion:
-    description: 'The app version to inject when initializing the Tauri app. Required if the version is not set via the `--config` flag.'
   includeUpdaterJson:
     description: 'Whether to upload a static JSON file for the updater using GitHub Releases as the CDN'
     default: 'true'
@@ -46,8 +38,6 @@ inputs:
     description: 'Arguments for the `tauri build` command'
   retryAttempts:
     description: 'The number of times to re-try building the app if the initial build fails or uploading assets if the upload fails.'
-  bundleIdentifier:
-    description: 'The bundle identifier to inject when initializing the Tauri app'
   owner:
     description: 'The account owner of the repository'
   repo:

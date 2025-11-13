@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import path, { join } from 'path';
 
 import TOML from 'smol-toml';
@@ -222,26 +222,5 @@ export class TauriConfig {
     } else {
       console.error(`Couldn't read --config: ${mergeConfig}`);
     }
-  }
-
-  /// Update tauri.conf.json file on disk with current values. Used solely in `initProject()`
-  /// and therefore only handles plain JSON while assuming it's a valid file straight from `tauri init`.
-  public updateConfigFile(tauriDir: string) {
-    const configPath = join(tauriDir, 'tauri.conf.json');
-    const contents = readFileSync(configPath).toString();
-    const config = _tryParseJsonConfig(contents);
-
-    if (!config) {
-      // This shouldn't happen. Instead the prior call to fromBaseConfig should fail.
-      throw new Error("Couldn't parse tauri.conf.json");
-    }
-
-    config.identifier = this.identifier;
-    config.productName = this.productName;
-    config.version = this.version;
-    config.build!.beforeBuildCommand = this.beforeBuildCommand;
-    config.build!.frontendDist = this.frontendDist;
-
-    writeFileSync(configPath, JSON.stringify(config, null, 2));
   }
 }

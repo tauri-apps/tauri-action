@@ -34,14 +34,6 @@ export interface BuildOptions {
   args: string[] | null;
 }
 
-export interface InitOptions {
-  distPath: string | null;
-  iconPath: string | null;
-  bundleIdentifier: string | null;
-  appVersion: string | null;
-  appName: string | null;
-}
-
 export interface CargoManifestBin {
   name: string;
 }

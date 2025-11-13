@@ -1,23 +1,20 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { initProject } from './init-project';
 import { getRunner } from './runner';
 import {
   createArtifact,
   getInfo,
   getTargetDir,
   getTargetInfo,
-  getTauriDir,
   getWorkspaceDir,
 } from './utils';
 
-import type { Artifact, BuildOptions, InitOptions } from './types';
+import type { Artifact, BuildOptions } from './types';
 
 export async function buildProject(
   root: string,
   buildOpts: BuildOptions,
-  initOpts: InitOptions,
   retryAttempts: number,
   uploadPlainBinary: boolean,
 ): Promise<Artifact[]> {
@@ -45,10 +42,6 @@ export async function buildProject(
     profileArgIdx >= 0 ? [...tauriArgs][profileArgIdx + 1] : undefined;
 
   const targetInfo = getTargetInfo(targetPath);
-
-  if (!getTauriDir(root)) {
-    await initProject(root, runner, initOpts);
-  }
 
   const info = getInfo(root, targetInfo, configArg);
 

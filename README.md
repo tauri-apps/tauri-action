@@ -2,8 +2,6 @@
 
 This GitHub Action builds your Tauri application as a native binary for macOS, Linux and Windows and optionally upload it to a GitHub Release.
 
-If your project doesn't include a Tauri project, the action can initialize it for you, so if you don't need to use Tauri's API, you can just ship native apps through this Action without making changes to your web app.
-
 ## Usage
 
 **_For more workflow examples, check out the [examples](examples) directory._**
@@ -79,19 +77,6 @@ jobs:
 
 ## Inputs
 
-### Project Initialization
-
-These inputs are only used if your GitHub repository does not contain an existing Tauri project and you want the action to initialize it for you.
-
-| Name               |           Required           | Description                                                                         | Type   | Default |
-| ------------------ | :--------------------------: | ----------------------------------------------------------------------------------- | ------ | ------- |
-| `projectPath`      |            false             | The path to the root of the tauri project relative to the current working directory | string | .       |
-| `distPath`         |            false             | Path to the distributable folder with your index.html and JS/CSS                    | string |         |
-| `iconPath`         |            false             | path to the PNG icon to use as app icon, relative to the projectPath                | string |         |
-| `bundleIdentifier` | yes, if not set via --config | The bundle identifier to inject when initializing the Tauri app                     | string |         |
-| `appName`          | yes, if not set via --config | The app name identifier to inject when initializing the Tauri app                   | string |         |
-| `appVersion`       | yes, if not set via --config | The app version to inject when initializing the Tauri app                           | string |         |
-
 ### Build Options
 
 These inputs allow you to change how your Tauri project will be build.
@@ -139,10 +124,6 @@ These inputs allow you to modify the GitHub release.
 
 ## Tips and Caveats
 
-- You can use this Action on a repo that doesn't have Tauri configured. We automatically initialize Tauri before building, and configure it to use your Web artifacts.
-  - You can configure the project initialization with the `distPath` and `iconPath` options.
-  - If you need to further customize the default `tauri.conf.json` file you can add a custom config that will be merged with the default one at build time.
-    - `args: --config custom-config.json`
 - You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri <COMMAND> <ARGS>` or `npm run tauri <COMMAND> <ARGS>`, we'll execute `${tauriScript} <COMMAND> <ARGS>`.
   - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
   - `tauriScript` can also be an absolute file path pointing to a `tauri-cli` binary. The path currently cannot contain spaces.
