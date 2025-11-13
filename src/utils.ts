@@ -8,7 +8,7 @@ import path, {
   sep,
 } from 'node:path';
 
-import { parse as parseToml } from '@iarna/toml';
+import TOML from 'smol-toml';
 import { execa } from 'execa';
 import { globbySync } from 'globby';
 
@@ -202,7 +202,7 @@ export function getWorkspaceDir(dir: string): string | null {
   while (dir.length && dir[dir.length - 1] !== sep) {
     const manifestPath = join(dir, 'Cargo.toml');
     if (existsSync(manifestPath)) {
-      const toml = parseToml(readFileSync(manifestPath).toString()) as {
+      const toml = TOML.parse(readFileSync(manifestPath).toString()) as {
         workspace?: { members?: string[]; exclude?: string[] };
       };
       if (toml.workspace?.members) {
@@ -254,7 +254,7 @@ export function getTargetDir(
       cargoConfigPath = join(dir, '.cargo/config.toml');
     }
     if (existsSync(cargoConfigPath)) {
-      const cargoConfig = parseToml(
+      const cargoConfig = TOML.parse(
         readFileSync(cargoConfigPath).toString(),
       ) as CargoConfig;
 
@@ -295,7 +295,7 @@ export function getTargetDir(
 
 export function getCargoManifest(dir: string): CargoManifest {
   const manifestPath = join(dir, 'Cargo.toml');
-  const cargoManifest = parseToml(
+  const cargoManifest = TOML.parse(
     readFileSync(manifestPath).toString(),
   ) as unknown as CargoManifest & {
     package: {
@@ -319,7 +319,7 @@ export function getCargoManifest(dir: string): CargoManifest {
       );
     }
     const manifestPath = join(workspaceDir, 'Cargo.toml');
-    const workspaceManifest = parseToml(
+    const workspaceManifest = TOML.parse(
       readFileSync(manifestPath).toString(),
     ) as unknown as CargoManifest;
 

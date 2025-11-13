@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import path, { join } from 'path';
 
-import { parse as parseToml } from '@iarna/toml';
+import TOML from 'smol-toml';
 import JSON5 from 'json5';
 
 import { TargetPlatform, TauriConfigV2 } from './types';
@@ -38,7 +38,7 @@ function _tryParseJson5Config(contents: string): TauriConfigV2 | null {
 
 function _tryParseTomlConfig(contents: string): TauriConfigV2 | null {
   try {
-    const config = parseToml(contents) as unknown as TauriConfigV2;
+    const config = TOML.parse(contents) as unknown as TauriConfigV2;
     return config;
   } catch (e) {
     // @ts-expect-error Catching errors in typescript is a headache

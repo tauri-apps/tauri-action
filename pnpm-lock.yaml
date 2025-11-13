@@ -14,9 +14,6 @@ importers:
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
-      '@iarna/toml':
-        specifier: 2.2.5
-        version: 2.2.5
       execa:
         specifier: 9.6.0
         version: 9.6.0
@@ -26,6 +23,9 @@ importers:
       json5:
         specifier: 2.2.3
         version: 2.2.3
+      smol-toml:
+        specifier: 1.4.2
+        version: 1.4.2
       string-argv:
         specifier: 0.3.2
         version: 0.3.2
@@ -195,9 +195,6 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
-
-  '@iarna/toml@2.2.5':
-    resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1078,6 +1075,10 @@ packages:
   slow-redact@0.3.0:
     resolution: {integrity: sha512-cf723wn9JeRIYP9tdtd86GuqoR5937u64Io+CYjlm2i7jvu7g0H+Cp0l0ShAf/4ZL+ISUTVT+8Qzz7RZmp9FjA==}
 
+  smol-toml@1.4.2:
+    resolution: {integrity: sha512-rInDH6lCNiEyn3+hH8KVGFdbjc099j47+OSgbMrfDYX1CmXLfdKd7qi6IfcWj2wFxvSVkuI46M+wPGYfEOEj6g==}
+    engines: {node: '>= 18'}
+
   sonic-boom@4.2.0:
     resolution: {integrity: sha512-INb7TM37/mAcsGmc9hyyI6+QR3rR1zVRu36B0NeGXKnOOLiZOfER5SA+N7X7k3yUYRzLWafduTDvJAfDswwEww==}
 
@@ -1316,9 +1317,9 @@ snapshots:
       - encoding
       - mocha
 
-  '@covector/assemble@0.12.0':
+  '@covector/assemble@0.12.0(mocha@10.4.0)':
     dependencies:
-      '@covector/command': 0.8.0
+      '@covector/command': 0.8.0(mocha@10.4.0)
       '@covector/files': 0.8.0
       effection: 2.0.8(mocha@10.4.0)
       js-yaml: 4.1.0
@@ -1329,9 +1330,10 @@ snapshots:
       unified: 9.2.2
     transitivePeerDependencies:
       - encoding
+      - mocha
       - supports-color
 
-  '@covector/changelog@0.12.0':
+  '@covector/changelog@0.12.0(mocha@10.4.0)':
     dependencies:
       '@covector/files': 0.8.0
       effection: 2.0.8(mocha@10.4.0)
@@ -1341,14 +1343,16 @@ snapshots:
       unified: 9.2.2
     transitivePeerDependencies:
       - encoding
+      - mocha
       - supports-color
 
-  '@covector/command@0.8.0':
+  '@covector/command@0.8.0(mocha@10.4.0)':
     dependencies:
       '@effection/process': 2.1.4
       effection: 2.0.8(mocha@10.4.0)
     transitivePeerDependencies:
       - encoding
+      - mocha
 
   '@covector/files@0.8.0':
     dependencies:
@@ -1395,8 +1399,6 @@ snapshots:
     dependencies:
       effection: 2.0.8(mocha@10.4.0)
       mocha: 10.4.0
-    transitivePeerDependencies:
-      - encoding
 
   '@effection/process@2.1.4':
     dependencies:
@@ -1404,8 +1406,6 @@ snapshots:
       ctrlc-windows: 2.2.0
       effection: 2.0.8(mocha@10.4.0)
       shellwords: 0.1.1
-    transitivePeerDependencies:
-      - encoding
 
   '@effection/stream@2.0.6':
     dependencies:
@@ -1474,8 +1474,6 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/retry@0.4.3': {}
-
-  '@iarna/toml@2.2.5': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -1777,9 +1775,9 @@ snapshots:
     dependencies:
       '@clack/prompts': 0.7.0
       '@covector/apply': 0.10.0(mocha@10.4.0)
-      '@covector/assemble': 0.12.0
-      '@covector/changelog': 0.12.0
-      '@covector/command': 0.8.0
+      '@covector/assemble': 0.12.0(mocha@10.4.0)
+      '@covector/changelog': 0.12.0(mocha@10.4.0)
+      '@covector/command': 0.8.0(mocha@10.4.0)
       '@covector/files': 0.8.0
       effection: 2.0.8(mocha@10.4.0)
       globby: 11.1.0
@@ -2403,6 +2401,8 @@ snapshots:
   slash@5.1.0: {}
 
   slow-redact@0.3.0: {}
+
+  smol-toml@1.4.2: {}
 
   sonic-boom@4.2.0:
     dependencies:

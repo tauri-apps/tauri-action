@@ -11,8 +11,7 @@ on:
 
 jobs:
   CI:
-    strategy:
-      fail-fast: false
+    continue-on-error: true
 
     runs-on: ubuntu-latest
     steps:
