@@ -42,7 +42,7 @@ jobs:
       - name: install example dependencies
         run: |
           echo "skipped"
-          cd ../example-with-tauri-v2
+          cd ./.github/fixtures/example-with-tauri-v2
           pnpm install
       # Testing cli fallback install
       # rust
