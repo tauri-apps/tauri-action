@@ -395,7 +395,12 @@ export function usesBun(root: string): boolean {
 
 function isRunnerInstalled(runner: string) {
   const bin = process.platform === 'win32' ? 'where.exe' : 'which';
-  return execaSync(bin, [runner]).exitCode === 0;
+  try {
+    return execaSync(bin, [runner]).exitCode === 0;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_e) {
+    return false;
+  }
 }
 
 export async function execCommand(
