@@ -134,16 +134,21 @@ async function run(): Promise<void> {
       }
     }
 
+    // TODO: if uploadPlainBinary
     if (uploadWorkflowArtifacts) {
       const ghartifact = new DefaultArtifactClient();
       for (const artifact of artifacts) {
+        console.log(artifact.name);
         if (artifact.workflowArtifactName) {
-          await ghartifact.uploadArtifact(
-            artifact.workflowArtifactName,
-            [artifact.path],
-            dirname(artifact.path),
-            { compressionLevel: artifact.ext === '.app' ? 6 : 0 },
-          );
+          console.log(artifact.name, artifact.workflowArtifactName);
+          await ghartifact
+            .uploadArtifact(
+              artifact.workflowArtifactName,
+              [artifact.path],
+              dirname(artifact.path),
+              { compressionLevel: artifact.ext === '.app' ? 6 : 0 },
+            )
+            .catch((e) => console.error(`Error uploading artifact: ${e}`));
         }
       }
     }
