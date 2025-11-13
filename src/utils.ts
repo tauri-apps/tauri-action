@@ -355,6 +355,19 @@ export function hasTauriScript(root: string): boolean {
   );
 }
 
+export function usesNpm(root: string): boolean {
+  if (existsSync(join(root, 'package-lock.json'))) {
+    if (isRunnerInstalled('npm')) {
+      return true;
+    } else {
+      console.warn(
+        "package-lock.json detected but couldn't find `npm` executable.",
+      );
+    }
+  }
+  return false;
+}
+
 export function usesYarn(root: string): boolean {
   if (existsSync(join(root, 'yarn.lock'))) {
     if (isRunnerInstalled('yarn')) {
