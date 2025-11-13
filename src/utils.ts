@@ -23,6 +23,7 @@ import type {
   TargetPlatform,
 } from './types';
 import { GitHub } from '@actions/github/lib/utils';
+import { findUpSync } from 'find-up-simple';
 
 /*** constants ***/
 export const extensions = [
@@ -355,8 +356,8 @@ export function hasTauriScript(root: string): boolean {
   );
 }
 
-export function usesNpm(root: string): boolean {
-  if (existsSync(join(root, 'package-lock.json'))) {
+export function usesNpm(cwd: string): boolean {
+  if (findUpSync('package-lock.json', { cwd })) {
     if (isRunnerInstalled('npm')) {
       return true;
     } else {
@@ -368,8 +369,8 @@ export function usesNpm(root: string): boolean {
   return false;
 }
 
-export function usesYarn(root: string): boolean {
-  if (existsSync(join(root, 'yarn.lock'))) {
+export function usesYarn(cwd: string): boolean {
+  if (findUpSync('yarn.lock', { cwd })) {
     if (isRunnerInstalled('yarn')) {
       return true;
     } else {
@@ -379,8 +380,8 @@ export function usesYarn(root: string): boolean {
   return false;
 }
 
-export function usesPnpm(root: string): boolean {
-  if (existsSync(join(root, 'pnpm-lock.yaml'))) {
+export function usesPnpm(cwd: string): boolean {
+  if (findUpSync('pnpm-lock.yaml', { cwd })) {
     if (isRunnerInstalled('pnpm')) {
       return true;
     } else {
@@ -392,11 +393,8 @@ export function usesPnpm(root: string): boolean {
   return false;
 }
 
-export function usesBun(root: string): boolean {
-  if (
-    existsSync(join(root, 'bun.lockb')) ||
-    existsSync(join(root, 'bun.lock'))
-  ) {
+export function usesBun(cwd: string): boolean {
+  if (findUpSync('bun.lockb', { cwd }) || findUpSync('bun.lock', { cwd })) {
     if (isRunnerInstalled('bun')) {
       return true;
     } else {
