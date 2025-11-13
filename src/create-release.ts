@@ -15,6 +15,7 @@ interface GitHubRelease {
   upload_url: string;
   html_url: string;
   tag_name: string;
+  draft: boolean;
 }
 
 function allReleases(
@@ -73,6 +74,12 @@ export async function getOrCreateRelease(
           (release) => release.tag_name === tagName,
         );
         if (releaseWithTag) {
+          if (!releaseWithTag.draft) {
+            console.warn(
+              `Found release with tag ${tagName} but it's NOT a draft!`,
+            );
+            break;
+          }
           release = releaseWithTag;
           console.log(
             `Found draft release with tag ${tagName} on the release list.`,
