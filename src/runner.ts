@@ -52,9 +52,11 @@ async function getRunner(
   }
 
   if (hasDependency('@tauri-apps/cli', root)) {
+    // usesX also check if the runner executable exists.
     if (usesYarn(root)) return new Runner('yarn', ['tauri']);
     if (usesPnpm(root)) return new Runner('pnpm', ['tauri']);
     if (usesBun(root)) return new Runner('bun', ['tauri']);
+    // npm should always be available in a GitHub runner so we use it as a safe fallback.
     return new Runner('npm', [hasTauriScript(root) ? 'run' : 'exec', 'tauri']);
   }
 

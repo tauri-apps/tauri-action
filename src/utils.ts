@@ -9,7 +9,7 @@ import path, {
 } from 'node:path';
 
 import TOML from 'smol-toml';
-import { execa } from 'execa';
+import { execa, execaSync } from 'execa';
 import { globbySync } from 'globby';
 
 import { TauriConfig } from './config';
@@ -356,17 +356,46 @@ export function hasTauriScript(root: string): boolean {
 }
 
 export function usesYarn(root: string): boolean {
-  return existsSync(join(root, 'yarn.lock'));
+  if (existsSync(join(root, 'yarn.lock'))) {
+    if (isRunnerInstalled('yarn')) {
+      return true;
+    } else {
+      console.warn("yarn.lock detected but couldn't find `yarn` executable.");
+    }
+  }
+  return false;
 }
 
 export function usesPnpm(root: string): boolean {
-  return existsSync(join(root, 'pnpm-lock.yaml'));
+  if (existsSync(join(root, 'pnpm-lock.yaml'))) {
+    if (isRunnerInstalled('pnpm')) {
+      return true;
+    } else {
+      console.warn(
+        "pnpm-lock.yaml detected but couldn't find `pnpm` executable.",
+      );
+    }
+  }
+  return false;
 }
 
 export function usesBun(root: string): boolean {
-  return (
-    existsSync(join(root, 'bun.lockb')) || existsSync(join(root, 'bun.lock'))
-  );
+  if (
+    existsSync(join(root, 'bun.lockb')) ||
+    existsSync(join(root, 'bun.lock'))
+  ) {
+    if (isRunnerInstalled('bun')) {
+      return true;
+    } else {
+      console.warn("bun.lock(b) detected but couldn't find `bun` executable.");
+    }
+  }
+  return false;
+}
+
+function isRunnerInstalled(runner: string) {
+  const bin = process.platform === 'win32' ? 'where.exe' : 'which';
+  return execaSync(bin, [runner]).exitCode === 0;
 }
 
 export async function execCommand(
