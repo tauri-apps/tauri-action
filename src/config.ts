@@ -4,54 +4,48 @@ import path, { join } from 'path';
 import { parse as parseToml } from '@iarna/toml';
 import JSON5 from 'json5';
 
-import { TargetPlatform, TauriConfigV1, TauriConfigV2 } from './types';
+import { TargetPlatform, TauriConfigV2 } from './types';
 
-function _tryParseJsonConfig(
-  contents: string,
-): TauriConfigV1 | TauriConfigV2 | null {
+function _tryParseJsonConfig(contents: string): TauriConfigV2 | null {
   try {
-    const config = JSON.parse(contents) as TauriConfigV1 | TauriConfigV2;
+    const config = JSON.parse(contents) as TauriConfigV2;
     return config;
   } catch (e) {
     // @ts-expect-error Catching errors in typescript is a headache
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const msg = e.message;
     console.error(
-      `Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`,
+      `Couldn't parse --config flag as inline JSON. This error can be ignored if it's a file path. Source: "${msg}"`,
     );
     return null;
   }
 }
 
-function _tryParseJson5Config(
-  contents: string,
-): TauriConfigV1 | TauriConfigV2 | null {
+function _tryParseJson5Config(contents: string): TauriConfigV2 | null {
   try {
-    const config = JSON5.parse<TauriConfigV1 | TauriConfigV2>(contents);
+    const config = JSON5.parse<TauriConfigV2>(contents);
     return config;
   } catch (e) {
     // @ts-expect-error Catching errors in typescript is a headache
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const msg = e.message;
     console.error(
-      `Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`,
+      `Couldn't parse --config flag as inline JSON. This error can be ignored if it's a file path. Source: "${msg}"`,
     );
     return null;
   }
 }
 
-function _tryParseTomlConfig(
-  contents: string,
-): TauriConfigV1 | TauriConfigV2 | null {
+function _tryParseTomlConfig(contents: string): TauriConfigV2 | null {
   try {
-    const config = parseToml(contents) as TauriConfigV1 | TauriConfigV2;
+    const config = parseToml(contents) as unknown as TauriConfigV2;
     return config;
   } catch (e) {
     // @ts-expect-error Catching errors in typescript is a headache
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const msg = e.message;
     console.error(
-      `Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`,
+      `Couldn't parse --config flag as inline JSON. This error can be ignored if it's a file path. Source: "${msg}"`,
     );
     return null;
   }
@@ -60,7 +54,7 @@ function _tryParseTomlConfig(
 function readPlatformConfig(
   tauriDir: string,
   platform: string,
-): TauriConfigV1 | TauriConfigV2 | null {
+): TauriConfigV2 | null {
   let path = join(tauriDir, `tauri.${platform}.conf.json`);
   if (existsSync(path)) {
     const contents = readFileSync(path).toString();
@@ -85,7 +79,7 @@ function readPlatformConfig(
   return null;
 }
 
-function readCustomConfig(customPath: string): TauriConfigV1 | TauriConfigV2 {
+function readCustomConfig(customPath: string): TauriConfigV2 {
   if (!existsSync(customPath)) {
     throw new Error(`Provided config path \`${customPath}\` does not exist.`);
   }
@@ -112,9 +106,6 @@ function readCustomConfig(customPath: string): TauriConfigV1 | TauriConfigV2 {
 }
 
 export class TauriConfig {
-  // Non tauri config properties
-  private _isV2: boolean;
-
   // Required values
   identifier: string;
 
@@ -128,13 +119,8 @@ export class TauriConfig {
   wixLanguage?: string | string[] | { [language: string]: unknown };
   unzippedSigs?: boolean;
 
-  constructor(identifier: string, isV2 = false) {
+  constructor(identifier: string) {
     this.identifier = identifier;
-    this._isV2 = isV2;
-  }
-
-  public isV2(): boolean {
-    return this._isV2;
   }
 
   public static fromBaseConfig(tauriDir: string): TauriConfig {
@@ -144,11 +130,7 @@ export class TauriConfig {
       ).toString();
       const config = _tryParseJsonConfig(contents);
       if (config) {
-        if ('identifier' in config) {
-          return this.fromV2Base(config);
-        } else {
-          return this.fromV1Base(config);
-        }
+        return this.fromV2Base(config);
       }
       console.error(
         "Found tauri.conf.json file but couldn't parse it as JSON.",
@@ -161,11 +143,7 @@ export class TauriConfig {
       ).toString();
       const config = _tryParseJson5Config(contents);
       if (config) {
-        if ('identifier' in config) {
-          return this.fromV2Base(config);
-        } else {
-          return this.fromV1Base(config);
-        }
+        return this.fromV2Base(config);
       }
       console.error(
         "Found tauri.conf.json5 file but couldn't parse it as JSON5.",
@@ -176,11 +154,7 @@ export class TauriConfig {
       const contents = readFileSync(join(tauriDir, 'Tauri.toml')).toString();
       const config = _tryParseTomlConfig(contents);
       if (config) {
-        if ('identifier' in config) {
-          return this.fromV2Base(config);
-        } else {
-          return this.fromV1Base(config);
-        }
+        return this.fromV2Base(config);
       }
       console.error("Found Tauri.toml file but couldn't parse it as TOML.");
     }
@@ -188,29 +162,12 @@ export class TauriConfig {
     throw new Error("Couldn't locate or parse tauri config.");
   }
 
-  private static fromV1Base(config: TauriConfigV1): TauriConfig {
-    if (!config.tauri?.bundle?.identifier) {
-      throw Error('base config has no bundle identifier.');
-    }
-
-    const c = new TauriConfig(config.tauri?.bundle?.identifier, false);
-
-    c.productName = config.package?.productName;
-    c.version = config.package?.version;
-    c.frontendDist = config.build?.distDir;
-    c.beforeBuildCommand = config.build?.beforeBuildCommand;
-    c.rpmRelease = config.tauri.bundle.rpm?.release;
-    c.wixLanguage = config.tauri.bundle.windows?.wix?.language;
-
-    return c;
-  }
-
   private static fromV2Base(config: TauriConfigV2): TauriConfig {
     if (!config.identifier) {
       throw Error('base config has no bundle identifier.');
     }
 
-    const c = new TauriConfig(config.identifier, true);
+    const c = new TauriConfig(config.identifier);
 
     c.productName = config.productName;
     c.mainBinaryName = config.mainBinaryName;
@@ -224,36 +181,21 @@ export class TauriConfig {
     return c;
   }
 
-  private mergeConfig(config: TauriConfigV1 | TauriConfigV2) {
-    if (this._isV2) {
-      const c = config as TauriConfigV2;
-
-      this.identifier = c.identifier ?? this.identifier;
-      this.productName = c.productName ?? this.productName;
-      this.mainBinaryName = c.mainBinaryName ?? this.mainBinaryName;
-      this.version = c.version ?? this.version;
-      this.frontendDist = c.build?.frontendDist ?? this.frontendDist;
-      this.beforeBuildCommand =
-        c.build?.beforeBuildCommand ?? this.beforeBuildCommand;
-      this.rpmRelease = c.bundle?.linux?.rpm?.release ?? this.rpmRelease;
-      this.wixLanguage = c.bundle?.windows?.wix?.language ?? this.wixLanguage;
-      this.unzippedSigs =
-        c.bundle?.createUpdaterArtifacts != null
-          ? c.bundle?.createUpdaterArtifacts === true
-          : this.unzippedSigs;
-    } else {
-      const c = config as TauriConfigV1;
-
-      this.identifier = c.tauri?.bundle?.identifier ?? this.identifier;
-      this.productName = c.package?.productName ?? this.productName;
-      this.version = c.package?.version ?? this.version;
-      this.frontendDist = c.build?.distDir ?? this.frontendDist;
-      this.beforeBuildCommand =
-        c.build?.beforeBuildCommand ?? this.beforeBuildCommand;
-      this.rpmRelease = c.tauri?.bundle?.rpm?.release ?? this.rpmRelease;
-      this.wixLanguage =
-        c.tauri?.bundle?.windows?.wix?.language ?? this.wixLanguage;
-    }
+  private mergeConfig(config: TauriConfigV2) {
+    this.identifier = config.identifier ?? this.identifier;
+    this.productName = config.productName ?? this.productName;
+    this.mainBinaryName = config.mainBinaryName ?? this.mainBinaryName;
+    this.version = config.version ?? this.version;
+    this.frontendDist = config.build?.frontendDist ?? this.frontendDist;
+    this.beforeBuildCommand =
+      config.build?.beforeBuildCommand ?? this.beforeBuildCommand;
+    this.rpmRelease = config.bundle?.linux?.rpm?.release ?? this.rpmRelease;
+    this.wixLanguage =
+      config.bundle?.windows?.wix?.language ?? this.wixLanguage;
+    this.unzippedSigs =
+      config.bundle?.createUpdaterArtifacts != null
+        ? config.bundle?.createUpdaterArtifacts === true
+        : this.unzippedSigs;
   }
 
   public mergePlatformConfig(tauriDir: string, target: TargetPlatform) {
@@ -294,26 +236,12 @@ export class TauriConfig {
       throw new Error("Couldn't parse tauri.conf.json");
     }
 
-    if (this._isV2) {
-      const c = config as TauriConfigV2;
+    config.identifier = this.identifier;
+    config.productName = this.productName;
+    config.version = this.version;
+    config.build!.beforeBuildCommand = this.beforeBuildCommand;
+    config.build!.frontendDist = this.frontendDist;
 
-      c.identifier = this.identifier;
-      c.productName = this.productName;
-      c.version = this.version;
-      c.build!.beforeBuildCommand = this.beforeBuildCommand;
-      c.build!.frontendDist = this.frontendDist;
-
-      writeFileSync(configPath, JSON.stringify(c, null, 2));
-    } else {
-      const c = config as TauriConfigV1;
-
-      c.build!.beforeBuildCommand = this.beforeBuildCommand;
-      c.build!.distDir = this.frontendDist;
-      c.package!.productName = this.productName;
-      c.package!.version = this.version;
-      c.tauri!.bundle!.identifier = this.identifier;
-
-      writeFileSync(configPath, JSON.stringify(c, null, 2));
-    }
+    writeFileSync(configPath, JSON.stringify(config, null, 2));
   }
 }

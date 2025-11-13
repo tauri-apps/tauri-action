@@ -2058,7 +2058,7 @@ const Context = __importStar(__nccwpck_require__(3077));
 const Utils = __importStar(__nccwpck_require__(8399));
 // octokit + plugins
 const core_1 = __nccwpck_require__(1772);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6316);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6363);
 const plugin_paginate_rest_1 = __nccwpck_require__(8633);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
@@ -7678,7 +7678,7 @@ paginateRest.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 6316:
+/***/ 6363:
 /***/ ((module) => {
 
 
@@ -42164,7 +42164,6 @@ async function initProject(root, runner, options) {
 
 ;// CONCATENATED MODULE: ./src/runner.ts
 
-
 class Runner {
     constructor(bin, tauriScript) {
         this.bin = bin;
@@ -42199,21 +42198,7 @@ async function getRunner(root, tauriScript) {
             return new Runner('bun', ['tauri']);
         return new Runner('npm', ['run', 'tauri']);
     }
-    // TODO: Change to v2 after a while.
-    let tag = 'v1';
-    try {
-        const tauriDir = (0,utils/* getTauriDir */.Z0)(root);
-        if (tauriDir) {
-            const baseConf = src_config/* TauriConfig */.K.fromBaseConfig(tauriDir);
-            if (baseConf && baseConf.isV2()) {
-                tag = 'v2';
-            }
-        }
-    }
-    catch {
-        // ignore
-    }
-    await (0,utils/* execCommand */.NK)('npm', ['install', '-g', `@tauri-apps/cli@${tag}`], {
+    await (0,utils/* execCommand */.NK)('npm', ['install', '-g', `@tauri-apps/cli@v2`], {
         cwd: undefined,
     });
     return new Runner('tauri');
@@ -42252,7 +42237,6 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
         mainBinaryName: info.mainBinaryName,
         version: info.version,
         wixLanguage: info.wixLanguage,
-        wixAppVersion: info.wixAppVersion,
         rpmRelease: info.rpmRelease,
     };
     await runner.execTauriCommand(['build'], [...tauriArgs], root, targetInfo.platform === 'macos'
@@ -42260,15 +42244,6 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
             TAURI_BUNDLER_DMG_IGNORE_CI: process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
         }
         : undefined, retryAttempts);
-    // on Linux, the app product name is converted to kebab-case and `()[]{}` will be removed
-    // with tauri-cli 2.0.0-beta.19 deb and appimage will now use the product name as on the other platforms.
-    // with tauri-cli 2.0.0-beta.21 rpm will do too.
-    const linuxFileAppName = app.name
-        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-        .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
-        .replace(/[ _.]/g, '-')
-        .replace(/[()[\]{}]/g, '')
-        .toLowerCase();
     const workspacePath = (0,utils/* getWorkspaceDir */.Lw)(app.tauriPath) ?? app.tauriPath;
     const artifactsPath = (0,external_node_path_.join)((0,utils/* getTargetDir */.d)(workspacePath, info.tauriPath, !!targetPath), targetPath ?? '', profile ? profile : debug ? 'debug' : 'release');
     let artifacts = [];
@@ -42342,44 +42317,6 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
             langs = Object.keys(app.wixLanguage);
         }
         const winArtifacts = [];
-        // wix v1
-        if (app.version != app.wixAppVersion) {
-            langs.forEach((lang) => {
-                winArtifacts.push((0,utils/* createArtifact */.Dg)({
-                    path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`),
-                    name: app.name,
-                    debug,
-                    platform: targetInfo.platform,
-                    arch,
-                    bundle: 'msi',
-                    version: app.version,
-                }), (0,utils/* createArtifact */.Dg)({
-                    path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`),
-                    name: app.name,
-                    debug,
-                    platform: targetInfo.platform,
-                    arch,
-                    bundle: 'msi',
-                    version: app.version,
-                }), (0,utils/* createArtifact */.Dg)({
-                    path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`),
-                    name: app.name,
-                    debug,
-                    platform: targetInfo.platform,
-                    arch,
-                    bundle: 'msi',
-                    version: app.version,
-                }), (0,utils/* createArtifact */.Dg)({
-                    path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`),
-                    name: app.name,
-                    debug,
-                    platform: targetInfo.platform,
-                    arch,
-                    bundle: 'msi',
-                    version: app.version,
-                }));
-            });
-        }
         // wix v2
         langs.forEach((lang) => {
             winArtifacts.push((0,utils/* createArtifact */.Dg)({
@@ -42553,73 +42490,6 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 version: app.version,
             }),
         ];
-        if (app.name != linuxFileAppName) {
-            artifacts.push((0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb`),
-                name: linuxFileAppName,
-                debug,
-                platform: targetInfo.platform,
-                arch: debianArch,
-                bundle: 'deb',
-                version: app.version,
-            }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb.sig`),
-                name: linuxFileAppName,
-                debug,
-                platform: targetInfo.platform,
-                arch: debianArch,
-                bundle: 'deb',
-                version: app.version,
-            }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`),
-                name: linuxFileAppName,
-                debug,
-                platform: targetInfo.platform,
-                arch: rpmArch,
-                bundle: 'rpm',
-                version: app.version,
-            }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`),
-                name: linuxFileAppName,
-                debug,
-                platform: targetInfo.platform,
-                arch: rpmArch,
-                bundle: 'rpm',
-                version: app.version,
-            }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage`),
-                name: linuxFileAppName,
-                debug,
-                platform: targetInfo.platform,
-                arch: appImageArch,
-                bundle: 'appimage',
-                version: app.version,
-            }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.sig`),
-                name: linuxFileAppName,
-                debug,
-                platform: targetInfo.platform,
-                arch: appImageArch,
-                bundle: 'appimage',
-                version: app.version,
-            }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`),
-                name: linuxFileAppName,
-                debug,
-                platform: targetInfo.platform,
-                arch: appImageArch,
-                bundle: 'appimage',
-                version: app.version,
-            }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`),
-                name: linuxFileAppName,
-                debug,
-                platform: targetInfo.platform,
-                arch: appImageArch,
-                bundle: 'appimage',
-                version: app.version,
-            }));
-        }
     }
     if (uploadPlainBinary) {
         const ext = targetInfo.platform === 'windows' ? '.exe' : '';
@@ -42666,7 +42536,7 @@ function _tryParseJsonConfig(contents) {
         // @ts-expect-error Catching errors in typescript is a headache
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const msg = e.message;
-        console.error(`Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`);
+        console.error(`Couldn't parse --config flag as inline JSON. This error can be ignored if it's a file path. Source: "${msg}"`);
         return null;
     }
 }
@@ -42679,7 +42549,7 @@ function _tryParseJson5Config(contents) {
         // @ts-expect-error Catching errors in typescript is a headache
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const msg = e.message;
-        console.error(`Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`);
+        console.error(`Couldn't parse --config flag as inline JSON. This error can be ignored if it's a file path. Source: "${msg}"`);
         return null;
     }
 }
@@ -42692,7 +42562,7 @@ function _tryParseTomlConfig(contents) {
         // @ts-expect-error Catching errors in typescript is a headache
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const msg = e.message;
-        console.error(`Couldn't parse --config flag as inline JSON. This is not an error if it's a file path. Source: "${msg}"`);
+        console.error(`Couldn't parse --config flag as inline JSON. This error can be ignored if it's a file path. Source: "${msg}"`);
         return null;
     }
 }
@@ -42744,24 +42614,15 @@ function readCustomConfig(customPath) {
     throw new Error(`Couldn't parse \`${customPath}\` as ${ext.substring(1)}.`);
 }
 class TauriConfig {
-    constructor(identifier, isV2 = false) {
+    constructor(identifier) {
         this.identifier = identifier;
-        this._isV2 = isV2;
-    }
-    isV2() {
-        return this._isV2;
     }
     static fromBaseConfig(tauriDir) {
         if ((0,fs__WEBPACK_IMPORTED_MODULE_0__.existsSync)((0,path__WEBPACK_IMPORTED_MODULE_1__.join)(tauriDir, 'tauri.conf.json'))) {
             const contents = (0,fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)((0,path__WEBPACK_IMPORTED_MODULE_1__.join)(tauriDir, 'tauri.conf.json')).toString();
             const config = _tryParseJsonConfig(contents);
             if (config) {
-                if ('identifier' in config) {
-                    return this.fromV2Base(config);
-                }
-                else {
-                    return this.fromV1Base(config);
-                }
+                return this.fromV2Base(config);
             }
             console.error("Found tauri.conf.json file but couldn't parse it as JSON.");
         }
@@ -42769,12 +42630,7 @@ class TauriConfig {
             const contents = (0,fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)((0,path__WEBPACK_IMPORTED_MODULE_1__.join)(tauriDir, 'tauri.conf.json5')).toString();
             const config = _tryParseJson5Config(contents);
             if (config) {
-                if ('identifier' in config) {
-                    return this.fromV2Base(config);
-                }
-                else {
-                    return this.fromV1Base(config);
-                }
+                return this.fromV2Base(config);
             }
             console.error("Found tauri.conf.json5 file but couldn't parse it as JSON5.");
         }
@@ -42782,35 +42638,17 @@ class TauriConfig {
             const contents = (0,fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)((0,path__WEBPACK_IMPORTED_MODULE_1__.join)(tauriDir, 'Tauri.toml')).toString();
             const config = _tryParseTomlConfig(contents);
             if (config) {
-                if ('identifier' in config) {
-                    return this.fromV2Base(config);
-                }
-                else {
-                    return this.fromV1Base(config);
-                }
+                return this.fromV2Base(config);
             }
             console.error("Found Tauri.toml file but couldn't parse it as TOML.");
         }
         throw new Error("Couldn't locate or parse tauri config.");
     }
-    static fromV1Base(config) {
-        if (!config.tauri?.bundle?.identifier) {
-            throw Error('base config has no bundle identifier.');
-        }
-        const c = new TauriConfig(config.tauri?.bundle?.identifier, false);
-        c.productName = config.package?.productName;
-        c.version = config.package?.version;
-        c.frontendDist = config.build?.distDir;
-        c.beforeBuildCommand = config.build?.beforeBuildCommand;
-        c.rpmRelease = config.tauri.bundle.rpm?.release;
-        c.wixLanguage = config.tauri.bundle.windows?.wix?.language;
-        return c;
-    }
     static fromV2Base(config) {
         if (!config.identifier) {
             throw Error('base config has no bundle identifier.');
         }
-        const c = new TauriConfig(config.identifier, true);
+        const c = new TauriConfig(config.identifier);
         c.productName = config.productName;
         c.mainBinaryName = config.mainBinaryName;
         c.version = config.version;
@@ -42822,34 +42660,20 @@ class TauriConfig {
         return c;
     }
     mergeConfig(config) {
-        if (this._isV2) {
-            const c = config;
-            this.identifier = c.identifier ?? this.identifier;
-            this.productName = c.productName ?? this.productName;
-            this.mainBinaryName = c.mainBinaryName ?? this.mainBinaryName;
-            this.version = c.version ?? this.version;
-            this.frontendDist = c.build?.frontendDist ?? this.frontendDist;
-            this.beforeBuildCommand =
-                c.build?.beforeBuildCommand ?? this.beforeBuildCommand;
-            this.rpmRelease = c.bundle?.linux?.rpm?.release ?? this.rpmRelease;
-            this.wixLanguage = c.bundle?.windows?.wix?.language ?? this.wixLanguage;
-            this.unzippedSigs =
-                c.bundle?.createUpdaterArtifacts != null
-                    ? c.bundle?.createUpdaterArtifacts === true
-                    : this.unzippedSigs;
-        }
-        else {
-            const c = config;
-            this.identifier = c.tauri?.bundle?.identifier ?? this.identifier;
-            this.productName = c.package?.productName ?? this.productName;
-            this.version = c.package?.version ?? this.version;
-            this.frontendDist = c.build?.distDir ?? this.frontendDist;
-            this.beforeBuildCommand =
-                c.build?.beforeBuildCommand ?? this.beforeBuildCommand;
-            this.rpmRelease = c.tauri?.bundle?.rpm?.release ?? this.rpmRelease;
-            this.wixLanguage =
-                c.tauri?.bundle?.windows?.wix?.language ?? this.wixLanguage;
-        }
+        this.identifier = config.identifier ?? this.identifier;
+        this.productName = config.productName ?? this.productName;
+        this.mainBinaryName = config.mainBinaryName ?? this.mainBinaryName;
+        this.version = config.version ?? this.version;
+        this.frontendDist = config.build?.frontendDist ?? this.frontendDist;
+        this.beforeBuildCommand =
+            config.build?.beforeBuildCommand ?? this.beforeBuildCommand;
+        this.rpmRelease = config.bundle?.linux?.rpm?.release ?? this.rpmRelease;
+        this.wixLanguage =
+            config.bundle?.windows?.wix?.language ?? this.wixLanguage;
+        this.unzippedSigs =
+            config.bundle?.createUpdaterArtifacts != null
+                ? config.bundle?.createUpdaterArtifacts === true
+                : this.unzippedSigs;
     }
     mergePlatformConfig(tauriDir, target) {
         const config = readPlatformConfig(tauriDir, target);
@@ -42882,24 +42706,12 @@ class TauriConfig {
             // This shouldn't happen. Instead the prior call to fromBaseConfig should fail.
             throw new Error("Couldn't parse tauri.conf.json");
         }
-        if (this._isV2) {
-            const c = config;
-            c.identifier = this.identifier;
-            c.productName = this.productName;
-            c.version = this.version;
-            c.build.beforeBuildCommand = this.beforeBuildCommand;
-            c.build.frontendDist = this.frontendDist;
-            (0,fs__WEBPACK_IMPORTED_MODULE_0__.writeFileSync)(configPath, JSON.stringify(c, null, 2));
-        }
-        else {
-            const c = config;
-            c.build.beforeBuildCommand = this.beforeBuildCommand;
-            c.build.distDir = this.frontendDist;
-            c.package.productName = this.productName;
-            c.package.version = this.version;
-            c.tauri.bundle.identifier = this.identifier;
-            (0,fs__WEBPACK_IMPORTED_MODULE_0__.writeFileSync)(configPath, JSON.stringify(c, null, 2));
-        }
+        config.identifier = this.identifier;
+        config.productName = this.productName;
+        config.version = this.version;
+        config.build.beforeBuildCommand = this.beforeBuildCommand;
+        config.build.frontendDist = this.frontendDist;
+        (0,fs__WEBPACK_IMPORTED_MODULE_0__.writeFileSync)(configPath, JSON.stringify(config, null, 2));
     }
 }
 
@@ -53488,7 +53300,6 @@ function getInfo(root, targetInfo, configFlag) {
             console.error('Could not determine package name and version.');
             process.exit(1);
         }
-        const wixAppVersion = version.replace(/[-+]/g, '.');
         if (config.wixLanguage) {
             wixLanguage = config.wixLanguage;
         }
@@ -53501,7 +53312,6 @@ function getInfo(root, targetInfo, configFlag) {
             mainBinaryName: config.mainBinaryName || cargoManifest.package.name,
             version,
             wixLanguage,
-            wixAppVersion,
             rpmRelease,
             unzippedSigs: config.unzippedSigs === true,
         };

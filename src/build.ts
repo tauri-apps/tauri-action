@@ -63,7 +63,6 @@ export async function buildProject(
     mainBinaryName: info.mainBinaryName,
     version: info.version,
     wixLanguage: info.wixLanguage,
-    wixAppVersion: info.wixAppVersion,
     rpmRelease: info.rpmRelease,
   };
 
@@ -79,16 +78,6 @@ export async function buildProject(
       : undefined,
     retryAttempts,
   );
-
-  // on Linux, the app product name is converted to kebab-case and `()[]{}` will be removed
-  // with tauri-cli 2.0.0-beta.19 deb and appimage will now use the product name as on the other platforms.
-  // with tauri-cli 2.0.0-beta.21 rpm will do too.
-  const linuxFileAppName = app.name
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z])([A-Z])(?=[a-z])/g, '$1-$2')
-    .replace(/[ _.]/g, '-')
-    .replace(/[()[\]{}]/g, '')
-    .toLowerCase();
 
   const workspacePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
 
@@ -171,62 +160,6 @@ export async function buildProject(
     }
 
     const winArtifacts: Artifact[] = [];
-
-    // wix v1
-    if (app.version != app.wixAppVersion) {
-      langs.forEach((lang) => {
-        winArtifacts.push(
-          createArtifact({
-            path: join(
-              artifactsPath,
-              `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
-            ),
-            name: app.name,
-            debug,
-            platform: targetInfo.platform,
-            arch,
-            bundle: 'msi',
-            version: app.version,
-          }),
-          createArtifact({
-            path: join(
-              artifactsPath,
-              `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`,
-            ),
-            name: app.name,
-            debug,
-            platform: targetInfo.platform,
-            arch,
-            bundle: 'msi',
-            version: app.version,
-          }),
-          createArtifact({
-            path: join(
-              artifactsPath,
-              `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
-            ),
-            name: app.name,
-            debug,
-            platform: targetInfo.platform,
-            arch,
-            bundle: 'msi',
-            version: app.version,
-          }),
-          createArtifact({
-            path: join(
-              artifactsPath,
-              `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
-            ),
-            name: app.name,
-            debug,
-            platform: targetInfo.platform,
-            arch,
-            bundle: 'msi',
-            version: app.version,
-          }),
-        );
-      });
-    }
 
     // wix v2
     langs.forEach((lang) => {
@@ -464,107 +397,6 @@ export async function buildProject(
         version: app.version,
       }),
     ];
-
-    if (app.name != linuxFileAppName) {
-      artifacts.push(
-        createArtifact({
-          path: join(
-            artifactsPath,
-            `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb`,
-          ),
-          name: linuxFileAppName,
-          debug,
-          platform: targetInfo.platform,
-          arch: debianArch,
-          bundle: 'deb',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(
-            artifactsPath,
-            `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb.sig`,
-          ),
-          name: linuxFileAppName,
-          debug,
-          platform: targetInfo.platform,
-          arch: debianArch,
-          bundle: 'deb',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(
-            artifactsPath,
-            `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
-          ),
-          name: linuxFileAppName,
-          debug,
-          platform: targetInfo.platform,
-          arch: rpmArch,
-          bundle: 'rpm',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(
-            artifactsPath,
-            `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`,
-          ),
-          name: linuxFileAppName,
-          debug,
-          platform: targetInfo.platform,
-          arch: rpmArch,
-          bundle: 'rpm',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(
-            artifactsPath,
-            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage`,
-          ),
-          name: linuxFileAppName,
-          debug,
-          platform: targetInfo.platform,
-          arch: appImageArch,
-          bundle: 'appimage',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(
-            artifactsPath,
-            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.sig`,
-          ),
-          name: linuxFileAppName,
-          debug,
-          platform: targetInfo.platform,
-          arch: appImageArch,
-          bundle: 'appimage',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(
-            artifactsPath,
-            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`,
-          ),
-          name: linuxFileAppName,
-          debug,
-          platform: targetInfo.platform,
-          arch: appImageArch,
-          bundle: 'appimage',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(
-            artifactsPath,
-            `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
-          ),
-          name: linuxFileAppName,
-          debug,
-          platform: targetInfo.platform,
-          arch: appImageArch,
-          bundle: 'appimage',
-          version: app.version,
-        }),
-      );
-    }
   }
 
   if (uploadPlainBinary) {

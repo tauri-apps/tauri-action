@@ -459,8 +459,6 @@ export function getInfo(
       process.exit(1);
     }
 
-    const wixAppVersion = version.replace(/[-+]/g, '.');
-
     if (config.wixLanguage) {
       wixLanguage = config.wixLanguage;
     }
@@ -475,7 +473,6 @@ export function getInfo(
       mainBinaryName: config.mainBinaryName || cargoManifest.package.name,
       version,
       wixLanguage,
-      wixAppVersion,
       rpmRelease,
       unzippedSigs: config.unzippedSigs === true,
     };
