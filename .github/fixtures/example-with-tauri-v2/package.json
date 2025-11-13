@@ -7,8 +7,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "@tauri-apps/cli": "^2.9.4"
-  }
+  "license": "MIT"
 }
