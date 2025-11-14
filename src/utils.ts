@@ -142,10 +142,10 @@ export function createArtifact({
   const ext = exts[0] || extname(path);
   let workflowArtifactName;
   if (
-    bundle === 'binary' ||
+    name === 'binary' ||
     ['.app', '.dmg', '.exe', '.msi', '.deb', '.rpm', '.AppImage'].includes(ext)
   ) {
-    workflowArtifactName = `${platform}-${arch}-${bundle}`;
+    workflowArtifactName = `${platform}-${arch}-${bundle || name}`;
   }
 
   return {
