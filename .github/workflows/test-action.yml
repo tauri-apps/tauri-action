@@ -81,5 +81,5 @@ jobs:
           updaterJsonKeepUniversal: true
           retryAttempts: 1
           uploadPlainBinary: true
-          uploadWorkflowArtifacts: true
+          uploadWorkflowArtifacts: '[name]_${{ github.sha }}_[platform]_[arch]_[bundle]' # true
       # assetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[setup]x[ext]'
