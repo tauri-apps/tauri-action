@@ -110,7 +110,7 @@ async function run(): Promise<void> {
         if (artifact.workflowArtifactName) {
           let paths = [artifact.path];
           if (artifact.ext === '.app') {
-            paths = globbySync('**/*', { cwd: dirname(artifact.path) });
+            paths = globbySync('**/*', { cwd: artifact.path });
           }
           await ghartifact
             .uploadArtifact(
