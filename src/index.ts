@@ -10,7 +10,13 @@ import { getOrCreateRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
-import { execCommand, getInfo, getTargetInfo, retry } from './utils';
+import {
+  execCommand,
+  getAssetName,
+  getInfo,
+  getTargetInfo,
+  retry,
+} from './utils';
 
 import type { Artifact, BuildOptions } from './types';
 import { globbySync } from 'globby';
@@ -46,9 +52,14 @@ async function run(): Promise<void> {
       'https://api.github.com';
     const isGitea = core.getBooleanInput('isGitea');
     const generateReleaseNotes = core.getBooleanInput('generateReleaseNotes');
-    const uploadWorkflowArtifacts = core.getBooleanInput(
-      'uploadWorkflowArtifacts',
-    );
+    let uploadWorkflowArtifacts: boolean | string = false;
+    try {
+      uploadWorkflowArtifacts = core.getBooleanInput('uploadWorkflowArtifacts');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      uploadWorkflowArtifacts =
+        core.getInput('uploadWorkflowArtifacts') || false;
+    }
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -106,20 +117,30 @@ async function run(): Promise<void> {
 
     if (uploadWorkflowArtifacts) {
       for (const artifact of artifacts) {
-        const workflowArtifactName = artifact.workflowArtifactName;
-        if (workflowArtifactName) {
+        if (artifact.workflowArtifactName) {
+          let workflowArtifactName = artifact.workflowArtifactName;
+          if (typeof uploadWorkflowArtifacts === 'string') {
+            workflowArtifactName = getAssetName(
+              artifact,
+              uploadWorkflowArtifacts,
+            );
+          }
+
           let paths = [artifact.path];
-          let basedir = dirname(artifact.path);
           if (artifact.ext === '.app') {
-            basedir = artifact.path;
             paths = globbySync('**/*', { cwd: artifact.path, absolute: true });
           }
           console.log(JSON.stringify(paths));
           await retry(
             () =>
-              GHArtifact.uploadArtifact(workflowArtifactName, paths, basedir, {
-                compressionLevel: artifact.ext === '.app' ? 6 : 0,
-              }),
+              GHArtifact.uploadArtifact(
+                workflowArtifactName,
+                paths,
+                dirname(artifact.path),
+                {
+                  compressionLevel: artifact.ext === '.app' ? 6 : 0,
+                },
+              ),
             retryAttempts,
           );
         }

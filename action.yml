@@ -53,7 +53,7 @@ inputs:
     description: 'Whether to upload the plain executable file to the GitHub Releases'
     default: 'false'
   uploadWorkflowArtifacts:
-    description: 'Whether to upload the bundles and executables as workflow artifacts. Independent from the release configs.'
+    description: 'Whether to upload the bundles and executables as workflow artifacts. Independent from the release configs. Can be a string to set a name pattern.'
     default: 'false'
   generateReleaseNotes:
     description: "Whether to use GitHub's Release Notes API to generate the release title and body. If `releaseName` is set, it will overwrite the generated title. If `releaseBody` is set, it will be pre-pended to the automatically generated notes. This action is not responsible for the generated content."
