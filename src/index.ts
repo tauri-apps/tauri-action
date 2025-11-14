@@ -4,6 +4,7 @@ import { resolve, dirname, basename } from 'node:path';
 import * as core from '@actions/core';
 import { context } from '@actions/github';
 import GHArtifact from '@actions/artifact';
+import { globbySync } from 'globby';
 import stringArgv from 'string-argv';
 
 import { getOrCreateRelease } from './create-release';
@@ -19,7 +20,6 @@ import {
 } from './utils';
 
 import type { Artifact, BuildOptions } from './types';
-import { globbySync } from 'globby';
 
 async function run(): Promise<void> {
   try {
