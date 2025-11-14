@@ -145,7 +145,7 @@ export function createArtifact({
     name === 'binary' ||
     ['.app', '.dmg', '.exe', '.msi', '.deb', '.rpm', '.AppImage'].includes(ext)
   ) {
-    workflowArtifactName = `${platform}-${arch}-${bundle || name}`;
+    workflowArtifactName = `${platform}-${arch}-${bundle}`;
   }
 
   return {
