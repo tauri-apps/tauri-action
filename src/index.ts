@@ -13,6 +13,7 @@ import { buildProject } from './build';
 import { execCommand, getInfo, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions } from './types';
+import { globbySync } from 'globby';
 
 async function run(): Promise<void> {
   try {
@@ -106,17 +107,23 @@ async function run(): Promise<void> {
     if (uploadWorkflowArtifacts) {
       const ghartifact = new DefaultArtifactClient();
       for (const artifact of artifacts) {
-        console.log(JSON.stringify(artifact));
         if (artifact.workflowArtifactName) {
-          console.log('has workflowArtifactName');
+          let paths = [artifact.path];
+          if (artifact.ext === '.app') {
+            paths = globbySync('**/*', { cwd: dirname(artifact.path) });
+          }
           await ghartifact
             .uploadArtifact(
               artifact.workflowArtifactName,
-              [artifact.path],
+              paths,
               dirname(artifact.path),
-              { compressionLevel: artifact.ext === '.app' ? 6 : 0 },
+              {
+                compressionLevel: artifact.ext === '.app' ? 6 : 0,
+              },
             )
-            .catch((e) => console.error(`Error uploading artifact: ${e}`));
+            .catch((e) =>
+              console.error(`Error uploading workflow artifact: ${e}`),
+            );
         }
       }
     }
