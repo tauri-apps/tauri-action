@@ -3,14 +3,14 @@ import { resolve, dirname, basename } from 'node:path';
 
 import * as core from '@actions/core';
 import { context } from '@actions/github';
-import { DefaultArtifactClient } from '@actions/artifact';
+import GHArtifact from '@actions/artifact';
 import stringArgv from 'string-argv';
 
 import { getOrCreateRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
-import { execCommand, getInfo, getTargetInfo } from './utils';
+import { execCommand, getInfo, getTargetInfo, retry } from './utils';
 
 import type { Artifact, BuildOptions } from './types';
 import { globbySync } from 'globby';
@@ -105,25 +105,26 @@ async function run(): Promise<void> {
     core.setOutput('appVersion', info.version);
 
     if (uploadWorkflowArtifacts) {
-      const ghartifact = new DefaultArtifactClient();
       for (const artifact of artifacts) {
-        if (artifact.workflowArtifactName) {
+        const workflowArtifactName = artifact.workflowArtifactName;
+        if (workflowArtifactName) {
           let paths = [artifact.path];
           if (artifact.ext === '.app') {
             paths = globbySync('**/*', { cwd: artifact.path });
           }
-          await ghartifact
-            .uploadArtifact(
-              artifact.workflowArtifactName,
-              paths,
-              dirname(artifact.path),
-              {
-                compressionLevel: artifact.ext === '.app' ? 6 : 0,
-              },
-            )
-            .catch((e) =>
-              console.error(`Error uploading workflow artifact: ${e}`),
-            );
+          console.log(JSON.stringify(paths));
+          await retry(
+            () =>
+              GHArtifact.uploadArtifact(
+                workflowArtifactName,
+                paths,
+                dirname(artifact.path),
+                {
+                  compressionLevel: artifact.ext === '.app' ? 6 : 0,
+                },
+              ),
+            retryAttempts,
+          );
         }
       }
     }
