@@ -398,7 +398,7 @@ export async function buildProject(
       createArtifact({
         path: join(artifactsPath, `${app.mainBinaryName}${ext}`),
         name: 'binary', // app.mainBinaryName,
-        bundle: '',
+        bundle: 'bin',
         debug,
         platform: targetInfo.platform,
         arch,

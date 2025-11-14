@@ -157,8 +157,8 @@ export function createArtifact({
     bundle,
     ext,
     version,
-    setup: bundle == 'nsis' ? '-setup' : '',
-    _setup: bundle == 'nsis' ? '_setup' : '',
+    setup: bundle === 'nsis' ? '-setup' : '',
+    _setup: bundle === 'nsis' ? '_setup' : '',
     workflowArtifactName,
   };
 }
