@@ -3,23 +3,16 @@ import { resolve, dirname, basename } from 'node:path';
 
 import * as core from '@actions/core';
 import { context } from '@actions/github';
-import GHArtifact from '@actions/artifact';
-import { globbySync } from 'globby';
 import stringArgv from 'string-argv';
 
 import { getOrCreateRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
-import {
-  execCommand,
-  getAssetName,
-  getInfo,
-  getTargetInfo,
-  retry,
-} from './utils';
+import { execCommand, getInfo, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions } from './types';
+import { uploadWorkflowArtifacts } from './upload-workflow-artifacts';
 
 async function run(): Promise<void> {
   try {
@@ -52,12 +45,14 @@ async function run(): Promise<void> {
       'https://api.github.com';
     const isGitea = core.getBooleanInput('isGitea');
     const generateReleaseNotes = core.getBooleanInput('generateReleaseNotes');
-    let uploadWorkflowArtifacts: boolean | string = false;
+    let shouldUploadWorkflowArtifacts: boolean | string = false;
     try {
-      uploadWorkflowArtifacts = core.getBooleanInput('uploadWorkflowArtifacts');
+      shouldUploadWorkflowArtifacts = core.getBooleanInput(
+        'uploadWorkflowArtifacts',
+      );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      uploadWorkflowArtifacts =
+      shouldUploadWorkflowArtifacts =
         core.getInput('uploadWorkflowArtifacts') || false;
     }
 
@@ -95,7 +90,7 @@ async function run(): Promise<void> {
     );
 
     if (artifacts.length === 0) {
-      if (releaseId || tagName || uploadWorkflowArtifacts) {
+      if (releaseId || tagName || shouldUploadWorkflowArtifacts) {
         throw new Error('No artifacts were found.');
       } else {
         console.log(
@@ -115,36 +110,13 @@ async function run(): Promise<void> {
     const info = getInfo(projectPath, targetInfo, configArg);
     core.setOutput('appVersion', info.version);
 
-    if (uploadWorkflowArtifacts) {
-      for (const artifact of artifacts) {
-        if (artifact.workflowArtifactName) {
-          let workflowArtifactName = artifact.workflowArtifactName;
-          if (typeof uploadWorkflowArtifacts === 'string') {
-            workflowArtifactName = getAssetName(
-              artifact,
-              uploadWorkflowArtifacts,
-            );
-          }
-
-          let paths = [artifact.path];
-          if (artifact.ext === '.app') {
-            paths = globbySync('**/*', { cwd: artifact.path, absolute: true });
-          }
-          console.log(JSON.stringify(paths));
-          await retry(
-            () =>
-              GHArtifact.uploadArtifact(
-                workflowArtifactName,
-                paths,
-                dirname(artifact.path),
-                {
-                  compressionLevel: artifact.ext === '.app' ? 6 : 0,
-                },
-              ),
-            retryAttempts,
-          );
-        }
-      }
+    // Since artifacts are .zip archives we can do this before the .tar.gz step below.
+    if (shouldUploadWorkflowArtifacts) {
+      await uploadWorkflowArtifacts(
+        artifacts,
+        shouldUploadWorkflowArtifacts,
+        retryAttempts,
+      );
     }
 
     // Other steps may benefit from this so we do this whether or not we want to upload it.
