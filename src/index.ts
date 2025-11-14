@@ -109,20 +109,17 @@ async function run(): Promise<void> {
         const workflowArtifactName = artifact.workflowArtifactName;
         if (workflowArtifactName) {
           let paths = [artifact.path];
+          let basedir = dirname(artifact.path);
           if (artifact.ext === '.app') {
+            basedir = artifact.path;
             paths = globbySync('**/*', { cwd: artifact.path });
           }
           console.log(JSON.stringify(paths));
           await retry(
             () =>
-              GHArtifact.uploadArtifact(
-                workflowArtifactName,
-                paths,
-                dirname(artifact.path),
-                {
-                  compressionLevel: artifact.ext === '.app' ? 6 : 0,
-                },
-              ),
+              GHArtifact.uploadArtifact(workflowArtifactName, paths, basedir, {
+                compressionLevel: artifact.ext === '.app' ? 6 : 0,
+              }),
             retryAttempts,
           );
         }
