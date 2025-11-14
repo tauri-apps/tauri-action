@@ -112,7 +112,7 @@ async function run(): Promise<void> {
           let basedir = dirname(artifact.path);
           if (artifact.ext === '.app') {
             basedir = artifact.path;
-            paths = globbySync('**/*', { cwd: artifact.path });
+            paths = globbySync('**/*', { cwd: artifact.path, absolute: true });
           }
           console.log(JSON.stringify(paths));
           await retry(
