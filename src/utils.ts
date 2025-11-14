@@ -141,7 +141,10 @@ export function createArtifact({
   const exts = extensions.filter((s) => baseName.includes(s));
   const ext = exts[0] || extname(path);
   let workflowArtifactName;
-  if (bundle === 'binary' || ext === `.${bundle}`) {
+  if (
+    bundle === 'binary' ||
+    ['.app', '.dmg', '.exe', '.msi', '.deb', '.rpm', '.AppImage'].includes(ext)
+  ) {
     workflowArtifactName = `${platform}-${arch}-${bundle}`;
   }
 

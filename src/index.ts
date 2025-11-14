@@ -103,6 +103,24 @@ async function run(): Promise<void> {
     const info = getInfo(projectPath, targetInfo, configArg);
     core.setOutput('appVersion', info.version);
 
+    if (uploadWorkflowArtifacts) {
+      const ghartifact = new DefaultArtifactClient();
+      for (const artifact of artifacts) {
+        console.log(JSON.stringify(artifact));
+        if (artifact.workflowArtifactName) {
+          console.log('has workflowArtifactName');
+          await ghartifact
+            .uploadArtifact(
+              artifact.workflowArtifactName,
+              [artifact.path],
+              dirname(artifact.path),
+              { compressionLevel: artifact.ext === '.app' ? 6 : 0 },
+            )
+            .catch((e) => console.error(`Error uploading artifact: ${e}`));
+        }
+      }
+    }
+
     // Other steps may benefit from this so we do this whether or not we want to upload it.
     if (targetInfo.platform === 'macos') {
       let i = 0;
@@ -131,25 +149,6 @@ async function run(): Promise<void> {
           artifacts.splice(i, 1);
         }
         i++;
-      }
-    }
-
-    // TODO: if uploadPlainBinary
-    if (uploadWorkflowArtifacts) {
-      const ghartifact = new DefaultArtifactClient();
-      for (const artifact of artifacts) {
-        console.log(JSON.stringify(artifact));
-        if (artifact.workflowArtifactName) {
-          console.log('has workflowArtifactName');
-          await ghartifact
-            .uploadArtifact(
-              artifact.workflowArtifactName,
-              [artifact.path],
-              dirname(artifact.path),
-              { compressionLevel: artifact.ext === '.app' ? 6 : 0 },
-            )
-            .catch((e) => console.error(`Error uploading artifact: ${e}`));
-        }
       }
     }
 
