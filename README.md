@@ -143,6 +143,7 @@ These inputs allow you to modify the GitHub release.
   - `[_setup]` behaves like `[setup]` but with `_setup` instead of `-setup`.
   - `[bundle]` will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin` (for `uploadPlainBinary`). This is likely only useful for `uploadWorkflowArtifacts` and _not_ for `assetNamePattern` because of its conflict with `[ext]`.
 - Gitea support is experimental. It was implemented and tested solely by the community.
+- `uploadWorkflowArtifacts` will likely be removed once [actions/upload-artifact#331](https://github.com/actions/upload-artifact/issues/331) lands.
 
 ## Partners
 
