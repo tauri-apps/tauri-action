@@ -43,8 +43,8 @@ importers:
         specifier: 9.39.1
         version: 9.39.1
       '@types/node':
-        specifier: 24.10.0
-        version: 24.10.0
+        specifier: 24.10.1
+        version: 24.10.1
       '@vercel/ncc':
         specifier: 0.38.4
         version: 0.38.4
@@ -395,8 +395,8 @@ packages:
   '@types/node-fetch@2.6.13':
     resolution: {integrity: sha512-QGpRVpzSaUs30JBSGPjOg4Uveu384erbHBoT1zeONvyCfwQxIkUshLAOqN/k9EjGviPRmWTTe6aH2qySWKTVSw==}
 
-  '@types/node@24.10.0':
-    resolution: {integrity: sha512-qzQZRBqkFsYyaSWXuEHc2WR9c0a0CXwiE5FWUvn7ZM+vdy1uZLfCunD38UzhuB7YN/J11ndbDBcTmOdxJo9Q7A==}
+  '@types/node@24.10.1':
+    resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
 
   '@types/tunnel@0.0.3':
     resolution: {integrity: sha512-sOUTGn6h1SfQ+gbgqC364jLFBw2lnFqkgF3q0WovEHRLMrVD1sd5aufqi/aJObLekJO+Aq5z646U4Oxy6shXMA==}
@@ -1935,9 +1935,9 @@ snapshots:
       - encoding
       - mocha
 
-  '@covector/assemble@0.12.0(mocha@10.4.0)':
+  '@covector/assemble@0.12.0':
     dependencies:
-      '@covector/command': 0.8.0(mocha@10.4.0)
+      '@covector/command': 0.8.0
       '@covector/files': 0.8.0
       effection: 2.0.8(mocha@10.4.0)
       js-yaml: 4.1.0
@@ -1948,10 +1948,9 @@ snapshots:
       unified: 9.2.2
     transitivePeerDependencies:
       - encoding
-      - mocha
       - supports-color
 
-  '@covector/changelog@0.12.0(mocha@10.4.0)':
+  '@covector/changelog@0.12.0':
     dependencies:
       '@covector/files': 0.8.0
       effection: 2.0.8(mocha@10.4.0)
@@ -1961,16 +1960,14 @@ snapshots:
       unified: 9.2.2
     transitivePeerDependencies:
       - encoding
-      - mocha
       - supports-color
 
-  '@covector/command@0.8.0(mocha@10.4.0)':
+  '@covector/command@0.8.0':
     dependencies:
-      '@effection/process': 2.1.4(mocha@10.4.0)
+      '@effection/process': 2.1.4
       effection: 2.0.8(mocha@10.4.0)
     transitivePeerDependencies:
       - encoding
-      - mocha
 
   '@covector/files@0.8.0':
     dependencies:
@@ -2017,8 +2014,10 @@ snapshots:
     dependencies:
       effection: 2.0.8(mocha@10.4.0)
       mocha: 10.4.0
+    transitivePeerDependencies:
+      - encoding
 
-  '@effection/process@2.1.4(mocha@10.4.0)':
+  '@effection/process@2.1.4':
     dependencies:
       cross-spawn: 7.0.6
       ctrlc-windows: 2.2.0
@@ -2026,7 +2025,6 @@ snapshots:
       shellwords: 0.1.1
     transitivePeerDependencies:
       - encoding
-      - mocha
 
   '@effection/stream@2.0.6':
     dependencies:
@@ -2228,16 +2226,16 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 24.10.0
+      '@types/node': 24.10.1
       form-data: 4.0.4
 
-  '@types/node@24.10.0':
+  '@types/node@24.10.1':
     dependencies:
       undici-types: 7.16.0
 
   '@types/tunnel@0.0.3':
     dependencies:
-      '@types/node': 24.10.0
+      '@types/node': 24.10.1
 
   '@types/unist@2.0.11': {}
 
@@ -2539,9 +2537,9 @@ snapshots:
     dependencies:
       '@clack/prompts': 0.7.0
       '@covector/apply': 0.10.0(mocha@10.4.0)
-      '@covector/assemble': 0.12.0(mocha@10.4.0)
-      '@covector/changelog': 0.12.0(mocha@10.4.0)
-      '@covector/command': 0.8.0(mocha@10.4.0)
+      '@covector/assemble': 0.12.0
+      '@covector/changelog': 0.12.0
+      '@covector/command': 0.8.0
       '@covector/files': 0.8.0
       effection: 2.0.8(mocha@10.4.0)
       globby: 11.1.0
