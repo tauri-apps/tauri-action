@@ -78,7 +78,6 @@ jobs:
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           args: ${{ matrix.args }}
-          updaterJsonKeepUniversal: true
           retryAttempts: 1
           uploadPlainBinary: true
           uploadWorkflowArtifacts: true

@@ -21,9 +21,6 @@ async function run(): Promise<void> {
       core.getInput('projectPath') || process.argv[2],
     );
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
-    const updaterJsonKeepUniversal = core.getBooleanInput(
-      'updaterJsonKeepUniversal',
-    );
     const retryAttempts = parseInt(core.getInput('retryAttempts') || '0', 10);
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
@@ -210,7 +207,6 @@ async function run(): Promise<void> {
           targetInfo,
           info.unzippedSigs,
           updaterJsonPreferNsis,
-          updaterJsonKeepUniversal,
           retryAttempts,
           githubBaseUrl,
           isGitea,

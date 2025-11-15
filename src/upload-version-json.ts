@@ -34,7 +34,6 @@ export async function uploadVersionJSON(
   targetInfo: TargetInfo,
   unzippedSig: boolean,
   updaterJsonPreferNsis: boolean,
-  updaterJsonKeepUniversal: boolean,
   retryAttempts: number,
   githubBaseUrl: string,
   isGitea: boolean,
@@ -230,12 +229,10 @@ export async function uploadVersionJSON(
           };
         }
       }
-      if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
-        (versionContent.platforms[`${os}-${arch}`] as unknown) = {
-          signature: readFileSync(signatureFile.path).toString(),
-          url: updaterFileDownloadUrl,
-        };
-      }
+      (versionContent.platforms[`${os}-${arch}`] as unknown) = {
+        signature: readFileSync(signatureFile.path).toString(),
+        url: updaterFileDownloadUrl,
+      };
     }
 
     // This is for the new `{os}-{arch}-{installer}` format
@@ -254,14 +251,12 @@ export async function uploadVersionJSON(
         };
       }
     }
-    if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
-      (versionContent.platforms[
-        `${os}-${arch}-${signatureFile.bundle}`
-      ] as unknown) = {
-        signature: readFileSync(signatureFile.path).toString(),
-        url: updaterFileDownloadUrl,
-      };
-    }
+    (versionContent.platforms[
+      `${os}-${arch}-${signatureFile.bundle}`
+    ] as unknown) = {
+      signature: readFileSync(signatureFile.path).toString(),
+      url: updaterFileDownloadUrl,
+    };
   }
 
   writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
