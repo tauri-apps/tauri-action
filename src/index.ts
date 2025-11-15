@@ -27,7 +27,7 @@ async function run(): Promise<void> {
     const retryAttempts = parseInt(core.getInput('retryAttempts') || '0', 10);
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
-    const assetNamePattern = core.getInput('assetNamePattern');
+    const releaseAssetNamePattern = core.getInput('releaseAssetNamePattern');
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
@@ -45,16 +45,12 @@ async function run(): Promise<void> {
       'https://api.github.com';
     const isGitea = core.getBooleanInput('isGitea');
     const generateReleaseNotes = core.getBooleanInput('generateReleaseNotes');
-    let shouldUploadWorkflowArtifacts: boolean | string = false;
-    try {
-      shouldUploadWorkflowArtifacts = core.getBooleanInput(
-        'uploadWorkflowArtifacts',
-      );
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      shouldUploadWorkflowArtifacts =
-        core.getInput('uploadWorkflowArtifacts') || false;
-    }
+    const shouldUploadWorkflowArtifacts = core.getBooleanInput(
+      'uploadWorkflowArtifacts',
+    );
+    const workflowArtifactsNamePattern =
+      core.getInput('workflowArtifactsNamePattern') ||
+      '[platform]-[arch]-[bundle]';
     const uplodaUpdaterSignatures = core.getBooleanInput(
       'uploadUpdaterSignatures',
     );
@@ -117,7 +113,7 @@ async function run(): Promise<void> {
     if (shouldUploadWorkflowArtifacts) {
       await uploadWorkflowArtifacts(
         artifacts,
-        shouldUploadWorkflowArtifacts,
+        workflowArtifactsNamePattern,
         retryAttempts,
       );
     }
@@ -198,7 +194,7 @@ async function run(): Promise<void> {
         retryAttempts,
         githubBaseUrl,
         isGitea,
-        assetNamePattern,
+        releaseAssetNamePattern,
         uplodaUpdaterSignatures,
       );
 
@@ -218,7 +214,7 @@ async function run(): Promise<void> {
           retryAttempts,
           githubBaseUrl,
           isGitea,
-          assetNamePattern,
+          releaseAssetNamePattern,
         );
       }
     } else {

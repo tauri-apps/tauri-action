@@ -13,7 +13,7 @@ export async function uploadAssets(
   retryAttempts: number,
   githubBaseUrl: string,
   isGitea: boolean,
-  assetNamePattern?: string,
+  releaseAssetNamePattern?: string,
   uploadUpdaterSignatures?: boolean,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
@@ -46,7 +46,7 @@ export async function uploadAssets(
       'content-length': contentLength(asset.path),
     };
 
-    const assetName = getAssetName(asset, assetNamePattern);
+    const assetName = getAssetName(asset, releaseAssetNamePattern);
 
     const existingAsset = existingAssets.find(
       (a) =>
