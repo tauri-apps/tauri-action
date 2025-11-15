@@ -55,6 +55,9 @@ async function run(): Promise<void> {
       shouldUploadWorkflowArtifacts =
         core.getInput('uploadWorkflowArtifacts') || false;
     }
+    const uplodaUpdaterSignatures = core.getBooleanInput(
+      'uploadUpdaterSignatures',
+    );
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -196,6 +199,7 @@ async function run(): Promise<void> {
         githubBaseUrl,
         isGitea,
         assetNamePattern,
+        uplodaUpdaterSignatures,
       );
 
       if (includeUpdaterJson) {

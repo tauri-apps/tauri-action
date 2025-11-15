@@ -14,6 +14,7 @@ export async function uploadAssets(
   githubBaseUrl: string,
   isGitea: boolean,
   assetNamePattern?: string,
+  uploadUpdaterSignatures?: boolean,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -36,6 +37,10 @@ export async function uploadAssets(
   const contentLength = (filePath: string) => fs.statSync(filePath).size;
 
   for (const asset of assets) {
+    if (!uploadUpdaterSignatures && asset.ext.endsWith('.sig')) {
+      continue;
+    }
+
     const headers = {
       'content-type': 'application/zip',
       'content-length': contentLength(asset.path),
