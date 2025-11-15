@@ -132,6 +132,7 @@ export async function uploadVersionJSON(
   let hasNativeArm;
   let hasNativeX64;
   for (const artifact of artifacts) {
+    console.log('plain', JSON.stringify(artifact));
     if (artifact.ext === '.app.tar.gz' && artifact.arch === 'universal') {
       const arm = ghAssetName(
         { ...artifact, arch: 'aarch64' },
@@ -141,8 +142,11 @@ export async function uploadVersionJSON(
         { ...artifact, arch: 'x86_64' },
         releaseAssetNamePattern,
       );
+      console.log('arm', JSON.stringify(arm));
+      console.log('x86', JSON.stringify(x86));
       hasNativeArm = downloadUrls.has(arm);
       hasNativeX64 = downloadUrls.has(x86);
+      console.log('has', hasNativeArm, hasNativeX64);
     }
 
     const assetName = ghAssetName(artifact, releaseAssetNamePattern);
