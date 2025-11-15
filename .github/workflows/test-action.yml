@@ -15,6 +15,10 @@ jobs:
         include:
           - platform: 'macos-latest'
             args: '--verbose --target universal-apple-darwin --debug'
+          - platform: 'macos-latest'
+            args: '--verbose --target aarch64-apple-darwin --debug'
+          - platform: 'macos-latest'
+            args: '--verbose --target x86_64-apple-darwin --debug'
           - platform: 'ubuntu-22.04'
             args: '--verbose --debug'
           - platform: 'windows-latest'
