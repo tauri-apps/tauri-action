@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.5.25]
+
+- [`3c63ddb`](https://www.github.com/tauri-apps/tauri-action/commit/3c63ddbd5319f3421dd2113943e2a4b33f049475) Fix default file name pattern to match tauri's file names again.
+
 ## \[0.5.24]
 
 - [`c5d6ac7`](https://www.github.com/tauri-apps/tauri-action/commit/c5d6ac7494763a167f5acf6e6c73664fc7360468) ([#1152](https://www.github.com/tauri-apps/tauri-action/pull/1152) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) The `latest.json` file now contains `{os}-{arch}-{installer}` keys as well to support multiple installer formats per platform. This requires `tauri-plugin-updater` version `2.10.0` or above.
