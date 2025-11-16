@@ -595,4 +595,14 @@ export function deleteGiteaReleaseAsset(
   );
 }
 
+export function ghAssetName(
+  artifact: Artifact,
+  releaseAssetNamePattern?: string,
+) {
+  return getAssetName(artifact, releaseAssetNamePattern)
+    .trim()
+    .replace(/[^a-zA-Z0-9_-]/g, '.')
+    .replace(/\.\./g, '.');
+}
+
 // TODO: Properly resolve the eslint issues in this file.

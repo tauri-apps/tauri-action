@@ -2,9 +2,13 @@ import fs from 'node:fs';
 
 import { getOctokit } from '@actions/github';
 
-import { deleteGiteaReleaseAsset, getAssetName, retry } from './utils';
+import {
+  deleteGiteaReleaseAsset,
+  getAssetName,
+  ghAssetName,
+  retry,
+} from './utils';
 import type { Artifact } from './types';
-import { basename } from 'node:path';
 
 export async function uploadAssets(
   owner: string,
@@ -34,8 +38,6 @@ export async function uploadAssets(
     })
   ).data;
 
-  console.log(JSON.stringify(existingAssets));
-
   // Determine content-length for header to upload asset
   const contentLength = (filePath: string) => fs.statSync(filePath).size;
 
@@ -50,16 +52,10 @@ export async function uploadAssets(
     };
 
     const assetName = getAssetName(asset, releaseAssetNamePattern);
+    const assetNameGH = ghAssetName(asset, releaseAssetNamePattern);
 
     const existingAsset = existingAssets.find(
-      (a) =>
-        a.name ===
-        assetName
-          .trim()
-          .replace(/[ ()[\]{}]/g, '.')
-          .replace(/\.\./g, '.')
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, ''),
+      (a) => a.label === assetName || a.name === assetNameGH,
     );
 
     if (existingAsset) {
@@ -88,13 +84,16 @@ export async function uploadAssets(
         github.rest.repos.uploadReleaseAsset({
           headers,
           name: assetName,
+          // GitHub renames the filename so we'll also set the label which it leaves as-is.
+          // This will look nicer on the Release page but more importantly it helps our
+          // "find existing assets"-logic since GitHub doesn't properly document how files are renamed.
+          label: assetName,
           // https://github.com/tauri-apps/tauri-action/pull/45
           // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
           data: fs.createReadStream(asset.path),
           owner: owner,
           repo: repo,
           release_id: releaseId,
-          label: basename(asset.path),
         }),
       retryAttempts + 1,
     );
