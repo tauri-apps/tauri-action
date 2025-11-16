@@ -85,8 +85,6 @@ export async function uploadAssets(
           headers,
           name: assetName,
           // GitHub renames the filename so we'll also set the label which it leaves as-is.
-          // This will look nicer on the Release page but more importantly it helps our
-          // "find existing assets"-logic since GitHub doesn't properly document how files are renamed.
           label: assetName,
           // https://github.com/tauri-apps/tauri-action/pull/45
           // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
