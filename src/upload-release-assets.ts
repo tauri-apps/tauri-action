@@ -4,6 +4,7 @@ import { getOctokit } from '@actions/github';
 
 import { deleteGiteaReleaseAsset, getAssetName, retry } from './utils';
 import type { Artifact } from './types';
+import { basename } from 'node:path';
 
 export async function uploadAssets(
   owner: string,
@@ -32,6 +33,8 @@ export async function uploadAssets(
       per_page: 100,
     })
   ).data;
+
+  console.log(JSON.stringify(existingAssets));
 
   // Determine content-length for header to upload asset
   const contentLength = (filePath: string) => fs.statSync(filePath).size;
@@ -91,8 +94,11 @@ export async function uploadAssets(
           owner: owner,
           repo: repo,
           release_id: releaseId,
+          label: basename(asset.path),
         }),
       retryAttempts + 1,
     );
+
+    console.log(`${assetName} successfully uploaded.`);
   }
 }
