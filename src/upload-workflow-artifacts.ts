@@ -21,7 +21,9 @@ export async function uploadWorkflowArtifacts(
       if (artifact.ext === '.app') {
         paths = globbySync('**/*', { cwd: artifact.path, absolute: true });
       }
-      console.log(JSON.stringify(paths));
+      console.log(
+        "Handing it off to GitHub's uploadArtifact function. This will print a few unmanaged logs.",
+      );
       await retry(
         () =>
           GHArtifact.uploadArtifact(
@@ -34,6 +36,7 @@ export async function uploadWorkflowArtifacts(
           ),
         retryAttempts,
       );
+      console.log('Workflow artifacts uploads DONE!');
     }
   }
 }
