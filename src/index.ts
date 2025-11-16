@@ -4,6 +4,7 @@ import { resolve, dirname, basename } from 'node:path';
 import * as core from '@actions/core';
 import { context } from '@actions/github';
 import stringArgv from 'string-argv';
+import yargsParser from 'yargs-parser';
 
 import { getOrCreateRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
@@ -25,6 +26,14 @@ async function run(): Promise<void> {
     const tauriScript = core.getInput('tauriScript');
     const args = stringArgv(core.getInput('args'));
     const releaseAssetNamePattern = core.getInput('releaseAssetNamePattern');
+    const rawArgs = stringArgv(core.getInput('args'));
+    const parsedArgs = yargsParser(core.getInput('args'), {
+      alias: {
+        target: ['t'],
+        config: ['c'],
+      },
+      configuration: { 'boolean-negation': false },
+    });
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
@@ -59,14 +68,11 @@ async function run(): Promise<void> {
 
     const buildOptions: BuildOptions = {
       tauriScript,
-      args,
+      rawArgs,
+      parsedArgs,
     };
 
-    const targetArgIdx = [...args].findIndex(
-      (e) => e === '-t' || e === '--target',
-    );
-    const targetPath =
-      targetArgIdx >= 0 ? [...args][targetArgIdx + 1] : undefined;
+    const targetPath = parsedArgs['--'].target;
 
     const configArgIdx = [...args].findIndex(
       (e) => e === '-c' || e === '--config',
