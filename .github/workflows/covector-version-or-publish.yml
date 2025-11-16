@@ -4,16 +4,18 @@ on:
   push:
     branches:
       - dev
+      - legacy/v0
+      - legacy/v0.5
 
 jobs:
   covector:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
           registry-url: 'https://registry.npmjs.org'
@@ -41,7 +43,7 @@ jobs:
         uses: tauri-apps/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ci/release
+          branch: ci/release-${{ github.ref_name }}
           title: Apply Version Updates From Current Changes
           commit-message: 'apply version updates'
           labels: 'version updates'
