@@ -14,7 +14,7 @@ jobs:
       matrix:
         include:
           - platform: 'macos-latest'
-            args: '--verbose --target=universal-apple-darwin --debug'
+            args: '--verbose --target universal-apple-darwin --debug'
           - platform: 'macos-latest'
             args: '--verbose --target aarch64-apple-darwin --debug'
           - platform: 'macos-latest'
@@ -22,11 +22,11 @@ jobs:
           - platform: 'ubuntu-22.04'
             args: '--verbose --debug'
           - platform: 'windows-latest'
-            args: '--verbose -d'
+            args: '--verbose --debug'
           - platform: 'ubuntu-24.04-arm'
             args: '--verbose --debug'
           - platform: 'windows-11-arm'
-            args: '--verbose --debug -- --profile xd'
+            args: '--verbose --debug'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -85,5 +85,6 @@ jobs:
           retryAttempts: 1
           uploadPlainBinary: true
           uploadWorkflowArtifacts: true
+          uploadUpdaterSignatures: false
       # workflowArtifactNamePattern: '[name]_${{ github.sha }}_[platform]_[arch]_[bundle]'
       # releaseAssetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[setup]x[ext]'

@@ -43,14 +43,7 @@ async function run(): Promise<void> {
       strict: false,
       options: { profile: { type: 'string' } },
     });
-    // TODO: remove
-    console.log(
-      JSON.stringify(rawArgs),
-      JSON.stringify(parsedArgs),
-      JSON.stringify(parsedRunnerArgs),
-      JSON.stringify(parseArgs({ args: rawArgs, strict: false })),
-      JSON.stringify(parseArgs({ args: rawArgs, strict: false, tokens: true })),
-    );
+
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
