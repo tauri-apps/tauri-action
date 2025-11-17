@@ -38,9 +38,6 @@ importers:
       tslib:
         specifier: 2.8.1
         version: 2.8.1
-      yargs-parser:
-        specifier: 22.0.0
-        version: 22.0.0
     devDependencies:
       '@eslint/js':
         specifier: 9.39.1
@@ -1681,10 +1678,6 @@ packages:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
     engines: {node: '>=12'}
 
-  yargs-parser@22.0.0:
-    resolution: {integrity: sha512-rwu/ClNdSMpkSrUb+d6BRsSkLUq1fmfsY6TOpYzTwvwkg1/NRG85KBy3kq++A8LKQwX6lsu+aWad+2khvuXrqw==}
-    engines: {node: ^20.19.0 || ^22.12.0 || >=23}
-
   yargs-unparser@2.0.0:
     resolution: {integrity: sha512-7pRTIA9Qc1caZ0bZ6RYRGbHJthJWuakf+WmHK0rVeLkNrrGhfoabBNdue6kdINI6r4if7ocq9aD/n7xwKOdzOA==}
     engines: {node: '>=10'}
@@ -1979,7 +1972,7 @@ snapshots:
 
   '@covector/command@0.8.0(mocha@10.4.0)':
     dependencies:
-      '@effection/process': 2.1.4
+      '@effection/process': 2.1.4(mocha@10.4.0)
       effection: 2.0.8(mocha@10.4.0)
     transitivePeerDependencies:
       - encoding
@@ -2031,12 +2024,15 @@ snapshots:
       effection: 2.0.8(mocha@10.4.0)
       mocha: 10.4.0
 
-  '@effection/process@2.1.4':
+  '@effection/process@2.1.4(mocha@10.4.0)':
     dependencies:
       cross-spawn: 7.0.6
       ctrlc-windows: 2.2.0
       effection: 2.0.8(mocha@10.4.0)
       shellwords: 0.1.1
+    transitivePeerDependencies:
+      - encoding
+      - mocha
 
   '@effection/stream@2.0.6':
     dependencies:
@@ -3576,8 +3572,6 @@ snapshots:
   yargs-parser@20.2.4: {}
 
   yargs-parser@21.1.1: {}
-
-  yargs-parser@22.0.0: {}
 
   yargs-unparser@2.0.0:
     dependencies:

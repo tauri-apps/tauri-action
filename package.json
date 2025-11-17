@@ -33,13 +33,11 @@
     "json5": "2.2.3",
     "smol-toml": "1.5.2",
     "string-argv": "0.3.2",
-    "tslib": "2.8.1",
-    "yargs-parser": "22.0.0"
+    "tslib": "2.8.1"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
     "@types/node": "24.10.1",
-    "@types/yargs-parser": "^21.0.3",
     "@vercel/ncc": "0.38.4",
     "covector": "0.12.4",
     "eslint": "9.39.1",

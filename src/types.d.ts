@@ -1,4 +1,3 @@
-import { Arguments } from 'yargs-parser';
 import { Runner } from './runner';
 
 export interface Application {
@@ -35,9 +34,19 @@ export interface Artifact {
 export interface BuildOptions {
   tauriScript: string | null;
   rawArgs: string[] | null;
-  parsedArgs: Arguments;
-  parsedRunnerArgs: Arguments;
+  parsedArgs: ParsedArgs;
+  parsedRunnerArgs: ParsedRunnerArgs;
 }
+
+type ParsedArgs = {
+  debug?: string | boolean;
+  config?: string | boolean;
+  target?: string | boolean;
+};
+
+type ParsedRunnerArgs = {
+  profile?: string | boolean;
+};
 
 export interface CargoManifestBin {
   name: string;

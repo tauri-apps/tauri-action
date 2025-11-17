@@ -4,7 +4,6 @@ import { resolve, dirname, basename } from 'node:path';
 import * as core from '@actions/core';
 import { context } from '@actions/github';
 import stringArgv from 'string-argv';
-import yargsParser from 'yargs-parser';
 
 import { getOrCreateRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
@@ -27,15 +26,7 @@ async function run(): Promise<void> {
     const tauriScript = core.getInput('tauriScript');
     const releaseAssetNamePattern = core.getInput('releaseAssetNamePattern');
     const rawArgs = stringArgv(core.getInput('args'));
-    const parsedArgs = yargsParser(core.getInput('args'), {
-      alias: {
-        target: ['t'],
-        config: ['c'],
-        debug: ['d'],
-      },
-      configuration: { 'boolean-negation': false },
-    });
-    const parsedArgs2 = parseArgs({
+    const parsedArgs = parseArgs({
       args: rawArgs,
       strict: false,
       options: {
@@ -47,13 +38,18 @@ async function run(): Promise<void> {
         debug: { type: 'boolean', short: 'd' },
       },
     });
-    const parsedRunnerArgs = yargsParser(parsedArgs._.map(String));
+    const parsedRunnerArgs = parseArgs({
+      args: parsedArgs.positionals,
+      strict: false,
+      options: { profile: { type: 'string' } },
+    });
     // TODO: remove
     console.log(
       JSON.stringify(rawArgs),
       JSON.stringify(parsedArgs),
       JSON.stringify(parsedRunnerArgs),
-      JSON.stringify(parsedArgs2),
+      JSON.stringify(parseArgs({ args: rawArgs, strict: false })),
+      JSON.stringify(parseArgs({ args: rawArgs, strict: false, tokens: true })),
     );
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
@@ -90,12 +86,12 @@ async function run(): Promise<void> {
     const buildOptions: BuildOptions = {
       tauriScript,
       rawArgs,
-      parsedArgs,
-      parsedRunnerArgs,
+      parsedArgs: parsedArgs.values,
+      parsedRunnerArgs: parsedRunnerArgs.values,
     };
 
-    const targetPath = parsedArgs['target'] as string | undefined;
-    const configArg = parsedArgs['config'] as string | undefined;
+    const targetPath = buildOptions.parsedArgs['target'] as string | undefined;
+    const configArg = buildOptions.parsedArgs['config'] as string | undefined;
 
     const artifacts: Artifact[] = [];
 
