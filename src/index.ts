@@ -24,16 +24,19 @@ async function run(): Promise<void> {
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
     const retryAttempts = parseInt(core.getInput('retryAttempts') || '0', 10);
     const tauriScript = core.getInput('tauriScript');
-    const args = stringArgv(core.getInput('args'));
     const releaseAssetNamePattern = core.getInput('releaseAssetNamePattern');
     const rawArgs = stringArgv(core.getInput('args'));
     const parsedArgs = yargsParser(core.getInput('args'), {
       alias: {
         target: ['t'],
         config: ['c'],
+        debug: ['d'],
       },
+      boolean: ['debug'],
       configuration: { 'boolean-negation': false },
     });
+    // TODO: remove
+    console.log(JSON.stringify(rawArgs), JSON.stringify(parsedArgs));
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
@@ -72,13 +75,8 @@ async function run(): Promise<void> {
       parsedArgs,
     };
 
-    const targetPath = parsedArgs['--'].target;
-
-    const configArgIdx = [...args].findIndex(
-      (e) => e === '-c' || e === '--config',
-    );
-    const configArg =
-      configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
+    const targetPath = parsedArgs['target'] as string | undefined;
+    const configArg = parsedArgs['config'] as string | undefined;
 
     const artifacts: Artifact[] = [];
 

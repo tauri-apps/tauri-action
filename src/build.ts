@@ -20,26 +20,12 @@ export async function buildProject(
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
-  const tauriArgs = buildOpts.args ?? [];
+  const parsedArgs = buildOpts.parsedArgs;
 
-  const debug =
-    [...tauriArgs].findIndex((e) => e === '-d' || e === '--debug') >= 0;
-
-  const targetArgIdx = [...tauriArgs].findIndex(
-    (e) => e === '-t' || e === '--target',
-  );
-  const targetPath =
-    targetArgIdx >= 0 ? [...tauriArgs][targetArgIdx + 1] : undefined;
-
-  const configArgIdx = [...tauriArgs].findIndex(
-    (e) => e === '-c' || e === '--config',
-  );
-  const configArg =
-    configArgIdx >= 0 ? [...tauriArgs][configArgIdx + 1] : undefined;
-
-  const profileArgIdx = [...tauriArgs].findIndex((e) => e === '--profile');
-  const profile =
-    profileArgIdx >= 0 ? [...tauriArgs][profileArgIdx + 1] : undefined;
+  const debug = parsedArgs['debug'] as boolean;
+  const targetPath = parsedArgs['target'] as string | undefined;
+  const configArg = parsedArgs['config'] as string | undefined;
+  const profile = undefined; //parsedArgs['--']?.includes('profile');
 
   const targetInfo = getTargetInfo(targetPath);
 
@@ -61,7 +47,7 @@ export async function buildProject(
 
   await runner.execTauriCommand(
     ['build'],
-    [...tauriArgs],
+    buildOpts.rawArgs || [],
     root,
     targetInfo.platform === 'macos'
       ? {
