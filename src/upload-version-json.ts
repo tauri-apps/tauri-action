@@ -335,7 +335,8 @@ export async function uploadVersionJSON(
     repo,
     releaseId,
     [artifact],
-    retryAttempts,
+    // The whole step will be retried where `uploadVersionJSON` is called.
+    0,
     githubBaseUrl,
     isGitea,
   );

@@ -9,7 +9,7 @@ import { getOrCreateRelease } from './create-release';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
 import { buildProject } from './build';
-import { execCommand, getInfo, getTargetInfo } from './utils';
+import { execCommand, getInfo, getTargetInfo, retry } from './utils';
 
 import type { Artifact, BuildOptions } from './types';
 import { uploadWorkflowArtifacts } from './upload-workflow-artifacts';
@@ -208,21 +208,28 @@ async function run(): Promise<void> {
       );
 
       if (includeUpdaterJson) {
-        await uploadVersionJSON(
-          owner,
-          repo,
-          info.version,
-          body,
-          tagName,
-          releaseId,
-          artifacts,
-          targetInfo,
-          info.unzippedSigs,
-          updaterJsonPreferNsis,
-          retryAttempts,
-          githubBaseUrl,
-          isGitea,
-          releaseAssetNamePattern,
+        // Once we start throwing our own errors in this function we may need some custom retry logic.
+        // We can't retry just the inner asset upload as that may upload an outdated latest.json file.
+        await retry(
+          () =>
+            uploadVersionJSON(
+              owner,
+              repo,
+              info.version,
+              body,
+              tagName,
+              releaseId,
+              artifacts,
+              targetInfo,
+              info.unzippedSigs,
+              updaterJsonPreferNsis,
+              retryAttempts,
+              githubBaseUrl,
+              isGitea,
+              releaseAssetNamePattern,
+            ),
+          // since all jobs try to upload this file it tends to conflict often so we want to retry it at least once.
+          retryAttempts === 0 ? 1 : retryAttempts,
         );
       }
     } else {
