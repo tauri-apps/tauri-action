@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - dev
+      - legacy/v0
+      - legacy/v0.5
 
 jobs:
   covector:
@@ -41,7 +43,7 @@ jobs:
         uses: tauri-apps/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ci/release
+          branch: ci/release-${{ github.ref_name }}
           title: Apply Version Updates From Current Changes
           commit-message: 'apply version updates'
           labels: 'version updates'

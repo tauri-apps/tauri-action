@@ -111,12 +111,17 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     const name = basename(asset.path, asset.ext);
     const arch = '_' + asset.arch;
     let platform = '';
+    let version = '';
 
     if (asset.name === 'binary') {
       platform = '_' + asset.platform;
     }
 
-    return name + platform + arch + asset.ext;
+    if (asset.ext.includes('.app.tar.gz')) {
+      version = '_' + asset.version;
+    }
+
+    return name + platform + version + arch + asset.ext;
   }
 }
 
@@ -593,6 +598,16 @@ export function deleteGiteaReleaseAsset(
       asset_id: assetId,
     },
   );
+}
+
+export function ghAssetName(
+  artifact: Artifact,
+  releaseAssetNamePattern?: string,
+) {
+  return getAssetName(artifact, releaseAssetNamePattern)
+    .trim()
+    .replace(/[^a-zA-Z0-9_-]/g, '.')
+    .replace(/\.\./g, '.');
 }
 
 // TODO: Properly resolve the eslint issues in this file.

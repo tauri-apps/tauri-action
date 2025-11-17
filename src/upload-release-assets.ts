@@ -2,7 +2,12 @@ import fs from 'node:fs';
 
 import { getOctokit } from '@actions/github';
 
-import { deleteGiteaReleaseAsset, getAssetName, retry } from './utils';
+import {
+  deleteGiteaReleaseAsset,
+  getAssetName,
+  ghAssetName,
+  retry,
+} from './utils';
 import type { Artifact } from './types';
 
 export async function uploadAssets(
@@ -47,16 +52,10 @@ export async function uploadAssets(
     };
 
     const assetName = getAssetName(asset, releaseAssetNamePattern);
+    const assetNameGH = ghAssetName(asset, releaseAssetNamePattern);
 
     const existingAsset = existingAssets.find(
-      (a) =>
-        a.name ===
-        assetName
-          .trim()
-          .replace(/[ ()[\]{}]/g, '.')
-          .replace(/\.\./g, '.')
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, ''),
+      (a) => a.label === assetName || a.name === assetNameGH,
     );
 
     if (existingAsset) {
@@ -85,6 +84,8 @@ export async function uploadAssets(
         github.rest.repos.uploadReleaseAsset({
           headers,
           name: assetName,
+          // GitHub renames the filename so we'll also set the label which it leaves as-is.
+          label: assetName,
           // https://github.com/tauri-apps/tauri-action/pull/45
           // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
           data: fs.createReadStream(asset.path),
@@ -94,5 +95,7 @@ export async function uploadAssets(
         }),
       retryAttempts + 1,
     );
+
+    console.log(`${assetName} successfully uploaded.`);
   }
 }
