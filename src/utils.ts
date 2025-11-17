@@ -111,12 +111,17 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     const name = basename(asset.path, asset.ext);
     const arch = '_' + asset.arch;
     let platform = '';
+    let version = '';
 
     if (asset.name === 'binary') {
       platform = '_' + asset.platform;
     }
 
-    return name + platform + arch + asset.ext;
+    if (asset.ext.includes('.app.tar.gz')) {
+      version = '_' + asset.version;
+    }
+
+    return name + platform + version + arch + asset.ext;
   }
 }
 
