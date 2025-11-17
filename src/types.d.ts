@@ -36,6 +36,7 @@ export interface BuildOptions {
   tauriScript: string | null;
   rawArgs: string[] | null;
   parsedArgs: Arguments;
+  parsedRunnerArgs: Arguments;
 }
 
 export interface CargoManifestBin {

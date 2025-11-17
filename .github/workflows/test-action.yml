@@ -22,7 +22,7 @@ jobs:
           - platform: 'ubuntu-22.04'
             args: '--verbose --debug'
           - platform: 'windows-latest'
-            args: '--verbose --debug'
+            args: '--verbose -d'
           - platform: 'ubuntu-24.04-arm'
             args: '--verbose --debug'
           - platform: 'windows-11-arm'

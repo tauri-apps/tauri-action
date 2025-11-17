@@ -32,9 +32,9 @@ async function run(): Promise<void> {
         config: ['c'],
         debug: ['d'],
       },
-      boolean: ['debug'],
       configuration: { 'boolean-negation': false },
     });
+    const parsedRunnerArgs = yargsParser(parsedArgs._.map(String));
     // TODO: remove
     console.log(JSON.stringify(rawArgs), JSON.stringify(parsedArgs));
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
@@ -60,7 +60,7 @@ async function run(): Promise<void> {
     const workflowArtifactsNamePattern =
       core.getInput('workflowArtifactsNamePattern') ||
       '[platform]-[arch]-[bundle]';
-    const uplodaUpdaterSignatures = core.getBooleanInput(
+    const uploadUpdaterSignatures = core.getBooleanInput(
       'uploadUpdaterSignatures',
     );
 
@@ -73,6 +73,7 @@ async function run(): Promise<void> {
       tauriScript,
       rawArgs,
       parsedArgs,
+      parsedRunnerArgs,
     };
 
     const targetPath = parsedArgs['target'] as string | undefined;
@@ -196,7 +197,7 @@ async function run(): Promise<void> {
         githubBaseUrl,
         isGitea,
         releaseAssetNamePattern,
-        uplodaUpdaterSignatures,
+        uploadUpdaterSignatures,
       );
 
       if (includeUpdaterJson) {

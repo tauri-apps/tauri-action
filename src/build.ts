@@ -20,12 +20,10 @@ export async function buildProject(
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
-  const parsedArgs = buildOpts.parsedArgs;
-
-  const debug = parsedArgs['debug'] as boolean;
-  const targetPath = parsedArgs['target'] as string | undefined;
-  const configArg = parsedArgs['config'] as string | undefined;
-  const profile = undefined; //parsedArgs['--']?.includes('profile');
+  const debug = buildOpts.parsedArgs['debug'] as boolean;
+  const targetPath = buildOpts.parsedArgs['target'] as string | undefined;
+  const configArg = buildOpts.parsedArgs['config'] as string | undefined;
+  const profile = buildOpts.parsedRunnerArgs['profile'] as string | undefined;
 
   const targetInfo = getTargetInfo(targetPath);
 
