@@ -37,6 +37,7 @@ async function run(): Promise<void> {
     });
     const parsedArgs2 = parseArgs({
       args: rawArgs,
+      strict: false,
       options: {
         target: { type: 'string', short: 't' },
         config: {
