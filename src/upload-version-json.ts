@@ -34,7 +34,7 @@ export async function uploadVersionJSON(
   targetInfo: TargetInfo,
   unzippedSig: boolean,
   updaterJsonPreferNsis: boolean,
-  retryAttempts: number,
+  _retryAttempts: number,
   githubBaseUrl: string,
   isGitea: boolean,
   releaseAssetNamePattern?: string,
@@ -336,7 +336,8 @@ export async function uploadVersionJSON(
     releaseId,
     [artifact],
     // The whole step will be retried where `uploadVersionJSON` is called.
-    0,
+    // Just in case it's a quick http hickup we retry it once here as well.
+    1,
     githubBaseUrl,
     isGitea,
   );
