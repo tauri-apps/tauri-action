@@ -36,7 +36,11 @@ async function run(): Promise<void> {
     });
     const parsedRunnerArgs = yargsParser(parsedArgs._.map(String));
     // TODO: remove
-    console.log(JSON.stringify(rawArgs), JSON.stringify(parsedArgs));
+    console.log(
+      JSON.stringify(rawArgs),
+      JSON.stringify(parsedArgs),
+      JSON.stringify(parsedRunnerArgs),
+    );
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
