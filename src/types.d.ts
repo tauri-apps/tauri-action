@@ -33,8 +33,20 @@ export interface Artifact {
 
 export interface BuildOptions {
   tauriScript: string | null;
-  args: string[] | null;
+  rawArgs: string[] | null;
+  parsedArgs: ParsedArgs;
+  parsedRunnerArgs: ParsedRunnerArgs;
 }
+
+type ParsedArgs = {
+  debug?: string | boolean;
+  config?: string | boolean;
+  target?: string | boolean;
+};
+
+type ParsedRunnerArgs = {
+  profile?: string | boolean;
+};
 
 export interface CargoManifestBin {
   name: string;

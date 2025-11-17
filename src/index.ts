@@ -13,6 +13,7 @@ import { execCommand, getInfo, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions } from './types';
 import { uploadWorkflowArtifacts } from './upload-workflow-artifacts';
+import { parseArgs } from 'node:util';
 
 async function run(): Promise<void> {
   try {
@@ -23,8 +24,26 @@ async function run(): Promise<void> {
     const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
     const retryAttempts = parseInt(core.getInput('retryAttempts') || '0', 10);
     const tauriScript = core.getInput('tauriScript');
-    const args = stringArgv(core.getInput('args'));
     const releaseAssetNamePattern = core.getInput('releaseAssetNamePattern');
+    const rawArgs = stringArgv(core.getInput('args'));
+    const parsedArgs = parseArgs({
+      args: rawArgs,
+      strict: false,
+      options: {
+        target: { type: 'string', short: 't' },
+        config: {
+          type: 'string',
+          short: 'c',
+        },
+        debug: { type: 'boolean', short: 'd' },
+      },
+    });
+    const parsedRunnerArgs = parseArgs({
+      args: parsedArgs.positionals,
+      strict: false,
+      options: { profile: { type: 'string' } },
+    });
+
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
@@ -48,7 +67,7 @@ async function run(): Promise<void> {
     const workflowArtifactsNamePattern =
       core.getInput('workflowArtifactsNamePattern') ||
       '[platform]-[arch]-[bundle]';
-    const uplodaUpdaterSignatures = core.getBooleanInput(
+    const uploadUpdaterSignatures = core.getBooleanInput(
       'uploadUpdaterSignatures',
     );
 
@@ -59,20 +78,13 @@ async function run(): Promise<void> {
 
     const buildOptions: BuildOptions = {
       tauriScript,
-      args,
+      rawArgs,
+      parsedArgs: parsedArgs.values,
+      parsedRunnerArgs: parsedRunnerArgs.values,
     };
 
-    const targetArgIdx = [...args].findIndex(
-      (e) => e === '-t' || e === '--target',
-    );
-    const targetPath =
-      targetArgIdx >= 0 ? [...args][targetArgIdx + 1] : undefined;
-
-    const configArgIdx = [...args].findIndex(
-      (e) => e === '-c' || e === '--config',
-    );
-    const configArg =
-      configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
+    const targetPath = buildOptions.parsedArgs['target'] as string | undefined;
+    const configArg = buildOptions.parsedArgs['config'] as string | undefined;
 
     const artifacts: Artifact[] = [];
 
@@ -192,7 +204,7 @@ async function run(): Promise<void> {
         githubBaseUrl,
         isGitea,
         releaseAssetNamePattern,
-        uplodaUpdaterSignatures,
+        uploadUpdaterSignatures,
       );
 
       if (includeUpdaterJson) {
