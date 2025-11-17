@@ -14,6 +14,7 @@ import { execCommand, getInfo, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions } from './types';
 import { uploadWorkflowArtifacts } from './upload-workflow-artifacts';
+import { parseArgs } from 'node:util';
 
 async function run(): Promise<void> {
   try {
@@ -34,12 +35,24 @@ async function run(): Promise<void> {
       },
       configuration: { 'boolean-negation': false },
     });
+    const parsedArgs2 = parseArgs({
+      args: rawArgs,
+      options: {
+        target: { type: 'string', short: 't' },
+        config: {
+          type: 'string',
+          short: 'c',
+        },
+        debug: { type: 'boolean', short: 'd' },
+      },
+    });
     const parsedRunnerArgs = yargsParser(parsedArgs._.map(String));
     // TODO: remove
     console.log(
       JSON.stringify(rawArgs),
       JSON.stringify(parsedArgs),
       JSON.stringify(parsedRunnerArgs),
+      JSON.stringify(parsedArgs2),
     );
     const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
 
