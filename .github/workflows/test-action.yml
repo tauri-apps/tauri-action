@@ -85,5 +85,6 @@ jobs:
           retryAttempts: 1
           uploadPlainBinary: true
           uploadWorkflowArtifacts: true
+          uploadUpdaterSignatures: false
       # workflowArtifactNamePattern: '[name]_${{ github.sha }}_[platform]_[arch]_[bundle]'
       # releaseAssetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[setup]x[ext]'
