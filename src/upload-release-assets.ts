@@ -8,18 +8,21 @@ import {
   ghAssetName,
   retry,
 } from './utils';
+import {
+  githubBaseUrl,
+  isGitea,
+  owner,
+  releaseAssetNamePattern,
+  repo,
+  uploadUpdaterSignatures,
+} from './inputs';
+
 import type { Artifact } from './types';
 
 export async function uploadAssets(
-  owner: string,
-  repo: string,
   releaseId: number,
   assets: Artifact[],
   retryAttempts: number,
-  githubBaseUrl: string,
-  isGitea: boolean,
-  releaseAssetNamePattern?: string,
-  uploadUpdaterSignatures?: boolean,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -31,8 +34,8 @@ export async function uploadAssets(
 
   const existingAssets = (
     await github.rest.repos.listReleaseAssets({
-      owner: owner,
-      repo: repo,
+      owner,
+      repo,
       release_id: releaseId,
       per_page: 100,
     })
@@ -61,17 +64,11 @@ export async function uploadAssets(
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
       if (isGitea) {
-        await deleteGiteaReleaseAsset(
-          github,
-          owner,
-          repo,
-          releaseId,
-          existingAsset.id,
-        );
+        await deleteGiteaReleaseAsset(github, releaseId, existingAsset.id);
       } else {
         await github.rest.repos.deleteReleaseAsset({
-          owner: owner,
-          repo: repo,
+          owner,
+          repo,
           asset_id: existingAsset.id,
         });
       }
@@ -89,8 +86,8 @@ export async function uploadAssets(
           // https://github.com/tauri-apps/tauri-action/pull/45
           // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
           data: fs.createReadStream(asset.path),
-          owner: owner,
-          repo: repo,
+          owner,
+          repo,
           release_id: releaseId,
         }),
       retryAttempts + 1,

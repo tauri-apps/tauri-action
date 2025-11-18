@@ -3,6 +3,14 @@ import { join } from 'node:path';
 
 import { getRunner } from './runner';
 import {
+  parsedArgs,
+  parsedRunnerArgs,
+  projectPath,
+  rawArgs,
+  retryAttempts,
+  uploadPlainBinary,
+} from './inputs';
+import {
   createArtifact,
   getInfo,
   getTargetDir,
@@ -10,24 +18,19 @@ import {
   getWorkspaceDir,
 } from './utils';
 
-import type { Artifact, BuildOptions } from './types';
+import type { Artifact } from './types';
 
-export async function buildProject(
-  root: string,
-  buildOpts: BuildOptions,
-  retryAttempts: number,
-  uploadPlainBinary: boolean,
-): Promise<Artifact[]> {
-  const runner = await getRunner(root, buildOpts.tauriScript);
+export async function buildProject(): Promise<Artifact[]> {
+  const runner = await getRunner();
 
-  const debug = buildOpts.parsedArgs['debug'] as boolean;
-  const targetPath = buildOpts.parsedArgs['target'] as string | undefined;
-  const configArg = buildOpts.parsedArgs['config'] as string | undefined;
-  const profile = buildOpts.parsedRunnerArgs['profile'] as string | undefined;
+  const debug = parsedArgs['debug'] as boolean;
+  const targetPath = parsedArgs['target'] as string | undefined;
+  const configArg = parsedArgs['config'] as string | undefined;
+  const profile = parsedRunnerArgs['profile'] as string | undefined;
 
   const targetInfo = getTargetInfo(targetPath);
 
-  const info = getInfo(root, targetInfo, configArg);
+  const info = getInfo(targetInfo, configArg);
 
   if (!info.tauriPath) {
     throw Error("Couldn't detect path of tauri app");
@@ -45,8 +48,8 @@ export async function buildProject(
 
   await runner.execTauriCommand(
     ['build'],
-    buildOpts.rawArgs || [],
-    root,
+    rawArgs,
+    projectPath,
     targetInfo.platform === 'macos'
       ? {
           TAURI_BUNDLER_DMG_IGNORE_CI:

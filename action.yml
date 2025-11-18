@@ -29,6 +29,7 @@ inputs:
     default: 'true'
   updaterJsonPreferNsis:
     description: 'Whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist. Will default to false. May default to true for apps using tauri@v2 in the future.'
+    default: 'false'
   tauriScript:
     description: 'The script to run to build the Tauri app'
   args:

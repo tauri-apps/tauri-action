@@ -24,6 +24,7 @@ import type {
 } from './types';
 import { GitHub } from '@actions/github/lib/utils';
 import { findUpSync } from 'find-up-simple';
+import { owner, projectPath, repo } from './inputs';
 
 /*** constants ***/
 export const extensions = [
@@ -125,6 +126,16 @@ export function getAssetName(asset: Artifact, pattern?: string) {
   }
 }
 
+export function ghAssetName(
+  artifact: Artifact,
+  releaseAssetNamePattern?: string,
+) {
+  return getAssetName(artifact, releaseAssetNamePattern)
+    .trim()
+    .replace(/[^a-zA-Z0-9_-]/g, '.')
+    .replace(/\.\./g, '.');
+}
+
 export function createArtifact({
   path,
   name,
@@ -178,13 +189,13 @@ export function getPackageJson(root: string) {
   return null;
 }
 
-export function getTauriDir(root: string): string | null {
+export function getTauriDir(): string | null {
   const tauriConfPaths = globbySync(
     ['**/tauri.conf.json', '**/tauri.conf.json5', '**/Tauri.toml'],
     {
       // globby v16 changes this to also look into parent dir. Monitor this closely and disable if needed.
       gitignore: true,
-      cwd: root,
+      cwd: projectPath,
       // Forcefully ignore target and node_modules dirs
       ignore: ['**/target', '**/node_modules'],
     },
@@ -194,7 +205,7 @@ export function getTauriDir(root: string): string | null {
     return null;
   }
 
-  return resolve(root, tauriConfPaths[0], '..');
+  return resolve(projectPath, tauriConfPaths[0], '..');
 }
 
 export function getWorkspaceDir(dir: string): string | null {
@@ -470,12 +481,8 @@ export async function execCommand(
   });
 }
 
-export function getInfo(
-  root: string,
-  targetInfo?: TargetInfo,
-  configFlag?: string,
-): Info {
-  const tauriDir = getTauriDir(root);
+export function getInfo(targetInfo?: TargetInfo, configFlag?: string): Info {
+  const tauriDir = getTauriDir();
   if (tauriDir !== null) {
     let name;
     let version;
@@ -489,7 +496,7 @@ export function getInfo(
       config.mergePlatformConfig(tauriDir, targetInfo.platform);
     }
     if (configFlag) {
-      config.mergeUserConfig(root, configFlag);
+      config.mergeUserConfig(projectPath, configFlag);
     }
 
     name = config?.productName;
@@ -585,8 +592,6 @@ export async function retry(
 // This is a workaround since Gitea's API is incompatible with the GitHub API
 export function deleteGiteaReleaseAsset(
   github: InstanceType<typeof GitHub>,
-  owner: string,
-  repo: string,
   releaseId: number,
   assetId: number,
 ) {
@@ -599,16 +604,6 @@ export function deleteGiteaReleaseAsset(
       asset_id: assetId,
     },
   );
-}
-
-export function ghAssetName(
-  artifact: Artifact,
-  releaseAssetNamePattern?: string,
-) {
-  return getAssetName(artifact, releaseAssetNamePattern)
-    .trim()
-    .replace(/[^a-zA-Z0-9_-]/g, '.')
-    .replace(/\.\./g, '.');
 }
 
 // TODO: Properly resolve the eslint issues in this file.
