@@ -22,7 +22,7 @@ inputs:
   releaseCommitish:
     description: 'Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit'
   projectPath:
-    description: 'Path to the root of the project that will be built'
+    description: 'Path to the root of the project that will be built. It must NOT be gitignored.'
     default: '.'
   includeUpdaterJson:
     description: 'Whether to upload a static JSON file for the updater using GitHub Releases as the CDN'

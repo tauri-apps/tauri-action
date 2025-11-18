@@ -83,7 +83,7 @@ These inputs allow you to change how your Tauri project will be build.
 
 | Name                    | Description                                                                                                        | Type   | Default                                                                        |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------ |
-| `projectPath`           | The path to the root of the tauri project relative to the current working directory                                | string | .                                                                              |
+| `projectPath`           | The path to the root of the tauri project relative to the current working directory. It must NOT be gitignored.    | string | .                                                                              |
 | `includeUpdaterJson`    | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                  | bool   | true                                                                           |
 | `updaterJsonPreferNsis` | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist    | bool   | `false`. May be changed to `true` for projects using `tauri@v2` in the future. |
 | `tauriScript`           | the script to execute the Tauri CLI. It must not include any args or commands like `build`                         | string | `npm run\|pnpm\|yarn tauri`                                                    |
@@ -133,6 +133,7 @@ These inputs allow you to modify the GitHub release.
 - When your Tauri app is not in the root of the repo, use the `projectPath` input.
   - Usually it will work without it, but the action will install and use a global `@tauri-apps/cli` installation instead of your project's CLI which can cause issues if you also configured `tauriScript` or if you have multiple `tauri.conf.json` files in your repo.
   - Additionally, relative paths provided via the `--config` flag will be resolved relative to the `projectPath` to match Tauri's behavior.
+  - The path must NOT be gitignored. Please open an issue if this causes you problems.
 - If `releaseId` is set, the action will use this release to upload assets to. If `tagName` is set the action will try to find an existing release for that tag. If there's none, the action requires `releaseName` to create a new release for the specified `tagName`.
 - If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
 - If you provide a `tagName` to an existing release, `releaseDraft` must be set to `true` if the existing release is a draft.
