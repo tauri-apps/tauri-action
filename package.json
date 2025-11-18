@@ -9,7 +9,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "ncc build src/index.ts -o dist -m",
+    "build": "ncc build src/index.ts -o dist",
     "lint": "eslint .",
     "format": "prettier --write src/** action.yml README.md",
     "format:check": "prettier --check src/** action.yml README.md"
