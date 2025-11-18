@@ -133,7 +133,8 @@ jobs:
     # default: false
     isGitea: false
 
-    # The path to the root of the tauri project relative to the current working directory
+    # The path to the root of the tauri project relative to the current working directory.
+    # It must NOT be gitignored.
     # default: ./
     projectPath: ''
 
@@ -193,7 +194,7 @@ These inputs allow you to change how your Tauri project will be build.
 
 | Name                    | Description                                                                                                        | Type   | Default                                                                        |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------ |
-| `projectPath`           | The path to the root of the tauri project relative to the current working directory                                | string | .                                                                              |
+| `projectPath`           | The path to the root of the tauri project relative to the current working directory. It must NOT be gitignored.    | string | .                                                                              |
 | `includeUpdaterJson`    | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                  | bool   | true                                                                           |
 | `updaterJsonPreferNsis` | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist    | bool   | `false`. May be changed to `true` for projects using `tauri@v2` in the future. |
 | `tauriScript`           | the script to execute the Tauri CLI. It must not include any args or commands like `build`                         | string | `npm run\|pnpm\|yarn tauri`                                                    |
