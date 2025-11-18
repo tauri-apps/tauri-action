@@ -1,8 +1,18 @@
 import fs from 'node:fs';
 
 import * as core from '@actions/core';
-import { getOctokit, context } from '@actions/github';
+import { getOctokit } from '@actions/github';
 import type { GitHub } from '@actions/github/lib/utils';
+
+import {
+  commitish,
+  draft,
+  generateReleaseNotes,
+  githubBaseUrl,
+  owner,
+  prerelease,
+  repo,
+} from './inputs';
 
 interface Release {
   id: number;
@@ -20,8 +30,6 @@ interface GitHubRelease {
 
 function allReleases(
   github: InstanceType<typeof GitHub>,
-  owner: string,
-  repo: string,
 ): AsyncIterableIterator<{ data: GitHubRelease[] }> {
   const params = { per_page: 100, owner, repo };
   return github.paginate.iterator(
@@ -31,16 +39,9 @@ function allReleases(
 
 /// Try to get release by tag. If there's none, releaseName is required to create one.
 export async function getOrCreateRelease(
-  owner: string,
-  repo: string,
   tagName: string,
-  githubBaseUrl: string,
   releaseName?: string,
   body?: string,
-  commitish?: string,
-  draft = true,
-  prerelease = true,
-  generateReleaseNotes = false,
 ): Promise<Release> {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -69,7 +70,7 @@ export async function getOrCreateRelease(
     // so we must find one in the list of all releases
     if (draft) {
       console.log(`Looking for a draft release with tag ${tagName}...`);
-      for await (const response of allReleases(github, owner, repo)) {
+      for await (const response of allReleases(github)) {
         const releaseWithTag = response.data.find(
           (release) => release.tag_name === tagName,
         );
@@ -115,7 +116,7 @@ export async function getOrCreateRelease(
           body: bodyFileContent || body,
           draft,
           prerelease,
-          target_commitish: commitish || context.sha,
+          target_commitish: commitish,
           generate_release_notes: generateReleaseNotes,
         });
 

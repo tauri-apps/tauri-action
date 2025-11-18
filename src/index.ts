@@ -1,101 +1,37 @@
 import { existsSync } from 'node:fs';
-import { resolve, dirname, basename } from 'node:path';
+import { dirname, basename } from 'node:path';
 
 import * as core from '@actions/core';
-import { context } from '@actions/github';
-import stringArgv from 'string-argv';
 
+import { buildProject } from './build';
 import { getOrCreateRelease } from './create-release';
+import {
+  includeUpdaterJson,
+  parsedArgs,
+  retryAttempts,
+  shouldUploadWorkflowArtifacts,
+} from './inputs';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
 import { uploadVersionJSON } from './upload-version-json';
-import { buildProject } from './build';
+import { uploadWorkflowArtifacts } from './upload-workflow-artifacts';
 import { execCommand, getInfo, getTargetInfo, retry } from './utils';
 
-import type { Artifact, BuildOptions } from './types';
-import { uploadWorkflowArtifacts } from './upload-workflow-artifacts';
-import { parseArgs } from 'node:util';
+import type { Artifact } from './types';
 
 async function run(): Promise<void> {
   try {
-    const projectPath = resolve(
-      process.cwd(),
-      core.getInput('projectPath') || process.argv[2],
-    );
-    const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
-    const retryAttempts = parseInt(core.getInput('retryAttempts') || '0', 10);
-    const tauriScript = core.getInput('tauriScript');
-    const releaseAssetNamePattern = core.getInput('releaseAssetNamePattern');
-    const rawArgs = stringArgv(core.getInput('args'));
-    const parsedArgs = parseArgs({
-      args: rawArgs,
-      strict: false,
-      options: {
-        target: { type: 'string', short: 't' },
-        config: {
-          type: 'string',
-          short: 'c',
-        },
-        debug: { type: 'boolean', short: 'd' },
-      },
-    });
-    const parsedRunnerArgs = parseArgs({
-      args: parsedArgs.positionals,
-      strict: false,
-      options: { profile: { type: 'string' } },
-    });
-
-    const uploadPlainBinary = core.getBooleanInput('uploadPlainBinary');
-
+    // inputs that won't be changed are in ./inputs
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseId = Number(core.getInput('releaseId'));
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
     let body = core.getInput('releaseBody');
-    const owner = core.getInput('owner') || context.repo.owner;
-    const repo = core.getInput('repo') || context.repo.repo;
-    const draft = core.getBooleanInput('releaseDraft');
-    const prerelease = core.getBooleanInput('prerelease');
-    const commitish = core.getInput('releaseCommitish') || null;
-    const githubBaseUrl =
-      core.getInput('githubBaseUrl') ||
-      process.env.GITHUB_API_URL ||
-      'https://api.github.com';
-    const isGitea = core.getBooleanInput('isGitea');
-    const generateReleaseNotes = core.getBooleanInput('generateReleaseNotes');
-    const shouldUploadWorkflowArtifacts = core.getBooleanInput(
-      'uploadWorkflowArtifacts',
-    );
-    const workflowArtifactNamePattern =
-      core.getInput('workflowArtifactNamePattern') ||
-      '[platform]-[arch]-[bundle]';
-    const uploadUpdaterSignatures = core.getBooleanInput(
-      'uploadUpdaterSignatures',
-    );
 
-    // TODO: Change its default to true for v2 apps
-    // Not using getBooleanInput so we can differentiate between true,false,unset later.
-    const updaterJsonPreferNsis =
-      core.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
-
-    const buildOptions: BuildOptions = {
-      tauriScript,
-      rawArgs,
-      parsedArgs: parsedArgs.values,
-      parsedRunnerArgs: parsedRunnerArgs.values,
-    };
-
-    const targetPath = buildOptions.parsedArgs['target'] as string | undefined;
-    const configArg = buildOptions.parsedArgs['config'] as string | undefined;
+    const targetPath = parsedArgs['target'] as string | undefined;
+    const configArg = parsedArgs['config'] as string | undefined;
 
     const artifacts: Artifact[] = [];
 
-    artifacts.push(
-      ...(await buildProject(
-        projectPath,
-        buildOptions,
-        retryAttempts,
-        uploadPlainBinary,
-      )),
-    );
+    artifacts.push(...(await buildProject()));
 
     if (artifacts.length === 0) {
       if (releaseId || tagName || shouldUploadWorkflowArtifacts) {
@@ -115,16 +51,12 @@ async function run(): Promise<void> {
     );
 
     const targetInfo = getTargetInfo(targetPath);
-    const info = getInfo(projectPath, targetInfo, configArg);
+    const info = getInfo(targetInfo, configArg);
     core.setOutput('appVersion', info.version);
 
     // Since artifacts are .zip archives we can do this before the .tar.gz step below.
     if (shouldUploadWorkflowArtifacts) {
-      await uploadWorkflowArtifacts(
-        artifacts,
-        workflowArtifactNamePattern,
-        retryAttempts,
-      );
+      await uploadWorkflowArtifacts(artifacts);
     }
 
     // Other steps may benefit from this so we do this whether or not we want to upload it.
@@ -177,16 +109,9 @@ async function run(): Promise<void> {
       });
 
       const releaseData = await getOrCreateRelease(
-        owner,
-        repo,
         tagName,
-        githubBaseUrl,
         releaseName || undefined,
         body,
-        commitish || undefined,
-        draft,
-        prerelease,
-        generateReleaseNotes,
       );
       releaseId = releaseData.id;
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);
@@ -195,17 +120,7 @@ async function run(): Promise<void> {
     }
 
     if (releaseId) {
-      await uploadReleaseAssets(
-        owner,
-        repo,
-        releaseId,
-        artifacts,
-        retryAttempts,
-        githubBaseUrl,
-        isGitea,
-        releaseAssetNamePattern,
-        uploadUpdaterSignatures,
-      );
+      await uploadReleaseAssets(releaseId, artifacts, retryAttempts);
 
       if (includeUpdaterJson) {
         // Once we start throwing our own errors in this function we may need some custom retry logic.
@@ -213,8 +128,6 @@ async function run(): Promise<void> {
         await retry(
           () =>
             uploadVersionJSON(
-              owner,
-              repo,
               info.version,
               body,
               tagName,
@@ -222,11 +135,6 @@ async function run(): Promise<void> {
               artifacts,
               targetInfo,
               info.unzippedSigs,
-              updaterJsonPreferNsis,
-              retryAttempts,
-              githubBaseUrl,
-              isGitea,
-              releaseAssetNamePattern,
             ),
           // since all jobs try to upload this file it tends to conflict often so we want to retry it at least once.
           retryAttempts === 0 ? 1 : retryAttempts,

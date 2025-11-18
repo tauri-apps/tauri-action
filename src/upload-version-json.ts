@@ -3,11 +3,23 @@ import { basename, extname, resolve } from 'node:path';
 
 import { getOctokit } from '@actions/github';
 
+import {
+  githubBaseUrl,
+  isGitea,
+  owner,
+  releaseAssetNamePattern,
+  repo,
+  updaterJsonPreferNsis,
+} from './inputs';
 import { uploadAssets } from './upload-release-assets';
-import { deleteGiteaReleaseAsset, getAssetName, ghAssetName } from './utils';
+import {
+  createArtifact,
+  deleteGiteaReleaseAsset,
+  getAssetName,
+  ghAssetName,
+} from './utils';
 
 import type { Artifact, TargetInfo } from './types';
-import { createArtifact } from './utils';
 
 type Platform = {
   signature: string;
@@ -24,8 +36,6 @@ type VersionContent = {
 };
 
 export async function uploadVersionJSON(
-  owner: string,
-  repo: string,
   version: string,
   notes: string,
   tagName: string,
@@ -33,11 +43,6 @@ export async function uploadVersionJSON(
   artifacts: Artifact[],
   targetInfo: TargetInfo,
   unzippedSig: boolean,
-  updaterJsonPreferNsis: boolean,
-  _retryAttempts: number,
-  githubBaseUrl: string,
-  isGitea: boolean,
-  releaseAssetNamePattern?: string,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
@@ -57,8 +62,8 @@ export async function uploadVersionJSON(
   };
 
   const assets = await github.rest.repos.listReleaseAssets({
-    owner: owner,
-    repo: repo,
+    owner,
+    repo,
     release_id: releaseId,
     per_page: 50,
   });
@@ -308,12 +313,12 @@ export async function uploadVersionJSON(
 
   if (asset) {
     if (isGitea) {
-      await deleteGiteaReleaseAsset(github, owner, repo, releaseId, asset.id);
+      await deleteGiteaReleaseAsset(github, releaseId, asset.id);
     } else {
       // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
       await github.rest.repos.deleteReleaseAsset({
-        owner: owner,
-        repo: repo,
+        owner,
+        repo,
         release_id: releaseId,
         asset_id: asset.id,
       });
@@ -331,14 +336,10 @@ export async function uploadVersionJSON(
   });
 
   await uploadAssets(
-    owner,
-    repo,
     releaseId,
     [artifact],
     // The whole step will be retried where `uploadVersionJSON` is called.
     // Just in case it's a quick http hickup we retry it once here as well.
     1,
-    githubBaseUrl,
-    isGitea,
   );
 }

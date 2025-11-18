@@ -1,3 +1,4 @@
+import { projectPath, tauriScript } from './inputs';
 import {
   execCommand,
   hasDependency,
@@ -42,10 +43,7 @@ class Runner {
   }
 }
 
-async function getRunner(
-  root: string,
-  tauriScript: string | null,
-): Promise<Runner> {
+async function getRunner(): Promise<Runner> {
   if (tauriScript) {
     console.log('`tauriScript` set. Skipping cli verification.');
     // FIXME: This will also split file paths with spaces.
@@ -53,15 +51,15 @@ async function getRunner(
     return new Runner(runnerCommand, runnerArgs);
   }
 
-  if (hasDependency('@tauri-apps/cli', root)) {
+  if (hasDependency('@tauri-apps/cli', projectPath)) {
     // usesX also check if the runner executable exists.
-    if (usesYarn(root)) return new Runner('yarn', ['tauri']);
-    if (usesPnpm(root)) return new Runner('pnpm', ['tauri']);
-    if (usesBun(root)) return new Runner('bun', ['tauri']);
+    if (usesYarn(projectPath)) return new Runner('yarn', ['tauri']);
+    if (usesPnpm(projectPath)) return new Runner('pnpm', ['tauri']);
+    if (usesBun(projectPath)) return new Runner('bun', ['tauri']);
     // npm should always be available in a GitHub runner but we'll check for it anyway.
-    if (usesNpm(root))
+    if (usesNpm(projectPath))
       return new Runner('npm', [
-        hasTauriScript(root) ? 'run' : 'exec',
+        hasTauriScript(projectPath) ? 'run' : 'exec',
         'tauri',
       ]);
   }

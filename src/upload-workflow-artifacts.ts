@@ -1,21 +1,22 @@
 import { dirname } from 'node:path';
-import GHArtifact from '@actions/artifact';
 
+import GHArtifact from '@actions/artifact';
 import { globbySync } from 'globby';
-import { Artifact } from './types';
+
+import { retryAttempts, workflowArtifactNamePattern } from './inputs';
 import { getAssetName, retry } from './utils';
 
-export async function uploadWorkflowArtifacts(
-  artifacts: Artifact[],
-  pattern: string | true,
-  retryAttempts: number,
-) {
+import type { Artifact } from './types';
+
+export async function uploadWorkflowArtifacts(artifacts: Artifact[]) {
   for (const artifact of artifacts) {
     if (artifact.workflowArtifactName) {
       let workflowArtifactName = artifact.workflowArtifactName;
-      if (typeof pattern === 'string') {
-        workflowArtifactName = getAssetName(artifact, pattern);
-      }
+
+      workflowArtifactName = getAssetName(
+        artifact,
+        workflowArtifactNamePattern,
+      );
 
       let paths = [artifact.path];
       if (artifact.ext === '.app') {
