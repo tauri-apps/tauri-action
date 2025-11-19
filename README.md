@@ -260,12 +260,18 @@ jobs:
 
 - You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri <COMMAND> <ARGS>` or `npm run tauri <COMMAND> <ARGS>`, we'll execute `${tauriScript} <COMMAND> <ARGS>`.
   - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script or if you use `cargo install tauri-cli`.
+  - `tauriScript` can also be an absolute file path pointing to a `tauri-cli` binary. The path currently cannot contain spaces.
 - If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
 - When your Tauri app is not in the root of the repo, use the `projectPath` input.
   - Usually it will work without it, but the action will install and use a global `@tauri-apps/cli` installation instead of your project's CLI which can cause issues if you also configured `tauriScript` or if you have multiple `tauri.conf.json` files in your repo.
+  - Additionally, relative paths provided via the `--config` flag will be resolved relative to the `projectPath` to match Tauri's behavior.
+  - The path must NOT be gitignored. Please open an issue if this causes you problems.
 - If `releaseId` is set, the action will use this release to upload assets to. If `tagName` is set the action will try to find an existing release for that tag. If there's none, the action requires `releaseName` to create a new release for the specified `tagName`.
 - If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
+- If you provide a `tagName` to an existing release, `releaseDraft` must be set to `true` if the existing release is a draft.
 - If you only want to build the app without having the action upload any assets, for example if you want to only use [`actions/upload-artifact`](https://github.com/actions/upload-artifact), simply omit `tagName`, `releaseName` and `releaseId`.
+- Only enable `uploadPlainBinary` if you are sure what you're doing since Tauri doesn't officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
+- Gitea support is experimental. It was implemented and tested solely by the community.
 - `uploadWorkflowArtifacts` will likely be removed once [actions/upload-artifact#331](https://github.com/actions/upload-artifact/issues/331) lands.
 
 ## Partners
