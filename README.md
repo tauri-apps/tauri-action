@@ -193,6 +193,7 @@ jobs:
     args: ''
 
     # The naming pattern to use for the uploaded assets.
+    #
     # Currently available variables are:
     # - `[name]`: base filename / appname (Product Name)
     # - `[version]`: app version
