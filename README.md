@@ -193,24 +193,25 @@ jobs:
     releaseAssetNamePattern: ''
 
     # Whether to upload the unbundled executable binary or not. Requires Tauri v2+.
-    # To prevent issues with Tauri's `bundle_type` value this should only be used with the `--no-bundle` flag.
+    # To prevent issues with Tauri's `bundle_type` value (used by e.g. the updater) this
+    # should only be used with the `--no-bundle` flag.
     # ONLY ENABLE THIS IF YOU KNOW WHAT YOU'RE DOING since Tauri does NOT officially support a portable mode,
     # especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
-    # Ref: `bundle_type` = https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html
+    # Ref: https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html
     # default: false
     uploadPlainBinary: false
 
     # Whether to upload the bundles and executables as "workflow artifacts".
     # Independent from the release configs.
     # Affected by `uploadPlainBinary`.
-    # Ref: "workflow artifacts" = https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
+    # Ref: https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
     # default: false
     uploadWorkflowArtifacts: false
 
     # The naming pattern to use for uploaded "workflow artifacts".
     # Ignored if `uploadWorkflowArtifacts` is not enabled.
     # See `releaseAssetNamePattern` for a list of replacement variables.
-    # Ref: "workflow artifacts" = https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
+    # Ref: https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
     # default: "[platform]-[arch]-[bundle]"
     workflowArtifactNamePattern: ''
 
