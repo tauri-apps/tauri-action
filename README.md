@@ -212,7 +212,8 @@ jobs:
     # To prevent issues with Tauri's `bundle_type` value (used by e.g. the updater) this
     # should only be used with the `--no-bundle` flag.
     # ONLY ENABLE THIS IF YOU KNOW WHAT YOU'RE DOING since Tauri does NOT officially support a portable mode,
-    # especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
+    # especially on platforms other than Windows where
+    # standalone binaries for GUI applications do not exist.
     #
     # Ref: https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html
     #
