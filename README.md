@@ -194,15 +194,15 @@ jobs:
 
     # The naming pattern to use for the uploaded assets.
     # Currently available variables are:
-    # - `[name]`
-    # - `[version]`
-    # - `[platform]`
-    # - `[arch]`
-    # - `[ext]`
-    # - `[mode]`: will be replaced with `debug` or `release` depending on the use of the `--debug` flag.
-    # - `[setup]`: will be replaced with `-setup` for the NSIS installer or an empty string for all other types.
-    # - `[_setup]`: behaves like `[setup]` but with `_setup` instead of `-setup`.
-    # - `[bundle]`: will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin`.
+    # - `[name]`: base filename / appname (Product Name)
+    # - `[version]`: app version
+    # - `[platform]`: target platform (OS)
+    # - `[arch]`: target architecture - format differs per platform
+    # - `[ext]`: file extension (`.app`, `.dmg`, `.msi`, `.exe`, `.AppImage`, `.deb`, `.rpm`)
+    # - `[mode]`: `debug` or `release` depending on the use of the `--debug` flag.
+    # - `[setup]`: `-setup` for the NSIS installer or an empty string for all other types.
+    # - `[_setup]`: `_setup` for the NSIS installer or an empty string for all other types.
+    # - `[bundle]`: one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin`.
     #
     # default: If not set, the names given by Tauri's CLI are kept.
     releaseAssetNamePattern: ''
