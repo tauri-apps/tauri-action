@@ -199,13 +199,10 @@ jobs:
     # - `[platform]`
     # - `[arch]`
     # - `[ext]`
-    # - `[mode]`: will be replaced with `debug` or `release` depending on the use of the `--debug` flag in `args`.
-    # - `[setup]`: will be replaced with `-setup` which can be used to differenciate between the NSIS installer and
-    # the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
+    # - `[mode]`: will be replaced with `debug` or `release` depending on the use of the `--debug` flag.
+    # - `[setup]`: will be replaced with `-setup` for the NSIS installer or an empty string for all other types.
     # - `[_setup]`: behaves like `[setup]` but with `_setup` instead of `-setup`.
-    # - `[bundle]`: will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin`. This
-    # is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern`
-    # because of its conflict with `[ext]`.
+    # - `[bundle]`: will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin`.
     #
     # default: If not set, the names given by Tauri's CLI are kept.
     releaseAssetNamePattern: ''
@@ -232,6 +229,7 @@ jobs:
 
     # The naming pattern to use for uploaded "workflow artifacts".
     # Ignored if `uploadWorkflowArtifacts` is not enabled.
+    #
     # See `releaseAssetNamePattern` for a list of replacement variables.
     #
     # Ref: https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
@@ -273,6 +271,8 @@ jobs:
 - Only enable `uploadPlainBinary` if you are sure what you're doing since Tauri doesn't officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
 - Gitea support is experimental. It was implemented and tested solely by the community.
 - `uploadWorkflowArtifacts` will likely be removed once [actions/upload-artifact#331](https://github.com/actions/upload-artifact/issues/331) lands.
+- `[setup]` can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary` (both have the `.exe` extension).
+- `[bundle]` is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
 
 ## Partners
 
