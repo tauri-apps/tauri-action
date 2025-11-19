@@ -186,29 +186,31 @@ jobs:
     # the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
     # - `[_setup]`: behaves like `[setup]` but with `_setup` instead of `-setup`.
     # - `[bundle]`: will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin`. This
-    # is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
+    # is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern`
+    # because of its conflict with `[ext]`.
     #
     # default: If not set, the names given by Tauri's CLI are kept.
     releaseAssetNamePattern: ''
 
     # Whether to upload the unbundled executable binary or not. Requires Tauri v2+.
     # To prevent issues with Tauri's `bundle_type` value this should only be used with the `--no-bundle` flag.
-    # ONLY ENABLE THIS IF YOU KNOW WHAT YOU'RE DOING since Tauri does NOT officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
-    # Ref: [`bundle_type`](https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html)
+    # ONLY ENABLE THIS IF YOU KNOW WHAT YOU'RE DOING since Tauri does NOT officially support a portable mode,
+    # especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
+    # Ref: `bundle_type` = https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html
     # default: false
     uploadPlainBinary: false
 
     # Whether to upload the bundles and executables as "workflow artifacts".
     # Independent from the release configs.
     # Affected by `uploadPlainBinary`.
-    # Ref: [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts)
+    # Ref: "workflow artifacts" = https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
     # default: false
     uploadWorkflowArtifacts: false
 
     # The naming pattern to use for uploaded "workflow artifacts".
     # Ignored if `uploadWorkflowArtifacts` is not enabled.
     # See `releaseAssetNamePattern` for a list of replacement variables.
-    # Ref: [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts)
+    # Ref: "workflow artifacts" = https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
     # default: "[platform]-[arch]-[bundle]"
     workflowArtifactNamePattern: ''
 
