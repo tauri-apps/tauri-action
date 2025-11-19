@@ -76,7 +76,7 @@ export async function buildProject(): Promise<Artifact[]> {
     artifactsPath = join(info.tauriPath, 'gen/android/app/build/outputs/');
   }
   if (isIOS) {
-    artifactsPath = join(info.tauriPath, 'gen/apple/app/build/');
+    artifactsPath = join(info.tauriPath, 'gen/apple/build/');
   }
 
   let artifacts: Artifact[] = [];

@@ -84728,7 +84728,7 @@ async function buildProject() {
         artifactsPath = (0,external_node_path_.join)(info.tauriPath, 'gen/android/app/build/outputs/');
     }
     if (inputs/* isIOS */.un) {
-        artifactsPath = (0,external_node_path_.join)(info.tauriPath, 'gen/apple/app/build/');
+        artifactsPath = (0,external_node_path_.join)(info.tauriPath, 'gen/apple/build/');
     }
     let artifacts = [];
     let arch = targetInfo.arch;
