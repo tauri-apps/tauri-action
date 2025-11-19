@@ -89,7 +89,8 @@ jobs:
 
     # The tag name of the release to upload/create or the tag of the release belonging to `releaseId`.
     # If this points to an existing release `releaseDraft` must match the status of that release.
-    # If `releaseId` is set but this is not, the `latest.json` file will point to `releases/latest/download/<bundle>` instead of the tag.
+    # If `releaseId` is set but this is not, the `latest.json` file will
+    # point to `releases/latest/download/<bundle>` instead of the tag.
     # default: unset
     tagName: ''
 
@@ -136,7 +137,8 @@ jobs:
     # default: $GITHUB_API_URL or "https://api.github.com"
     githubBaseUrl: ''
 
-    # Whether to run in Gitea compatibility mode. Set this if `githubBaseUrl` targets a Gitea instance, since some API endpoints differ from GitHub.
+    # Whether to run in Gitea compatibility mode. Set this if `githubBaseUrl` targets a Gitea instance,
+    # since some API endpoints differ from GitHub.
     # Gitea support is experimental. It was implemented and tested solely by the community.
     # default: false
     isGitea: false
@@ -180,28 +182,33 @@ jobs:
     # - `[arch]`
     # - `[ext]`
     # - `[mode]`: will be replaced with `debug` or `release` depending on the use of the `--debug` flag in `args`.
-    # - `[setup]`: will be replaced with `-setup` which can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
+    # - `[setup]`: will be replaced with `-setup` which can be used to differenciate between the NSIS installer and
+    # the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
     # - `[_setup]`: behaves like `[setup]` but with `_setup` instead of `-setup`.
-    # - `[bundle]`: will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin` (for `uploadPlainBinary`). This is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
+    # - `[bundle]`: will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin`. This
+    # is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
     #
     # default: If not set, the names given by Tauri's CLI are kept.
     releaseAssetNamePattern: ''
 
     # Whether to upload the unbundled executable binary or not. Requires Tauri v2+.
-    # To prevent issues with Tauri's [`bundle_type`](https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html) value this should only be used with the `--no-bundle` flag.
+    # To prevent issues with Tauri's `bundle_type` value this should only be used with the `--no-bundle` flag.
     # ONLY ENABLE THIS IF YOU KNOW WHAT YOU'RE DOING since Tauri does NOT officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
+    # Ref: [`bundle_type`](https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html)
     # default: false
     uploadPlainBinary: false
 
-    # Whether to upload the bundles and executables as [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts).
+    # Whether to upload the bundles and executables as "workflow artifacts".
     # Independent from the release configs.
     # Affected by `uploadPlainBinary`.
+    # Ref: [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts)
     # default: false
     uploadWorkflowArtifacts: false
 
-    # The naming pattern to use for uploaded [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts).
+    # The naming pattern to use for uploaded "workflow artifacts".
     # Ignored if `uploadWorkflowArtifacts` is not enabled.
     # See `releaseAssetNamePattern` for a list of replacement variables.
+    # Ref: [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts)
     # default: "[platform]-[arch]-[bundle]"
     workflowArtifactNamePattern: ''
 
