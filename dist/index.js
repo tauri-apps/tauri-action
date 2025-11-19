@@ -84695,7 +84695,6 @@ async function getRunner() {
 
 async function buildProject() {
     const runner = await getRunner();
-    const debug = inputs/* parsedArgs */.HD['debug'];
     const targetPath = inputs/* parsedArgs */.HD['target'];
     const configArg = inputs/* parsedArgs */.HD['config'];
     const profile = inputs/* parsedRunnerArgs */.Nl['profile'];
@@ -84713,13 +84712,24 @@ async function buildProject() {
         wixLanguage: info.wixLanguage,
         rpmRelease: info.rpmRelease,
     };
-    await runner.execTauriCommand(['build'], inputs/* rawArgs */.ay, inputs/* projectPath */.DZ, targetInfo.platform === 'macos'
+    let command = ['build'];
+    if (inputs/* isAndroid */.m0)
+        command = ['android', 'build'];
+    if (inputs/* isIOS */.un)
+        command = ['ios', 'build'];
+    await runner.execTauriCommand(command, inputs/* rawArgs */.ay, inputs/* projectPath */.DZ, targetInfo.platform === 'macos'
         ? {
             TAURI_BUNDLER_DMG_IGNORE_CI: process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
         }
         : undefined, inputs/* retryAttempts */.z);
     const workspacePath = (0,utils/* getWorkspaceDir */.Lw)(app.tauriPath) ?? app.tauriPath;
-    const artifactsPath = (0,external_node_path_.join)((0,utils/* getTargetDir */.d)(workspacePath, info.tauriPath, !!targetPath), targetPath ?? '', profile ? profile : debug ? 'debug' : 'release');
+    let artifactsPath = (0,external_node_path_.join)((0,utils/* getTargetDir */.d)(workspacePath, info.tauriPath, !!targetPath), targetPath ?? '', profile ? profile : inputs/* isDebug */._o ? 'debug' : 'release');
+    if (inputs/* isAndroid */.m0) {
+        artifactsPath = (0,external_node_path_.join)(info.tauriPath, 'gen/android/app/build/outputs/');
+    }
+    if (inputs/* isIOS */.un) {
+        artifactsPath = (0,external_node_path_.join)(info.tauriPath, 'gen/apple/app/build/');
+    }
     let artifacts = [];
     let arch = targetInfo.arch;
     if (targetInfo.platform === 'macos') {
@@ -84733,7 +84743,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/dmg/${app.name}_${app.version}_${arch}.dmg`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch,
                 bundle: 'dmg', // could be 'dmg' or 'app' depending on the usecase
@@ -84742,7 +84751,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/macos/${app.name}.app`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch,
                 bundle: 'app',
@@ -84751,7 +84759,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/macos/${app.name}.app.tar.gz`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch,
                 bundle: 'app',
@@ -84760,7 +84767,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/macos/${app.name}.app.tar.gz.sig`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch,
                 bundle: 'app',
@@ -84796,7 +84802,6 @@ async function buildProject() {
             winArtifacts.push((0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch,
                 bundle: 'msi',
@@ -84804,7 +84809,6 @@ async function buildProject() {
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.sig`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch,
                 bundle: 'msi',
@@ -84812,7 +84816,6 @@ async function buildProject() {
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch,
                 bundle: 'msi',
@@ -84820,7 +84823,6 @@ async function buildProject() {
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip.sig`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch,
                 bundle: 'msi',
@@ -84830,7 +84832,6 @@ async function buildProject() {
         winArtifacts.push((0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe`),
             name: app.name,
-            debug,
             platform: targetInfo.platform,
             arch,
             bundle: 'nsis',
@@ -84838,7 +84839,6 @@ async function buildProject() {
         }), (0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe.sig`),
             name: app.name,
-            debug,
             platform: targetInfo.platform,
             arch,
             bundle: 'nsis',
@@ -84846,7 +84846,6 @@ async function buildProject() {
         }), (0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip`),
             name: app.name,
-            debug,
             platform: targetInfo.platform,
             arch,
             bundle: 'nsis',
@@ -84854,7 +84853,6 @@ async function buildProject() {
         }), (0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`),
             name: app.name,
-            debug,
             platform: targetInfo.platform,
             arch,
             bundle: 'nsis',
@@ -84862,7 +84860,7 @@ async function buildProject() {
         }));
         artifacts = winArtifacts;
     }
-    else {
+    else if (targetInfo.platform === 'linux') {
         const debianArch = arch === 'x64' || arch === 'x86_64'
             ? 'amd64'
             : arch === 'x32' || arch === 'i686'
@@ -84894,7 +84892,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/deb/${app.name}_${app.version}_${debianArch}.deb`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch: debianArch,
                 bundle: 'deb',
@@ -84903,7 +84900,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/deb/${app.name}_${app.version}_${debianArch}.deb.sig`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch: debianArch,
                 bundle: 'deb',
@@ -84912,7 +84908,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch: rpmArch,
                 bundle: 'rpm',
@@ -84921,7 +84916,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch: rpmArch,
                 bundle: 'rpm',
@@ -84930,7 +84924,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
                 bundle: 'appimage',
@@ -84939,7 +84932,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.sig`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
                 bundle: 'appimage',
@@ -84948,7 +84940,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
                 bundle: 'appimage',
@@ -84957,7 +84948,6 @@ async function buildProject() {
             (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`),
                 name: app.name,
-                debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
                 bundle: 'appimage',
@@ -84965,13 +84955,165 @@ async function buildProject() {
             }),
         ];
     }
+    else if (targetInfo.platform === 'android') {
+        const debug = inputs/* isDebug */._o ? 'debug' : 'release';
+        // TODO: detect (un)signed beforehand
+        if (!inputs/* isDebug */._o) {
+            // unsigned release apks
+            artifacts.push((0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `apk/universal/release/app-universal-unsigend.apk`),
+                name: app.name,
+                platform: targetInfo.platform,
+                arch: 'universal',
+                bundle: 'apk',
+                version: app.version,
+            }), (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `apk/arm64/release/app-arm64-unsigend.apk`),
+                name: app.name,
+                platform: targetInfo.platform,
+                arch: 'arm64',
+                bundle: 'apk',
+                version: app.version,
+            }), (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `apk/arm/release/app-arm-unsigend.apk`),
+                name: app.name,
+                platform: targetInfo.platform,
+                arch: 'universal',
+                bundle: 'apk',
+                version: app.version,
+            }), (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `apk/x86_64/release/app-x86_64-unsigend.apk`),
+                name: app.name,
+                platform: targetInfo.platform,
+                arch: 'arm',
+                bundle: 'apk',
+                version: app.version,
+            }), (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `apk/x86/release/app-x86-unsigend.apk`),
+                name: app.name,
+                platform: targetInfo.platform,
+                arch: 'x86',
+                bundle: 'apk',
+                version: app.version,
+            }));
+        }
+        artifacts.push(
+        // signed release apks and debug apks
+        (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `apk/universal/${debug}/app-universal-${debug}.apk`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'universal',
+            bundle: 'apk',
+            version: app.version,
+        }), (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `apk/arm64/${debug}/app-arm64-${debug}.apk`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'arm64',
+            bundle: 'apk',
+            version: app.version,
+        }), (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `apk/arm/${debug}/app-arm-${debug}.apk`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'universal',
+            bundle: 'apk',
+            version: app.version,
+        }), (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `apk/x86_64/${debug}/app-x86_64-${debug}.apk`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'arm',
+            bundle: 'apk',
+            version: app.version,
+        }), (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `apk/x86/${debug}/app-x86-${debug}.apk`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'x86',
+            bundle: 'apk',
+            version: app.version,
+        }), 
+        //
+        // aabs
+        //
+        (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/universal${debug}/app-universal-${debug}.aab`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'universal',
+            bundle: 'aab',
+            version: app.version,
+        }), (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/arm64${debug}/app-arm64-${debug}.aab`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'arm64',
+            bundle: 'aab',
+            version: app.version,
+        }), (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/arm${debug}/app-arm-${debug}.aab`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'arm',
+            bundle: 'aab',
+            version: app.version,
+        }), (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/x86_64${debug}/app-x86_64-${debug}.aab`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'x86_64',
+            bundle: 'aab',
+            version: app.version,
+        }), (0,utils/* createArtifact */.Dg)({
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/x86${debug}/app-x86-${debug}.aab`),
+            name: app.name,
+            platform: targetInfo.platform,
+            arch: 'x86',
+            bundle: 'aab',
+            version: app.version,
+        }));
+    }
+    else if (targetInfo.platform === 'ios') {
+        // TODO: Confirm that info.name is correct.
+        artifacts = [
+            (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `x86_64/${app.name}.ipa`),
+                name: app.name,
+                platform: targetInfo.platform,
+                arch: 'x86_64',
+                bundle: 'ipa',
+                version: app.version,
+            }),
+            (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `arm64/${app.name}.ipa`),
+                name: app.name,
+                platform: targetInfo.platform,
+                arch: 'arm64',
+                bundle: 'ipa',
+                version: app.version,
+            }),
+            (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `arm64-sim/${app.name}.ipa`),
+                name: app.name,
+                platform: targetInfo.platform,
+                arch: 'arm64-sim',
+                bundle: 'ipa',
+                version: app.version,
+            }),
+        ];
+    }
+    else {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        console.error(`Unhandled target platform: "${targetInfo.platform}"`);
+    }
     if (inputs/* uploadPlainBinary */.pm) {
         const ext = targetInfo.platform === 'windows' ? '.exe' : '';
         artifacts.push((0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `${app.mainBinaryName}${ext}`),
             name: 'binary', // app.mainBinaryName,
             bundle: 'bin',
-            debug,
             platform: targetInfo.platform,
             arch,
             version: app.version,
@@ -85129,6 +85271,9 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 async function run() {
     try {
+        if (_inputs__WEBPACK_IMPORTED_MODULE_5__/* .isIOS */ .un && process.platform !== 'darwin') {
+            throw new Error('Building for iOS is only supported on macOS runners.');
+        }
         // inputs that won't be changed are in ./inputs
         let tagName = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('tagName').replace('refs/tags/', '');
         let releaseId = Number(_actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('releaseId'));
@@ -85242,7 +85387,10 @@ __nccwpck_require__.d(__webpack_exports__, {
   yK: () => (/* binding */ generateReleaseNotes),
   qu: () => (/* binding */ githubBaseUrl),
   Sv: () => (/* binding */ includeUpdaterJson),
+  m0: () => (/* binding */ isAndroid),
+  _o: () => (/* binding */ isDebug),
   Hd: () => (/* binding */ isGitea),
+  un: () => (/* binding */ isIOS),
   eC: () => (/* binding */ owner),
   HD: () => (/* binding */ parsedArgs),
   Nl: () => (/* binding */ parsedRunnerArgs),
@@ -85357,6 +85505,9 @@ const shouldUploadWorkflowArtifacts = core.getBooleanInput('uploadWorkflowArtifa
 const workflowArtifactNamePattern = core.getInput('workflowArtifactNamePattern') || '[platform]-[arch]-[bundle]';
 const uploadUpdaterSignatures = core.getBooleanInput('uploadUpdaterSignatures');
 const updaterJsonPreferNsis = core.getBooleanInput('updaterJsonPreferNsis');
+const isAndroid = core.getInput('mobile').toLowerCase() === 'android';
+const isIOS = core.getInput('mobile').toLowerCase() === 'ios';
+const isDebug = parsedArgs['debug'];
 
 
 /***/ }),
@@ -85673,7 +85824,6 @@ async function uploadVersionJSON(version, notes, tagName, releaseId, artifacts, 
     const artifact = (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .createArtifact */ .Dg)({
         path: versionFile,
         name: versionFilename,
-        debug: false,
         platform: targetInfo.platform,
         arch: '',
         bundle: '',
@@ -96121,7 +96271,7 @@ function ghAssetName(artifact, releaseAssetNamePattern) {
         .replace(/[^a-zA-Z0-9_-]/g, '.')
         .replace(/\.\./g, '.');
 }
-function createArtifact({ path, name, debug, platform, arch, bundle, version, }) {
+function createArtifact({ path, name, platform, arch, bundle, version, }) {
     const baseName = (0,external_node_path_.basename)(path);
     const exts = extensions.filter((s) => baseName.includes(s));
     const ext = exts[0] || (0,external_node_path_.extname)(path);
@@ -96133,7 +96283,7 @@ function createArtifact({ path, name, debug, platform, arch, bundle, version, })
     return {
         path,
         name,
-        mode: debug ? 'debug' : 'release',
+        mode: inputs/* isDebug */._o ? 'debug' : 'release',
         platform: platform === 'macos' ? 'darwin' : platform,
         arch,
         bundle,

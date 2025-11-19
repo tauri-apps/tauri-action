@@ -24,7 +24,7 @@ import type {
 } from './types';
 import { GitHub } from '@actions/github/lib/utils';
 import { findUpSync } from 'find-up-simple';
-import { owner, projectPath, repo } from './inputs';
+import { isDebug, owner, projectPath, repo } from './inputs';
 
 /*** constants ***/
 export const extensions = [
@@ -139,7 +139,6 @@ export function ghAssetName(
 export function createArtifact({
   path,
   name,
-  debug,
   platform,
   arch,
   bundle,
@@ -147,7 +146,6 @@ export function createArtifact({
 }: {
   path: string;
   name: string;
-  debug: boolean;
   platform: TargetPlatform;
   arch: string;
   bundle: string;
@@ -167,7 +165,7 @@ export function createArtifact({
   return {
     path,
     name,
-    mode: debug ? 'debug' : 'release',
+    mode: isDebug ? 'debug' : 'release',
     platform: platform === 'macos' ? 'darwin' : platform,
     arch,
     bundle,

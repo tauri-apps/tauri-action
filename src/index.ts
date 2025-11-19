@@ -7,6 +7,7 @@ import { buildProject } from './build';
 import { getOrCreateRelease } from './create-release';
 import {
   includeUpdaterJson,
+  isIOS,
   parsedArgs,
   retryAttempts,
   shouldUploadWorkflowArtifacts,
@@ -20,6 +21,10 @@ import type { Artifact } from './types';
 
 async function run(): Promise<void> {
   try {
+    if (isIOS && process.platform !== 'darwin') {
+      throw new Error('Building for iOS is only supported on macOS runners.');
+    }
+
     // inputs that won't be changed are in ./inputs
     let tagName = core.getInput('tagName').replace('refs/tags/', '');
     let releaseId = Number(core.getInput('releaseId'));

@@ -328,7 +328,6 @@ export async function uploadVersionJSON(
   const artifact = createArtifact({
     path: versionFile,
     name: versionFilename,
-    debug: false,
     platform: targetInfo.platform,
     arch: '',
     bundle: '',

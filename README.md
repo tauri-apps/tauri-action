@@ -244,6 +244,22 @@ jobs:
     #
     # default: true
     uploadUpdaterSignatures: true
+
+    # Whether to build for mobile or desktop.
+    # Effectively changes the build command from `${tauriScript} build`
+    # to `${tauriScript} android build` / ` ${tauriScript}ios build`
+    #
+    # Note that you have to install system dependencies (Xcode, SDKs, etc) yourself.
+    # Furthermore, the action does not upload the app to the App Store or Play Store.
+    # The .apk and .ipa files can be uploaded to the release or as workflow artifcats, but
+    # plain .ipa files are generally useless so uploading them to a release is not recommended.
+    #
+    # Can be set to "android" to build for Android. This works on all runners.
+    # Can be set to "ios` to build for iOS. This only works on macOS runners.
+    # Any other values will be ignored.
+    #
+    # default: unset
+    mobile: ''
 ```
 
 ## Outputs

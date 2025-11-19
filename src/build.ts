@@ -3,6 +3,9 @@ import { join } from 'node:path';
 
 import { getRunner } from './runner';
 import {
+  isAndroid,
+  isDebug,
+  isIOS,
   parsedArgs,
   parsedRunnerArgs,
   projectPath,
@@ -23,7 +26,6 @@ import type { Artifact } from './types';
 export async function buildProject(): Promise<Artifact[]> {
   const runner = await getRunner();
 
-  const debug = parsedArgs['debug'] as boolean;
   const targetPath = parsedArgs['target'] as string | undefined;
   const configArg = parsedArgs['config'] as string | undefined;
   const profile = parsedRunnerArgs['profile'] as string | undefined;
@@ -46,8 +48,12 @@ export async function buildProject(): Promise<Artifact[]> {
     rpmRelease: info.rpmRelease,
   };
 
+  let command = ['build'];
+  if (isAndroid) command = ['android', 'build'];
+  if (isIOS) command = ['ios', 'build'];
+
   await runner.execTauriCommand(
-    ['build'],
+    command,
     rawArgs,
     projectPath,
     targetInfo.platform === 'macos'
@@ -61,11 +67,17 @@ export async function buildProject(): Promise<Artifact[]> {
 
   const workspacePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
 
-  const artifactsPath = join(
+  let artifactsPath = join(
     getTargetDir(workspacePath, info.tauriPath, !!targetPath),
     targetPath ?? '',
-    profile ? profile : debug ? 'debug' : 'release',
+    profile ? profile : isDebug ? 'debug' : 'release',
   );
+  if (isAndroid) {
+    artifactsPath = join(info.tauriPath, 'gen/android/app/build/outputs/');
+  }
+  if (isIOS) {
+    artifactsPath = join(info.tauriPath, 'gen/apple/app/build/');
+  }
 
   let artifacts: Artifact[] = [];
 
@@ -85,7 +97,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/dmg/${app.name}_${app.version}_${arch}.dmg`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch,
         bundle: 'dmg', // could be 'dmg' or 'app' depending on the usecase
@@ -94,7 +105,6 @@ export async function buildProject(): Promise<Artifact[]> {
       createArtifact({
         path: join(artifactsPath, `bundle/macos/${app.name}.app`),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch,
         bundle: 'app',
@@ -103,7 +113,6 @@ export async function buildProject(): Promise<Artifact[]> {
       createArtifact({
         path: join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz`),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch,
         bundle: 'app',
@@ -112,7 +121,6 @@ export async function buildProject(): Promise<Artifact[]> {
       createArtifact({
         path: join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz.sig`),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch,
         bundle: 'app',
@@ -150,7 +158,6 @@ export async function buildProject(): Promise<Artifact[]> {
             `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi`,
           ),
           name: app.name,
-          debug,
           platform: targetInfo.platform,
           arch,
           bundle: 'msi',
@@ -162,7 +169,6 @@ export async function buildProject(): Promise<Artifact[]> {
             `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.sig`,
           ),
           name: app.name,
-          debug,
           platform: targetInfo.platform,
           arch,
           bundle: 'msi',
@@ -174,7 +180,6 @@ export async function buildProject(): Promise<Artifact[]> {
             `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip`,
           ),
           name: app.name,
-          debug,
           platform: targetInfo.platform,
           arch,
           bundle: 'msi',
@@ -186,7 +191,6 @@ export async function buildProject(): Promise<Artifact[]> {
             `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip.sig`,
           ),
           name: app.name,
-          debug,
           platform: targetInfo.platform,
           arch,
           bundle: 'msi',
@@ -202,7 +206,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch,
         bundle: 'nsis',
@@ -214,7 +217,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe.sig`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch,
         bundle: 'nsis',
@@ -226,7 +228,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch,
         bundle: 'nsis',
@@ -238,7 +239,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch,
         bundle: 'nsis',
@@ -247,7 +247,7 @@ export async function buildProject(): Promise<Artifact[]> {
     );
 
     artifacts = winArtifacts;
-  } else {
+  } else if (targetInfo.platform === 'linux') {
     const debianArch =
       arch === 'x64' || arch === 'x86_64'
         ? 'amd64'
@@ -286,7 +286,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/deb/${app.name}_${app.version}_${debianArch}.deb`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch: debianArch,
         bundle: 'deb',
@@ -298,7 +297,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/deb/${app.name}_${app.version}_${debianArch}.deb.sig`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch: debianArch,
         bundle: 'deb',
@@ -310,7 +308,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch: rpmArch,
         bundle: 'rpm',
@@ -322,7 +319,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch: rpmArch,
         bundle: 'rpm',
@@ -334,7 +330,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch: appImageArch,
         bundle: 'appimage',
@@ -346,7 +341,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.sig`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch: appImageArch,
         bundle: 'appimage',
@@ -358,7 +352,6 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch: appImageArch,
         bundle: 'appimage',
@@ -370,13 +363,201 @@ export async function buildProject(): Promise<Artifact[]> {
           `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
         ),
         name: app.name,
-        debug,
         platform: targetInfo.platform,
         arch: appImageArch,
         bundle: 'appimage',
         version: app.version,
       }),
     ];
+  } else if (targetInfo.platform === 'android') {
+    const debug = isDebug ? 'debug' : 'release';
+
+    // TODO: detect (un)signed beforehand
+
+    if (!isDebug) {
+      // unsigned release apks
+      artifacts.push(
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `apk/universal/release/app-universal-unsigend.apk`,
+          ),
+          name: app.name,
+          platform: targetInfo.platform,
+          arch: 'universal',
+          bundle: 'apk',
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(artifactsPath, `apk/arm64/release/app-arm64-unsigend.apk`),
+          name: app.name,
+          platform: targetInfo.platform,
+          arch: 'arm64',
+          bundle: 'apk',
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(artifactsPath, `apk/arm/release/app-arm-unsigend.apk`),
+          name: app.name,
+          platform: targetInfo.platform,
+          arch: 'universal',
+          bundle: 'apk',
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `apk/x86_64/release/app-x86_64-unsigend.apk`,
+          ),
+          name: app.name,
+          platform: targetInfo.platform,
+          arch: 'arm',
+          bundle: 'apk',
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(artifactsPath, `apk/x86/release/app-x86-unsigend.apk`),
+          name: app.name,
+          platform: targetInfo.platform,
+          arch: 'x86',
+          bundle: 'apk',
+          version: app.version,
+        }),
+      );
+    }
+
+    artifacts.push(
+      // signed release apks and debug apks
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `apk/universal/${debug}/app-universal-${debug}.apk`,
+        ),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'universal',
+        bundle: 'apk',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `apk/arm64/${debug}/app-arm64-${debug}.apk`),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'arm64',
+        bundle: 'apk',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `apk/arm/${debug}/app-arm-${debug}.apk`),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'universal',
+        bundle: 'apk',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `apk/x86_64/${debug}/app-x86_64-${debug}.apk`,
+        ),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'arm',
+        bundle: 'apk',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `apk/x86/${debug}/app-x86-${debug}.apk`),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'x86',
+        bundle: 'apk',
+        version: app.version,
+      }),
+      //
+      // aabs
+      //
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `/bundle/universal${debug}/app-universal-${debug}.aab`,
+        ),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'universal',
+        bundle: 'aab',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `/bundle/arm64${debug}/app-arm64-${debug}.aab`,
+        ),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'arm64',
+        bundle: 'aab',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `/bundle/arm${debug}/app-arm-${debug}.aab`),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'arm',
+        bundle: 'aab',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(
+          artifactsPath,
+          `/bundle/x86_64${debug}/app-x86_64-${debug}.aab`,
+        ),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'x86_64',
+        bundle: 'aab',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `/bundle/x86${debug}/app-x86-${debug}.aab`),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'x86',
+        bundle: 'aab',
+        version: app.version,
+      }),
+    );
+  } else if (targetInfo.platform === 'ios') {
+    // TODO: Confirm that info.name is correct.
+    artifacts = [
+      createArtifact({
+        path: join(artifactsPath, `x86_64/${app.name}.ipa`),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'x86_64',
+        bundle: 'ipa',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `arm64/${app.name}.ipa`),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'arm64',
+        bundle: 'ipa',
+        version: app.version,
+      }),
+      createArtifact({
+        path: join(artifactsPath, `arm64-sim/${app.name}.ipa`),
+        name: app.name,
+        platform: targetInfo.platform,
+        arch: 'arm64-sim',
+        bundle: 'ipa',
+        version: app.version,
+      }),
+    ];
+  } else {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    console.error(`Unhandled target platform: "${targetInfo.platform}"`);
   }
 
   if (uploadPlainBinary) {
@@ -386,7 +567,7 @@ export async function buildProject(): Promise<Artifact[]> {
         path: join(artifactsPath, `${app.mainBinaryName}${ext}`),
         name: 'binary', // app.mainBinaryName,
         bundle: 'bin',
-        debug,
+
         platform: targetInfo.platform,
         arch,
         version: app.version,
