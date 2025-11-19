@@ -181,7 +181,7 @@ jobs:
     updaterJsonPreferNsis: false
 
     # The script to execute the Tauri CLI. It must not include any args or commands like `build`.
-    # It can also be an absolute path pointing to a `tauri-cli` binary, but this path currently cannot contain spaces.
+    # It can also be an absolute path without spaces pointing to a `tauri-cli` binary.
     #
     # default: "npm|pnpm|yarn|bun tauri" or "tauri" if the action had to install the CLI.
     tauriScript: ''
