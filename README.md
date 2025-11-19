@@ -82,12 +82,19 @@ jobs:
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   with:
-    # The tag name of the release to upload/create or the tag of the release belonging to
-    # default: empty
+    # The id of the release to upload artifacts as release assets.
+    # If set, `tagName` and `releaseName` will NOT be considered to find a release.
+    # default: unset
+    releaseId: ''
+
+    # The tag name of the release to upload/create or the tag of the release belonging to `releaseId`.
+    # If this points to an existing release `releaseDraft` must match the status of that release.
+    # If `releaseId` is set but this is not, the `latest.json` file will point to `releases/latest/download/<bundle>` instead of the tag.
+    # default: unset
     tagName: ''
 
     # The name of the release to create.
-    # Required if there's no existing release for `tagName`.
+    # Required if `releaseId` is not set and there's no existing release for `tagName`.
     # default: ""
     releaseName: ''
 
@@ -130,11 +137,14 @@ jobs:
     githubBaseUrl: ''
 
     # Whether to run in Gitea compatibility mode. Set this if `githubBaseUrl` targets a Gitea instance, since some API endpoints differ from GitHub.
+    # Gitea support is experimental. It was implemented and tested solely by the community.
     # default: false
     isGitea: false
 
     # The path to the root of the tauri project relative to the current working directory.
-    # It must NOT be gitignored.
+    # It must NOT be gitignored. Please open an issue if this causes problems.
+    #
+    # Relative paths provided via the `--config` flag will be resolved relative to this path.
     # default: ./
     projectPath: ''
 
@@ -152,20 +162,34 @@ jobs:
     # default: false (for legacy reasons)
     updaterJsonPreferNsis: false
 
-    # The script to execute the Tauri CLI. It must not include any args or commands like `build`
+    # The script to execute the Tauri CLI. It must not include any args or commands like `build`.
+    # It can also be an absolute path pointing to a `tauri-cli` binary, but this path currently cannot contain spaces.
     # default: "npm|pnpm|yarn|bun tauri" or "tauri" if the action had to install the CLI.
     tauriScript: ''
 
-    # Additional arguments to the current tauri build command
+    # Additional arguments to the current tauri build command.
+    # Relative paths in the `--config` flag will be resolved relative to `projectPath`.
     # default: ""
     args: ''
 
     # The naming pattern to use for the uploaded assets.
-    # If not set, the names given by Tauri's CLI are kept.
+    # Currently available variables are:
+    # - `[name]`
+    # - `[version]`
+    # - `[platform]`
+    # - `[arch]`
+    # - `[ext]`
+    # - `[mode]`: will be replaced with `debug` or `release` depending on the use of the `--debug` flag in `args`.
+    # - `[setup]`: will be replaced with `-setup` which can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
+    # - `[_setup]`: behaves like `[setup]` but with `_setup` instead of `-setup`.
+    # - `[bundle]`: will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin` (for `uploadPlainBinary`). This is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
+    #
+    # default: If not set, the names given by Tauri's CLI are kept.
     releaseAssetNamePattern: ''
 
     # Whether to upload the unbundled executable binary or not. Requires Tauri v2+.
     # To prevent issues with Tauri's [`bundle_type`](https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html) value this should only be used with the `--no-bundle` flag.
+    # ONLY ENABLE THIS IF YOU KNOW WHAT YOU'RE DOING since Tauri does NOT officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
     # default: false
     uploadPlainBinary: false
 
@@ -177,6 +201,7 @@ jobs:
 
     # The naming pattern to use for uploaded [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts).
     # Ignored if `uploadWorkflowArtifacts` is not enabled.
+    # See `releaseAssetNamePattern` for a list of replacement variables.
     # default: "[platform]-[arch]-[bundle]"
     workflowArtifactNamePattern: ''
 
@@ -238,24 +263,13 @@ These inputs allow you to modify the GitHub release.
 ## Tips and Caveats
 
 - You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri <COMMAND> <ARGS>` or `npm run tauri <COMMAND> <ARGS>`, we'll execute `${tauriScript} <COMMAND> <ARGS>`.
-  - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
-  - `tauriScript` can also be an absolute file path pointing to a `tauri-cli` binary. The path currently cannot contain spaces.
+  - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script or if you use `cargo install tauri-cli`.
 - If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
 - When your Tauri app is not in the root of the repo, use the `projectPath` input.
   - Usually it will work without it, but the action will install and use a global `@tauri-apps/cli` installation instead of your project's CLI which can cause issues if you also configured `tauriScript` or if you have multiple `tauri.conf.json` files in your repo.
-  - Additionally, relative paths provided via the `--config` flag will be resolved relative to the `projectPath` to match Tauri's behavior.
-  - The path must NOT be gitignored. Please open an issue if this causes you problems.
 - If `releaseId` is set, the action will use this release to upload assets to. If `tagName` is set the action will try to find an existing release for that tag. If there's none, the action requires `releaseName` to create a new release for the specified `tagName`.
 - If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
-- If you provide a `tagName` to an existing release, `releaseDraft` must be set to `true` if the existing release is a draft.
 - If you only want to build the app without having the action upload any assets, for example if you want to only use [`actions/upload-artifact`](https://github.com/actions/upload-artifact), simply omit `tagName`, `releaseName` and `releaseId`.
-- Only enable `uploadPlainBinary` if you are sure what you're doing since Tauri doesn't officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
-- `releaseAssetNamePattern` offers a few variables that will be replaced automatically if encapsulated in `[]`. Currently available variables are: `[name]`, `[version]`, `[platform]`, `[arch]`, `[mode]`, `[setup]`, `[_setup]`, `[ext]`, `[bundle]`.
-  - `[mode]` will be replaced with `debug` or `release`, depending on the use of the `--debug` flag in `args`.
-  - `[setup]` will be replaced with `-setup` which can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
-  - `[_setup]` behaves like `[setup]` but with `_setup` instead of `-setup`.
-  - `[bundle]` will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin` (for `uploadPlainBinary`). This is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
-- Gitea support is experimental. It was implemented and tested solely by the community.
 - `uploadWorkflowArtifacts` will likely be removed once [actions/upload-artifact#331](https://github.com/actions/upload-artifact/issues/331) lands.
 
 ## Partners
