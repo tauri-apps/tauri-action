@@ -24,7 +24,7 @@ import type {
 } from './types';
 import { GitHub } from '@actions/github/lib/utils';
 import { findUpSync } from 'find-up-simple';
-import { isDebug, owner, projectPath, repo } from './inputs';
+import { isAndroid, isDebug, isIOS, owner, projectPath, repo } from './inputs';
 
 /*** constants ***/
 export const extensions = [
@@ -544,12 +544,18 @@ export function getInfo(targetInfo?: TargetInfo, configFlag?: string): Info {
 
 export function getTargetInfo(targetPath?: string): TargetInfo {
   let arch: string = process.arch;
-  let platform: TargetPlatform =
-    process.platform === 'win32'
-      ? 'windows'
-      : process.platform === 'darwin'
-        ? 'macos'
-        : 'linux';
+  let platform: TargetPlatform;
+  if (isAndroid) {
+    platform = 'android';
+  } else if (isIOS) {
+    platform = 'ios';
+  } else if (process.platform === 'win32') {
+    platform = 'windows';
+  } else if (process.platform === 'darwin') {
+    platform = 'macos';
+  } else {
+    platform = 'linux';
+  }
 
   if (targetPath) {
     if (targetPath.includes('windows')) {

@@ -96577,11 +96577,22 @@ function getInfo(targetInfo, configFlag) {
 }
 function getTargetInfo(targetPath) {
     let arch = process.arch;
-    let platform = process.platform === 'win32'
-        ? 'windows'
-        : process.platform === 'darwin'
-            ? 'macos'
-            : 'linux';
+    let platform;
+    if (inputs/* isAndroid */.m0) {
+        platform = 'android';
+    }
+    else if (inputs/* isIOS */.un) {
+        platform = 'ios';
+    }
+    else if (process.platform === 'win32') {
+        platform = 'windows';
+    }
+    else if (process.platform === 'darwin') {
+        platform = 'macos';
+    }
+    else {
+        platform = 'linux';
+    }
     if (targetPath) {
         if (targetPath.includes('windows')) {
             platform = 'windows';
