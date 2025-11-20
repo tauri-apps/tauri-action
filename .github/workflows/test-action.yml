@@ -28,8 +28,10 @@ jobs:
           - platform: 'windows-11-arm'
             args: '--verbose --debug'
           - platform: 'macos-26'
+            args: '--verbose --debug'
             mobile: 'ios'
           - platform: 'ubuntu-latest'
+            args: '--verbose --debug'
             mobile: 'android'
 
     runs-on: ${{ matrix.platform }}
