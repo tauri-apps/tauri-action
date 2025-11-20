@@ -51,8 +51,9 @@ jobs:
 
       - name: install example dependencies
         run: |
-          echo "skipped"
-        # disabled to test cli fallback install
+          cd ./.github/fixtures/example-with-tauri-v2
+          pnpm install
+        # disabled on desktop to test cli fallback install
         #cd ./.github/fixtures/example-with-tauri-v2
         # pnpm install
 
@@ -111,6 +112,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev
+
+      - name: init mobile project
+        if: matrix.mobile != ''
+        run: |
+          cd ./.github/fixtures/example-with-tauri-v2
+          pnpm tauri ${{ matrix.mobile }} init
 
       - name: Preconfigured Tauri Project
         uses: ./
