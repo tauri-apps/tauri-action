@@ -27,12 +27,13 @@ jobs:
             args: '--verbose --debug'
           - platform: 'windows-11-arm'
             args: '--verbose --debug'
-          - platform: 'macos-26'
-            args: '--verbose --debug'
-            mobile: 'ios'
           - platform: 'ubuntu-latest'
             args: '--verbose --debug'
             mobile: 'android'
+          # can't test without an apple account
+          #- platform: 'macos-26'
+          #  args: '--verbose --debug'
+          #  mobile: 'ios'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -98,6 +99,14 @@ jobs:
         if: matrix.mobile == 'ios'
         with:
           xcode-version: 26.1
+
+      - name: setup Apple API key
+        if: matrix.mobile == 'ios'
+        run: |
+          APPLE_API_KEY_PATH="$RUNNER_TEMP/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8"
+          echo "${{ secrets.APPLE_API_KEY }}" > $APPLE_API_KEY_PATH
+          echo "APPLE_API_KEY_PATH=$APPLE_API_KEY_PATH" >> $GITHUB_ENV
+          echo "API_PRIVATE_KEYS_DIR=$RUNNER_TEMP" >> $GITHUB_ENV
 
       - uses: Swatinem/rust-cache@v2
         with:
