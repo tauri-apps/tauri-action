@@ -83,9 +83,11 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Android SDK
+        if: matrix.mobile == 'android'
         uses: android-actions/setup-android@v3
 
       - name: Setup Android NDK
+        if: matrix.mobile == 'android'
         uses: nttld/setup-ndk@v1
         id: setup-ndk
         with:
@@ -93,6 +95,7 @@ jobs:
           link-to-sdk: true
 
       - uses: maxim-lobanov/setup-xcode@v1
+        if: matrix.mobile == 'ios'
         with:
           xcode-version: 26.1
 
