@@ -61,6 +61,8 @@ inputs:
   generateReleaseNotes:
     description: "Whether to use GitHub's Release Notes API to generate the release title and body. If `releaseName` is set, it will overwrite the generated title. If `releaseBody` is set, it will be pre-pended to the automatically generated notes. This action is not responsible for the generated content."
     default: 'false'
+  mobile:
+    description: 'Whether to build for mobile or desktop. Can be "android" or "ios" or unset for desktop builds.'
 outputs:
   releaseId:
     description: 'The ID of the created release'
