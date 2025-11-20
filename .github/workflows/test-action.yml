@@ -51,9 +51,7 @@ jobs:
 
       - name: install example dependencies
         run: |
-          cd ./.github/fixtures/example-with-tauri-v2
-          pnpm install
-          pnpm add -D @tauri-apps/cli
+          echo "skipped"
         # disabled on desktop to test cli fallback install
         #cd ./.github/fixtures/example-with-tauri-v2
         # pnpm install
@@ -118,7 +116,7 @@ jobs:
         if: matrix.mobile != ''
         run: |
           cd ./.github/fixtures/example-with-tauri-v2
-          pnpm tauri ${{ matrix.mobile }} init
+          pnpm dlx @tauri-apps/cli ${{ matrix.mobile }} init
 
       - name: Preconfigured Tauri Project
         uses: ./
