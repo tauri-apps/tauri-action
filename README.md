@@ -245,7 +245,8 @@ jobs:
     # default: true
     uploadUpdaterSignatures: true
 
-    # Whether to build for mobile or desktop.
+    # EXPERIMENTAL - Whether to build for mobile or desktop.
+    #
     # Effectively changes the build command from `${tauriScript} build`
     # to `${tauriScript} android build` / ` ${tauriScript}ios build`
     #
@@ -254,9 +255,10 @@ jobs:
     # The .apk and .ipa files can be uploaded to the release or as workflow artifcats, but
     # plain .ipa files are generally useless so uploading them to a release is not recommended.
     #
-    # Can be set to "android" to build for Android. This works on all runners.
-    # Can be set to "ios` to build for iOS. This only works on macOS runners.
-    # Any other values will be ignored.
+    # - Can be set to "android" to build for Android. This works on all runners but other
+    # required actions typically only work on Ubuntu so we recommend Ubuntu as well.
+    # - Can be set to "ios` to build for iOS. This only works on macOS runners.
+    # - Any other value will be ignored.
     #
     # default: unset
     mobile: ''
@@ -302,6 +304,8 @@ jobs:
 - `[setup]` can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary` (both have the `.exe` extension).
 
 - `[bundle]` is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
+
+- The action's iOS and Android support is considered experimental, please report any issues or feedback you may have in this repository.
 
 ## Partners
 
