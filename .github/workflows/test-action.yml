@@ -27,6 +27,10 @@ jobs:
             args: '--verbose --debug'
           - platform: 'windows-11-arm'
             args: '--verbose --debug'
+          - platform: 'macos-26'
+            mobile: 'ios'
+          - platform: 'ubuntu-latest'
+            mobile: 'android'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -51,10 +55,44 @@ jobs:
         # pnpm install
 
       # rust
-      - name: install Rust stable
+      - name: install Rust stable (desktop)
+        if: matrix.mobile === ''
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: install Rust stable (android)
+        if: matrix.mobile === 'android'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: install Rust stable (ios)
+        if: matrix.mobile === 'ios'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios
+
+      - name: Set up JDK
+        if: matrix.mobile === 'android'
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21' # Maybe 17
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r29
+          link-to-sdk: true
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 26.1
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -75,6 +113,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Updater signature is exposed here to make sure it works in PR's
           TAURI_SIGNING_PRIVATE_KEY: dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5YTBGV3JiTy9lRDZVd3NkL0RoQ1htZmExNDd3RmJaNmRMT1ZGVjczWTBKZ0FBQkFBQUFBQUFBQUFBQUlBQUFBQWdMekUzVkE4K0tWQ1hjeGt1Vkx2QnRUR3pzQjVuV0ZpM2czWXNkRm9hVUxrVnB6TUN3K1NheHJMREhQbUVWVFZRK3NIL1VsMDBHNW5ET1EzQno0UStSb21nRW4vZlpTaXIwZFh5ZmRlL1lSN0dKcHdyOUVPclVvdzFhVkxDVnZrbHM2T1o4Tk1NWEU9Cg==
+          NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         with:
           projectPath: ./.github/fixtures/example-with-tauri-v2
           tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
@@ -86,5 +125,6 @@ jobs:
           uploadPlainBinary: true
           uploadWorkflowArtifacts: true
           uploadUpdaterSignatures: false
+          mobile: ${{ matrix.mobile }}
       # workflowArtifactNamePattern: '[name]_${{ github.sha }}_[platform]_[arch]_[bundle]'
       # releaseAssetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[setup]x[ext]'
