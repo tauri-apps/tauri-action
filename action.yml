@@ -24,7 +24,7 @@ inputs:
   projectPath:
     description: 'Path to the root of the project that will be built. It must NOT be gitignored.'
     default: '.'
-  includeUpdaterJson:
+  uploadUpdaterJson:
     description: 'Whether to upload a static JSON file for the updater using GitHub Releases as the CDN'
     default: 'true'
   updaterJsonPreferNsis:

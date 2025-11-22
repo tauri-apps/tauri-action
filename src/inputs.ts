@@ -10,7 +10,8 @@ export const projectPath = resolve(
   core.getInput('projectPath') || process.argv[2],
 );
 
-export const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
+export const shouldUploadUpdaterJson =
+  core.getBooleanInput('uploadUpdaterJson');
 
 export const retryAttempts = parseInt(
   core.getInput('retryAttempts') || '0',

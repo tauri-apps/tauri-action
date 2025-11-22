@@ -173,7 +173,7 @@ jobs:
     # This file assume you're using the GitHub Release as your updater endpoint.
     #
     # default: true
-    includeUpdaterJson: true
+    uploadUpdaterJson: true
 
     # Whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist.
     #

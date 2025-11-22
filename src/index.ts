@@ -6,7 +6,7 @@ import * as core from '@actions/core';
 import { buildProject } from './build';
 import { getOrCreateRelease } from './create-release';
 import {
-  includeUpdaterJson,
+  shouldUploadUpdaterJson,
   isIOS,
   parsedArgs,
   retryAttempts,
@@ -127,7 +127,7 @@ async function run(): Promise<void> {
     if (releaseId) {
       await uploadReleaseAssets(releaseId, artifacts, retryAttempts);
 
-      if (includeUpdaterJson) {
+      if (shouldUploadUpdaterJson) {
         // Once we start throwing our own errors in this function we may need some custom retry logic.
         // We can't retry just the inner asset upload as that may upload an outdated latest.json file.
         await retry(

@@ -85351,7 +85351,7 @@ async function run() {
         }
         if (releaseId) {
             await (0,_upload_release_assets__WEBPACK_IMPORTED_MODULE_6__/* .uploadAssets */ .r)(releaseId, artifacts, _inputs__WEBPACK_IMPORTED_MODULE_5__/* .retryAttempts */ .z);
-            if (_inputs__WEBPACK_IMPORTED_MODULE_5__/* .includeUpdaterJson */ .Sv) {
+            if (_inputs__WEBPACK_IMPORTED_MODULE_5__/* .shouldUploadUpdaterJson */ .Qe) {
                 // Once we start throwing our own errors in this function we may need some custom retry logic.
                 // We can't retry just the inner asset upload as that may upload an outdated latest.json file.
                 await (0,_utils__WEBPACK_IMPORTED_MODULE_9__/* .retry */ .L5)(() => (0,_upload_version_json__WEBPACK_IMPORTED_MODULE_7__/* .uploadVersionJSON */ .Y)(info.version, body, tagName, releaseId, artifacts, targetInfo, info.unzippedSigs), 
@@ -85386,7 +85386,6 @@ __nccwpck_require__.d(__webpack_exports__, {
   K4: () => (/* binding */ draft),
   yK: () => (/* binding */ generateReleaseNotes),
   qu: () => (/* binding */ githubBaseUrl),
-  Sv: () => (/* binding */ includeUpdaterJson),
   m0: () => (/* binding */ isAndroid),
   _o: () => (/* binding */ isDebug),
   Hd: () => (/* binding */ isGitea),
@@ -85400,6 +85399,7 @@ __nccwpck_require__.d(__webpack_exports__, {
   dw: () => (/* binding */ releaseAssetNamePattern),
   LB: () => (/* binding */ repo),
   z: () => (/* binding */ retryAttempts),
+  Qe: () => (/* binding */ shouldUploadUpdaterJson),
   Jc: () => (/* binding */ shouldUploadWorkflowArtifacts),
   PK: () => (/* binding */ tauriScript),
   ZQ: () => (/* binding */ updaterJsonPreferNsis),
@@ -85466,7 +85466,7 @@ function firstString() {
 
 
 const projectPath = (0,external_node_path_.resolve)(process.cwd(), core.getInput('projectPath') || process.argv[2]);
-const includeUpdaterJson = core.getBooleanInput('includeUpdaterJson');
+const shouldUploadUpdaterJson = core.getBooleanInput('uploadUpdaterJson');
 const retryAttempts = parseInt(core.getInput('retryAttempts') || '0', 10);
 const tauriScript = core.getInput('tauriScript') || undefined;
 const releaseAssetNamePattern = core.getInput('releaseAssetNamePattern') || undefined;
