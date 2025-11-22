@@ -136,15 +136,16 @@ jobs:
           NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         with:
           projectPath: ./.github/fixtures/example-with-tauri-v2
-          tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
-          releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v2'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
+          #tagName: ${{ !github.event.pull_request.head.repo.fork && 'example-with-tauri-v__VERSION__' || '' }}
+          #releaseName: 'Release example with preconfigured Tauri app v__VERSION__ for tauri-v2'
+          #releaseBody: 'See the assets to download this version and install.'
+          #releaseDraft: true
           args: ${{ matrix.args }}
           retryAttempts: 1
-          uploadPlainBinary: true
+          includeUpdaterJson: false
+          #uploadPlainBinary: true
           uploadWorkflowArtifacts: true
           uploadUpdaterSignatures: false
-          mobile: ${{ matrix.mobile }}
-      # workflowArtifactNamePattern: '[name]_${{ github.sha }}_[platform]_[arch]_[bundle]'
+          #mobile: ${{ matrix.mobile }}
+          workflowArtifactNamePattern: '[name]_${{ github.sha }}_[platform]_[arch]_[bundle]'
       # releaseAssetNamePattern: '[name]x[version]x[platform]x[arch]x[mode]x[setup]x[ext]'
