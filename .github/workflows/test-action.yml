@@ -141,7 +141,7 @@ jobs:
           #releaseBody: 'See the assets to download this version and install.'
           #releaseDraft: true
           args: ${{ matrix.args }}
-          retryAttempts: 1
+          #retryAttempts: 1
           includeUpdaterJson: false
           #uploadPlainBinary: true
           uploadWorkflowArtifacts: true
