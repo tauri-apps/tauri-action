@@ -142,7 +142,6 @@ jobs:
           releaseDraft: true
           args: ${{ matrix.args }}
           retryAttempts: 1
-          includeUpdaterJson: false
           uploadPlainBinary: true
           uploadWorkflowArtifacts: true
           uploadUpdaterSignatures: false
