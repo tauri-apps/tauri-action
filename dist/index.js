@@ -84654,7 +84654,7 @@ class Runner {
             args.push('--');
         }
         args.push(...commandOptions);
-        return (0,utils/* retry */.L5)(() => (0,utils/* execCommand */.NK)(this.bin, args, { cwd }, env), retryAttempts + 1);
+        return (0,utils/* retry */.L5)(() => (0,utils/* execCommand */.NK)(this.bin, args, { cwd }, env), retryAttempts);
     }
 }
 async function getRunner() {
@@ -85579,7 +85579,7 @@ async function uploadAssets(releaseId, assets, retryAttempts) {
             owner: _inputs__WEBPACK_IMPORTED_MODULE_3__/* .owner */ .eC,
             repo: _inputs__WEBPACK_IMPORTED_MODULE_3__/* .repo */ .LB,
             release_id: releaseId,
-        }), retryAttempts + 1);
+        }), retryAttempts);
         console.log(`${assetName} successfully uploaded.`);
     }
 }
@@ -96615,15 +96615,20 @@ function getTargetInfo(targetPath) {
     }
     return { arch, platform };
 }
-async function retry(fn, attempts) {
+/// Will run provided fn at least once plus the provided attempts on failures
+/// Examples
+/// - retry(fn, 0) = run fn once then return no matter the success status
+/// - retry(fn, 3) = if all tries fail, fn will be executed 4 times
+async function retry(fn, additionalAttempts) {
+    const attempts = additionalAttempts + 1;
     for (let attempt = 1; attempt <= attempts; attempt++) {
         try {
             return await fn();
         }
         catch (error) {
-            if (attempt === attempts)
+            if (attempt >= attempts)
                 throw error;
-            console.log(`Attempt ${attempt} failed, retrying...`);
+            console.log(`Attempt ${attempt} failed. ${attempts - attempt} tries left.`);
         }
     }
 }

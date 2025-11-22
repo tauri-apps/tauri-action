@@ -90,7 +90,7 @@ export async function uploadAssets(
           repo,
           release_id: releaseId,
         }),
-      retryAttempts + 1,
+      retryAttempts,
     );
 
     console.log(`${assetName} successfully uploaded.`);

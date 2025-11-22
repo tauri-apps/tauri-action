@@ -38,7 +38,7 @@ class Runner {
 
     return retry(
       () => execCommand(this.bin, args, { cwd }, env),
-      retryAttempts + 1,
+      retryAttempts,
     ) as Promise<void>;
   }
 }

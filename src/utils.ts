@@ -578,16 +578,23 @@ export function getTargetInfo(targetPath?: string): TargetInfo {
   return { arch, platform };
 }
 
+/// Will run provided fn at least once plus the provided attempts on failures
+/// Examples
+/// - retry(fn, 0) = run fn once then return no matter the success status
+/// - retry(fn, 3) = if all tries fail, fn will be executed 4 times
 export async function retry(
   fn: () => Promise<unknown>,
-  attempts: number,
+  additionalAttempts: number,
 ): Promise<unknown> {
+  const attempts = additionalAttempts + 1;
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
       return await fn();
     } catch (error) {
-      if (attempt === attempts) throw error;
-      console.log(`Attempt ${attempt} failed, retrying...`);
+      if (attempt >= attempts) throw error;
+      console.log(
+        `Attempt ${attempt} failed. ${attempts - attempt} tries left.`,
+      );
     }
   }
 }
