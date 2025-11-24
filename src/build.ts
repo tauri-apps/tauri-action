@@ -371,6 +371,7 @@ export async function buildProject(): Promise<Artifact[]> {
     ];
   } else if (targetInfo.platform === 'android') {
     const debug = isDebug ? 'debug' : 'release';
+    const aabDebug = isDebug ? 'Debug' : 'Release';
 
     // TODO: detect (un)signed beforehand
 
@@ -380,24 +381,8 @@ export async function buildProject(): Promise<Artifact[]> {
         createArtifact({
           path: join(
             artifactsPath,
-            `apk/universal/release/app-universal-unsigend.apk`,
+            `apk/universal/release/app-universal-release-unsigend.apk`,
           ),
-          name: app.name,
-          platform: targetInfo.platform,
-          arch: 'universal',
-          bundle: 'apk',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(artifactsPath, `apk/arm64/release/app-arm64-unsigend.apk`),
-          name: app.name,
-          platform: targetInfo.platform,
-          arch: 'arm64',
-          bundle: 'apk',
-          version: app.version,
-        }),
-        createArtifact({
-          path: join(artifactsPath, `apk/arm/release/app-arm-unsigend.apk`),
           name: app.name,
           platform: targetInfo.platform,
           arch: 'universal',
@@ -407,7 +392,29 @@ export async function buildProject(): Promise<Artifact[]> {
         createArtifact({
           path: join(
             artifactsPath,
-            `apk/x86_64/release/app-x86_64-unsigend.apk`,
+            `apk/arm64/release/app-arm64-release-unsigend.apk`,
+          ),
+          name: app.name,
+          platform: targetInfo.platform,
+          arch: 'arm64',
+          bundle: 'apk',
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `apk/arm/release/app-arm-release-unsigend.apk`,
+          ),
+          name: app.name,
+          platform: targetInfo.platform,
+          arch: 'universal',
+          bundle: 'apk',
+          version: app.version,
+        }),
+        createArtifact({
+          path: join(
+            artifactsPath,
+            `apk/x86_64/release/app-x86_64-release-unsigend.apk`,
           ),
           name: app.name,
           platform: targetInfo.platform,
@@ -416,7 +423,10 @@ export async function buildProject(): Promise<Artifact[]> {
           version: app.version,
         }),
         createArtifact({
-          path: join(artifactsPath, `apk/x86/release/app-x86-unsigend.apk`),
+          path: join(
+            artifactsPath,
+            `apk/x86/release/app-x86-release-unsigend.apk`,
+          ),
           name: app.name,
           platform: targetInfo.platform,
           arch: 'x86',
@@ -480,7 +490,7 @@ export async function buildProject(): Promise<Artifact[]> {
       createArtifact({
         path: join(
           artifactsPath,
-          `/bundle/universal${debug}/app-universal-${debug}.aab`,
+          `/bundle/universal${aabDebug}/app-universal-${debug}.aab`,
         ),
         name: app.name,
         platform: targetInfo.platform,
@@ -491,7 +501,7 @@ export async function buildProject(): Promise<Artifact[]> {
       createArtifact({
         path: join(
           artifactsPath,
-          `/bundle/arm64${debug}/app-arm64-${debug}.aab`,
+          `/bundle/arm64${aabDebug}/app-arm64-${debug}.aab`,
         ),
         name: app.name,
         platform: targetInfo.platform,
@@ -500,7 +510,10 @@ export async function buildProject(): Promise<Artifact[]> {
         version: app.version,
       }),
       createArtifact({
-        path: join(artifactsPath, `/bundle/arm${debug}/app-arm-${debug}.aab`),
+        path: join(
+          artifactsPath,
+          `/bundle/arm${aabDebug}/app-arm-${debug}.aab`,
+        ),
         name: app.name,
         platform: targetInfo.platform,
         arch: 'arm',
@@ -510,7 +523,7 @@ export async function buildProject(): Promise<Artifact[]> {
       createArtifact({
         path: join(
           artifactsPath,
-          `/bundle/x86_64${debug}/app-x86_64-${debug}.aab`,
+          `/bundle/x86_64${aabDebug}/app-x86_64-${debug}.aab`,
         ),
         name: app.name,
         platform: targetInfo.platform,
@@ -519,7 +532,10 @@ export async function buildProject(): Promise<Artifact[]> {
         version: app.version,
       }),
       createArtifact({
-        path: join(artifactsPath, `/bundle/x86${debug}/app-x86-${debug}.aab`),
+        path: join(
+          artifactsPath,
+          `/bundle/x86${aabDebug}/app-x86-${debug}.aab`,
+        ),
         name: app.name,
         platform: targetInfo.platform,
         arch: 'x86',

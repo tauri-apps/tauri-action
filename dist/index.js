@@ -84957,39 +84957,40 @@ async function buildProject() {
     }
     else if (targetInfo.platform === 'android') {
         const debug = inputs/* isDebug */._o ? 'debug' : 'release';
+        const aabDebug = inputs/* isDebug */._o ? 'Debug' : 'Release';
         // TODO: detect (un)signed beforehand
         if (!inputs/* isDebug */._o) {
             // unsigned release apks
             artifacts.push((0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/universal/release/app-universal-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/universal/release/app-universal-release-unsigend.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'universal',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/arm64/release/app-arm64-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/arm64/release/app-arm64-release-unsigend.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'arm64',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/arm/release/app-arm-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/arm/release/app-arm-release-unsigend.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'universal',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/x86_64/release/app-x86_64-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/x86_64/release/app-x86_64-release-unsigend.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'arm',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/x86/release/app-x86-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/x86/release/app-x86-release-unsigend.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'x86',
@@ -85039,35 +85040,35 @@ async function buildProject() {
         // aabs
         //
         (0,utils/* createArtifact */.Dg)({
-            path: (0,external_node_path_.join)(artifactsPath, `/bundle/universal${debug}/app-universal-${debug}.aab`),
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/universal${aabDebug}/app-universal-${debug}.aab`),
             name: app.name,
             platform: targetInfo.platform,
             arch: 'universal',
             bundle: 'aab',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
-            path: (0,external_node_path_.join)(artifactsPath, `/bundle/arm64${debug}/app-arm64-${debug}.aab`),
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/arm64${aabDebug}/app-arm64-${debug}.aab`),
             name: app.name,
             platform: targetInfo.platform,
             arch: 'arm64',
             bundle: 'aab',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
-            path: (0,external_node_path_.join)(artifactsPath, `/bundle/arm${debug}/app-arm-${debug}.aab`),
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/arm${aabDebug}/app-arm-${debug}.aab`),
             name: app.name,
             platform: targetInfo.platform,
             arch: 'arm',
             bundle: 'aab',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
-            path: (0,external_node_path_.join)(artifactsPath, `/bundle/x86_64${debug}/app-x86_64-${debug}.aab`),
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/x86_64${aabDebug}/app-x86_64-${debug}.aab`),
             name: app.name,
             platform: targetInfo.platform,
             arch: 'x86_64',
             bundle: 'aab',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
-            path: (0,external_node_path_.join)(artifactsPath, `/bundle/x86${debug}/app-x86-${debug}.aab`),
+            path: (0,external_node_path_.join)(artifactsPath, `/bundle/x86${aabDebug}/app-x86-${debug}.aab`),
             name: app.name,
             platform: targetInfo.platform,
             arch: 'x86',
