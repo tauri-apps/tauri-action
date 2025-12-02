@@ -27,7 +27,7 @@
     "@actions/artifact": "4.0.0",
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
-    "execa": "9.6.0",
+    "execa": "9.6.1",
     "find-up-simple": "1.0.1",
     "globby": "16.0.0",
     "json5": "2.2.3",
