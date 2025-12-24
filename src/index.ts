@@ -61,6 +61,7 @@ async function run(): Promise<void> {
 
     // Since artifacts are .zip archives we can do this before the .tar.gz step below.
     if (shouldUploadWorkflowArtifacts) {
+      console.log('uploadWorkflowArtifacts enabled');
       await uploadWorkflowArtifacts(artifacts);
     }
 
