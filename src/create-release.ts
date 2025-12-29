@@ -25,6 +25,8 @@ interface GitHubRelease {
   upload_url: string;
   html_url: string;
   tag_name: string;
+  name: string | null;
+  target_commitish: string;
   draft: boolean;
 }
 
@@ -99,7 +101,7 @@ export async function getOrCreateRelease(
       });
       release = foundRelease.data;
       const release_id: number = release.id;
-      const name: string = release.name;
+      const name = release.name ?? undefined;
 
       console.log(`Found release with tag ${tagName}.`);
       await github.rest.repos.updateRelease({
