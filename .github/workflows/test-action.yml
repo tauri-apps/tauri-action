@@ -14,7 +14,7 @@ jobs:
       matrix:
         include:
           - platform: 'macos-latest'
-            args: '--verbose --target universal-apple-darwin --debug --config {"version":"4.5.6"} --config {"productName":"ConfigTest"}'
+            args: '--verbose --target universal-apple-darwin --debug'
           - platform: 'macos-latest'
             args: '--verbose --target aarch64-apple-darwin --debug'
           - platform: 'macos-latest'
