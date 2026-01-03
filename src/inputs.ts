@@ -33,6 +33,7 @@ const parsedArgs_ = parseArgs({
     config: {
       type: 'string',
       short: 'c',
+      multiple: true,
     },
     debug: { type: 'boolean', short: 'd' },
   },

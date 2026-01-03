@@ -27,7 +27,7 @@ export async function buildProject(): Promise<Artifact[]> {
   const runner = await getRunner();
 
   const targetPath = parsedArgs['target'] as string | undefined;
-  const configArg = parsedArgs['config'] as string | undefined;
+  const configArg = parsedArgs['config'] as string[] | undefined;
   const profile = parsedRunnerArgs['profile'] as string | undefined;
 
   const targetInfo = getTargetInfo(targetPath);
