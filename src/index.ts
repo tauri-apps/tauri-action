@@ -32,7 +32,7 @@ async function run(): Promise<void> {
     let body = core.getInput('releaseBody');
 
     const targetPath = parsedArgs['target'] as string | undefined;
-    const configArg = parsedArgs['config'] as string | undefined;
+    const configArg = parsedArgs['config'] as string[] | undefined;
 
     const artifacts: Artifact[] = [];
 

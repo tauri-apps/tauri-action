@@ -86387,6 +86387,7 @@ const parsedArgs_ = (0,external_node_util_.parseArgs)({
         config: {
             type: 'string',
             short: 'c',
+            multiple: true,
         },
         debug: { type: 'boolean', short: 'd' },
     },
@@ -97473,7 +97474,9 @@ function getInfo(targetInfo, configFlag) {
             config.mergePlatformConfig(tauriDir, targetInfo.platform);
         }
         if (configFlag) {
-            config.mergeUserConfig(inputs/* projectPath */.DZ, configFlag);
+            for (const c of configFlag) {
+                config.mergeUserConfig(inputs/* projectPath */.DZ, c);
+            }
         }
         name = config?.productName;
         if (config.version?.endsWith('.json')) {

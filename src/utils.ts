@@ -490,7 +490,7 @@ export async function execCommand(
   });
 }
 
-export function getInfo(targetInfo?: TargetInfo, configFlag?: string): Info {
+export function getInfo(targetInfo?: TargetInfo, configFlag?: string[]): Info {
   const tauriDir = getTauriDir();
   if (tauriDir !== null) {
     let name;
@@ -505,7 +505,9 @@ export function getInfo(targetInfo?: TargetInfo, configFlag?: string): Info {
       config.mergePlatformConfig(tauriDir, targetInfo.platform);
     }
     if (configFlag) {
-      config.mergeUserConfig(projectPath, configFlag);
+      for (const c of configFlag) {
+        config.mergeUserConfig(projectPath, c);
+      }
     }
 
     name = config?.productName;
