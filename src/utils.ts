@@ -418,7 +418,7 @@ export async function execCommand(
 export function getInfo(
   root: string,
   targetInfo?: TargetInfo,
-  configFlag?: string,
+  configFlag?: string[],
 ): Info {
   const tauriDir = getTauriDir(root);
   if (tauriDir !== null) {
@@ -434,7 +434,9 @@ export function getInfo(
       config.mergePlatformConfig(tauriDir, targetInfo.platform);
     }
     if (configFlag) {
-      config.mergeUserConfig(root, configFlag);
+      for (const c of configFlag) {
+        config.mergeUserConfig(root, c);
+      }
     }
 
     name = config?.productName;

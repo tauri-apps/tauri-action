@@ -28,29 +28,17 @@ export async function buildProject(
     ? ['--debug', ...(buildOpts.args ?? [])]
     : (buildOpts.args ?? []);
 
-  const targetArgIdx = [...tauriArgs].findIndex(
-    (e) => e === '-t' || e === '--target',
-  );
-  const targetPath =
-    targetArgIdx >= 0 ? [...tauriArgs][targetArgIdx + 1] : undefined;
-
-  const configArgIdx = [...tauriArgs].findIndex(
-    (e) => e === '-c' || e === '--config',
-  );
-  const configArg =
-    configArgIdx >= 0 ? [...tauriArgs][configArgIdx + 1] : undefined;
-
   const profileArgIdx = [...tauriArgs].findIndex((e) => e === '--profile');
   const profile =
     profileArgIdx >= 0 ? [...tauriArgs][profileArgIdx + 1] : undefined;
 
-  const targetInfo = getTargetInfo(targetPath);
+  const targetInfo = getTargetInfo(buildOpts.targetPath || undefined);
 
   if (!getTauriDir(root)) {
     await initProject(root, runner, initOpts);
   }
 
-  const info = getInfo(root, targetInfo, configArg);
+  const info = getInfo(root, targetInfo, buildOpts.configArg || undefined);
 
   if (!info.tauriPath) {
     throw Error("Couldn't detect path of tauri app");
@@ -93,8 +81,8 @@ export async function buildProject(
   const workspacePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
 
   const artifactsPath = join(
-    getTargetDir(workspacePath, info.tauriPath, !!targetPath),
-    targetPath ?? '',
+    getTargetDir(workspacePath, info.tauriPath, !!buildOpts.targetPath),
+    buildOpts.targetPath ?? '',
     profile ? profile : debug ? 'debug' : 'release',
   );
 
