@@ -12,6 +12,7 @@ import { buildProject } from './build';
 import { execCommand, getInfo, getTargetInfo } from './utils';
 
 import type { Artifact, BuildOptions, InitOptions } from './types';
+import { parseArgs } from 'node:util';
 
 async function run(): Promise<void> {
   try {
@@ -58,9 +59,29 @@ async function run(): Promise<void> {
     const updaterJsonPreferNsis =
       core.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
 
+    const parsedArgs_ = parseArgs({
+      args: args,
+      strict: false,
+      options: {
+        target: { type: 'string', short: 't' },
+        config: {
+          type: 'string',
+          short: 'c',
+          multiple: true,
+        },
+        debug: { type: 'boolean', short: 'd' },
+      },
+    });
+
+    const parsedArgs = parsedArgs_.values;
+    const targetPath = parsedArgs['target'] as string | undefined;
+    const configArg = parsedArgs['config'] as string[] | undefined;
+
     const buildOptions: BuildOptions = {
       tauriScript,
       args,
+      configArg,
+      targetPath,
     };
     const initOptions: InitOptions = {
       distPath,
@@ -69,18 +90,6 @@ async function run(): Promise<void> {
       appName,
       appVersion,
     };
-
-    const targetArgIdx = [...args].findIndex(
-      (e) => e === '-t' || e === '--target',
-    );
-    const targetPath =
-      targetArgIdx >= 0 ? [...args][targetArgIdx + 1] : undefined;
-
-    const configArgIdx = [...args].findIndex(
-      (e) => e === '-c' || e === '--config',
-    );
-    const configArg =
-      configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
 
     const releaseArtifacts: Artifact[] = [];
     const debugArtifacts: Artifact[] = [];

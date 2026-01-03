@@ -32,6 +32,8 @@ export interface Artifact {
 export interface BuildOptions {
   tauriScript: string | null;
   args: string[] | null;
+  configArg?: string[] | null;
+  targetPath?: string | null;
 }
 
 export interface InitOptions {

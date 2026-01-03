@@ -42231,17 +42231,13 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
     const tauriArgs = debug
         ? ['--debug', ...(buildOpts.args ?? [])]
         : (buildOpts.args ?? []);
-    const targetArgIdx = [...tauriArgs].findIndex((e) => e === '-t' || e === '--target');
-    const targetPath = targetArgIdx >= 0 ? [...tauriArgs][targetArgIdx + 1] : undefined;
-    const configArgIdx = [...tauriArgs].findIndex((e) => e === '-c' || e === '--config');
-    const configArg = configArgIdx >= 0 ? [...tauriArgs][configArgIdx + 1] : undefined;
     const profileArgIdx = [...tauriArgs].findIndex((e) => e === '--profile');
     const profile = profileArgIdx >= 0 ? [...tauriArgs][profileArgIdx + 1] : undefined;
-    const targetInfo = (0,utils/* getTargetInfo */.sg)(targetPath);
+    const targetInfo = (0,utils/* getTargetInfo */.sg)(buildOpts.targetPath || undefined);
     if (!(0,utils/* getTauriDir */.Z0)(root)) {
         await initProject(root, runner, initOpts);
     }
-    const info = (0,utils/* getInfo */.Vp)(root, targetInfo, configArg);
+    const info = (0,utils/* getInfo */.Vp)(root, targetInfo, buildOpts.configArg || undefined);
     if (!info.tauriPath) {
         throw Error("Couldn't detect path of tauri app");
     }
@@ -42270,7 +42266,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
         .replace(/[()[\]{}]/g, '')
         .toLowerCase();
     const workspacePath = (0,utils/* getWorkspaceDir */.Lw)(app.tauriPath) ?? app.tauriPath;
-    const artifactsPath = (0,external_node_path_.join)((0,utils/* getTargetDir */.d)(workspacePath, info.tauriPath, !!targetPath), targetPath ?? '', profile ? profile : debug ? 'debug' : 'release');
+    const artifactsPath = (0,external_node_path_.join)((0,utils/* getTargetDir */.d)(workspacePath, info.tauriPath, !!buildOpts.targetPath), buildOpts.targetPath ?? '', profile ? profile : debug ? 'debug' : 'release');
     let artifacts = [];
     let arch = targetInfo.arch;
     if (targetInfo.platform === 'macos') {
@@ -43028,12 +43024,15 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(4903);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var string_argv__WEBPACK_IMPORTED_MODULE_9__ = __nccwpck_require__(8445);
+/* harmony import */ var string_argv__WEBPACK_IMPORTED_MODULE_10__ = __nccwpck_require__(8445);
 /* harmony import */ var _create_release__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(644);
 /* harmony import */ var _upload_release_assets__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(1103);
 /* harmony import */ var _upload_version_json__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(6715);
 /* harmony import */ var _build__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(151);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_8__ = __nccwpck_require__(4619);
+/* harmony import */ var node_util__WEBPACK_IMPORTED_MODULE_9__ = __nccwpck_require__(7975);
+/* harmony import */ var node_util__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__nccwpck_require__.n(node_util__WEBPACK_IMPORTED_MODULE_9__);
+
 
 
 
@@ -43058,7 +43057,7 @@ async function run() {
         const updaterJsonKeepUniversal = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('updaterJsonKeepUniversal');
         const retryAttempts = parseInt(_actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('retryAttempts') || '0', 10);
         const tauriScript = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('tauriScript');
-        const args = (0,string_argv__WEBPACK_IMPORTED_MODULE_9__/* ["default"] */ .A)(_actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('args'));
+        const args = (0,string_argv__WEBPACK_IMPORTED_MODULE_10__/* ["default"] */ .A)(_actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('args'));
         const bundleIdentifier = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('bundleIdentifier');
         const assetNamePattern = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('assetNamePattern');
         const uploadPlainBinary = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('uploadPlainBinary');
@@ -43079,9 +43078,27 @@ async function run() {
         // TODO: Change its default to true for v2 apps
         // Not using getBooleanInput so we can differentiate between true,false,unset later.
         const updaterJsonPreferNsis = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
+        const parsedArgs_ = (0,node_util__WEBPACK_IMPORTED_MODULE_9__.parseArgs)({
+            args: args,
+            strict: false,
+            options: {
+                target: { type: 'string', short: 't' },
+                config: {
+                    type: 'string',
+                    short: 'c',
+                    multiple: true,
+                },
+                debug: { type: 'boolean', short: 'd' },
+            },
+        });
+        const parsedArgs = parsedArgs_.values;
+        const targetPath = parsedArgs['target'];
+        const configArg = parsedArgs['config'];
         const buildOptions = {
             tauriScript,
             args,
+            configArg,
+            targetPath,
         };
         const initOptions = {
             distPath,
@@ -43090,10 +43107,6 @@ async function run() {
             appName,
             appVersion,
         };
-        const targetArgIdx = [...args].findIndex((e) => e === '-t' || e === '--target');
-        const targetPath = targetArgIdx >= 0 ? [...args][targetArgIdx + 1] : undefined;
-        const configArgIdx = [...args].findIndex((e) => e === '-c' || e === '--config');
-        const configArg = configArgIdx >= 0 ? [...args][configArgIdx + 1] : undefined;
         const releaseArtifacts = [];
         const debugArtifacts = [];
         if (includeRelease) {
@@ -53467,7 +53480,9 @@ function getInfo(root, targetInfo, configFlag) {
             config.mergePlatformConfig(tauriDir, targetInfo.platform);
         }
         if (configFlag) {
-            config.mergeUserConfig(root, configFlag);
+            for (const c of configFlag) {
+                config.mergeUserConfig(root, c);
+            }
         }
         name = config?.productName;
         if (config.version?.endsWith('.json')) {
