@@ -6066,7 +6066,7 @@ const Context = __importStar(__nccwpck_require__(83077));
 const Utils = __importStar(__nccwpck_require__(28399));
 // octokit + plugins
 const core_1 = __nccwpck_require__(11772);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(16363);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(66316);
 const plugin_paginate_rest_1 = __nccwpck_require__(68633);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
@@ -10455,7 +10455,7 @@ exports.requestLog = requestLog;
 
 /***/ }),
 
-/***/ 16363:
+/***/ 66316:
 /***/ ((module) => {
 
 
@@ -85639,7 +85639,7 @@ var external_node_path_ = __nccwpck_require__(76760);
 // EXTERNAL MODULE: ./src/inputs.ts + 1 modules
 var inputs = __nccwpck_require__(53900);
 // EXTERNAL MODULE: ./src/utils.ts + 145 modules
-var utils = __nccwpck_require__(3159);
+var utils = __nccwpck_require__(82236);
 ;// CONCATENATED MODULE: ./src/runner.ts
 
 
@@ -86259,7 +86259,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _upload_release_assets__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(21103);
 /* harmony import */ var _upload_version_json__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(46715);
 /* harmony import */ var _upload_workflow_artifacts__WEBPACK_IMPORTED_MODULE_8__ = __nccwpck_require__(34689);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_9__ = __nccwpck_require__(3159);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_9__ = __nccwpck_require__(82236);
 
 
 
@@ -86525,7 +86525,7 @@ const isDebug = parsedArgs['debug'];
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(84903);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3159);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(82236);
 /* harmony import */ var _inputs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(53900);
 
 
@@ -86604,7 +86604,7 @@ async function uploadAssets(releaseId, assets, retryAttempts) {
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _inputs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(53900);
 /* harmony import */ var _upload_release_assets__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(21103);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(3159);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(82236);
 
 
 
@@ -86851,9 +86851,9 @@ async function uploadVersionJSON(version, notes, tagName, releaseId, artifacts, 
 /* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(node_path__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _actions_artifact__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(47429);
 /* harmony import */ var _actions_artifact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_artifact__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var globby__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(26116);
+/* harmony import */ var globby__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(42269);
 /* harmony import */ var _inputs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(53900);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(3159);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(82236);
 
 
 
@@ -86880,7 +86880,7 @@ async function uploadWorkflowArtifacts(artifacts) {
 
 /***/ }),
 
-/***/ 3159:
+/***/ 82236:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -86911,7 +86911,7 @@ var external_node_fs_ = __nccwpck_require__(73024);
 // EXTERNAL MODULE: external "node:path"
 var external_node_path_ = __nccwpck_require__(76760);
 var external_node_path_default = /*#__PURE__*/__nccwpck_require__.n(external_node_path_);
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/error.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/error.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -86976,7 +86976,7 @@ class TomlError extends Error {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/util.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/util.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -87084,7 +87084,7 @@ function getStringEnd(str, seek) {
     return seek;
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/date.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/date.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -87112,7 +87112,7 @@ function getStringEnd(str, seek) {
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-let DATE_TIME_RE = /^(\d{4}-\d{2}-\d{2})?[T ]?(?:(\d{2}):\d{2}:\d{2}(?:\.\d+)?)?(Z|[-+]\d{2}:\d{2})?$/i;
+let DATE_TIME_RE = /^(\d{4}-\d{2}-\d{2})?[T ]?(?:(\d{2}):\d{2}(?::\d{2}(?:\.\d+)?)?)?(Z|[-+]\d{2}:\d{2})?$/i;
 class TomlDate extends Date {
     #hasDate = false;
     #hasTime = false;
@@ -87213,7 +87213,7 @@ class TomlDate extends Date {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/primitive.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/primitive.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -87247,13 +87247,14 @@ class TomlDate extends Date {
 let INT_REGEX = /^((0x[0-9a-fA-F](_?[0-9a-fA-F])*)|(([+-]|0[ob])?\d(_?\d)*))$/;
 let FLOAT_REGEX = /^[+-]?\d(_?\d)*(\.\d(_?\d)*)?([eE][+-]?\d(_?\d)*)?$/;
 let LEADING_ZERO = /^[+-]?0[0-9_]/;
-let ESCAPE_REGEX = /^[0-9a-f]{4,8}$/i;
+let ESCAPE_REGEX = /^[0-9a-f]{2,8}$/i;
 let ESC_MAP = {
     b: '\b',
     t: '\t',
     n: '\n',
     f: '\f',
     r: '\r',
+    e: '\x1b',
     '"': '"',
     '\\': '\\',
 };
@@ -87289,9 +87290,9 @@ function parseString(str, ptr = 0, endPtr = str.length) {
         }
         if (isEscape) {
             isEscape = false;
-            if (c === 'u' || c === 'U') {
+            if (c === 'x' || c === 'u' || c === 'U') {
                 // Unicode escape
-                let code = str.slice(ptr, (ptr += (c === 'u' ? 4 : 8)));
+                let code = str.slice(ptr, (ptr += (c === 'x' ? 2 : c === 'u' ? 4 : 8)));
                 if (!ESCAPE_REGEX.test(code)) {
                     throw new TomlError('invalid unicode escape', {
                         toml: str,
@@ -87393,7 +87394,7 @@ function parseValue(value, toml, ptr, integersAsBigInt) {
     return date;
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/extract.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/extract.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -87425,7 +87426,7 @@ function parseValue(value, toml, ptr, integersAsBigInt) {
 
 
 
-function sliceAndTrimEndOf(str, startPtr, endPtr, allowNewLines) {
+function sliceAndTrimEndOf(str, startPtr, endPtr) {
     let value = str.slice(startPtr, endPtr);
     let commentIdx = value.indexOf('#');
     if (commentIdx > -1) {
@@ -87434,17 +87435,7 @@ function sliceAndTrimEndOf(str, startPtr, endPtr, allowNewLines) {
         skipComment(str, commentIdx);
         value = value.slice(0, commentIdx);
     }
-    let trimmed = value.trimEnd();
-    if (!allowNewLines) {
-        let newlineIdx = value.indexOf('\n', trimmed.length);
-        if (newlineIdx > -1) {
-            throw new TomlError('newlines are not allowed in inline tables', {
-                toml: str,
-                ptr: startPtr + newlineIdx
-            });
-        }
-    }
-    return [trimmed, commentIdx];
+    return [value.trimEnd(), commentIdx];
 }
 function extractValue(str, ptr, end, depth, integersAsBigInt) {
     if (depth === 0) {
@@ -87458,24 +87449,25 @@ function extractValue(str, ptr, end, depth, integersAsBigInt) {
         let [value, endPtr] = c === '['
             ? parseArray(str, ptr, depth, integersAsBigInt)
             : parseInlineTable(str, ptr, depth, integersAsBigInt);
-        let newPtr = end ? skipUntil(str, endPtr, ',', end) : endPtr;
-        if (endPtr - newPtr && end === '}') {
-            let nextNewLine = indexOfNewline(str, endPtr, newPtr);
-            if (nextNewLine > -1) {
-                throw new TomlError('newlines are not allowed in inline tables', {
+        if (end) {
+            endPtr = skipVoid(str, endPtr);
+            if (str[endPtr] === ',')
+                endPtr++;
+            else if (str[endPtr] !== end) {
+                throw new TomlError('expected comma or end of structure', {
                     toml: str,
-                    ptr: nextNewLine
+                    ptr: endPtr,
                 });
             }
         }
-        return [value, newPtr];
+        return [value, endPtr];
     }
     let endPtr;
     if (c === '"' || c === "'") {
         endPtr = getStringEnd(str, ptr);
         let parsed = parseString(str, ptr, endPtr);
         if (end) {
-            endPtr = skipVoid(str, endPtr, end !== ']');
+            endPtr = skipVoid(str, endPtr);
             if (str[endPtr] && str[endPtr] !== ',' && str[endPtr] !== end && str[endPtr] !== '\n' && str[endPtr] !== '\r') {
                 throw new TomlError('unexpected character encountered', {
                     toml: str,
@@ -87487,7 +87479,7 @@ function extractValue(str, ptr, end, depth, integersAsBigInt) {
         return [parsed, endPtr];
     }
     endPtr = skipUntil(str, ptr, ',', end);
-    let slice = sliceAndTrimEndOf(str, ptr, endPtr - (+(str[endPtr - 1] === ',')), end === ']');
+    let slice = sliceAndTrimEndOf(str, ptr, endPtr - (+(str[endPtr - 1] === ',')));
     if (!slice[0]) {
         throw new TomlError('incomplete key-value declaration: no value specified', {
             toml: str,
@@ -87504,7 +87496,7 @@ function extractValue(str, ptr, end, depth, integersAsBigInt) {
     ];
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/struct.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/struct.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -87613,20 +87605,17 @@ function parseInlineTable(str, ptr, depth, integersAsBigInt) {
     let res = {};
     let seen = new Set();
     let c;
-    let comma = 0;
     ptr++;
     while ((c = str[ptr++]) !== '}' && c) {
-        let err = { toml: str, ptr: ptr - 1 };
-        if (c === '\n') {
-            throw new TomlError('newlines are not allowed in inline tables', err);
+        if (c === ',') {
+            throw new TomlError('expected value, found comma', {
+                toml: str,
+                ptr: ptr - 1,
+            });
         }
-        else if (c === '#') {
-            throw new TomlError('inline tables cannot contain comments', err);
-        }
-        else if (c === ',') {
-            throw new TomlError('expected key-value, found comma', err);
-        }
-        else if (c !== ' ' && c !== '\t') {
+        else if (c === '#')
+            ptr = skipComment(str, ptr);
+        else if (c !== ' ' && c !== '\t' && c !== '\n' && c !== '\r') {
             let k;
             let t = res;
             let hasOwn = false;
@@ -87655,14 +87644,7 @@ function parseInlineTable(str, ptr, depth, integersAsBigInt) {
             seen.add(value);
             t[k] = value;
             ptr = valueEndPtr;
-            comma = str[ptr - 1] === ',' ? ptr - 1 : 0;
         }
-    }
-    if (comma) {
-        throw new TomlError('trailing commas are not allowed in inline tables', {
-            toml: str,
-            ptr: comma,
-        });
     }
     if (!c) {
         throw new TomlError('unfinished table encountered', {
@@ -87700,7 +87682,7 @@ function parseArray(str, ptr, depth, integersAsBigInt) {
     return [res, ptr];
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/parse.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/parse.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -87850,7 +87832,7 @@ function parse(toml, { maxDepth = 1000, integersAsBigInt } = {}) {
     return res;
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/stringify.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/stringify.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -88019,7 +88001,7 @@ function stringify(obj, { maxDepth = 1000, numbersAsFloat = false } = {}) {
     return str;
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.5.2/node_modules/smol-toml/dist/index.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/smol-toml@1.6.0/node_modules/smol-toml/dist/index.js
 /*!
  * Copyright (c) Squirrel Chat et al., All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
@@ -96921,8 +96903,8 @@ const {
 } = getIpcExport();
 
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/globby@16.0.0/node_modules/globby/index.js + 5 modules
-var globby = __nccwpck_require__(26116);
+// EXTERNAL MODULE: ./node_modules/.pnpm/globby@16.1.0/node_modules/globby/index.js + 5 modules
+var globby = __nccwpck_require__(42269);
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(79896);
 // EXTERNAL MODULE: external "path"
@@ -112455,23 +112437,6 @@ exports.UserDelegationKeyCredential = UserDelegationKeyCredential;
 
 /***/ }),
 
-/***/ 13430:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.KnownEncryptionAlgorithmType = void 0;
-/** Known values of {@link EncryptionAlgorithmType} that the service accepts. */
-var KnownEncryptionAlgorithmType;
-(function (KnownEncryptionAlgorithmType) {
-    KnownEncryptionAlgorithmType["AES256"] = "AES256";
-})(KnownEncryptionAlgorithmType || (exports.KnownEncryptionAlgorithmType = KnownEncryptionAlgorithmType = {}));
-//# sourceMappingURL=generatedModels.js.map
-
-/***/ }),
-
 /***/ 76546:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -122740,125 +122705,6 @@ exports.listType = {
 
 /***/ }),
 
-/***/ 36242:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-/*
- * Copyright (c) Microsoft Corporation.
- * Licensed under the MIT License.
- *
- * Code generated by Microsoft (R) AutoRest Code Generator.
- * Changes may cause incorrect behavior and will be lost if the code is regenerated.
- */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-//# sourceMappingURL=appendBlob.js.map
-
-/***/ }),
-
-/***/ 42294:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-/*
- * Copyright (c) Microsoft Corporation.
- * Licensed under the MIT License.
- *
- * Code generated by Microsoft (R) AutoRest Code Generator.
- * Changes may cause incorrect behavior and will be lost if the code is regenerated.
- */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-//# sourceMappingURL=blob.js.map
-
-/***/ }),
-
-/***/ 26003:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-/*
- * Copyright (c) Microsoft Corporation.
- * Licensed under the MIT License.
- *
- * Code generated by Microsoft (R) AutoRest Code Generator.
- * Changes may cause incorrect behavior and will be lost if the code is regenerated.
- */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-//# sourceMappingURL=blockBlob.js.map
-
-/***/ }),
-
-/***/ 2718:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-/*
- * Copyright (c) Microsoft Corporation.
- * Licensed under the MIT License.
- *
- * Code generated by Microsoft (R) AutoRest Code Generator.
- * Changes may cause incorrect behavior and will be lost if the code is regenerated.
- */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-//# sourceMappingURL=container.js.map
-
-/***/ }),
-
-/***/ 52597:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-
-/*
- * Copyright (c) Microsoft Corporation.
- * Licensed under the MIT License.
- *
- * Code generated by Microsoft (R) AutoRest Code Generator.
- * Changes may cause incorrect behavior and will be lost if the code is regenerated.
- */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const tslib_1 = __nccwpck_require__(67892);
-tslib_1.__exportStar(__nccwpck_require__(87126), exports);
-tslib_1.__exportStar(__nccwpck_require__(2718), exports);
-tslib_1.__exportStar(__nccwpck_require__(42294), exports);
-tslib_1.__exportStar(__nccwpck_require__(85517), exports);
-tslib_1.__exportStar(__nccwpck_require__(36242), exports);
-tslib_1.__exportStar(__nccwpck_require__(26003), exports);
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ 85517:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-/*
- * Copyright (c) Microsoft Corporation.
- * Licensed under the MIT License.
- *
- * Code generated by Microsoft (R) AutoRest Code Generator.
- * Changes may cause incorrect behavior and will be lost if the code is regenerated.
- */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-//# sourceMappingURL=pageBlob.js.map
-
-/***/ }),
-
-/***/ 87126:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-/*
- * Copyright (c) Microsoft Corporation.
- * Licensed under the MIT License.
- *
- * Code generated by Microsoft (R) AutoRest Code Generator.
- * Changes may cause incorrect behavior and will be lost if the code is regenerated.
- */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-//# sourceMappingURL=service.js.map
-
-/***/ }),
-
 /***/ 74910:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -126057,6 +125903,125 @@ const filterBlobsOperationSpec = {
 
 /***/ }),
 
+/***/ 36242:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT License.
+ *
+ * Code generated by Microsoft (R) AutoRest Code Generator.
+ * Changes may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=appendBlob.js.map
+
+/***/ }),
+
+/***/ 42294:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT License.
+ *
+ * Code generated by Microsoft (R) AutoRest Code Generator.
+ * Changes may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=blob.js.map
+
+/***/ }),
+
+/***/ 26003:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT License.
+ *
+ * Code generated by Microsoft (R) AutoRest Code Generator.
+ * Changes may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=blockBlob.js.map
+
+/***/ }),
+
+/***/ 2718:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT License.
+ *
+ * Code generated by Microsoft (R) AutoRest Code Generator.
+ * Changes may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=container.js.map
+
+/***/ }),
+
+/***/ 52597:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT License.
+ *
+ * Code generated by Microsoft (R) AutoRest Code Generator.
+ * Changes may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const tslib_1 = __nccwpck_require__(67892);
+tslib_1.__exportStar(__nccwpck_require__(87126), exports);
+tslib_1.__exportStar(__nccwpck_require__(2718), exports);
+tslib_1.__exportStar(__nccwpck_require__(42294), exports);
+tslib_1.__exportStar(__nccwpck_require__(85517), exports);
+tslib_1.__exportStar(__nccwpck_require__(36242), exports);
+tslib_1.__exportStar(__nccwpck_require__(26003), exports);
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ 85517:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT License.
+ *
+ * Code generated by Microsoft (R) AutoRest Code Generator.
+ * Changes may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=pageBlob.js.map
+
+/***/ }),
+
+/***/ 87126:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT License.
+ *
+ * Code generated by Microsoft (R) AutoRest Code Generator.
+ * Changes may cause incorrect behavior and will be lost if the code is regenerated.
+ */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+//# sourceMappingURL=service.js.map
+
+/***/ }),
+
 /***/ 36244:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -126126,6 +126091,23 @@ class StorageClient extends coreHttpCompat.ExtendedServiceClient {
 }
 exports.StorageClient = StorageClient;
 //# sourceMappingURL=storageClient.js.map
+
+/***/ }),
+
+/***/ 13430:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.KnownEncryptionAlgorithmType = void 0;
+/** Known values of {@link EncryptionAlgorithmType} that the service accepts. */
+var KnownEncryptionAlgorithmType;
+(function (KnownEncryptionAlgorithmType) {
+    KnownEncryptionAlgorithmType["AES256"] = "AES256";
+})(KnownEncryptionAlgorithmType || (exports.KnownEncryptionAlgorithmType = KnownEncryptionAlgorithmType = {}));
+//# sourceMappingURL=generatedModels.js.map
 
 /***/ }),
 
@@ -148781,7 +148763,7 @@ const PASSTHROUGH_LISTENERS_PER_STREAM = 1;
 
 /***/ }),
 
-/***/ 26116:
+/***/ 42269:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -148890,13 +148872,24 @@ function slash(path) {
 	return path.replace(/\\/g, '/');
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@16.0.0/node_modules/globby/utilities.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@16.1.0/node_modules/globby/utilities.js
 
 
 
 
 
 const isNegativePattern = pattern => pattern[0] === '!';
+
+/**
+Normalize an absolute pattern to be relative.
+
+On Unix, patterns starting with `/` are interpreted as absolute paths from the filesystem root. This causes inconsistent behavior across platforms since Windows uses different path roots (like `C:\`).
+
+This function strips leading `/` to make patterns relative to cwd, ensuring consistent cross-platform behavior.
+
+@param {string} pattern - The pattern to normalize.
+*/
+const normalizeAbsolutePatternToRelative = pattern => pattern.startsWith('/') ? pattern.slice(1) : pattern;
 
 const bindFsMethod = (object, methodName) => {
 	const method = object?.[methodName];
@@ -149180,7 +149173,7 @@ const convertPatternsForFastGlob = (patterns, usingGitRoot, normalizeDirectoryPa
 	return hasNegations ? [] : result;
 };
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@16.0.0/node_modules/globby/ignore.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@16.1.0/node_modules/globby/ignore.js
 
 
 
@@ -149512,7 +149505,7 @@ const getIgnorePatternsAndPredicateSync = (patterns, options, includeParentIgnor
 const isGitIgnored = options => isIgnoredByIgnoreFiles(GITIGNORE_FILES_PATTERN, options);
 const isGitIgnoredSync = options => isIgnoredByIgnoreFilesSync(GITIGNORE_FILES_PATTERN, options);
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@16.0.0/node_modules/globby/index.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@16.1.0/node_modules/globby/index.js
 
 
 
@@ -149793,11 +149786,20 @@ const createFilterFunction = (isIgnored, cwd) => {
 const unionFastGlobResults = (results, filter) => results.flat().filter(fastGlobResult => filter(fastGlobResult));
 
 const convertNegativePatterns = (patterns, options) => {
-	// If all patterns are negative, prepend a positive catch-all pattern
-	// This makes negation-only patterns work intuitively (e.g., '!*.json' matches all files except JSON)
+	// If all patterns are negative and expandNegationOnlyPatterns is enabled (default),
+	// prepend a positive catch-all pattern to make negation-only patterns work intuitively
+	// (e.g., '!*.json' matches all files except JSON)
 	if (patterns.length > 0 && patterns.every(pattern => isNegativePattern(pattern))) {
+		if (options.expandNegationOnlyPatterns === false) {
+			return [];
+		}
+
 		patterns = ['**/*', ...patterns];
 	}
+
+	patterns = patterns.map(pattern => isNegativePattern(pattern)
+		? `!${normalizeAbsolutePatternToRelative(pattern.slice(1))}`
+		: pattern);
 
 	const tasks = [];
 
