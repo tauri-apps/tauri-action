@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.6.1]
+
+- [`ad5c271`](https://www.github.com/tauri-apps/tauri-action/commit/ad5c2710e257ef83afcf261722eeaa6a33b4e0f7) ([#1241](https://www.github.com/tauri-apps/tauri-action/pull/1241) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Fixed an issue that caused the action to only read one `--config` arg.
+
 ## \[0.6.0]
 
 - [`e918a06`](https://www.github.com/tauri-apps/tauri-action/commit/e918a068fe65bde93e97fe0d4024e45dc568c536) ([#1133](https://www.github.com/tauri-apps/tauri-action/pull/1133)) Encode `tagName` option value in `latest.json` URL.
