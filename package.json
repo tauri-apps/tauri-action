@@ -26,7 +26,7 @@
   "dependencies": {
     "@actions/artifact": "5.0.2",
     "@actions/core": "2.0.2",
-    "@actions/github": "6.0.1",
+    "@actions/github": "7.0.0",
     "execa": "9.6.1",
     "find-up-simple": "1.0.1",
     "globby": "16.1.0",
