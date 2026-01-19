@@ -407,7 +407,7 @@ export async function buildProject(): Promise<Artifact[]> {
           ),
           name: app.name,
           platform: targetInfo.platform,
-          arch: 'universal',
+          arch: 'arm',
           bundle: 'apk',
           version: app.version,
         }),
