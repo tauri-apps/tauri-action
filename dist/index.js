@@ -85979,14 +85979,14 @@ async function buildProject() {
                 path: (0,external_node_path_.join)(artifactsPath, `apk/arm/release/app-arm-release-unsigend.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
-                arch: 'universal',
+                arch: 'arm',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `apk/x86_64/release/app-x86_64-release-unsigend.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
-                arch: 'arm',
+                arch: 'x86_64',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
@@ -86018,14 +86018,14 @@ async function buildProject() {
             path: (0,external_node_path_.join)(artifactsPath, `apk/arm/${debug}/app-arm-${debug}.apk`),
             name: app.name,
             platform: targetInfo.platform,
-            arch: 'universal',
+            arch: 'arm',
             bundle: 'apk',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `apk/x86_64/${debug}/app-x86_64-${debug}.apk`),
             name: app.name,
             platform: targetInfo.platform,
-            arch: 'arm',
+            arch: 'x86_64',
             bundle: 'apk',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
