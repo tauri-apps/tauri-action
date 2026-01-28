@@ -1,7 +1,7 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
-/***/ 47429:
+/***/ 66044:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -20,17 +20,17 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const client_1 = __nccwpck_require__(53346);
-__exportStar(__nccwpck_require__(58343), exports);
-__exportStar(__nccwpck_require__(7500), exports);
-__exportStar(__nccwpck_require__(53346), exports);
+const client_1 = __nccwpck_require__(597);
+__exportStar(__nccwpck_require__(83290), exports);
+__exportStar(__nccwpck_require__(31441), exports);
+__exportStar(__nccwpck_require__(597), exports);
 const client = new client_1.DefaultArtifactClient();
 exports["default"] = client;
 //# sourceMappingURL=artifact.js.map
 
 /***/ }),
 
-/***/ 28889:
+/***/ 68358:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
@@ -172,7 +172,7 @@ exports.Timestamp = new Timestamp$Type();
 
 /***/ }),
 
-/***/ 68177:
+/***/ 25012:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
@@ -787,7 +787,7 @@ exports.BytesValue = new BytesValue$Type();
 
 /***/ }),
 
-/***/ 62705:
+/***/ 47922:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -806,15 +806,15 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__nccwpck_require__(28889), exports);
-__exportStar(__nccwpck_require__(68177), exports);
-__exportStar(__nccwpck_require__(85887), exports);
-__exportStar(__nccwpck_require__(72567), exports);
+__exportStar(__nccwpck_require__(68358), exports);
+__exportStar(__nccwpck_require__(25012), exports);
+__exportStar(__nccwpck_require__(4220), exports);
+__exportStar(__nccwpck_require__(93894), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ 85887:
+/***/ 4220:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
@@ -829,9 +829,9 @@ const runtime_2 = __nccwpck_require__(68140);
 const runtime_3 = __nccwpck_require__(68140);
 const runtime_4 = __nccwpck_require__(68140);
 const runtime_5 = __nccwpck_require__(68140);
-const wrappers_1 = __nccwpck_require__(68177);
-const wrappers_2 = __nccwpck_require__(68177);
-const timestamp_1 = __nccwpck_require__(28889);
+const wrappers_1 = __nccwpck_require__(25012);
+const wrappers_2 = __nccwpck_require__(25012);
+const timestamp_1 = __nccwpck_require__(68358);
 // @generated message type with reflection information, may provide speed optimized methods
 class MigrateArtifactRequest$Type extends runtime_5.MessageType {
     constructor() {
@@ -1763,13 +1763,13 @@ exports.ArtifactService = new runtime_rpc_1.ServiceType("github.actions.results.
 
 /***/ }),
 
-/***/ 72567:
+/***/ 93894:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ArtifactServiceClientProtobuf = exports.ArtifactServiceClientJSON = void 0;
-const artifact_1 = __nccwpck_require__(85887);
+const artifact_1 = __nccwpck_require__(4220);
 class ArtifactServiceClientJSON {
     constructor(rpc) {
         this.rpc = rpc;
@@ -1869,7 +1869,7 @@ exports.ArtifactServiceClientProtobuf = ArtifactServiceClientProtobuf;
 
 /***/ }),
 
-/***/ 53346:
+/***/ 597:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -1895,14 +1895,14 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DefaultArtifactClient = void 0;
-const core_1 = __nccwpck_require__(71635);
-const config_1 = __nccwpck_require__(43753);
-const upload_artifact_1 = __nccwpck_require__(16785);
-const download_artifact_1 = __nccwpck_require__(86639);
-const delete_artifact_1 = __nccwpck_require__(7577);
-const get_artifact_1 = __nccwpck_require__(18192);
-const list_artifacts_1 = __nccwpck_require__(47151);
-const errors_1 = __nccwpck_require__(7500);
+const core_1 = __nccwpck_require__(59550);
+const config_1 = __nccwpck_require__(78308);
+const upload_artifact_1 = __nccwpck_require__(94286);
+const download_artifact_1 = __nccwpck_require__(47932);
+const delete_artifact_1 = __nccwpck_require__(49066);
+const get_artifact_1 = __nccwpck_require__(18749);
+const list_artifacts_1 = __nccwpck_require__(22970);
+const errors_1 = __nccwpck_require__(31441);
 /**
  * The default artifact client that is used by the artifact action(s).
  */
@@ -2019,7 +2019,7 @@ exports.DefaultArtifactClient = DefaultArtifactClient;
 
 /***/ }),
 
-/***/ 7577:
+/***/ 49066:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2035,18 +2035,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.deleteArtifactPublic = deleteArtifactPublic;
 exports.deleteArtifactInternal = deleteArtifactInternal;
-const core_1 = __nccwpck_require__(71635);
+const core_1 = __nccwpck_require__(59550);
 const github_1 = __nccwpck_require__(84903);
-const user_agent_1 = __nccwpck_require__(90388);
-const retry_options_1 = __nccwpck_require__(59692);
+const user_agent_1 = __nccwpck_require__(69537);
+const retry_options_1 = __nccwpck_require__(54659);
 const utils_1 = __nccwpck_require__(24523);
 const plugin_request_log_1 = __nccwpck_require__(83909);
 const plugin_retry_1 = __nccwpck_require__(38957);
-const artifact_twirp_client_1 = __nccwpck_require__(36812);
-const util_1 = __nccwpck_require__(69899);
-const generated_1 = __nccwpck_require__(62705);
-const get_artifact_1 = __nccwpck_require__(18192);
-const errors_1 = __nccwpck_require__(7500);
+const artifact_twirp_client_1 = __nccwpck_require__(60399);
+const util_1 = __nccwpck_require__(99210);
+const generated_1 = __nccwpck_require__(47922);
+const get_artifact_1 = __nccwpck_require__(18749);
+const errors_1 = __nccwpck_require__(31441);
 function deleteArtifactPublic(artifactName, workflowRunId, repositoryOwner, repositoryName, token) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a;
@@ -2107,7 +2107,7 @@ function deleteArtifactInternal(artifactName) {
 
 /***/ }),
 
-/***/ 86639:
+/***/ 47932:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2164,15 +2164,15 @@ const promises_1 = __importDefault(__nccwpck_require__(91943));
 const crypto = __importStar(__nccwpck_require__(76982));
 const stream = __importStar(__nccwpck_require__(2203));
 const github = __importStar(__nccwpck_require__(84903));
-const core = __importStar(__nccwpck_require__(71635));
-const httpClient = __importStar(__nccwpck_require__(2430));
+const core = __importStar(__nccwpck_require__(59550));
+const httpClient = __importStar(__nccwpck_require__(80897));
 const unzip_stream_1 = __importDefault(__nccwpck_require__(34340));
-const user_agent_1 = __nccwpck_require__(90388);
-const config_1 = __nccwpck_require__(43753);
-const artifact_twirp_client_1 = __nccwpck_require__(36812);
-const generated_1 = __nccwpck_require__(62705);
-const util_1 = __nccwpck_require__(69899);
-const errors_1 = __nccwpck_require__(7500);
+const user_agent_1 = __nccwpck_require__(69537);
+const config_1 = __nccwpck_require__(78308);
+const artifact_twirp_client_1 = __nccwpck_require__(60399);
+const generated_1 = __nccwpck_require__(47922);
+const util_1 = __nccwpck_require__(99210);
+const errors_1 = __nccwpck_require__(31441);
 const scrubQueryParameters = (url) => {
     const parsed = new URL(url);
     parsed.search = '';
@@ -2356,7 +2356,7 @@ function resolveOrCreateDirectory() {
 
 /***/ }),
 
-/***/ 18192:
+/***/ 18749:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2407,15 +2407,15 @@ exports.getArtifactPublic = getArtifactPublic;
 exports.getArtifactInternal = getArtifactInternal;
 const github_1 = __nccwpck_require__(84903);
 const plugin_retry_1 = __nccwpck_require__(38957);
-const core = __importStar(__nccwpck_require__(71635));
+const core = __importStar(__nccwpck_require__(59550));
 const utils_1 = __nccwpck_require__(24523);
-const retry_options_1 = __nccwpck_require__(59692);
+const retry_options_1 = __nccwpck_require__(54659);
 const plugin_request_log_1 = __nccwpck_require__(83909);
-const util_1 = __nccwpck_require__(69899);
-const user_agent_1 = __nccwpck_require__(90388);
-const artifact_twirp_client_1 = __nccwpck_require__(36812);
-const generated_1 = __nccwpck_require__(62705);
-const errors_1 = __nccwpck_require__(7500);
+const util_1 = __nccwpck_require__(99210);
+const user_agent_1 = __nccwpck_require__(69537);
+const artifact_twirp_client_1 = __nccwpck_require__(60399);
+const generated_1 = __nccwpck_require__(47922);
+const errors_1 = __nccwpck_require__(31441);
 function getArtifactPublic(artifactName, workflowRunId, repositoryOwner, repositoryName, token) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a;
@@ -2498,7 +2498,7 @@ function getArtifactInternal(artifactName) {
 
 /***/ }),
 
-/***/ 47151:
+/***/ 22970:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2514,17 +2514,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.listArtifactsPublic = listArtifactsPublic;
 exports.listArtifactsInternal = listArtifactsInternal;
-const core_1 = __nccwpck_require__(71635);
+const core_1 = __nccwpck_require__(59550);
 const github_1 = __nccwpck_require__(84903);
-const user_agent_1 = __nccwpck_require__(90388);
-const retry_options_1 = __nccwpck_require__(59692);
+const user_agent_1 = __nccwpck_require__(69537);
+const retry_options_1 = __nccwpck_require__(54659);
 const utils_1 = __nccwpck_require__(24523);
 const plugin_request_log_1 = __nccwpck_require__(83909);
 const plugin_retry_1 = __nccwpck_require__(38957);
-const artifact_twirp_client_1 = __nccwpck_require__(36812);
-const util_1 = __nccwpck_require__(69899);
-const config_1 = __nccwpck_require__(43753);
-const generated_1 = __nccwpck_require__(62705);
+const artifact_twirp_client_1 = __nccwpck_require__(60399);
+const util_1 = __nccwpck_require__(99210);
+const config_1 = __nccwpck_require__(78308);
+const generated_1 = __nccwpck_require__(47922);
 const maximumArtifactCount = (0, config_1.getMaxArtifactListCount)();
 const paginationCount = 100;
 const maxNumberOfPages = Math.ceil(maximumArtifactCount / paginationCount);
@@ -2651,7 +2651,7 @@ function filterLatest(artifacts) {
 
 /***/ }),
 
-/***/ 59692:
+/***/ 54659:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2690,7 +2690,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRetryOptions = getRetryOptions;
-const core = __importStar(__nccwpck_require__(71635));
+const core = __importStar(__nccwpck_require__(59550));
 // Defaults for fetching artifacts
 const defaultMaxRetryNumber = 5;
 const defaultExemptStatusCodes = [400, 401, 403, 404, 422]; // https://github.com/octokit/plugin-retry.js/blob/9a2443746c350b3beedec35cf26e197ea318a261/src/index.ts#L14
@@ -2716,7 +2716,7 @@ function getRetryOptions(defaultOptions, retries = defaultMaxRetryNumber, exempt
 
 /***/ }),
 
-/***/ 36812:
+/***/ 60399:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2731,14 +2731,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.internalArtifactTwirpClient = internalArtifactTwirpClient;
-const http_client_1 = __nccwpck_require__(2430);
-const auth_1 = __nccwpck_require__(38314);
-const core_1 = __nccwpck_require__(71635);
-const generated_1 = __nccwpck_require__(62705);
-const config_1 = __nccwpck_require__(43753);
-const user_agent_1 = __nccwpck_require__(90388);
-const errors_1 = __nccwpck_require__(7500);
-const util_1 = __nccwpck_require__(69899);
+const http_client_1 = __nccwpck_require__(80897);
+const auth_1 = __nccwpck_require__(54935);
+const core_1 = __nccwpck_require__(59550);
+const generated_1 = __nccwpck_require__(47922);
+const config_1 = __nccwpck_require__(78308);
+const user_agent_1 = __nccwpck_require__(69537);
+const errors_1 = __nccwpck_require__(31441);
+const util_1 = __nccwpck_require__(99210);
 class ArtifactHttpClient {
     constructor(userAgent, maxAttempts, baseRetryIntervalMilliseconds, retryMultiplier) {
         this.maxAttempts = 5;
@@ -2875,7 +2875,7 @@ function internalArtifactTwirpClient(options) {
 
 /***/ }),
 
-/***/ 43753:
+/***/ 78308:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -2892,7 +2892,7 @@ exports.getConcurrency = getConcurrency;
 exports.getUploadChunkTimeout = getUploadChunkTimeout;
 exports.getMaxArtifactListCount = getMaxArtifactListCount;
 const os_1 = __importDefault(__nccwpck_require__(70857));
-const core_1 = __nccwpck_require__(71635);
+const core_1 = __nccwpck_require__(59550);
 // Used for controlling the highWaterMark value of the zip that is being streamed
 // The same value is used as the chunk size that is use during upload to blob storage
 function getUploadChunkSize() {
@@ -2977,7 +2977,7 @@ function getMaxArtifactListCount() {
 
 /***/ }),
 
-/***/ 7500:
+/***/ 31441:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3053,7 +3053,7 @@ UsageError.isUsageErrorMessage = (msg) => {
 
 /***/ }),
 
-/***/ 58343:
+/***/ 83290:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -3062,14 +3062,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 /***/ }),
 
-/***/ 90388:
+/***/ 69537:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getUserAgentString = getUserAgentString;
 // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-const packageJson = __nccwpck_require__(75074);
+const packageJson = __nccwpck_require__(84561);
 /**
  * Ensure that this User Agent String is used in all HTTP calls so that we can monitor telemetry between different versions of this package
  */
@@ -3080,7 +3080,7 @@ function getUserAgentString() {
 
 /***/ }),
 
-/***/ 69899:
+/***/ 99210:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -3124,10 +3124,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getBackendIdsFromToken = getBackendIdsFromToken;
 exports.maskSigUrl = maskSigUrl;
 exports.maskSecretUrls = maskSecretUrls;
-const core = __importStar(__nccwpck_require__(71635));
-const config_1 = __nccwpck_require__(43753);
+const core = __importStar(__nccwpck_require__(59550));
+const config_1 = __nccwpck_require__(78308);
 const jwt_decode_1 = __importDefault(__nccwpck_require__(25724));
-const core_1 = __nccwpck_require__(71635);
+const core_1 = __nccwpck_require__(59550);
 const InvalidJwtError = new Error('Failed to get backend IDs: The provided JWT token is invalid and/or missing claims');
 // uses the JWT token claims to get the
 // workflow run and workflow job run backend ids
@@ -3245,7 +3245,7 @@ function maskSecretUrls(body) {
 
 /***/ }),
 
-/***/ 63164:
+/***/ 30395:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -3294,11 +3294,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.uploadZipToBlobStorage = uploadZipToBlobStorage;
 const storage_blob_1 = __nccwpck_require__(32917);
-const config_1 = __nccwpck_require__(43753);
-const core = __importStar(__nccwpck_require__(71635));
+const config_1 = __nccwpck_require__(78308);
+const core = __importStar(__nccwpck_require__(59550));
 const crypto = __importStar(__nccwpck_require__(76982));
 const stream = __importStar(__nccwpck_require__(2203));
-const errors_1 = __nccwpck_require__(7500);
+const errors_1 = __nccwpck_require__(31441);
 function uploadZipToBlobStorage(authenticatedUploadURL, zipUploadStream) {
     return __awaiter(this, void 0, void 0, function* () {
         let uploadByteCount = 0;
@@ -3370,14 +3370,14 @@ function uploadZipToBlobStorage(authenticatedUploadURL, zipUploadStream) {
 
 /***/ }),
 
-/***/ 13103:
+/***/ 55564:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.validateArtifactName = validateArtifactName;
 exports.validateFilePath = validateFilePath;
-const core_1 = __nccwpck_require__(71635);
+const core_1 = __nccwpck_require__(59550);
 /**
  * Invalid characters that cannot be in the artifact name or an uploaded file. Will be rejected
  * from the server if attempted to be sent over. These characters are not allowed due to limitations with certain
@@ -3442,7 +3442,7 @@ The following characters are not allowed in files that are uploaded due to limit
 
 /***/ }),
 
-/***/ 40293:
+/***/ 83570:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -3481,8 +3481,8 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getExpiration = getExpiration;
-const generated_1 = __nccwpck_require__(62705);
-const core = __importStar(__nccwpck_require__(71635));
+const generated_1 = __nccwpck_require__(47922);
+const core = __importStar(__nccwpck_require__(59550));
 function getExpiration(retentionDays) {
     if (!retentionDays) {
         return undefined;
@@ -3511,7 +3511,7 @@ function getRetentionDays() {
 
 /***/ }),
 
-/***/ 16785:
+/***/ 94286:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -3559,16 +3559,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.uploadArtifact = uploadArtifact;
-const core = __importStar(__nccwpck_require__(71635));
-const retention_1 = __nccwpck_require__(40293);
-const path_and_artifact_name_validation_1 = __nccwpck_require__(13103);
-const artifact_twirp_client_1 = __nccwpck_require__(36812);
-const upload_zip_specification_1 = __nccwpck_require__(90760);
-const util_1 = __nccwpck_require__(69899);
-const blob_upload_1 = __nccwpck_require__(63164);
-const zip_1 = __nccwpck_require__(53700);
-const generated_1 = __nccwpck_require__(62705);
-const errors_1 = __nccwpck_require__(7500);
+const core = __importStar(__nccwpck_require__(59550));
+const retention_1 = __nccwpck_require__(83570);
+const path_and_artifact_name_validation_1 = __nccwpck_require__(55564);
+const artifact_twirp_client_1 = __nccwpck_require__(60399);
+const upload_zip_specification_1 = __nccwpck_require__(29325);
+const util_1 = __nccwpck_require__(99210);
+const blob_upload_1 = __nccwpck_require__(30395);
+const zip_1 = __nccwpck_require__(45483);
+const generated_1 = __nccwpck_require__(47922);
+const errors_1 = __nccwpck_require__(31441);
 function uploadArtifact(name, files, rootDirectory, options) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, path_and_artifact_name_validation_1.validateArtifactName)(name);
@@ -3630,7 +3630,7 @@ function uploadArtifact(name, files, rootDirectory, options) {
 
 /***/ }),
 
-/***/ 90760:
+/***/ 29325:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -3671,9 +3671,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.validateRootDirectory = validateRootDirectory;
 exports.getUploadZipSpecification = getUploadZipSpecification;
 const fs = __importStar(__nccwpck_require__(79896));
-const core_1 = __nccwpck_require__(71635);
+const core_1 = __nccwpck_require__(59550);
 const path_1 = __nccwpck_require__(16928);
-const path_and_artifact_name_validation_1 = __nccwpck_require__(13103);
+const path_and_artifact_name_validation_1 = __nccwpck_require__(55564);
 /**
  * Checks if a root directory exists and is valid
  * @param rootDirectory an absolute root directory path common to all input files that that will be trimmed from the final zip structure
@@ -3761,7 +3761,7 @@ function getUploadZipSpecification(filesToZip, rootDirectory) {
 
 /***/ }),
 
-/***/ 53700:
+/***/ 45483:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -3813,8 +3813,8 @@ exports.createZipUploadStream = createZipUploadStream;
 const stream = __importStar(__nccwpck_require__(2203));
 const promises_1 = __nccwpck_require__(91943);
 const archiver = __importStar(__nccwpck_require__(72709));
-const core = __importStar(__nccwpck_require__(71635));
-const config_1 = __nccwpck_require__(43753);
+const core = __importStar(__nccwpck_require__(59550));
+const config_1 = __nccwpck_require__(78308);
 exports.DEFAULT_COMPRESSION_LEVEL = 6;
 // Custom stream transformer so we can set the highWaterMark property
 // See https://github.com/nodejs/node/issues/8855
@@ -3895,7 +3895,7 @@ const zipEndCallback = () => {
 
 /***/ }),
 
-/***/ 49691:
+/***/ 73392:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -3936,7 +3936,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issueCommand = issueCommand;
 exports.issue = issue;
 const os = __importStar(__nccwpck_require__(70857));
-const utils_1 = __nccwpck_require__(8831);
+const utils_1 = __nccwpck_require__(91412);
 /**
  * Issues a command to the GitHub Actions runner
  *
@@ -4029,7 +4029,7 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 71635:
+/***/ 59550:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -4098,12 +4098,12 @@ exports.group = group;
 exports.saveState = saveState;
 exports.getState = getState;
 exports.getIDToken = getIDToken;
-const command_1 = __nccwpck_require__(49691);
-const file_command_1 = __nccwpck_require__(366);
-const utils_1 = __nccwpck_require__(8831);
+const command_1 = __nccwpck_require__(73392);
+const file_command_1 = __nccwpck_require__(21559);
+const utils_1 = __nccwpck_require__(91412);
 const os = __importStar(__nccwpck_require__(70857));
 const path = __importStar(__nccwpck_require__(16928));
-const oidc_utils_1 = __nccwpck_require__(91841);
+const oidc_utils_1 = __nccwpck_require__(50884);
 /**
  * The code to exit an action
  */
@@ -4392,29 +4392,29 @@ function getIDToken(aud) {
 /**
  * Summary exports
  */
-var summary_1 = __nccwpck_require__(63162);
+var summary_1 = __nccwpck_require__(51313);
 Object.defineProperty(exports, "summary", ({ enumerable: true, get: function () { return summary_1.summary; } }));
 /**
  * @deprecated use core.summary
  */
-var summary_2 = __nccwpck_require__(63162);
+var summary_2 = __nccwpck_require__(51313);
 Object.defineProperty(exports, "markdownSummary", ({ enumerable: true, get: function () { return summary_2.markdownSummary; } }));
 /**
  * Path exports
  */
-var path_utils_1 = __nccwpck_require__(97335);
+var path_utils_1 = __nccwpck_require__(64554);
 Object.defineProperty(exports, "toPosixPath", ({ enumerable: true, get: function () { return path_utils_1.toPosixPath; } }));
 Object.defineProperty(exports, "toWin32Path", ({ enumerable: true, get: function () { return path_utils_1.toWin32Path; } }));
 Object.defineProperty(exports, "toPlatformPath", ({ enumerable: true, get: function () { return path_utils_1.toPlatformPath; } }));
 /**
  * Platform utilities exports
  */
-exports.platform = __importStar(__nccwpck_require__(52863));
+exports.platform = __importStar(__nccwpck_require__(30898));
 //# sourceMappingURL=core.js.map
 
 /***/ }),
 
-/***/ 366:
+/***/ 21559:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -4460,7 +4460,7 @@ exports.prepareKeyValueMessage = prepareKeyValueMessage;
 const crypto = __importStar(__nccwpck_require__(76982));
 const fs = __importStar(__nccwpck_require__(79896));
 const os = __importStar(__nccwpck_require__(70857));
-const utils_1 = __nccwpck_require__(8831);
+const utils_1 = __nccwpck_require__(91412);
 function issueFileCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -4491,7 +4491,7 @@ function prepareKeyValueMessage(key, value) {
 
 /***/ }),
 
-/***/ 91841:
+/***/ 50884:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -4506,9 +4506,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OidcClient = void 0;
-const http_client_1 = __nccwpck_require__(2430);
-const auth_1 = __nccwpck_require__(38314);
-const core_1 = __nccwpck_require__(71635);
+const http_client_1 = __nccwpck_require__(80897);
+const auth_1 = __nccwpck_require__(54935);
+const core_1 = __nccwpck_require__(59550);
 class OidcClient {
     static createHttpClient(allowRetry = true, maxRetry = 10) {
         const requestOptions = {
@@ -4574,7 +4574,7 @@ exports.OidcClient = OidcClient;
 
 /***/ }),
 
-/***/ 97335:
+/***/ 64554:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -4651,7 +4651,7 @@ function toPlatformPath(pth) {
 
 /***/ }),
 
-/***/ 52863:
+/***/ 30898:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -4761,7 +4761,7 @@ function getDetails() {
 
 /***/ }),
 
-/***/ 63162:
+/***/ 51313:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -5050,7 +5050,7 @@ exports.summary = _summary;
 
 /***/ }),
 
-/***/ 8831:
+/***/ 91412:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -6098,6 +6098,285 @@ exports.getOctokitOptions = getOctokitOptions;
 
 /***/ }),
 
+/***/ 2117:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Context = void 0;
+const fs_1 = __nccwpck_require__(79896);
+const os_1 = __nccwpck_require__(70857);
+class Context {
+    /**
+     * Hydrate the context from the environment
+     */
+    constructor() {
+        var _a, _b, _c;
+        this.payload = {};
+        if (process.env.GITHUB_EVENT_PATH) {
+            if ((0, fs_1.existsSync)(process.env.GITHUB_EVENT_PATH)) {
+                this.payload = JSON.parse((0, fs_1.readFileSync)(process.env.GITHUB_EVENT_PATH, { encoding: 'utf8' }));
+            }
+            else {
+                const path = process.env.GITHUB_EVENT_PATH;
+                process.stdout.write(`GITHUB_EVENT_PATH ${path} does not exist${os_1.EOL}`);
+            }
+        }
+        this.eventName = process.env.GITHUB_EVENT_NAME;
+        this.sha = process.env.GITHUB_SHA;
+        this.ref = process.env.GITHUB_REF;
+        this.workflow = process.env.GITHUB_WORKFLOW;
+        this.action = process.env.GITHUB_ACTION;
+        this.actor = process.env.GITHUB_ACTOR;
+        this.job = process.env.GITHUB_JOB;
+        this.runAttempt = parseInt(process.env.GITHUB_RUN_ATTEMPT, 10);
+        this.runNumber = parseInt(process.env.GITHUB_RUN_NUMBER, 10);
+        this.runId = parseInt(process.env.GITHUB_RUN_ID, 10);
+        this.apiUrl = (_a = process.env.GITHUB_API_URL) !== null && _a !== void 0 ? _a : `https://api.github.com`;
+        this.serverUrl = (_b = process.env.GITHUB_SERVER_URL) !== null && _b !== void 0 ? _b : `https://github.com`;
+        this.graphqlUrl =
+            (_c = process.env.GITHUB_GRAPHQL_URL) !== null && _c !== void 0 ? _c : `https://api.github.com/graphql`;
+    }
+    get issue() {
+        const payload = this.payload;
+        return Object.assign(Object.assign({}, this.repo), { number: (payload.issue || payload.pull_request || payload).number });
+    }
+    get repo() {
+        if (process.env.GITHUB_REPOSITORY) {
+            const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+            return { owner, repo };
+        }
+        if (this.payload.repository) {
+            return {
+                owner: this.payload.repository.owner.login,
+                repo: this.payload.repository.name
+            };
+        }
+        throw new Error("context.repo requires a GITHUB_REPOSITORY environment variable like 'owner/repo'");
+    }
+}
+exports.Context = Context;
+//# sourceMappingURL=context.js.map
+
+/***/ }),
+
+/***/ 98087:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.context = void 0;
+exports.getOctokit = getOctokit;
+const Context = __importStar(__nccwpck_require__(2117));
+const utils_1 = __nccwpck_require__(75307);
+exports.context = new Context.Context();
+/**
+ * Returns a hydrated octokit ready to use for GitHub Actions
+ *
+ * @param     token    the repo PAT or GITHUB_TOKEN
+ * @param     options  other options to set
+ */
+function getOctokit(token, options, ...additionalPlugins) {
+    const GitHubWithPlugins = utils_1.GitHub.plugin(...additionalPlugins);
+    return new GitHubWithPlugins((0, utils_1.getOctokitOptions)(token, options));
+}
+//# sourceMappingURL=github.js.map
+
+/***/ }),
+
+/***/ 3151:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getAuthString = getAuthString;
+exports.getProxyAgent = getProxyAgent;
+exports.getProxyAgentDispatcher = getProxyAgentDispatcher;
+exports.getProxyFetch = getProxyFetch;
+exports.getApiBaseUrl = getApiBaseUrl;
+const httpClient = __importStar(__nccwpck_require__(80897));
+const undici_1 = __nccwpck_require__(76017);
+function getAuthString(token, options) {
+    if (!token && !options.auth) {
+        throw new Error('Parameter token or opts.auth is required');
+    }
+    else if (token && options.auth) {
+        throw new Error('Parameters token and opts.auth may not both be specified');
+    }
+    return typeof options.auth === 'string' ? options.auth : `token ${token}`;
+}
+function getProxyAgent(destinationUrl) {
+    const hc = new httpClient.HttpClient();
+    return hc.getAgent(destinationUrl);
+}
+function getProxyAgentDispatcher(destinationUrl) {
+    const hc = new httpClient.HttpClient();
+    return hc.getAgentDispatcher(destinationUrl);
+}
+function getProxyFetch(destinationUrl) {
+    const httpDispatcher = getProxyAgentDispatcher(destinationUrl);
+    const proxyFetch = (url, opts) => __awaiter(this, void 0, void 0, function* () {
+        return (0, undici_1.fetch)(url, Object.assign(Object.assign({}, opts), { dispatcher: httpDispatcher }));
+    });
+    return proxyFetch;
+}
+function getApiBaseUrl() {
+    return process.env['GITHUB_API_URL'] || 'https://api.github.com';
+}
+//# sourceMappingURL=utils.js.map
+
+/***/ }),
+
+/***/ 75307:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GitHub = exports.defaults = exports.context = void 0;
+exports.getOctokitOptions = getOctokitOptions;
+const Context = __importStar(__nccwpck_require__(2117));
+const Utils = __importStar(__nccwpck_require__(3151));
+// octokit + plugins
+const core_1 = __nccwpck_require__(11772);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(66316);
+const plugin_paginate_rest_1 = __nccwpck_require__(68633);
+exports.context = new Context.Context();
+const baseUrl = Utils.getApiBaseUrl();
+exports.defaults = {
+    baseUrl,
+    request: {
+        agent: Utils.getProxyAgent(baseUrl),
+        fetch: Utils.getProxyFetch(baseUrl)
+    }
+};
+exports.GitHub = core_1.Octokit.plugin(plugin_rest_endpoint_methods_1.restEndpointMethods, plugin_paginate_rest_1.paginateRest).defaults(exports.defaults);
+/**
+ * Convience function to correctly format Octokit Options to pass into the constructor.
+ *
+ * @param     token    the repo PAT or GITHUB_TOKEN
+ * @param     options  other options to set
+ */
+function getOctokitOptions(token, options) {
+    const opts = Object.assign({}, options || {}); // Shallow clone - don't mutate the object provided by the caller
+    // Auth
+    const auth = Utils.getAuthString(token, opts);
+    if (auth) {
+        opts.auth = auth;
+    }
+    return opts;
+}
+//# sourceMappingURL=utils.js.map
+
+/***/ }),
+
 /***/ 21966:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -6857,7 +7136,7 @@ class DecodedURL extends URL {
 
 /***/ }),
 
-/***/ 38314:
+/***/ 54935:
 /***/ (function(__unused_webpack_module, exports) {
 
 
@@ -6944,7 +7223,7 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 
 /***/ }),
 
-/***/ 2430:
+/***/ 80897:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -6997,7 +7276,7 @@ exports.getProxyUrl = getProxyUrl;
 exports.isHttps = isHttps;
 const http = __importStar(__nccwpck_require__(58611));
 const https = __importStar(__nccwpck_require__(65692));
-const pm = __importStar(__nccwpck_require__(36458));
+const pm = __importStar(__nccwpck_require__(88697));
 const tunnel = __importStar(__nccwpck_require__(30329));
 const undici_1 = __nccwpck_require__(76017);
 var HttpCodes;
@@ -7117,7 +7396,7 @@ class HttpClient {
         this._maxRetries = 1;
         this._keepAlive = false;
         this._disposed = false;
-        this.userAgent = userAgent;
+        this.userAgent = this._getUserAgentWithOrchestrationId(userAgent);
         this.handlers = handlers || [];
         this.requestOptions = requestOptions;
         if (requestOptions) {
@@ -7597,6 +7876,17 @@ class HttpClient {
         }
         return proxyAgent;
     }
+    _getUserAgentWithOrchestrationId(userAgent) {
+        const baseUserAgent = userAgent || 'actions/http-client';
+        const orchId = process.env['ACTIONS_ORCHESTRATION_ID'];
+        if (orchId) {
+            // Sanitize the orchestration ID to ensure it contains only valid characters
+            // Valid characters: 0-9, a-z, _, -, .
+            const sanitizedId = orchId.replace(/[^a-z0-9_.-]/gi, '_');
+            return `${baseUserAgent} actions_orchestration_id/${sanitizedId}`;
+        }
+        return baseUserAgent;
+    }
     _performExponentialBackoff(retryNumber) {
         return __awaiter(this, void 0, void 0, function* () {
             retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
@@ -7676,7 +7966,7 @@ const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCa
 
 /***/ }),
 
-/***/ 36458:
+/***/ 88697:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -85962,35 +86252,35 @@ async function buildProject() {
         if (!inputs/* isDebug */._o) {
             // unsigned release apks
             artifacts.push((0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/universal/release/app-universal-release-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/universal/release/app-universal-release-unsigned.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'universal',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/arm64/release/app-arm64-release-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/arm64/release/app-arm64-release-unsigned.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'arm64',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/arm/release/app-arm-release-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/arm/release/app-arm-release-unsigned.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'arm',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/x86_64/release/app-x86_64-release-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/x86_64/release/app-x86_64-release-unsigned.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'x86_64',
                 bundle: 'apk',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
-                path: (0,external_node_path_.join)(artifactsPath, `apk/x86/release/app-x86-release-unsigend.apk`),
+                path: (0,external_node_path_.join)(artifactsPath, `apk/x86/release/app-x86-release-unsigned.apk`),
                 name: app.name,
                 platform: targetInfo.platform,
                 arch: 'x86',
@@ -86135,9 +86425,9 @@ async function buildProject() {
 /* harmony export */ });
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(73024);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(71635);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(59550);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(84903);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(98087);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _inputs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(53900);
 
@@ -86251,7 +86541,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(76760);
 /* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_path__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(71635);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(59550);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _build__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(90532);
 /* harmony import */ var _create_release__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(60644);
@@ -86414,10 +86704,10 @@ __nccwpck_require__.d(__webpack_exports__, {
 var external_node_path_ = __nccwpck_require__(76760);
 // EXTERNAL MODULE: external "node:util"
 var external_node_util_ = __nccwpck_require__(57975);
-// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@2.0.1/node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(71635);
-// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@6.0.1/node_modules/@actions/github/lib/github.js
-var github = __nccwpck_require__(84903);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@2.0.2/node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(59550);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@7.0.0/node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(98087);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/string-argv@0.3.2/node_modules/string-argv/index.js
 
 function parseArgsStringToArgv(value, env, file) {
@@ -86523,7 +86813,7 @@ const isDebug = parsedArgs['debug'];
 /* harmony export */ });
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(73024);
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(84903);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(98087);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(82236);
 /* harmony import */ var _inputs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(53900);
@@ -86600,7 +86890,7 @@ async function uploadAssets(releaseId, assets, retryAttempts) {
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(76760);
 /* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(node_path__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(84903);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(98087);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _inputs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(53900);
 /* harmony import */ var _upload_release_assets__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(21103);
@@ -86849,7 +87139,7 @@ async function uploadVersionJSON(version, notes, tagName, releaseId, artifacts, 
 /* harmony export */ });
 /* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76760);
 /* harmony import */ var node_path__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(node_path__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_artifact__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(47429);
+/* harmony import */ var _actions_artifact__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(66044);
 /* harmony import */ var _actions_artifact__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_artifact__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var globby__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(42269);
 /* harmony import */ var _inputs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(53900);
@@ -101717,7 +102007,7 @@ Object.defineProperty(exports, "LroEngine", ({ enumerable: true, get: function (
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LroEngine = void 0;
 const operation_js_1 = __nccwpck_require__(58000);
-const constants_js_1 = __nccwpck_require__(31212);
+const constants_js_1 = __nccwpck_require__(8831);
 const poller_js_1 = __nccwpck_require__(12581);
 const operation_js_2 = __nccwpck_require__(60459);
 /**
@@ -102279,7 +102569,7 @@ exports.logger = (0, logger_1.createClientLogger)("core-lro");
 
 /***/ }),
 
-/***/ 31212:
+/***/ 8831:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -102308,7 +102598,7 @@ exports.terminalStates = ["succeeded", "canceled", "failed"];
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.pollOperation = exports.initOperation = exports.deserializeState = void 0;
 const logger_js_1 = __nccwpck_require__(40567);
-const constants_js_1 = __nccwpck_require__(31212);
+const constants_js_1 = __nccwpck_require__(8831);
 /**
  * Deserializes the state
  */
@@ -102486,7 +102776,7 @@ exports.pollOperation = pollOperation;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildCreatePoller = void 0;
 const operation_js_1 = __nccwpck_require__(60459);
-const constants_js_1 = __nccwpck_require__(31212);
+const constants_js_1 = __nccwpck_require__(8831);
 const core_util_1 = __nccwpck_require__(33000);
 const createStateProxy = () => ({
     /**
@@ -149961,10 +150251,10 @@ const {convertPathToPattern} = out;
 
 /***/ }),
 
-/***/ 75074:
+/***/ 84561:
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"name":"@actions/artifact","version":"5.0.1","preview":true,"description":"Actions artifact lib","keywords":["github","actions","artifact"],"homepage":"https://github.com/actions/toolkit/tree/main/packages/artifact","license":"MIT","main":"lib/artifact.js","types":"lib/artifact.d.ts","directories":{"lib":"lib","test":"__tests__"},"files":["lib","!.DS_Store"],"publishConfig":{"access":"public"},"repository":{"type":"git","url":"git+https://github.com/actions/toolkit.git","directory":"packages/artifact"},"scripts":{"audit-moderate":"npm install && npm audit --json --audit-level=moderate > audit.json","test":"cd ../../ && npm run test ./packages/artifact","bootstrap":"cd ../../ && npm run bootstrap","tsc-run":"tsc","tsc":"npm run bootstrap && npm run tsc-run","gen:docs":"typedoc --plugin typedoc-plugin-markdown --out docs/generated src/artifact.ts --githubPages false --readme none"},"bugs":{"url":"https://github.com/actions/toolkit/issues"},"dependencies":{"@actions/core":"^2.0.0","@actions/github":"^6.0.1","@actions/http-client":"^3.0.0","@azure/storage-blob":"^12.29.1","@octokit/core":"^5.2.1","@octokit/plugin-request-log":"^1.0.4","@octokit/plugin-retry":"^3.0.9","@octokit/request":"^8.4.1","@octokit/request-error":"^5.1.1","@protobuf-ts/plugin":"^2.2.3-alpha.1","archiver":"^7.0.1","jwt-decode":"^3.1.2","unzip-stream":"^0.3.1"},"devDependencies":{"@types/archiver":"^5.3.2","@types/unzip-stream":"^0.3.4","typedoc":"^0.28.13","typedoc-plugin-markdown":"^3.17.1","typescript":"^5.2.2"},"overrides":{"uri-js":"npm:uri-js-replace@^1.0.1","node-fetch":"^3.3.2"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"@actions/artifact","version":"5.0.2","preview":true,"description":"Actions artifact lib","keywords":["github","actions","artifact"],"homepage":"https://github.com/actions/toolkit/tree/main/packages/artifact","license":"MIT","main":"lib/artifact.js","types":"lib/artifact.d.ts","directories":{"lib":"lib","test":"__tests__"},"files":["lib","!.DS_Store"],"publishConfig":{"access":"public"},"repository":{"type":"git","url":"git+https://github.com/actions/toolkit.git","directory":"packages/artifact"},"scripts":{"audit-moderate":"npm install && npm audit --json --audit-level=moderate > audit.json","test":"cd ../../ && npm run test ./packages/artifact","bootstrap":"cd ../../ && npm run bootstrap","tsc-run":"tsc","tsc":"npm run bootstrap && npm run tsc-run","gen:docs":"typedoc --plugin typedoc-plugin-markdown --out docs/generated src/artifact.ts --githubPages false --readme none"},"bugs":{"url":"https://github.com/actions/toolkit/issues"},"dependencies":{"@actions/core":"^2.0.0","@actions/github":"^6.0.1","@actions/http-client":"^3.0.1","@azure/storage-blob":"^12.29.1","@octokit/core":"^5.2.1","@octokit/plugin-request-log":"^1.0.4","@octokit/plugin-retry":"^3.0.9","@octokit/request":"^8.4.1","@octokit/request-error":"^5.1.1","@protobuf-ts/plugin":"^2.2.3-alpha.1","archiver":"^7.0.1","jwt-decode":"^3.1.2","unzip-stream":"^0.3.1"},"devDependencies":{"@types/archiver":"^5.3.2","@types/unzip-stream":"^0.3.4","typedoc":"^0.28.13","typedoc-plugin-markdown":"^3.17.1","typescript":"^5.2.2"},"overrides":{"uri-js":"npm:uri-js-replace@^1.0.1","node-fetch":"^3.3.2"}}');
 
 /***/ })
 
