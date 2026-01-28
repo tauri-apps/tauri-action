@@ -381,7 +381,7 @@ export async function buildProject(): Promise<Artifact[]> {
         createArtifact({
           path: join(
             artifactsPath,
-            `apk/universal/release/app-universal-release-unsigend.apk`,
+            `apk/universal/release/app-universal-release-unsigned.apk`,
           ),
           name: app.name,
           platform: targetInfo.platform,
@@ -392,7 +392,7 @@ export async function buildProject(): Promise<Artifact[]> {
         createArtifact({
           path: join(
             artifactsPath,
-            `apk/arm64/release/app-arm64-release-unsigend.apk`,
+            `apk/arm64/release/app-arm64-release-unsigned.apk`,
           ),
           name: app.name,
           platform: targetInfo.platform,
@@ -403,7 +403,7 @@ export async function buildProject(): Promise<Artifact[]> {
         createArtifact({
           path: join(
             artifactsPath,
-            `apk/arm/release/app-arm-release-unsigend.apk`,
+            `apk/arm/release/app-arm-release-unsigned.apk`,
           ),
           name: app.name,
           platform: targetInfo.platform,
@@ -414,7 +414,7 @@ export async function buildProject(): Promise<Artifact[]> {
         createArtifact({
           path: join(
             artifactsPath,
-            `apk/x86_64/release/app-x86_64-release-unsigend.apk`,
+            `apk/x86_64/release/app-x86_64-release-unsigned.apk`,
           ),
           name: app.name,
           platform: targetInfo.platform,
@@ -425,7 +425,7 @@ export async function buildProject(): Promise<Artifact[]> {
         createArtifact({
           path: join(
             artifactsPath,
-            `apk/x86/release/app-x86-release-unsigend.apk`,
+            `apk/x86/release/app-x86-release-unsigned.apk`,
           ),
           name: app.name,
           platform: targetInfo.platform,
