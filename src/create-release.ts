@@ -66,6 +66,8 @@ export async function getOrCreateRelease(
   }
 
   let release: GitHubRelease | null = null;
+  let isNewRelease = false;
+
   try {
     // you can't get a an existing draft by tag
     // so we must find one in the list of all releases
@@ -99,22 +101,8 @@ export async function getOrCreateRelease(
         tag: tagName,
       });
       release = foundRelease.data;
-      const release_id: number = release.id;
-      const name: string = release.name;
 
       console.log(`Found release with tag ${tagName}.`);
-      await github.rest.repos.updateRelease({
-        owner,
-        repo,
-        release_id,
-        tagName,
-        name,
-        body: bodyFileContent || body,
-        draft,
-        prerelease,
-        target_commitish: commitish || release.target_commitish,
-        generate_release_notes: generateReleaseNotes,
-      });
     }
   } catch (error) {
     // @ts-expect-error Catching errors in typescript is a headache
@@ -136,6 +124,7 @@ export async function getOrCreateRelease(
           generate_release_notes: generateReleaseNotes,
         });
 
+        isNewRelease = true;
         release = createdRelease.data;
       }
     } else {
@@ -149,6 +138,16 @@ export async function getOrCreateRelease(
 
   if (!release) {
     throw new Error('Release not found or created.');
+  } else if (!isNewRelease) {
+    console.log('Updating name and body of existing release...');
+    await github.rest.repos.updateRelease({
+      owner,
+      repo,
+      release_id: release.id,
+      name: releaseName,
+      body: bodyFileContent || body,
+      generate_release_notes: generateReleaseNotes,
+    });
   }
 
   return {
