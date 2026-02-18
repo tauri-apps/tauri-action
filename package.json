@@ -9,7 +9,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "ncc build src/index.ts -o dist",
+    "build": "ncc build src/index.ts -o dist -m",
     "lint": "eslint .",
     "format": "prettier --write src/** action.yml README.md",
     "format:check": "prettier --check src/** action.yml README.md"
@@ -24,9 +24,9 @@
   ],
   "minimumReleaseAge": 4320,
   "dependencies": {
-    "@actions/artifact": "5.0.3",
-    "@actions/core": "2.0.3",
-    "@actions/github": "7.0.0",
+    "@actions/artifact": "6.1.0",
+    "@actions/core": "3.0.0",
+    "@actions/github": "9.0.0",
     "execa": "9.6.1",
     "find-up-simple": "1.0.1",
     "globby": "16.1.0",
