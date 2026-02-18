@@ -30,7 +30,7 @@ interface GitHubRelease {
 
 function allReleases(
   github: InstanceType<typeof GitHub>,
-): AsyncIterableIterator<{ data: GitHubRelease[] }> {
+): AsyncIterable<{ data: GitHubRelease[] }> {
   const params = { per_page: 100, owner, repo };
   return github.paginate.iterator(
     github.rest.repos.listReleases.endpoint.merge(params),
