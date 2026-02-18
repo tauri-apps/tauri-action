@@ -3,12 +3,6 @@ import fs from 'node:fs';
 import { getOctokit } from '@actions/github';
 
 import {
-  deleteGiteaReleaseAsset,
-  getAssetName,
-  ghAssetName,
-  retry,
-} from './utils';
-import {
   githubBaseUrl,
   isGitea,
   owner,
@@ -16,6 +10,12 @@ import {
   repo,
   uploadUpdaterSignatures,
 } from './inputs';
+import {
+  deleteGiteaReleaseAsset,
+  getAssetName,
+  ghAssetName,
+  retry,
+} from './utils';
 
 import type { Artifact } from './types';
 

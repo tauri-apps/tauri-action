@@ -2,7 +2,6 @@ import fs from 'node:fs';
 
 import * as core from '@actions/core';
 import { getOctokit } from '@actions/github';
-import type { GitHub } from '@actions/github/lib/utils';
 
 import {
   commitish,
@@ -13,6 +12,8 @@ import {
   prerelease,
   repo,
 } from './inputs';
+
+import type { GitHub } from '@actions/github/lib/utils';
 
 interface Release {
   id: number;

@@ -89,4 +89,4 @@ export const updaterJsonPreferNsis = core.getBooleanInput(
 
 export const isAndroid = core.getInput('mobile').toLowerCase() === 'android';
 export const isIOS = core.getInput('mobile').toLowerCase() === 'ios';
-export const isDebug = parsedArgs['debug'] as boolean;
+export const isDebug = parsedArgs.debug as boolean;

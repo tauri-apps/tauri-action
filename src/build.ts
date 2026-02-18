@@ -1,7 +1,6 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { getRunner } from './runner';
 import {
   isAndroid,
   isDebug,
@@ -13,6 +12,7 @@ import {
   retryAttempts,
   uploadPlainBinary,
 } from './inputs';
+import { getRunner } from './runner';
 import {
   createArtifact,
   getInfo,
@@ -26,9 +26,9 @@ import type { Artifact } from './types';
 export async function buildProject(): Promise<Artifact[]> {
   const runner = await getRunner();
 
-  const targetPath = parsedArgs['target'] as string | undefined;
-  const configArg = parsedArgs['config'] as string[] | undefined;
-  const profile = parsedRunnerArgs['profile'] as string | undefined;
+  const targetPath = parsedArgs.target as string | undefined;
+  const configArg = parsedArgs.config as string[] | undefined;
+  const profile = parsedRunnerArgs.profile as string | undefined;
 
   const targetInfo = getTargetInfo(targetPath);
 
@@ -138,7 +138,7 @@ export async function buildProject(): Promise<Artifact[]> {
 
     // If multiple Wix languages are specified, multiple installers (.msi) will be made
     // The .zip and .sig are only generated for the first specified language
-    let langs;
+    let langs: string[];
     if (typeof app.wixLanguage === 'string') {
       langs = [app.wixLanguage];
     } else if (Array.isArray(app.wixLanguage)) {
