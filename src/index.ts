@@ -1,15 +1,15 @@
 import { existsSync } from 'node:fs';
-import { dirname, basename } from 'node:path';
+import { basename, dirname } from 'node:path';
 
 import * as core from '@actions/core';
 
 import { buildProject } from './build';
 import { getOrCreateRelease } from './create-release';
 import {
-  shouldUploadUpdaterJson,
   isIOS,
   parsedArgs,
   retryAttempts,
+  shouldUploadUpdaterJson,
   shouldUploadWorkflowArtifacts,
 } from './inputs';
 import { uploadAssets as uploadReleaseAssets } from './upload-release-assets';
@@ -31,8 +31,8 @@ async function run(): Promise<void> {
     let releaseName = core.getInput('releaseName').replace('refs/tags/', '');
     let body = core.getInput('releaseBody');
 
-    const targetPath = parsedArgs['target'] as string | undefined;
-    const configArg = parsedArgs['config'] as string[] | undefined;
+    const targetPath = parsedArgs.target as string | undefined;
+    const configArg = parsedArgs.config as string[] | undefined;
 
     const artifacts: Artifact[] = [];
 

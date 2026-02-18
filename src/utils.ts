@@ -8,12 +8,15 @@ import path, {
   sep,
 } from 'node:path';
 
-import TOML from 'smol-toml';
 import { execa, execaSync } from 'execa';
+import { findUpSync } from 'find-up-simple';
 import { globbySync } from 'globby';
+import TOML from 'smol-toml';
 
 import { TauriConfig } from './config';
+import { isAndroid, isDebug, isIOS, owner, projectPath, repo } from './inputs';
 
+import type { GitHub } from '@actions/github/lib/utils';
 import type {
   Artifact,
   CargoConfig,
@@ -22,9 +25,6 @@ import type {
   TargetInfo,
   TargetPlatform,
 } from './types';
-import { GitHub } from '@actions/github/lib/utils';
-import { findUpSync } from 'find-up-simple';
-import { isAndroid, isDebug, isIOS, owner, projectPath, repo } from './inputs';
 
 /*** constants ***/
 export const extensions = [
@@ -77,7 +77,7 @@ export function renderNamePattern(
   replacements: Record<string, string>,
 ) {
   return pattern.replace(/\[(\w+)]/g, (match, type: string) => {
-    if (!Object.prototype.hasOwnProperty.call(replacements, type)) {
+    if (!Object.hasOwn(replacements, type)) {
       return match;
     }
     const replacement = replacements[type];
@@ -110,16 +110,16 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     }
 
     const name = basename(asset.path, asset.ext);
-    const arch = '_' + asset.arch;
+    const arch = `_${asset.arch}`;
     let platform = '';
     let version = '';
 
     if (asset.name === 'binary') {
-      platform = '_' + asset.platform;
+      platform = `_${asset.platform}`;
     }
 
     if (asset.ext.includes('.app.tar.gz')) {
-      version = '_' + asset.version;
+      version = `_${asset.version}`;
     }
 
     return name + platform + version + arch + asset.ext;
@@ -154,7 +154,7 @@ export function createArtifact({
   const baseName = basename(path);
   const exts = extensions.filter((s) => baseName.includes(s));
   const ext = exts[0] || extname(path);
-  let workflowArtifactName;
+  let workflowArtifactName: string | undefined;
   if (
     name === 'binary' ||
     [
@@ -260,9 +260,9 @@ export function getTargetDir(
   let dir = tauriPath;
 
   // hold on to target-dir cargo config while we search for build.target
-  let targetDir;
+  let targetDir: string | undefined;
   // same for build.target
-  let targetDirExt;
+  let targetDirExt: string | undefined;
 
   // The env var takes precedence over config files.
   if (process.env.CARGO_TARGET_DIR) {
@@ -330,8 +330,8 @@ export function getCargoManifest(dir: string): CargoManifest {
 
   // if the version or name is an object, it means it is a workspace package and we need to traverse up
   if (
-    typeof cargoManifest.package.version == 'object' ||
-    typeof cargoManifest.package.name == 'object'
+    typeof cargoManifest.package.version === 'object' ||
+    typeof cargoManifest.package.name === 'object'
   ) {
     const workspaceDir = getWorkspaceDir(dir);
     if (!workspaceDir) {
@@ -387,7 +387,7 @@ export function hasTauriScript(root: string): boolean {
   return (
     !!packageJson &&
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    !!packageJson.scripts?.['tauri']
+    !!packageJson.scripts?.tauri
   );
 }
 
@@ -493,8 +493,8 @@ export async function execCommand(
 export function getInfo(targetInfo?: TargetInfo, configFlag?: string[]): Info {
   const tauriDir = getTauriDir();
   if (tauriDir !== null) {
-    let name;
-    let version;
+    let name: string | undefined;
+    let version: string | undefined;
     let wixLanguage: string | string[] | { [language: string]: unknown } =
       'en-US';
     let rpmRelease = '1';

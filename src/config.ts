@@ -1,10 +1,10 @@
-import { existsSync, readFileSync } from 'fs';
-import path, { join } from 'path';
+import { existsSync, readFileSync } from 'node:fs';
+import path, { join } from 'node:path';
 
-import TOML from 'smol-toml';
 import JSON5 from 'json5';
+import TOML from 'smol-toml';
 
-import { TargetPlatform, TauriConfigV2 } from './types';
+import type { TargetPlatform, TauriConfigV2 } from './types';
 
 function _tryParseJsonConfig(contents: string): TauriConfigV2 | null {
   try {
@@ -130,7 +130,7 @@ export class TauriConfig {
       ).toString();
       const config = _tryParseJsonConfig(contents);
       if (config) {
-        return this.fromV2Base(config);
+        return TauriConfig.fromV2Base(config);
       }
       console.error(
         "Found tauri.conf.json file but couldn't parse it as JSON.",
@@ -143,7 +143,7 @@ export class TauriConfig {
       ).toString();
       const config = _tryParseJson5Config(contents);
       if (config) {
-        return this.fromV2Base(config);
+        return TauriConfig.fromV2Base(config);
       }
       console.error(
         "Found tauri.conf.json5 file but couldn't parse it as JSON5.",
@@ -154,7 +154,7 @@ export class TauriConfig {
       const contents = readFileSync(join(tauriDir, 'Tauri.toml')).toString();
       const config = _tryParseTomlConfig(contents);
       if (config) {
-        return this.fromV2Base(config);
+        return TauriConfig.fromV2Base(config);
       }
       console.error("Found Tauri.toml file but couldn't parse it as TOML.");
     }

@@ -1,4 +1,4 @@
-import { Runner } from './runner';
+import type { Runner } from './runner';
 
 export interface Application {
   tauriPath: string;

@@ -133,8 +133,8 @@ export async function uploadVersionJSON(
   // Signature files may not be uploaded to the release so we collect them separately
   const signatureFiles = [];
   // We need to check for these so that we can non-destructively overwrite the relevant json entries with universal builds if needed
-  let hasNativeArm;
-  let hasNativeX64;
+  let hasNativeArm = false;
+  let hasNativeX64 = false;
 
   for (const artifact of artifacts) {
     if (artifact.ext === '.app.tar.gz' && artifact.arch === 'universal') {

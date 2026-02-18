@@ -20,7 +20,10 @@ export async function uploadWorkflowArtifacts(artifacts: Artifact[]) {
 
       let paths = [artifact.path];
       if (artifact.ext === '.app') {
-        paths = globbySync('**/*', { cwd: artifact.path, absolute: true });
+        paths = globbySync('**/*', {
+          cwd: artifact.path,
+          absolute: true,
+        });
       }
       console.log(
         "Handing it off to GitHub's uploadArtifact function. This will print a few unmanaged logs.",
