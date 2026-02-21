@@ -30,7 +30,7 @@
     "@actions/github": "9.0.0",
     "execa": "9.6.1",
     "find-up-simple": "1.0.1",
-    "globby": "16.1.0",
+    "globby": "16.1.1",
     "json5": "2.2.3",
     "smol-toml": "1.6.0",
     "string-argv": "0.3.2",
