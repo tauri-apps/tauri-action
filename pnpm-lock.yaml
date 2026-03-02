@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       '@actions/artifact':
-        specifier: 6.1.0
-        version: 6.1.0
+        specifier: 6.2.0
+        version: 6.2.0
       '@actions/core':
         specifier: 3.0.0
         version: 3.0.0
@@ -60,8 +60,8 @@ importers:
 
 packages:
 
-  '@actions/artifact@6.1.0':
-    resolution: {integrity: sha512-oRn9YhKkboXgIq2TQZ9uj6bhkT5ZUzFtnyTQ0tLGBwImaD0GfWShE5R0tPbN25EJmS3tz5sDd2JnVokAOtNrZQ==}
+  '@actions/artifact@6.2.0':
+    resolution: {integrity: sha512-i9kmGy6WfuA6rby4fdD0UMKjT4MicFiKMsB5mUZ+1ggFW7+SzqvFsxLhIXxITkKUhTMVREXQfn/ZAN87EQLQDA==}
 
   '@actions/core@3.0.0':
     resolution: {integrity: sha512-zYt6cz+ivnTmiT/ksRVriMBOiuoUpDCJJlZ5KPl2/FRdvwU3f7MPh9qftvbkXJThragzUZieit2nyHUyw53Seg==}
@@ -158,24 +158,28 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@biomejs/cli-linux-arm64@2.4.4':
     resolution: {integrity: sha512-V/NFfbWhsUU6w+m5WYbBenlEAz8eYnSqRMDMAW3K+3v0tYVkNyZn8VU0XPxk/lOqNXLSCCrV7FmV/u3SjCBShg==}
     engines: {node: '>=14.21.3'}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@biomejs/cli-linux-x64-musl@2.4.4':
     resolution: {integrity: sha512-gGvFTGpOIQDb5CQ2VC0n9Z2UEqlP46c4aNgHmAMytYieTGEcfqhfCFnhs6xjt0S3igE6q5GLuIXtdQt3Izok+g==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@biomejs/cli-linux-x64@2.4.4':
     resolution: {integrity: sha512-R4+ZCDtG9kHArasyBO+UBD6jr/FcFCTH8QkNTOCu0pRJzCWyWC4EtZa2AmUZB5h3e0jD7bRV2KvrENcf8rndBg==}
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@biomejs/cli-win32-arm64@2.4.4':
     resolution: {integrity: sha512-trzCqM7x+Gn832zZHgr28JoYagQNX4CZkUZhMUac2YxvvyDRLJDrb5m9IA7CaZLlX6lTQmADVfLEKP1et1Ma4Q==}
@@ -1353,7 +1357,7 @@ packages:
 
 snapshots:
 
-  '@actions/artifact@6.1.0':
+  '@actions/artifact@6.2.0':
     dependencies:
       '@actions/core': 3.0.0
       '@actions/github': 9.0.0
