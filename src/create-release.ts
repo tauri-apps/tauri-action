@@ -143,6 +143,8 @@ export async function getOrCreateRelease(
     await github.rest.repos.updateRelease({
       owner,
       repo,
+      // tag_name is required to not mess up draft releases which do not have a real tag yet.
+      tag_name: release.tag_name,
       release_id: release.id,
       name: releaseName,
       body: bodyFileContent || body,
