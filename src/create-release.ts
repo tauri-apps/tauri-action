@@ -33,9 +33,7 @@ function allReleases(
   github: InstanceType<typeof GitHub>,
 ): AsyncIterable<{ data: GitHubRelease[] }> {
   const params = { per_page: 100, owner, repo };
-  return github.paginate.iterator(
-    github.rest.repos.listReleases.endpoint.merge(params),
-  );
+  return github.paginate.iterator(github.rest.repos.listReleases, params);
 }
 
 /// Try to get release by tag. If there's none, releaseName is required to create one.
@@ -74,22 +72,26 @@ export async function getOrCreateRelease(
     if (draft) {
       console.log(`Looking for a draft release with tag ${tagName}...`);
       for await (const response of allReleases(github)) {
-        const releaseWithTag = response.data.find(
-          (release) => release.tag_name === tagName,
-        );
-        if (releaseWithTag) {
-          if (!releaseWithTag.draft) {
-            console.warn(
-              `Found release with tag ${tagName} but it's NOT a draft!`,
-            );
-            break;
-          }
-          release = releaseWithTag;
-          console.log(
-            `Found draft release with tag ${tagName} on the release list.`,
-          );
-          break;
-        }
+        console.log(response.data.length);
+        response.data.forEach((re) => {
+          console.log(re.id, re.tag_name);
+        });
+        // const releaseWithTag = response.data.find(
+        //   (release) => release.tag_name === tagName,
+        // );
+        // if (releaseWithTag) {
+        //   if (!releaseWithTag.draft) {
+        //     console.warn(
+        //       `Found release with tag ${tagName} but it's NOT a draft!`,
+        //     );
+        //     break;
+        //   }
+        //   release = releaseWithTag;
+        //   console.log(
+        //     `Found draft release with tag ${tagName} on the release list.`,
+        //   );
+        //   break;
+        // }
       }
       if (!release) {
         throw new Error('release not found');
