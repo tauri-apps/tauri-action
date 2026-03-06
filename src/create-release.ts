@@ -33,9 +33,7 @@ function allReleases(
   github: InstanceType<typeof GitHub>,
 ): AsyncIterable<{ data: GitHubRelease[] }> {
   const params = { per_page: 100, owner, repo };
-  return github.paginate.iterator(
-    github.rest.repos.listReleases.endpoint.merge(params),
-  );
+  return github.paginate.iterator(github.rest.repos.listReleases, params);
 }
 
 /// Try to get release by tag. If there's none, releaseName is required to create one.
@@ -138,7 +136,9 @@ export async function getOrCreateRelease(
 
   if (!release) {
     throw new Error('Release not found or created.');
-  } else if (!isNewRelease) {
+  } else if (!isNewRelease && !release.draft) {
+    // updateRelease changes the tags of draft releases, creating duplicate releases.
+    // Therefore we only update published releases.
     console.log('Updating name and body of existing release...');
     await github.rest.repos.updateRelease({
       owner,
