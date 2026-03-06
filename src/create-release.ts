@@ -72,26 +72,22 @@ export async function getOrCreateRelease(
     if (draft) {
       console.log(`Looking for a draft release with tag ${tagName}...`);
       for await (const response of allReleases(github)) {
-        console.log(response.data.length);
-        response.data.forEach((re) => {
-          console.log(re.id, re.tag_name);
-        });
-        // const releaseWithTag = response.data.find(
-        //   (release) => release.tag_name === tagName,
-        // );
-        // if (releaseWithTag) {
-        //   if (!releaseWithTag.draft) {
-        //     console.warn(
-        //       `Found release with tag ${tagName} but it's NOT a draft!`,
-        //     );
-        //     break;
-        //   }
-        //   release = releaseWithTag;
-        //   console.log(
-        //     `Found draft release with tag ${tagName} on the release list.`,
-        //   );
-        //   break;
-        // }
+        const releaseWithTag = response.data.find(
+          (release) => release.tag_name === tagName,
+        );
+        if (releaseWithTag) {
+          if (!releaseWithTag.draft) {
+            console.warn(
+              `Found release with tag ${tagName} but it's NOT a draft!`,
+            );
+            break;
+          }
+          release = releaseWithTag;
+          console.log(
+            `Found draft release with tag ${tagName} on the release list.`,
+          );
+          break;
+        }
       }
       if (!release) {
         throw new Error('release not found');
