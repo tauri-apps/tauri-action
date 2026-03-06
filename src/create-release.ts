@@ -138,13 +138,13 @@ export async function getOrCreateRelease(
 
   if (!release) {
     throw new Error('Release not found or created.');
-  } else if (!isNewRelease) {
+  } else if (!isNewRelease && !release.draft) {
+    // updateRelease changes the tags of draft releases, creating duplicate releases.
+    // Therefore we only update published releases.
     console.log('Updating name and body of existing release...');
     await github.rest.repos.updateRelease({
       owner,
       repo,
-      // tag_name is required to not mess up draft releases which do not have a real tag yet.
-      tag_name: release.tag_name,
       release_id: release.id,
       name: releaseName,
       body: bodyFileContent || body,
