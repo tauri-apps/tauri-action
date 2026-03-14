@@ -74,24 +74,54 @@ export async function uploadAssets(
       }
     }
 
-    console.log(`Uploading ${assetName}...`);
+    console.log(`Uploading Assets`);
 
-    await retry(
-      () =>
-        github.rest.repos.uploadReleaseAsset({
-          headers,
-          name: assetName,
-          // GitHub renames the filename so we'll also set the label which it leaves as-is.
-          label: assetName,
-          // https://github.com/tauri-apps/tauri-action/pull/45
-          // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
-          data: fs.createReadStream(asset.path),
-          owner,
-          repo,
-          release_id: releaseId,
-        }),
-      retryAttempts,
-    );
+    if (isGitea) {
+      console.log(`Trying to upload ${assetName} to Gitea...`);
+      //Workaround for Gitea's api, proper endpoint
+      //todo: add retry with looser Promise type
+      try {
+        const formData = new FormData();
+        const fileBuffer = fs.readFileSync(asset.path);
+        const fileBlob = new Blob([fileBuffer]);
+        formData.append("attachment", fileBlob, assetName);
+        formData.append("name", assetName);
+        const response = await fetch(
+          `${githubBaseUrl}/repos/${owner}/${repo}/releases/${releaseId}/assets`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `token ${process.env.GITHUB_TOKEN}`,
+            },
+            body: formData,
+          },
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to upload asset: ${response.statusText}`);
+        }
+        return response.json();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log(`Trying to upload ${assetName} to Github...`);
+      await retry(
+        () =>
+          github.rest.repos.uploadReleaseAsset({
+            headers,
+            name: assetName,
+            // GitHub renames the filename so we'll also set the label which it leaves as-is.
+            label: assetName,
+            // https://github.com/tauri-apps/tauri-action/pull/45
+            // @ts-expect-error error TS2322: Type 'Buffer' is not assignable to type 'string'.
+            data: fs.createReadStream(asset.path),
+            owner,
+            repo,
+            release_id: releaseId,
+          }),
+        retryAttempts,
+      );
+    }
 
     console.log(`${assetName} successfully uploaded.`);
   }
