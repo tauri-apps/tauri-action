@@ -1,6 +1,11 @@
+[workspace]
+
+[workspace.package]
+version = "0.1.0"
+
 [package]
 name = "test-app"
-version = "0.1.0"
+version.workspace = true
 description = "A Tauri App"
 authors = ["you"]
 license = ""
