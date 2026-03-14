@@ -2058,7 +2058,7 @@ const Context = __importStar(__nccwpck_require__(3077));
 const Utils = __importStar(__nccwpck_require__(8399));
 // octokit + plugins
 const core_1 = __nccwpck_require__(1772);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6316);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6363);
 const plugin_paginate_rest_1 = __nccwpck_require__(8633);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
@@ -7678,7 +7678,7 @@ paginateRest.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 6316:
+/***/ 6363:
 /***/ ((module) => {
 
 
@@ -53321,6 +53321,10 @@ function getWorkspaceDir(dir) {
         const manifestPath = (0,external_node_path_.join)(dir, 'Cargo.toml');
         if ((0,external_node_fs_.existsSync)(manifestPath)) {
             const toml = (0,toml_toml.parse)((0,external_node_fs_.readFileSync)(manifestPath).toString());
+            // If the tauri package and workspace root are the same file, the tauri package doesn't have to be listed in workspace.members
+            if (toml.workspace && dir === rootPath) {
+                return dir;
+            }
             if (toml.workspace?.members) {
                 const ignore = ['**/target', '**/node_modules'];
                 if (toml.workspace.exclude)

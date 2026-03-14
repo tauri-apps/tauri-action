@@ -205,6 +205,12 @@ export function getWorkspaceDir(dir: string): string | null {
       const toml = parseToml(readFileSync(manifestPath).toString()) as {
         workspace?: { members?: string[]; exclude?: string[] };
       };
+
+      // If the tauri package and workspace root are the same file, the tauri package doesn't have to be listed in workspace.members
+      if (toml.workspace && dir === rootPath) {
+        return dir;
+      }
+
       if (toml.workspace?.members) {
         const ignore = ['**/target', '**/node_modules'];
         if (toml.workspace.exclude) ignore.push(...toml.workspace.exclude);
