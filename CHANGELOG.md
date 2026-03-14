@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.6.2]
+
+- [`73e111f`](https://www.github.com/tauri-apps/tauri-action/commit/73e111f47ab8fda0af8f09997c91a9e1e83182a2) ([#1288](https://www.github.com/tauri-apps/tauri-action/pull/1288)) The action can now detect the workspace root correctly if the tauri project is configured as the cargo workspace root.
+
 ## \[0.6.1]
 
 - [`ad5c271`](https://www.github.com/tauri-apps/tauri-action/commit/ad5c2710e257ef83afcf261722eeaa6a33b4e0f7) ([#1241](https://www.github.com/tauri-apps/tauri-action/pull/1241) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) Fixed an issue that caused the action to only read one `--config` arg.
