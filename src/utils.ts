@@ -222,7 +222,6 @@ export function getWorkspaceDir(dir: string): string | null {
 
   while (dir.length && dir[dir.length - 1] !== sep) {
     const manifestPath = join(dir, 'Cargo.toml');
-    console.log(manifestPath);
     if (existsSync(manifestPath)) {
       const toml = TOML.parse(readFileSync(manifestPath).toString()) as {
         workspace?: { members?: string[]; exclude?: string[] };
@@ -244,10 +243,7 @@ export function getWorkspaceDir(dir: string): string | null {
           onlyFiles: false,
         });
 
-        console.log(JSON.stringify(memberPaths));
-
         if (memberPaths.some((m) => resolve(dir, m) === rootPath)) {
-          console.log('memberPaths.some()');
           return dir;
         }
       }
