@@ -84,12 +84,12 @@ export async function uploadAssets(
         const formData = new FormData();
         const fileBuffer = fs.readFileSync(asset.path);
         const fileBlob = new Blob([fileBuffer]);
-        formData.append("attachment", fileBlob, assetName);
-        formData.append("name", assetName);
+        formData.append('attachment', fileBlob, assetName);
+        formData.append('name', assetName);
         const response = await fetch(
           `${githubBaseUrl}/repos/${owner}/${repo}/releases/${releaseId}/assets`,
           {
-            method: "POST",
+            method: 'POST',
             headers: {
               Authorization: `token ${process.env.GITHUB_TOKEN}`,
             },
