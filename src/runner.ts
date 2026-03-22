@@ -4,6 +4,7 @@ import {
   hasDependency,
   hasTauriScript,
   retry,
+  usesVitePlus,
   usesBun,
   usesNpm,
   usesPnpm,
@@ -53,6 +54,7 @@ async function getRunner(): Promise<Runner> {
 
   if (hasDependency('@tauri-apps/cli', projectPath)) {
     // usesX also check if the runner executable exists.
+    if (usesVitePlus()) return new Runner('vp', ['run', 'tauri']);
     if (usesYarn(projectPath)) return new Runner('yarn', ['tauri']);
     if (usesPnpm(projectPath)) return new Runner('pnpm', ['tauri']);
     if (usesBun(projectPath)) return new Runner('bun', ['tauri']);
