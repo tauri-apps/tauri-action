@@ -397,6 +397,13 @@ export function hasTauriScript(root: string): boolean {
   );
 }
 
+export function usesVitePlus(): boolean {
+  if (isRunnerInstalled('vp')) {
+    return true;
+  }
+  return false;
+}
+
 export function usesNpm(cwd: string): boolean {
   if (findUpSync('package-lock.json', { cwd })) {
     if (isRunnerInstalled('npm')) {
