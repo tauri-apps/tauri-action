@@ -53,6 +53,7 @@ async function getRunner(): Promise<Runner> {
   }
 
   if (hasDependency('@tauri-apps/cli', projectPath)) {
+    // usesX also check if the runner executable exists.
     if (usesVitePlus())
       return new Runner('vp', [
         hasTauriScript(projectPath) ? 'run' : 'exec',
