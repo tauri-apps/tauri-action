@@ -398,9 +398,9 @@ export function hasTauriScript(root: string): boolean {
 }
 
 export function usesVitePlus(): boolean {
-    if (isRunnerInstalled('vp')) {
-      return true;
-    }
+  if (isRunnerInstalled('vp')) {
+    return true;
+  }
   return false;
 }
 
