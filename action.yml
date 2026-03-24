@@ -30,6 +30,9 @@ inputs:
   updaterJsonPreferNsis:
     description: 'Whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist. Will default to false. May default to true for apps using tauri@v2 in the future.'
     default: 'false'
+  updaterJsonUseApiUrl:
+    description: 'Whether the updater JSON should use GitHub API download URLs (https://api.github.com/repos/OWNER/REPO/releases/assets/ASSET_ID) instead of browser download URLs. Useful for private repos where browser download URLs require authentication.'
+    default: 'false'
   tauriScript:
     description: 'The script to run to build the Tauri app'
   args:

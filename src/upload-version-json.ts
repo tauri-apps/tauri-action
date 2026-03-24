@@ -10,6 +10,7 @@ import {
   releaseAssetNamePattern,
   repo,
   updaterJsonPreferNsis,
+  updaterJsonUseApiUrl,
 } from './inputs';
 import { uploadAssets } from './upload-release-assets';
 import {
@@ -124,7 +125,9 @@ export async function uploadVersionJSON(
     downloadUrls.push({
       name: data.name,
       label: data.label,
-      url: data.browser_download_url,
+      url: updaterJsonUseApiUrl
+        ? `${githubBaseUrl}/repos/${owner}/${repo}/releases/assets/${data.id}`
+        : data.browser_download_url,
     });
   }
 
@@ -233,13 +236,16 @@ export async function uploadVersionJSON(
       continue;
     }
 
-    // Untagged release downloads won't work after the release was published
-    updaterFileDownloadUrl = updaterFileDownloadUrl.replace(
-      /\/download\/(untagged-[^/]+)\//,
-      tagName
-        ? `/download/${encodeURIComponent(tagName)}/`
-        : '/latest/download/',
-    );
+    // Untagged release downloads won't work after the release was published.
+    // API URLs don't need this transformation.
+    if (!updaterJsonUseApiUrl) {
+      updaterFileDownloadUrl = updaterFileDownloadUrl.replace(
+        /\/download\/(untagged-[^/]+)\//,
+        tagName
+          ? `/download/${encodeURIComponent(tagName)}/`
+          : '/latest/download/',
+      );
+    }
 
     let os = targetInfo.platform as string;
     if (os === 'macos') {
