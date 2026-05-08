@@ -12,8 +12,8 @@ importers:
         specifier: 6.2.1
         version: 6.2.1
       '@actions/core':
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
       '@actions/github':
         specifier: 9.0.0
         version: 9.0.0
@@ -57,8 +57,8 @@ packages:
   '@actions/artifact@6.2.1':
     resolution: {integrity: sha512-sJGH0mhEbEjBCw7o6SaLhUU66u27aFW8HTfkIb5Tk2/Wy0caUDc+oYQEgnuFN7a0HCpAbQyK0U6U7XUJDgDWrw==}
 
-  '@actions/core@3.0.0':
-    resolution: {integrity: sha512-zYt6cz+ivnTmiT/ksRVriMBOiuoUpDCJJlZ5KPl2/FRdvwU3f7MPh9qftvbkXJThragzUZieit2nyHUyw53Seg==}
+  '@actions/core@3.0.1':
+    resolution: {integrity: sha512-a6d/Nwahm9fliVGRhdhofo40HjHQasUPusmc7vBfyky+7Z+P2A1J68zyFVaNcEclc/Se+eO595oAr5nwEIoIUA==}
 
   '@actions/exec@3.0.0':
     resolution: {integrity: sha512-6xH/puSoNBXb72VPlZVm7vQ+svQpFyA96qdDBvhB8eNZOE8LtPf9L4oAsfzK/crCL8YZ+19fKYVnM63Sl+Xzlw==}
@@ -878,7 +878,7 @@ snapshots:
 
   '@actions/artifact@6.2.1':
     dependencies:
-      '@actions/core': 3.0.0
+      '@actions/core': 3.0.1
       '@actions/github': 9.0.0
       '@actions/http-client': 4.0.0
       '@azure/storage-blob': 12.31.0
@@ -898,7 +898,7 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  '@actions/core@3.0.0':
+  '@actions/core@3.0.1':
     dependencies:
       '@actions/exec': 3.0.0
       '@actions/http-client': 4.0.0
