@@ -604,7 +604,8 @@ export function getTargetInfo(targetPath?: string): TargetInfo {
   return { arch, platform };
 }
 
-/// Will run provided fn at least once plus the provided attempts on failures
+/// Will run provided fn at least once plus the provided attempts on failures,
+/// waiting between 1-10 seconds between retries
 /// Examples
 /// - retry(fn, 0) = run fn once then return no matter the success status
 /// - retry(fn, 3) = if all tries fail, fn will be executed 4 times
@@ -621,6 +622,10 @@ export async function retry(
       console.log(
         `Attempt ${attempt} failed. ${attempts - attempt} tries left.`,
       );
+      // For now we test random sleeps between 1 and 10 seconds.
+      // If that doesn't help enough, try taking pastAttempts into account,
+      // for a more exponential backoff-like approach (still needs a random element)
+      await sleep(Math.floor(Math.random() * 10) + 1);
     }
   }
 }
@@ -641,6 +646,10 @@ export function deleteGiteaReleaseAsset(
       asset_id: assetId,
     },
   );
+}
+
+async function sleep(seconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
 // TODO: Properly resolve the eslint issues in this file.

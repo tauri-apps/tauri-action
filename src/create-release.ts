@@ -53,7 +53,7 @@ export async function getOrCreateRelease(
 
   const bodyPath = core.getInput('body_path', { required: false });
   let bodyFileContent: string | null = null;
-  if (bodyPath !== '' && !!bodyPath) {
+  if (bodyPath && bodyPath !== '') {
     try {
       bodyFileContent = fs.readFileSync(bodyPath, { encoding: 'utf8' });
     } catch (error) {
