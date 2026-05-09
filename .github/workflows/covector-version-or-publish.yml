@@ -9,6 +9,9 @@ on:
 
 jobs:
   covector:
+    permissions:
+      contents: write # required to create new releases
+      pull-requests: write # required to open version update pr
     runs-on: ubuntu-latest
 
     steps:

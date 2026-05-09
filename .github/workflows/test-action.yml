@@ -9,6 +9,8 @@ on:
 
 jobs:
   v2:
+    permissions:
+      contents: write # required to create new releases
     strategy:
       fail-fast: false
       matrix:
