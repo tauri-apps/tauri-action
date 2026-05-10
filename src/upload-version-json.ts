@@ -32,7 +32,6 @@ type VersionContent = {
 export async function uploadVersionJSON(
   version: string,
   notes: string,
-  tagName: string,
   releaseId: number,
   artifacts: Artifact[],
   targetInfo: TargetInfo,
@@ -95,7 +94,7 @@ export async function uploadVersionJSON(
     downloadUrls.push({
       name: data.name,
       label: data.label,
-      url: data.browser_download_url,
+      url: `${githubBaseUrl}/repos/${owner}/${repo}/releases/assets/${data.id}`,
     });
   }
 
@@ -192,7 +191,7 @@ export async function uploadVersionJSON(
       signatureFile.assetName,
       extname(signatureFile.assetName),
     );
-    let updaterFileDownloadUrl = filteredAssets.find(
+    const updaterFileDownloadUrl = filteredAssets.find(
       (a) =>
         a.assetLabel === updaterFileLabel || a.assetName === updaterFileName,
     )?.downloadUrl;
@@ -203,14 +202,6 @@ export async function uploadVersionJSON(
       );
       continue;
     }
-
-    // Untagged release downloads won't work after the release was published
-    updaterFileDownloadUrl = updaterFileDownloadUrl.replace(
-      /\/download\/(untagged-[^/]+)\//,
-      tagName
-        ? `/download/${encodeURIComponent(tagName)}/`
-        : '/latest/download/',
-    );
 
     let os = targetInfo.platform as string;
     if (os === 'macos') {

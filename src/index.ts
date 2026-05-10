@@ -136,7 +136,6 @@ async function run(): Promise<void> {
             uploadVersionJSON(
               info.version,
               body,
-              tagName,
               releaseId,
               artifacts,
               targetInfo,
