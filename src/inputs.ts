@@ -66,7 +66,6 @@ export const githubBaseUrl =
   process.env.GITHUB_API_URL ||
   'https://api.github.com';
 
-export const isGitea = core.getBooleanInput('isGitea');
 
 export const generateReleaseNotes = core.getBooleanInput(
   'generateReleaseNotes',

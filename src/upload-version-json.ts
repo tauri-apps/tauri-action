@@ -5,7 +5,6 @@ import { getOctokit } from '@actions/github';
 
 import {
   githubBaseUrl,
-  isGitea,
   owner,
   releaseAssetNamePattern,
   repo,
@@ -14,7 +13,6 @@ import {
 import { uploadAssets } from './upload-release-assets';
 import {
   createArtifact,
-  deleteGiteaReleaseAsset,
   getAssetName,
   ghAssetName,
 } from './utils';
@@ -70,28 +68,6 @@ export async function uploadVersionJSON(
   const asset = assets.data.find((e) => e.name === versionFilename);
 
   if (asset) {
-    if (isGitea) {
-      const info = (
-        await github.request(
-          'GET /repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}',
-          {
-            owner,
-            repo,
-            release_id: releaseId,
-            asset_id: asset.id,
-          },
-        )
-      ).data as { browser_download_url: string };
-
-      const data = (await github.request(`GET ${info.browser_download_url}`))
-        .data as string;
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      versionContent.platforms = JSON.parse(
-        data,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      ).platforms;
-    } else {
       const assetData = (
         await github.request(
           `GET /repos/{owner}/{repo}/releases/assets/{asset_id}`,
@@ -112,7 +88,6 @@ export async function uploadVersionJSON(
         Buffer.from(assetData).toString(),
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ).platforms;
-    }
   }
 
   const downloadUrls: {
@@ -312,9 +287,6 @@ export async function uploadVersionJSON(
   writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
 
   if (asset) {
-    if (isGitea) {
-      await deleteGiteaReleaseAsset(github, releaseId, asset.id);
-    } else {
       // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
       await github.rest.repos.deleteReleaseAsset({
         owner,
@@ -322,7 +294,6 @@ export async function uploadVersionJSON(
         release_id: releaseId,
         asset_id: asset.id,
       });
-    }
   }
 
   const artifact = createArtifact({

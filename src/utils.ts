@@ -630,24 +630,6 @@ export async function retry(
   }
 }
 
-// Helper function to delete a Gitea release asset
-// This is a workaround since Gitea's API is incompatible with the GitHub API
-export function deleteGiteaReleaseAsset(
-  github: InstanceType<typeof GitHub>,
-  releaseId: number,
-  assetId: number,
-) {
-  return github.request(
-    'DELETE /repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}',
-    {
-      owner,
-      repo,
-      release_id: releaseId,
-      asset_id: assetId,
-    },
-  );
-}
-
 async function sleep(seconds: number) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
