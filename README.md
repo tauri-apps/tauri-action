@@ -148,13 +148,6 @@ jobs:
     # default: $GITHUB_API_URL or "https://api.github.com"
     githubBaseUrl: ''
 
-    # Whether to run in Gitea compatibility mode. Set this if `githubBaseUrl` targets a Gitea instance,
-    # since some API endpoints differ from GitHub.
-    # Gitea support is experimental. It was implemented and tested solely by the community.
-    #
-    # default: false
-    isGitea: false
-
     # The path to the root of the tauri project relative to the current working directory.
     # It must NOT be gitignored. Please open an issue if this causes problems.
     #
@@ -296,8 +289,6 @@ jobs:
 - If you only want to build the app without having the action upload any assets, for example if you want to only use [`actions/upload-artifact`](https://github.com/actions/upload-artifact), simply omit `tagName`, `releaseName` and `releaseId`.
 
 - Only enable `uploadPlainBinary` if you are sure what you're doing since Tauri doesn't officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
-
-- Gitea support is experimental. It was implemented and tested solely by the community.
 
 - `uploadWorkflowArtifacts` will likely be removed once [actions/upload-artifact#331](https://github.com/actions/upload-artifact/issues/331) lands.
 

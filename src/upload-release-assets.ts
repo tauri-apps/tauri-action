@@ -4,18 +4,12 @@ import { getOctokit } from '@actions/github';
 
 import {
   githubBaseUrl,
-  isGitea,
   owner,
   releaseAssetNamePattern,
   repo,
   uploadUpdaterSignatures,
 } from './inputs';
-import {
-  deleteGiteaReleaseAsset,
-  getAssetName,
-  ghAssetName,
-  retry,
-} from './utils';
+import { getAssetName, ghAssetName, retry } from './utils';
 
 import type { Artifact } from './types';
 
@@ -63,15 +57,11 @@ export async function uploadAssets(
 
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
-      if (isGitea) {
-        await deleteGiteaReleaseAsset(github, releaseId, existingAsset.id);
-      } else {
-        await github.rest.repos.deleteReleaseAsset({
-          owner,
-          repo,
-          asset_id: existingAsset.id,
-        });
-      }
+      await github.rest.repos.deleteReleaseAsset({
+        owner,
+        repo,
+        asset_id: existingAsset.id,
+      });
     }
 
     console.log(`Uploading ${assetName}...`);
