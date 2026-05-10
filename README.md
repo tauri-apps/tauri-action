@@ -4,7 +4,7 @@ This GitHub Action builds your Tauri application as a native binary for macOS, L
 
 ## Example
 
-**_For more workflow examples, check out the [examples](examples) directory._**
+**_For more workflow examples, check out the [examples](examples) directory. Alternatively, you can find a written guide in [our docs](https://v2.tauri.app/distribute/pipelines/github/)._**
 
 This GitHub Action has three main usages: test the build pipeline of your Tauri app, uploading Tauri artifacts to an existing release, and creating a new release with the Tauri artifacts.
 
