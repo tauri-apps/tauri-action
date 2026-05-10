@@ -144,6 +144,7 @@ jobs:
 
     # The base URL of the GitHub API to use.
     # This is useful if you want to use a self-hosted GitHub instance or a GitHub Enterprise server.
+    # This applies to API calls in the action run and in the generated latest.json file.
     #
     # default: $GITHUB_API_URL or "https://api.github.com"
     githubBaseUrl: ''
