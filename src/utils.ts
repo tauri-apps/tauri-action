@@ -14,9 +14,8 @@ import { globbySync } from 'globby';
 import TOML from 'smol-toml';
 
 import { TauriConfig } from './config';
-import { isAndroid, isDebug, isIOS, owner, projectPath, repo } from './inputs';
+import { isAndroid, isDebug, isIOS, projectPath } from './inputs';
 
-import type { GitHub } from '@actions/github/lib/utils';
 import type {
   Artifact,
   CargoConfig,

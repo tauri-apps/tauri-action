@@ -11,11 +11,7 @@ import {
   updaterJsonPreferNsis,
 } from './inputs';
 import { uploadAssets } from './upload-release-assets';
-import {
-  createArtifact,
-  getAssetName,
-  ghAssetName,
-} from './utils';
+import { createArtifact, getAssetName, ghAssetName } from './utils';
 
 import type { Artifact, TargetInfo } from './types';
 
@@ -68,26 +64,26 @@ export async function uploadVersionJSON(
   const asset = assets.data.find((e) => e.name === versionFilename);
 
   if (asset) {
-      const assetData = (
-        await github.request(
-          `GET /repos/{owner}/{repo}/releases/assets/{asset_id}`,
-          {
-            owner: owner,
-            repo: repo,
-            release_id: releaseId,
-            asset_id: asset.id,
-            headers: {
-              accept: 'application/octet-stream',
-            },
+    const assetData = (
+      await github.request(
+        `GET /repos/{owner}/{repo}/releases/assets/{asset_id}`,
+        {
+          owner: owner,
+          repo: repo,
+          release_id: releaseId,
+          asset_id: asset.id,
+          headers: {
+            accept: 'application/octet-stream',
           },
-        )
-      ).data as unknown as ArrayBuffer;
+        },
+      )
+    ).data as unknown as ArrayBuffer;
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      versionContent.platforms = JSON.parse(
-        Buffer.from(assetData).toString(),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      ).platforms;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    versionContent.platforms = JSON.parse(
+      Buffer.from(assetData).toString(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    ).platforms;
   }
 
   const downloadUrls: {
@@ -287,13 +283,13 @@ export async function uploadVersionJSON(
   writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
 
   if (asset) {
-      // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
-      await github.rest.repos.deleteReleaseAsset({
-        owner,
-        repo,
-        release_id: releaseId,
-        asset_id: asset.id,
-      });
+    // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
+    await github.rest.repos.deleteReleaseAsset({
+      owner,
+      repo,
+      release_id: releaseId,
+      asset_id: asset.id,
+    });
   }
 
   const artifact = createArtifact({
