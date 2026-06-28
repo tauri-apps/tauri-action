@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
     "includes": [
@@ -18,7 +18,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "style": {
         "useImportType": {
           "level": "on",
@@ -39,7 +39,7 @@
     "enabled": true,
     "actions": {
       "source": {
-        "recommended": true,
+        "preset": "recommended",
         "organizeImports": {
           "level": "on",
           "options": {
