@@ -38,16 +38,6 @@ export async function buildProject(): Promise<Artifact[]> {
     throw Error("Couldn't detect path of tauri app");
   }
 
-  const app = {
-    tauriPath: info.tauriPath,
-    runner,
-    name: info.name,
-    mainBinaryName: info.mainBinaryName,
-    version: info.version,
-    wixLanguage: info.wixLanguage,
-    rpmRelease: info.rpmRelease,
-  };
-
   let command = ['build'];
   if (isAndroid) command = ['android', 'build'];
   if (isIOS) command = ['ios', 'build'];
@@ -65,7 +55,7 @@ export async function buildProject(): Promise<Artifact[]> {
     retryAttempts,
   );
 
-  const workspacePath = getWorkspaceDir(app.tauriPath) ?? app.tauriPath;
+  const workspacePath = getWorkspaceDir(info.tauriPath) ?? info.tauriPath;
 
   let artifactsPath = join(
     getTargetDir(workspacePath, info.tauriPath, !!targetPath),
@@ -92,43 +82,31 @@ export async function buildProject(): Promise<Artifact[]> {
 
     artifacts = [
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/dmg/${app.name}_${app.version}_${arch}.dmg`,
+          `bundle/dmg/${info.name}_${info.version}_${arch}.dmg`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch,
         bundle: 'dmg', // could be 'dmg' or 'app' depending on the usecase
-        version: app.version,
       }),
       createArtifact({
-        path: join(artifactsPath, `bundle/macos/${app.name}.app`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+        info,
+        path: join(artifactsPath, `bundle/macos/${info.name}.app`),
         arch,
         bundle: 'app',
-        version: app.version,
       }),
       createArtifact({
-        path: join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+        info,
+        path: join(artifactsPath, `bundle/macos/${info.name}.app.tar.gz`),
         arch,
         bundle: 'app',
-        version: app.version,
       }),
       createArtifact({
-        path: join(artifactsPath, `bundle/macos/${app.name}.app.tar.gz.sig`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+        info,
+        path: join(artifactsPath, `bundle/macos/${info.name}.app.tar.gz.sig`),
         arch,
         bundle: 'app',
-        version: app.version,
       }),
     ];
   } else if (targetInfo.platform === 'windows') {
@@ -143,12 +121,12 @@ export async function buildProject(): Promise<Artifact[]> {
     // If multiple Wix languages are specified, multiple installers (.msi) will be made
     // The .zip and .sig are only generated for the first specified language
     let langs: string[];
-    if (typeof app.wixLanguage === 'string') {
-      langs = [app.wixLanguage];
-    } else if (Array.isArray(app.wixLanguage)) {
-      langs = app.wixLanguage;
+    if (typeof info.wixLanguage === 'string') {
+      langs = [info.wixLanguage];
+    } else if (Array.isArray(info.wixLanguage)) {
+      langs = info.wixLanguage;
     } else {
-      langs = Object.keys(app.wixLanguage);
+      langs = Object.keys(info.wixLanguage);
     }
 
     const winArtifacts: Artifact[] = [];
@@ -157,104 +135,88 @@ export async function buildProject(): Promise<Artifact[]> {
     langs.forEach((lang) => {
       winArtifacts.push(
         createArtifact({
+          info,
           path: join(
             artifactsPath,
-            `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi`,
+            `bundle/msi/${info.name}_${info.version}_${arch}_${lang}.msi`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
+
           arch,
           bundle: 'msi',
-          version: app.version,
         }),
         createArtifact({
+          info,
           path: join(
             artifactsPath,
-            `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.sig`,
+            `bundle/msi/${info.name}_${info.version}_${arch}_${lang}.msi.sig`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
+
           arch,
           bundle: 'msi',
-          version: app.version,
         }),
         createArtifact({
+          info,
           path: join(
             artifactsPath,
-            `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip`,
+            `bundle/msi/${info.name}_${info.version}_${arch}_${lang}.msi.zip`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
+
           arch,
           bundle: 'msi',
-          version: app.version,
         }),
         createArtifact({
+          info,
           path: join(
             artifactsPath,
-            `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip.sig`,
+            `bundle/msi/${info.name}_${info.version}_${arch}_${lang}.msi.zip.sig`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
+
           arch,
           bundle: 'msi',
-          version: app.version,
         }),
       );
     });
 
     winArtifacts.push(
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe`,
+          `bundle/nsis/${info.name}_${info.version}_${arch}-setup.exe`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+
         arch,
         bundle: 'nsis',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe.sig`,
+          `bundle/nsis/${info.name}_${info.version}_${arch}-setup.exe.sig`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+
         arch,
         bundle: 'nsis',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip`,
+          `bundle/nsis/${info.name}_${info.version}_${arch}-setup.nsis.zip`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+
         arch,
         bundle: 'nsis',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`,
+          `bundle/nsis/${info.name}_${info.version}_${arch}-setup.nsis.zip.sig`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+
         arch,
         bundle: 'nsis',
-        version: app.version,
       }),
     );
 
@@ -293,100 +255,76 @@ export async function buildProject(): Promise<Artifact[]> {
 
     artifacts = [
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/deb/${app.name}_${app.version}_${debianArch}.deb`,
+          `bundle/deb/${info.name}_${info.version}_${debianArch}.deb`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: debianArch,
         bundle: 'deb',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/deb/${app.name}_${app.version}_${debianArch}.deb.sig`,
+          `bundle/deb/${info.name}_${info.version}_${debianArch}.deb.sig`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: debianArch,
         bundle: 'deb',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`,
+          `bundle/rpm/${info.name}-${info.version}-${info.rpmRelease}.${rpmArch}.rpm`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: rpmArch,
         bundle: 'rpm',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`,
+          `bundle/rpm/${info.name}-${info.version}-${info.rpmRelease}.${rpmArch}.rpm.sig`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: rpmArch,
         bundle: 'rpm',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage`,
+          `bundle/appimage/${info.name}_${info.version}_${appImageArch}.AppImage`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: appImageArch,
         bundle: 'appimage',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.sig`,
+          `bundle/appimage/${info.name}_${info.version}_${appImageArch}.AppImage.sig`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: appImageArch,
         bundle: 'appimage',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz`,
+          `bundle/appimage/${info.name}_${info.version}_${appImageArch}.AppImage.tar.gz`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: appImageArch,
         bundle: 'appimage',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
-          `bundle/appimage/${app.name}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
+          `bundle/appimage/${info.name}_${info.version}_${appImageArch}.AppImage.tar.gz.sig`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: appImageArch,
         bundle: 'appimage',
-        version: app.version,
       }),
     ];
   } else if (targetInfo.platform === 'android') {
@@ -399,64 +337,49 @@ export async function buildProject(): Promise<Artifact[]> {
       // unsigned release apks
       artifacts.push(
         createArtifact({
+          info,
           path: join(
             artifactsPath,
             `apk/universal/release/app-universal-release-unsigned.apk`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
           arch: 'universal',
           bundle: 'apk',
-          version: app.version,
         }),
         createArtifact({
+          info,
           path: join(
             artifactsPath,
             `apk/arm64/release/app-arm64-release-unsigned.apk`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
           arch: 'arm64',
           bundle: 'apk',
-          version: app.version,
         }),
         createArtifact({
+          info,
           path: join(
             artifactsPath,
             `apk/arm/release/app-arm-release-unsigned.apk`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
           arch: 'arm',
           bundle: 'apk',
-          version: app.version,
         }),
         createArtifact({
+          info,
           path: join(
             artifactsPath,
             `apk/x86_64/release/app-x86_64-release-unsigned.apk`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
           arch: 'x86_64',
           bundle: 'apk',
-          version: app.version,
         }),
         createArtifact({
+          info,
           path: join(
             artifactsPath,
             `apk/x86/release/app-x86-release-unsigned.apk`,
           ),
-          name: app.name,
-          mainBinaryName: app.mainBinaryName,
-          platform: targetInfo.platform,
           arch: 'x86',
           bundle: 'apk',
-          version: app.version,
         }),
       );
     }
@@ -464,149 +387,110 @@ export async function buildProject(): Promise<Artifact[]> {
     artifacts.push(
       // signed release apks and debug apks
       createArtifact({
+        info,
         path: join(
           artifactsPath,
           `apk/universal/${debug}/app-universal-${debug}.apk`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'universal',
         bundle: 'apk',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(artifactsPath, `apk/arm64/${debug}/app-arm64-${debug}.apk`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'arm64',
         bundle: 'apk',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(artifactsPath, `apk/arm/${debug}/app-arm-${debug}.apk`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'arm',
         bundle: 'apk',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
           `apk/x86_64/${debug}/app-x86_64-${debug}.apk`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'x86_64',
         bundle: 'apk',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(artifactsPath, `apk/x86/${debug}/app-x86-${debug}.apk`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'x86',
         bundle: 'apk',
-        version: app.version,
       }),
       //
       // aabs
       //
       createArtifact({
+        info,
         path: join(
           artifactsPath,
           `/bundle/universal${aabDebug}/app-universal-${debug}.aab`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'universal',
         bundle: 'aab',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
           `/bundle/arm64${aabDebug}/app-arm64-${debug}.aab`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'arm64',
         bundle: 'aab',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
           `/bundle/arm${aabDebug}/app-arm-${debug}.aab`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'arm',
         bundle: 'aab',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
           `/bundle/x86_64${aabDebug}/app-x86_64-${debug}.aab`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'x86_64',
         bundle: 'aab',
-        version: app.version,
       }),
       createArtifact({
+        info,
         path: join(
           artifactsPath,
           `/bundle/x86${aabDebug}/app-x86-${debug}.aab`,
         ),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
         arch: 'x86',
         bundle: 'aab',
-        version: app.version,
       }),
     );
   } else if (targetInfo.platform === 'ios') {
     // TODO: Confirm that info.name is correct.
     artifacts = [
       createArtifact({
-        path: join(artifactsPath, `x86_64/${app.name}.ipa`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+        info,
+        path: join(artifactsPath, `x86_64/${info.name}.ipa`),
         arch: 'x86_64',
         bundle: 'ipa',
-        version: app.version,
       }),
       createArtifact({
-        path: join(artifactsPath, `arm64/${app.name}.ipa`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+        info,
+        path: join(artifactsPath, `arm64/${info.name}.ipa`),
         arch: 'arm64',
         bundle: 'ipa',
-        version: app.version,
       }),
       createArtifact({
-        path: join(artifactsPath, `arm64-sim/${app.name}.ipa`),
-        name: app.name,
-        mainBinaryName: app.mainBinaryName,
-        platform: targetInfo.platform,
+        info,
+        path: join(artifactsPath, `arm64-sim/${info.name}.ipa`),
         arch: 'arm64-sim',
         bundle: 'ipa',
-        version: app.version,
       }),
     ];
   } else {
@@ -618,13 +502,11 @@ export async function buildProject(): Promise<Artifact[]> {
     const ext = targetInfo.platform === 'windows' ? '.exe' : '';
     artifacts.push(
       createArtifact({
-        path: join(artifactsPath, `${app.mainBinaryName}${ext}`),
+        info,
+        path: join(artifactsPath, `${info.mainBinaryName}${ext}`),
         name: 'binary',
-        mainBinaryName: app.mainBinaryName,
         bundle: 'bin',
-        platform: targetInfo.platform,
         arch,
-        version: app.version,
       }),
     );
   }
