@@ -98,13 +98,13 @@ export async function buildProject(): Promise<Artifact[]> {
       }),
       createArtifact({
         info,
-        path: join(artifactsPath, `bundle/macos/${info.name}.info.tar.gz`),
+        path: join(artifactsPath, `bundle/macos/${info.name}.app.tar.gz`),
         arch,
         bundle: 'app',
       }),
       createArtifact({
         info,
-        path: join(artifactsPath, `bundle/macos/${info.name}.info.tar.gz.sig`),
+        path: join(artifactsPath, `bundle/macos/${info.name}.app.tar.gz.sig`),
         arch,
         bundle: 'app',
       }),
