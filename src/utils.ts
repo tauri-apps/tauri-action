@@ -106,10 +106,10 @@ export function getAssetName(asset: Artifact, pattern?: string) {
       // the binary is just the same Cargo.toml name field on all platforms
       asset.name !== 'binary' &&
       // Android bundles are called `app-universal-debug.apk`
-      asset.ext !== 'apk' &&
-      asset.ext !== 'aab' &&
+      asset.ext !== '.apk' &&
+      asset.ext !== '.aab' &&
       // iOS bundles do not include the architecture
-      asset.ext !== 'ipa'
+      asset.ext !== '.ipa'
     ) {
       // See TODO above, in most cases we keep the file name set by tauri's cli.
       return basename(asset.path);
