@@ -18,6 +18,7 @@ export interface Asset {
 
 export interface Artifact {
   name: string;
+  mainBinaryName: string;
   mode: 'debug' | 'release';
   platform: Exclude<TargetPlatform, 'macos'> | 'darwin';
   arch: string;

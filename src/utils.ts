@@ -115,17 +115,21 @@ export function getAssetName(asset: Artifact, pattern?: string) {
       return basename(asset.path);
     }
 
-    const name = basename(asset.path, asset.ext);
+    // Currently Tauri uses the product name on all platforms (except mobile).
+    // If Tauri changes that to for example match .deb and .rpm standards we should follow suit.
+    let name = asset.name;
     const arch = `_${asset.arch}`;
     let platform = '';
     let version = '';
 
     if (asset.name === 'binary') {
+      name = basename(asset.path, asset.ext);
       platform = `_${asset.platform}`;
     }
 
     // binaries usually don't have the version in them
     if (asset.name !== 'binary') {
+      name = asset.name;
       version = `_${asset.version}`;
     }
 
@@ -146,6 +150,7 @@ export function ghAssetName(
 export function createArtifact({
   path,
   name,
+  mainBinaryName,
   platform,
   arch,
   bundle,
@@ -153,6 +158,7 @@ export function createArtifact({
 }: {
   path: string;
   name: string;
+  mainBinaryName: string;
   platform: TargetPlatform;
   arch: string;
   bundle: string;
@@ -183,6 +189,7 @@ export function createArtifact({
   return {
     path,
     name,
+    mainBinaryName,
     mode: isDebug ? 'debug' : 'release',
     platform: platform === 'macos' ? 'darwin' : platform,
     arch,

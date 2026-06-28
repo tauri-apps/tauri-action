@@ -190,6 +190,7 @@ jobs:
     #
     # Currently available variables are:
     # - `[name]`: base filename / appname (Product Name)
+    # - `[mainBinaryName]`: mainBinaryName in tauri.conf.json or package > name in Cargo.toml
     # - `[version]`: app version
     # - `[platform]`: target platform (OS)
     # - `[arch]`: target architecture - format differs per platform
