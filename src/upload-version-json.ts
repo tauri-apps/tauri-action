@@ -13,7 +13,7 @@ import {
 import { uploadAssets } from './upload-release-assets';
 import { createArtifact, getAssetName, ghAssetName } from './utils';
 
-import type { Artifact, TargetInfo } from './types';
+import type { Artifact, Info } from './types';
 
 type Platform = {
   signature: string;
@@ -34,7 +34,7 @@ export async function uploadVersionJSON(
   notes: string,
   releaseId: number,
   artifacts: Artifact[],
-  targetInfo: TargetInfo,
+  info: Info,
   unzippedSig: boolean,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
@@ -203,7 +203,7 @@ export async function uploadVersionJSON(
       continue;
     }
 
-    let os = targetInfo.platform as string;
+    let os = info.targetPlatform as string;
     if (os === 'macos') {
       os = 'darwin';
     }
@@ -284,13 +284,11 @@ export async function uploadVersionJSON(
   }
 
   const artifact = createArtifact({
+    info,
     path: versionFile,
     name: versionFilename,
-    mainBinaryName: '',
-    platform: targetInfo.platform,
     arch: '',
     bundle: '',
-    version,
   });
 
   await uploadAssets(

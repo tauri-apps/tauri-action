@@ -148,21 +148,18 @@ export function ghAssetName(
 }
 
 export function createArtifact({
+  info,
   path,
   name,
-  mainBinaryName,
-  platform,
   arch,
   bundle,
-  version,
 }: {
+  info: Info,
   path: string;
-  name: string;
-  mainBinaryName: string;
-  platform: TargetPlatform;
+  /// Defaults to info.name
+  name?: string;
   arch: string;
   bundle: string;
-  version: string;
 }): Artifact {
   const baseName = basename(path);
   const exts = extensions.filter((s) => baseName.includes(s));
@@ -183,19 +180,19 @@ export function createArtifact({
       '.ipa',
     ].includes(ext)
   ) {
-    workflowArtifactName = `${platform}-${arch}-${bundle}`;
+    workflowArtifactName = `${info.targetPlatform}-${arch}-${bundle}`;
   }
 
   return {
     path,
-    name,
-    mainBinaryName,
+    name: name || info.name,
+    mainBinaryName: info.mainBinaryName,
     mode: isDebug ? 'debug' : 'release',
-    platform: platform === 'macos' ? 'darwin' : platform,
+    platform: info.targetPlatform === 'macos' ? 'darwin' : info.targetPlatform,
     arch,
     bundle,
     ext,
-    version,
+    version: info.version,
     setup: bundle === 'nsis' ? '-setup' : '',
     _setup: bundle === 'nsis' ? '_setup' : '',
     workflowArtifactName,
@@ -517,7 +514,7 @@ export async function execCommand(
   });
 }
 
-export function getInfo(targetInfo?: TargetInfo, configFlag?: string[]): Info {
+export function getInfo(targetInfo: TargetInfo, configFlag?: string[]): Info {
   const tauriDir = getTauriDir();
   if (tauriDir !== null) {
     let name: string | undefined;
@@ -575,6 +572,7 @@ export function getInfo(targetInfo?: TargetInfo, configFlag?: string[]): Info {
       wixLanguage,
       rpmRelease,
       unzippedSigs: config.unzippedSigs === true,
+      targetPlatform: targetInfo.platform
     };
   } else {
     // This should not actually happen.

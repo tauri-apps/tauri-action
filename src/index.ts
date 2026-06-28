@@ -138,7 +138,7 @@ async function run(): Promise<void> {
               body,
               releaseId,
               artifacts,
-              targetInfo,
+              info,
               info.unzippedSigs,
             ),
           // since all jobs try to upload this file it tends to conflict often so we want to retry it at least once.

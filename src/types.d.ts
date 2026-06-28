@@ -1,13 +1,3 @@
-import type { Runner } from './runner';
-
-export interface Application {
-  tauriPath: string;
-  runner: Runner;
-  name: string;
-  version: string;
-  wixLanguage: string | string[] | { [language: string]: unknown };
-}
-
 export interface Asset {
   downloadUrl: string;
   assetName: string;
@@ -51,6 +41,7 @@ export interface Info {
   wixLanguage: string | string[] | { [language: string]: unknown };
   rpmRelease: string;
   unzippedSigs: boolean;
+  targetPlatform: TargetPlatform;
 }
 
 export type TargetPlatform = 'android' | 'ios' | 'macos' | 'linux' | 'windows';
