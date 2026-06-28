@@ -154,7 +154,7 @@ export function createArtifact({
   arch,
   bundle,
 }: {
-  info: Info,
+  info: Info;
   path: string;
   /// Defaults to info.name
   name?: string;
@@ -572,7 +572,7 @@ export function getInfo(targetInfo: TargetInfo, configFlag?: string[]): Info {
       wixLanguage,
       rpmRelease,
       unzippedSigs: config.unzippedSigs === true,
-      targetPlatform: targetInfo.platform
+      targetPlatform: targetInfo.platform,
     };
   } else {
     // This should not actually happen.
