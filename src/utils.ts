@@ -100,9 +100,16 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     );
   } else {
     if (
+      // Tauri rightfully does not inject the version in .app but does the same for the .app.tar.gz which imo should have the version
       asset.ext !== '.app.tar.gz' &&
       asset.ext !== '.app.tar.gz.sig' &&
-      asset.name !== 'binary'
+      // the binary is just the same Cargo.toml name field on all platforms
+      asset.name !== 'binary' &&
+      // Android bundles are called `app-universal-debug.apk`
+      asset.ext !== 'apk' &&
+      asset.ext !== 'aab' &&
+      // iOS bundles do not include the architecture
+      asset.ext !== 'ipa'
     ) {
       // See TODO above, in most cases we keep the file name set by tauri's cli.
       return basename(asset.path);
@@ -117,7 +124,8 @@ export function getAssetName(asset: Artifact, pattern?: string) {
       platform = `_${asset.platform}`;
     }
 
-    if (asset.ext.includes('.app.tar.gz')) {
+    // binaries usually don't have the version in them
+    if (asset.name !== 'binary') {
       version = `_${asset.version}`;
     }
 
