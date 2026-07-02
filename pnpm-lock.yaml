@@ -46,8 +46,8 @@ importers:
         specifier: 24.13.2
         version: 24.13.2
       '@vercel/ncc':
-        specifier: 0.44.0
-        version: 0.44.0
+        specifier: 0.44.1
+        version: 0.44.1
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -303,8 +303,8 @@ packages:
     resolution: {integrity: sha512-91fp6CAAJSRtH5ja95T1FHSKa8aPW9/Zw6cta81jlZTUw/+Vq8jM/AfF/14h2b71wwR84JUTW/3Y8QPhDAawFA==}
     engines: {node: '>=20.0.0'}
 
-  '@vercel/ncc@0.44.0':
-    resolution: {integrity: sha512-pHyI+bZokSgIscTKFSmpNk5vZzmOrb9RW0Vu4SRyqUvkJ0kgg3PzaZLLDVTFXhbUiCqg0/Eu8L4fKtgViA92kg==}
+  '@vercel/ncc@0.44.1':
+    resolution: {integrity: sha512-cUjIE5P2YY1n+Kt9rFIazMMpGoPn1Fic04rOmTkElMkiDP5oszGfERMpo2shVkFKDL7rVppdM2pqJKC59shQWQ==}
     hasBin: true
 
   abort-controller@3.0.0:
@@ -1218,7 +1218,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vercel/ncc@0.44.0': {}
+  '@vercel/ncc@0.44.1': {}
 
   abort-controller@3.0.0:
     dependencies:
