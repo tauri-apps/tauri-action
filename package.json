@@ -32,7 +32,7 @@
     "find-up-simple": "1.0.1",
     "globby": "16.2.0",
     "json5": "2.2.3",
-    "smol-toml": "1.7.0",
+    "smol-toml": "1.7.1",
     "string-argv": "0.3.2",
     "tslib": "2.8.1"
   },
