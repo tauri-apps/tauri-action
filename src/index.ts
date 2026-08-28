@@ -114,10 +114,9 @@ async function run(): Promise<void> {
         body = body.replace(regex, template.value);
       });
 
-      const releaseData = await getOrCreateRelease(
-        tagName,
-        releaseName || undefined,
-        body,
+      const releaseData = await retry(
+        () => getOrCreateRelease(tagName, releaseName || undefined, body),
+        retryAttempts,
       );
       releaseId = releaseData.id;
       core.setOutput('releaseUploadUrl', releaseData.uploadUrl);

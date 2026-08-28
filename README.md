@@ -157,7 +157,7 @@ jobs:
     # default: ./
     projectPath: ''
 
-    # The number of times to re-try building the app if the initial build fails or uploading assets if the upload fails.
+    # The number of times to re-try building the app if the initial build fails, or fetching/creating the release and uploading assets if they fail.
     # Some small internal steps may be re-tried regardless of this config.
     #
     # default: 0

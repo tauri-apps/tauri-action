@@ -621,10 +621,10 @@ export function getTargetInfo(targetPath?: string): TargetInfo {
 /// Examples
 /// - retry(fn, 0) = run fn once then return no matter the success status
 /// - retry(fn, 3) = if all tries fail, fn will be executed 4 times
-export async function retry(
-  fn: () => Promise<unknown>,
+export async function retry<T>(
+  fn: () => Promise<T>,
   additionalAttempts: number,
-): Promise<unknown> {
+): Promise<T> {
   const attempts = additionalAttempts + 1;
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
@@ -640,6 +640,9 @@ export async function retry(
       await sleep(Math.floor(Math.random() * 10) + 1);
     }
   }
+  // Unreachable (the loop always returns or throws since attempts is at least
+  // 1); satisfies the declared return type.
+  return fn();
 }
 
 async function sleep(seconds: number) {
