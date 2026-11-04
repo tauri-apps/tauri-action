@@ -13,7 +13,8 @@
     "lint": "biome lint",
     "lint:write": "biome lint --write",
     "format": "biome format --write",
-    "format:check": "biome format"
+    "format:check": "biome format",
+    "test": "node -e \"fs.rmSync('.test-dist',{recursive:true,force:true})\" && tsc -p tsconfig.test.json && cd .test-dist/test && node --test"
   },
   "repository": {
     "type": "git",

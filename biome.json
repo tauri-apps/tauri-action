@@ -4,6 +4,7 @@
   "files": {
     "includes": [
       "src/**",
+      "test/**",
       "biome.js",
       "README.md",
       "action.yml",
