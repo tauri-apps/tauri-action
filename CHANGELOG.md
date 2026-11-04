@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.1]
+
+- [`a6e90dd`](https://www.github.com/tauri-apps/tauri-action/commit/a6e90ddc4ba4721f294e52b856d3d50e645edc07) ([#1342](https://www.github.com/tauri-apps/tauri-action/pull/1342) by [@raineorshine](https://www.github.com/tauri-apps/tauri-action/../../raineorshine)) `retryAttempts` now also covers fetching/creating the GitHub release. Previously this was the only GitHub API call that was never retried, so a single transient network failure (e.g. a connect timeout) could fail the job after a successful build.
+
 ## \[1.0.0]
 
 - [`db4399e`](https://www.github.com/tauri-apps/tauri-action/commit/db4399ef7ed597de7354e35eaa454c2e5e753d42) ([#1194](https://www.github.com/tauri-apps/tauri-action/pull/1194) by [@FabianLars](https://www.github.com/tauri-apps/tauri-action/../../FabianLars)) **Breaking Change**: `.app.tar.gz` & `.app.tar.gz.sig` files will now include the app version like all other bundles/installers.
