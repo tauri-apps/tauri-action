@@ -50,14 +50,19 @@ export interface TargetInfo {
   platform: TargetPlatform;
 }
 
+// The kebab-case keys are the serde aliases tauri-utils accepts for these fields.
 export interface TauriConfigV2 {
   identifier: string;
   productName?: string;
+  'product-name'?: string;
   version?: string;
   mainBinaryName?: string;
+  'main-binary-name'?: string;
   build?: {
     frontendDist?: string;
+    'frontend-dist'?: string;
     beforeBuildCommand?: string;
+    'before-build-command'?: string;
   };
   bundle?: {
     createUpdaterArtifacts?: boolean | 'v1Compatible';

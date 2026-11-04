@@ -51,6 +51,25 @@ function _tryParseTomlConfig(contents: string): TauriConfigV2 | null {
   }
 }
 
+// Tauri accepts kebab-case serde aliases for some keys (e.g. `product-name` in
+// Tauri.toml). Resolve the ones this action reads. Tauri rejects a config that
+// sets both spellings of a key, so which one wins here never matters for a
+// config that builds.
+function resolveAliases(config: TauriConfigV2): TauriConfigV2 {
+  const { build } = config;
+  return {
+    ...config,
+    productName: config.productName ?? config['product-name'],
+    mainBinaryName: config.mainBinaryName ?? config['main-binary-name'],
+    build: build && {
+      ...build,
+      frontendDist: build.frontendDist ?? build['frontend-dist'],
+      beforeBuildCommand:
+        build.beforeBuildCommand ?? build['before-build-command'],
+    },
+  };
+}
+
 function readPlatformConfig(
   tauriDir: string,
   platform: string,
@@ -162,7 +181,8 @@ export class TauriConfig {
     throw new Error("Couldn't locate or parse tauri config.");
   }
 
-  private static fromV2Base(config: TauriConfigV2): TauriConfig {
+  private static fromV2Base(base: TauriConfigV2): TauriConfig {
+    const config = resolveAliases(base);
     if (!config.identifier) {
       throw Error('base config has no bundle identifier.');
     }
@@ -181,7 +201,8 @@ export class TauriConfig {
     return c;
   }
 
-  private mergeConfig(config: TauriConfigV2) {
+  private mergeConfig(override: TauriConfigV2) {
+    const config = resolveAliases(override);
     this.identifier = config.identifier ?? this.identifier;
     this.productName = config.productName ?? this.productName;
     this.mainBinaryName = config.mainBinaryName ?? this.mainBinaryName;

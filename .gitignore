@@ -21,6 +21,9 @@ typings/
 # TypeScript cache
 *.tsbuildinfo
 
+# Compiled tests (pnpm test)
+.test-dist
+
 # Optional cache directory
 .npm
 .yarn
