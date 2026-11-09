@@ -106,7 +106,29 @@ export async function uploadVersionJSON(
   let hasNativeArm = false;
   let hasNativeX64 = false;
 
+  // Tauri's updater json can only handle a single .msi file so we filter out all but one to make sure
+  // that we use the same file in both `<arch>-windows` and `<arch>-windows-msi`.
+  // We default to english, falling back to the first configured language.
+  let wixLanguages: string[];
+  if (typeof info.wixLanguage === 'string') {
+    wixLanguages = [info.wixLanguage];
+  } else if (Array.isArray(info.wixLanguage)) {
+    wixLanguages = info.wixLanguage;
+  } else {
+    wixLanguages = Object.keys(info.wixLanguage);
+  }
+  const preferredWixLanguage =
+    wixLanguages.find((language) => language.startsWith('en')) ??
+    wixLanguages[0];
+
   for (const artifact of artifacts) {
+    if (
+      artifact.bundle === 'msi' &&
+      !basename(artifact.path).includes(`_${preferredWixLanguage}.msi`)
+    ) {
+      continue;
+    }
+
     if (artifact.ext === '.app.tar.gz' && artifact.arch === 'universal') {
       const arm = { ...artifact, arch: 'aarch64' };
       const x64 = { ...artifact, arch: 'x86_64' };
