@@ -32,12 +32,6 @@
     "windows": {
       "nsis": {
         "compression": "none"
-      },
-      "wix": {
-        "language": [
-          "de-DE",
-          "en-US"
-        ]
       }
     },
     "linux": {
