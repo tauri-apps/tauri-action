@@ -145,7 +145,7 @@ jobs:
           args: ${{ matrix.args }}
           retryAttempts: 1
           uploadPlainBinary: true
-          uploadWorkflowArtifacts: true
+          #uploadWorkflowArtifacts: true
           uploadUpdaterSignatures: true
           mobile: ${{ matrix.mobile }}
       # workflowArtifactNamePattern: '[name]_${{ github.sha }}_[platform]_[arch]_[bundle]'
