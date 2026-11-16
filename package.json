@@ -33,7 +33,7 @@
     "globby": "16.2.4",
     "json5": "2.2.3",
     "smol-toml": "1.9.1",
-    "string-argv": "0.3.2",
+    "string-argv": "0.4.0",
     "tslib": "2.9.1"
   },
   "devDependencies": {
